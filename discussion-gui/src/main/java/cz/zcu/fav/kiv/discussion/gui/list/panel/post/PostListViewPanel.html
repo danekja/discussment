@@ -1,0 +1,21 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <div class="post_container">
+        <div wicket:id="postListView">
+            <div class="post">
+                <span>
+                    <span wicket:id="username"></span>
+                    <small style="display: inline;">Posted on <span wicket:id="created"></span></small>
+                    <a data-toggle="modal" data-target="#replyModal">
+                        <span wicket:id="reply">reply</span>
+                    </a>
+                    <span style="float: right;">
+                        <a wicket:id="disable" href="#">d</a>
+                        <a wicket:id="remove" href="#">remove</a>
+                    </span>
+                </span>
+                <p wicket:id="disabled">This post is disabled</p>
+                <p wicket:id="text"></p>
+            </div>
+        </div>
+    </div>
+</wicket:panel>

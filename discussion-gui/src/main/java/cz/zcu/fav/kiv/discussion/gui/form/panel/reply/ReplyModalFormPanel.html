@@ -1,0 +1,21 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <div id="replyModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="replyForm">
+                    <div class="modal-header">
+                        <div class="form-group">
+                            <label for="replyText">Name</label>
+                            <textarea id="replyText" wicket:id="replyText" class="form-control" required="required"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Reply
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</wicket:panel>

@@ -1,0 +1,39 @@
+/*.topic_row {
+    line-height:24pt;
+    border: solid 1px black;
+}*/
+
+.topic_row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.glyphicon-folder-open {
+    font-size: 25px;
+}
+
+.glyphicon-list-alt {
+    font-size: 25px;
+}
+
+div.topic_container > div:nth-of-type(even) {
+    background: whitesmoke;
+}
+
+div.post_container > div:nth-of-type(odd) {
+    background: whitesmoke;
+}
+
+.post {
+   padding: 10px;
+}
+
+.thread {
+    margin-bottom: 20px;
+}
+
+#dashboardPage {
+    padding-left: 0; !important;
+}

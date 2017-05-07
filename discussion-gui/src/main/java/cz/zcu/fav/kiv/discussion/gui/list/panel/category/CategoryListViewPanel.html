@@ -1,0 +1,23 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <div wicket:id="categoryList" style="margin-bottom: 20px;" class="panel panel-default">
+
+        <!--vypisuje hlavicku kategorie-->
+        <div wicket:id="categoryHeader" class="panel-heading">
+            <div class="row">
+                <div class="col-md-11">
+                    <div wicket:id="categoryIcon" class="glyphicon glyphicon-minus" data-toggle="collapse" data-target="#"></div>
+                    <span wicket:id="categoryName" class="panel-title"></span>
+                </div>
+                <div class="col-md-1 text-right">
+                    <a data-toggle="modal" data-target="#topicModal">
+                        <span wicket:id="newTopic" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </a>
+                    <a wicket:id="remove"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                </div>
+            </div>
+        </div>
+
+        <!--vypisuje topicy v kategoii-->
+        <div wicket:id="topicListPanel" class="collapse in"></div>
+    </div>
+</wicket:panel>
