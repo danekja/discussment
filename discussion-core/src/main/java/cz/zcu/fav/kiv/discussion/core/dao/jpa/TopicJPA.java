@@ -1,5 +1,6 @@
-package cz.zcu.fav.kiv.discussion.core.dao;
+package cz.zcu.fav.kiv.discussion.core.dao.jpa;
 
+import cz.zcu.fav.kiv.discussion.core.dao.ITopicDao;
 import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 
@@ -9,9 +10,9 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class TopicDao extends GenericDao<TopicEntity> {
+public class TopicJPA extends GenericJPA<TopicEntity> implements ITopicDao {
 
-    public TopicDao() {
+    public TopicJPA() {
         super(TopicEntity.class);
     }
 

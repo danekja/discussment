@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.dao.TopicDao;
+import cz.zcu.fav.kiv.discussion.core.dao.ITopicDao;
+import cz.zcu.fav.kiv.discussion.core.dao.jpa.TopicJPA;
 import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class TopicService {
 
-    private static TopicDao topicDao = new TopicDao();
+    private static ITopicDao topicDao = new TopicJPA();
 
     public static TopicEntity createTopic(TopicEntity topicEntity) {
         return createTopic(topicEntity, null);

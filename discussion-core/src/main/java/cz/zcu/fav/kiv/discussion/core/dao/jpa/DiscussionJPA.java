@@ -1,5 +1,6 @@
-package cz.zcu.fav.kiv.discussion.core.dao;
+package cz.zcu.fav.kiv.discussion.core.dao.jpa;
 
+import cz.zcu.fav.kiv.discussion.core.dao.IDiscussionDao;
 import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 
@@ -9,9 +10,9 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 19.01.17.
  */
-public class DiscussionDao extends GenericDao<DiscussionEntity> {
+public class DiscussionJPA extends GenericJPA<DiscussionEntity> implements IDiscussionDao {
 
-    public DiscussionDao() {
+    public DiscussionJPA() {
         super(DiscussionEntity.class);
     }
 

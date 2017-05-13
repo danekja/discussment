@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.dao.PostDao;
+import cz.zcu.fav.kiv.discussion.core.dao.IPostDao;
+import cz.zcu.fav.kiv.discussion.core.dao.jpa.PostJPA;
 import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
 
@@ -9,7 +10,7 @@ import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
  */
 public class PostService {
 
-    private static PostDao postDao = new PostDao();
+    private static IPostDao postDao = new PostJPA();
 
     public static void removePost(PostEntity post) {
 

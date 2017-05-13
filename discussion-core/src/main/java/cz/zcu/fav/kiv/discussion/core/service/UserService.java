@@ -1,7 +1,9 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.dao.PermissionDao;
-import cz.zcu.fav.kiv.discussion.core.dao.UserDao;
+import cz.zcu.fav.kiv.discussion.core.dao.IPermissionDao;
+import cz.zcu.fav.kiv.discussion.core.dao.IUserDao;
+import cz.zcu.fav.kiv.discussion.core.dao.jpa.PermissionJPA;
+import cz.zcu.fav.kiv.discussion.core.dao.jpa.UserJPA;
 import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.PermissionEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
@@ -13,8 +15,8 @@ import java.util.List;
  */
 public class UserService {
 
-    private static UserDao userDao = new UserDao();
-    private static PermissionDao permissionDao = new PermissionDao();
+    private static IUserDao userDao = new UserJPA();
+    private static IPermissionDao permissionDao = new PermissionJPA();
 
 
     public static UserEntity addUser(UserEntity entity, PermissionEntity permissionEntity) {

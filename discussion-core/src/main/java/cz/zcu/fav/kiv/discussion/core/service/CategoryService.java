@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.dao.CategoryDao;
+import cz.zcu.fav.kiv.discussion.core.dao.ICategoryDao;
+import cz.zcu.fav.kiv.discussion.core.dao.jpa.CategoryJPA;
 import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
 
 import java.util.List;
@@ -10,27 +11,27 @@ import java.util.List;
  */
 public class CategoryService {
 
-    private static CategoryDao categoryDao = new CategoryDao();
+    private static ICategoryDao categoryJPA = new CategoryJPA();
 
     public static CategoryEntity createCategory(CategoryEntity entity) {
 
-        return categoryDao.save(entity);
+        return categoryJPA.save(entity);
 
     }
 
     public static CategoryEntity getCategoryById(long categoryId) {
 
-        return categoryDao.getById(categoryId);
+        return categoryJPA.getById(categoryId);
     }
 
     public static List<CategoryEntity> getCategories() {
 
-        return categoryDao.getCategories();
+        return categoryJPA.getCategories();
     }
 
     public static void removeCategory(CategoryEntity entity) {
 
-        categoryDao.remove(entity);
+        categoryJPA.remove(entity);
     }
 
 
