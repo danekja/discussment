@@ -1,8 +1,8 @@
 package org.danekja.discussment.ui.wicket.model;
 
+import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ThreadWicketModel implements IModel<List<Post>> {
         return discussion;
     }
 
-    public void setDiscussion(Discussion discussion) {
+    public void setDiscussion(Discussion IDiscussion) {
         this.discussion = discussion;
     }
 

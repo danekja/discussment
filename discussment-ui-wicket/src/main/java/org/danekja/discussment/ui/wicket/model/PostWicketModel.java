@@ -1,7 +1,7 @@
 package org.danekja.discussment.ui.wicket.model;
 
-import org.danekja.discussment.core.domain.Post;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.domain.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class PostWicketModel implements IModel<List<Post>> {
 
         posts.add(postsModel);
 
-        for (Post post: postsModel.getReplies()) {
+        for (Post post : postsModel.getReplies()) {
             createList(post, posts);
         }
     }

@@ -1,6 +1,9 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.service.imp.*;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,57 +14,73 @@ import static org.junit.Assert.assertNotNull;
  */
 public class CategoryServiceTest {
 
+    private ITopicService topicService;
+    private ICategoryService categoryService;
+    private IUserService userService;
+    private IDiscussionService discussionService;
+    private IPostService postService;
+
+    @Before
+    public void setUp() throws Exception {
+        topicService = new TopicService(new TopicJPA(), new CategoryJPA());
+        categoryService = new CategoryService(new CategoryJPA());
+        userService = new UserService(new UserJPA(), new PermissionJPA());
+        discussionService = new DiscussionService(new DiscussionJPA());
+        postService = new PostService(new PostJPA());
+
+    }
+
     @Test
     public void createCategory() throws Exception {
 
-        Category category = CategoryService.createCategory(new Category("category"));
+        Category category = categoryService.createCategory(new Category("category"));
 
         assertNotNull(category);
 
         //clear
-        CategoryService.removeCategory(category);
+        categoryService.removeCategory(category);
     }
 
     @Test
     public void getCategory() throws Exception {
-        Category category = CategoryService.createCategory(new Category("category"));
+        Category category = categoryService.createCategory(new Category("category"));
 
-        assertNotNull(CategoryService.getCategoryById(category.getId()));
+        assertNotNull(categoryService.getCategoryById(category.getId()));
 
         //clear
-        CategoryService.removeCategory(category);
+        categoryService.removeCategory(category);
     }
 
     @Test
     public void getCategories() throws Exception {
-        CategoryService.createCategory(new Category("category1"));
-        CategoryService.createCategory(new Category("category2"));
+        categoryService.createCategory(new Category("category1"));
+        categoryService.createCategory(new Category("category2"));
 
-        assertEquals(2, CategoryService.getCategories().size());
+        assertEquals(2, categoryService.getCategories().size());
     }
 
     @Test
     public void removeCategory() throws Exception {
 
-        User user = UserService.addUser(new User("test", "", ""), new Permission());
-        Category category = CategoryService.createCategory(new Category("category"));
+        User user = userService.addUser(new User("test", "", ""), new Permission());
+        Category category = categoryService.createCategory(new Category("category"));
 
         Topic topic = new Topic();
         topic.setName("test1");
         topic.setDescription("test des");
 
-        topic = TopicService.createTopic(topic, category);
+        topic = topicService.createTopic(topic, category);
 
         Discussion discussion = new Discussion("test");
-        discussion = DiscussionService.createDiscussion(discussion, topic);
+        discussion = discussionService.createDiscussion(discussion, topic);
 
-        Post post = PostService.sendPost(discussion, new Post(user, "text"));
-        PostService.sendReply(new Post(user, "reply text"), post);
+        Post IPost = postService.sendPost(discussion, new Post(user, "text"));
+        postService.sendReply(new Post(user, "reply text"), IPost);
 
-        CategoryService.removeCategory(category);
+        categoryService.removeCategory(category);
 
         //clear
-        UserService.removeUser(user);
+        userService.removeUser(user);
     }
 
 }

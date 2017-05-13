@@ -1,11 +1,14 @@
 package org.danekja.discussment.example.dashboard;
 
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.UserService;
-import org.danekja.discussment.example.base.BasePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.danekja.discussment.core.dao.jpa.PermissionJPA;
+import org.danekja.discussment.core.dao.jpa.UserJPA;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.core.service.imp.UserService;
+import org.danekja.discussment.example.base.BasePage;
 
 /**
  * Created by Martin Bláha on 21.01.17.
@@ -14,7 +17,9 @@ public class DashboardPage extends BasePage {
 
     public DashboardPage() {
 
-        add(new ListView<User>("usersListView", UserService.getUsers()) {
+        IUserService userService = new UserService(new UserJPA(), new PermissionJPA());
+
+        add(new ListView<User>("usersListView", userService.getUsers()) {
 
             public void populateItem(final ListItem<User> item) {
 

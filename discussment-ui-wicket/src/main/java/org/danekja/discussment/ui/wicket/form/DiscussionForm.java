@@ -1,18 +1,20 @@
 package org.danekja.discussment.ui.wicket.form;
 
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.DiscussionService;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.service.IDiscussionService;
 
 /**
  * Created by Martin Bláha on 25.01.17.
  */
 public class DiscussionForm extends Form {
+
+    private IDiscussionService discussionService;
 
     private String name;
     private boolean priv;
@@ -20,8 +22,10 @@ public class DiscussionForm extends Form {
 
     private Topic topic;
 
-    public DiscussionForm(String id, Topic topic) {
+    public DiscussionForm(String id, Topic topic, IDiscussionService discussionService) {
         super(id);
+
+        this.discussionService = discussionService;
 
         this.topic = topic;
 
@@ -40,7 +44,7 @@ public class DiscussionForm extends Form {
         discussion.setTopic(topic);
         discussion.setPass(pass);
 
-        DiscussionService.createDiscussion(discussion);
+        discussionService.createDiscussion(discussion);
 
         PageParameters pageParameters = new PageParameters();
         pageParameters.add("topicId", topic.getId());

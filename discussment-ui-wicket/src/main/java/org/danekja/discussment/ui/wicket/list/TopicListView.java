@@ -1,8 +1,5 @@
 package org.danekja.discussment.ui.wicket.list;
 
-import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.TopicService;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -10,6 +7,10 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.ITopicService;
+import org.danekja.discussment.core.service.imp.TopicService;
 
 import java.util.List;
 
@@ -18,8 +19,12 @@ import java.util.List;
  */
 public class TopicListView extends ListView<Topic> {
 
-    public TopicListView(String id, IModel<? extends List<Topic>> model) {
+    private ITopicService topicService;
+
+    public TopicListView(String id, IModel<? extends List<Topic>> model, ITopicService topicService) {
         super(id, model);
+
+        this.topicService = topicService;
     }
 
     protected void populateItem(ListItem<Topic> listItem) {
@@ -42,7 +47,7 @@ public class TopicListView extends ListView<Topic> {
         Link removeLink = new Link("remove") {
             @Override
             public void onClick() {
-                TopicService.removeTopic(topic);
+                topicService.removeTopic(topic);
             }
         };
         listItem.add(removeLink);

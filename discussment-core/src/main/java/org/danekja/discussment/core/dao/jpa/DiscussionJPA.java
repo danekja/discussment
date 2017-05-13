@@ -22,3 +22,4 @@ public class DiscussionJPA extends GenericJPA<Discussion> implements IDiscussion
         return q.getResultList();
     }
 }
+

@@ -1,9 +1,9 @@
 package org.danekja.discussment.ui.wicket.model;
 
+import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.TopicService;
-import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.service.ITopicService;
 
 import java.util.List;
 
@@ -12,21 +12,21 @@ import java.util.List;
  */
 public class TopicWicketModel implements IModel<List<Topic>> {
 
+    private ITopicService topicService;
 
     private List<Topic> topics;
 
     private Category category;
 
-    public TopicWicketModel() {
+    public TopicWicketModel(ITopicService topicService) {
 
-        this.category = null;
-
+        this(null, topicService);
     }
 
-    public TopicWicketModel(Category category) {
+    public TopicWicketModel(Category category, ITopicService topicService) {
 
         this.category = category;
-
+        this.topicService = topicService;
     }
 
     public void detach() {
@@ -35,9 +35,9 @@ public class TopicWicketModel implements IModel<List<Topic>> {
     public List<Topic> getObject() {
 
         if (category == null) {
-            return TopicService.getTopicsWithoutCategory();
+            return topicService.getTopicsWithoutCategory();
         } else {
-            return TopicService.getTopicsByCategory(category);
+            return topicService.getTopicsByCategory(category);
         }
 
     }

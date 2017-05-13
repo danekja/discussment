@@ -1,5 +1,6 @@
 package org.danekja.discussment.ui.wicket.list.panel.topic;
 
+import org.danekja.discussment.core.service.ITopicService;
 import org.danekja.discussment.ui.wicket.list.TopicListView;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -9,9 +10,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class TopicListViewPanel extends Panel {
 
-    public TopicListViewPanel(String id, TopicWicketModel topicWicketModel) {
+    public TopicListViewPanel(String id, TopicWicketModel topicWicketModel, ITopicService topicService) {
         super(id);
 
-        add(new TopicListView("topicList", topicWicketModel));
+        add(new TopicListView("topicList", topicWicketModel, topicService));
     }
 }

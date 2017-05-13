@@ -1,10 +1,15 @@
 package org.danekja.discussment.example.article;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.dao.jpa.DiscussionJPA;
+import org.danekja.discussment.core.dao.jpa.PostJPA;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.IDiscussionService;
+import org.danekja.discussment.core.service.IPostService;
+import org.danekja.discussment.core.service.imp.DiscussionService;
+import org.danekja.discussment.core.service.imp.PostService;
 import org.danekja.discussment.example.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
@@ -24,14 +29,17 @@ public class ArticlePage extends BasePage {
 	 */
     public ArticlePage(final PageParameters parameters) {
 
-        Discussion discussion = DiscussionService.getDiscussionById(DISCUSSION_ID);
+        IDiscussionService discussionService = new DiscussionService(new DiscussionJPA());
+        IPostService postService = new PostService(new PostJPA());
+
+        Discussion discussion = discussionService.getDiscussionById(DISCUSSION_ID);
 
 
-        if (discussion== null) {
-            discussion = DiscussionService.createDiscussion(new Discussion("article name"));
+        if (discussion == null) {
+            discussion = discussionService.createDiscussion(new Discussion("article name"));
         }
 
-        add(new DiscussionPanel("content", discussion));
+        add(new DiscussionPanel("content", discussion, postService));
 
 
     }

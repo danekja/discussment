@@ -1,9 +1,9 @@
 package org.danekja.discussment.ui.wicket.model;
 
+import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.service.IDiscussionService;
 
 import java.util.List;
 
@@ -12,19 +12,21 @@ import java.util.List;
  */
 public class DiscussionWicketModel implements IModel<List<Discussion>> {
 
+    private IDiscussionService discussionService;
+
     private Topic topic;
 
-    public DiscussionWicketModel(Topic topic) {
+    public DiscussionWicketModel(Topic topic, IDiscussionService discussionService) {
 
         this.topic = topic;
-
+        this.discussionService = discussionService;
     }
 
     public Topic getTopic() {
         return topic;
     }
 
-    public void setTopic(Topic topic) {
+    public void setTopic(Topic ITopic) {
         this.topic = topic;
     }
 
@@ -32,7 +34,7 @@ public class DiscussionWicketModel implements IModel<List<Discussion>> {
     }
 
     public List<Discussion> getObject() {
-        return DiscussionService.getDiscussionsByTopic(topic);
+        return discussionService.getDiscussionsByTopic(topic);
     }
 
     public void setObject(List<Discussion> object) {

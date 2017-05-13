@@ -1,8 +1,8 @@
 package org.danekja.discussment.ui.wicket.model;
 
-import org.danekja.discussment.core.domain.Category;
-import org.danekja.discussment.core.service.CategoryService;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.service.ICategoryService;
 
 import java.util.List;
 
@@ -11,11 +11,17 @@ import java.util.List;
  */
 public class CategoryWicketModel implements IModel<List<Category>> {
 
+    private ICategoryService categoryService;
+
+    public CategoryWicketModel(ICategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
     public void detach() {
     }
 
     public List<Category> getObject() {
-        return CategoryService.getCategories();
+        return categoryService.getCategories();
     }
 
     public void setObject(List<Category> object) {

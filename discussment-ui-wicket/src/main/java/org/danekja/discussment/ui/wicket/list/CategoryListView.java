@@ -1,9 +1,5 @@
 package org.danekja.discussment.ui.wicket.list;
 
-import org.danekja.discussment.core.domain.Category;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.CategoryService;
-import org.danekja.discussment.ui.wicket.form.TopicForm;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -13,6 +9,11 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.ICategoryService;
+import org.danekja.discussment.core.service.imp.CategoryService;
+import org.danekja.discussment.ui.wicket.form.TopicForm;
 
 import java.util.List;
 
@@ -21,12 +22,16 @@ import java.util.List;
  */
 public class CategoryListView extends ListView<Category> {
 
+    private ICategoryService categoryService;
+
     private TopicForm topicForm;
 
     private int generateId = 0;
 
-    public CategoryListView(String id, IModel<? extends List<Category>> model, TopicForm topicForm) {
+    public CategoryListView(String id, IModel<? extends List<Category>> model, TopicForm topicForm, ICategoryService categoryService) {
         super(id, model);
+
+        this.categoryService = categoryService;
 
         this.topicForm = topicForm;
     }
@@ -54,7 +59,7 @@ public class CategoryListView extends ListView<Category> {
         Link removeCategory = new Link("remove") {
             @Override
             public void onClick() {
-                CategoryService.removeCategory(category);
+                categoryService.removeCategory(category);
             }
         };
         categoryHeader.add(removeCategory);

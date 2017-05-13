@@ -1,18 +1,22 @@
-package org.danekja.discussment.core.service;
+package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.dao.IPostDao;
-import org.danekja.discussment.core.dao.jpa.PostJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.service.IPostService;
 
 /**
  * Created by Martin Bláha on 07.02.17.
  */
-public class PostService {
+public class PostService implements IPostService {
 
-    private static IPostDao postDao = new PostJPA();
+    private IPostDao postDao;
 
-    public static void removePost(Post post) {
+    public PostService(IPostDao postDao) {
+        this.postDao = postDao;
+    }
+
+    public void removePost(Post post) {
 
         if (post.getPost() != null) {
             post.getPost().getReplies().remove(post);
@@ -22,29 +26,29 @@ public class PostService {
         postDao.remove(post);
     }
 
-    public static Post getPostById(long postId) {
+    public Post getPostById(long postId) {
         return postDao.getById(postId);
     }
 
-    public static Post sendReply(Post reply, Post post) {
+    public Post sendReply(Post reply, Post IPost) {
 
-        int level = post.getLevel();
+        int level = IPost.getLevel();
         reply.setLevel(++level);
 
-        post.addReply(reply);
+        IPost.addReply(reply);
 
         return postDao.save(reply);
 
     }
 
-    public static Post sendPost(Discussion discussion, Post post) {
+    public Post sendPost(Discussion IDiscussion, Post post) {
 
-        discussion.addPost(post);
+        IDiscussion.addPost(post);
 
         return postDao.save(post);
     }
 
-    public static Post disablePost(Post post) {
+    public Post disablePost(Post post) {
 
         post.setDisabled(true);
 
@@ -52,7 +56,7 @@ public class PostService {
 
     }
 
-    public static Post enablePost(Post post) {
+    public Post enablePost(Post post) {
 
         post.setDisabled(false);
 

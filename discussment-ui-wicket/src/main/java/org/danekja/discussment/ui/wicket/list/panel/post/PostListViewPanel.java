@@ -1,5 +1,6 @@
 package org.danekja.discussment.ui.wicket.list.panel.post;
 
+import org.danekja.discussment.core.service.IPostService;
 import org.danekja.discussment.ui.wicket.form.panel.reply.ReplyModalFormPanel;
 import org.danekja.discussment.ui.wicket.list.PostListView;
 import org.danekja.discussment.ui.wicket.model.PostWicketModel;
@@ -12,12 +13,12 @@ public class PostListViewPanel extends Panel {
 
     private PostWicketModel postWicketModel;
 
-    public PostListViewPanel(String id, PostWicketModel postWicketModel, ReplyModalFormPanel replyModalFormPanel) {
+    public PostListViewPanel(String id, PostWicketModel postWicketModel, ReplyModalFormPanel replyModalFormPanel, IPostService postService) {
         super(id);
 
         this.postWicketModel = postWicketModel;
 
-        add(new PostListView("postListView", postWicketModel, replyModalFormPanel.getReplyForm()));
+        add(new PostListView("postListView", postWicketModel, replyModalFormPanel.getReplyForm(), postService));
     }
 
 }

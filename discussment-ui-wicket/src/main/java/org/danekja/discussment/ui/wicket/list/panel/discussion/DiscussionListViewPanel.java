@@ -1,15 +1,17 @@
 package org.danekja.discussment.ui.wicket.list.panel.discussion;
 
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.ui.wicket.form.panel.discussion.DiscussionModalFormPanel;
-import org.danekja.discussment.ui.wicket.form.panel.password.PasswordModalFormPanel;
-import org.danekja.discussment.ui.wicket.list.DiscussionListView;
-import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IDiscussionService;
+import org.danekja.discussment.core.service.ITopicService;
+import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.ui.wicket.form.panel.discussion.DiscussionModalFormPanel;
+import org.danekja.discussment.ui.wicket.form.panel.password.PasswordModalFormPanel;
+import org.danekja.discussment.ui.wicket.list.DiscussionListView;
+import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 
 
 /**
@@ -31,11 +33,11 @@ public class DiscussionListViewPanel extends Panel {
         }
     }
 
-    public DiscussionListViewPanel(String id, DiscussionWicketModel discussion) {
+    public DiscussionListViewPanel(String id, DiscussionWicketModel discussion, ITopicService topicService, IDiscussionService discussionService, IUserService userService) {
         super(id);
 
 
-        add(new Label("topicName", TopicService.getTopicById(discussion.getTopic().getId()).getName()));
+        add(new Label("topicName", topicService.getTopicById(discussion.getTopic().getId()).getName()));
 
         createDiscussion = new AjaxLink("createDiscussion") {
             @Override
@@ -43,12 +45,12 @@ public class DiscussionListViewPanel extends Panel {
         };
         add(createDiscussion);
 
-        add(new DiscussionModalFormPanel("discussionForm", discussion.getTopic()));
+        add(new DiscussionModalFormPanel("discussionForm", discussion.getTopic(), discussionService));
 
-        PasswordModalFormPanel passwordModalFormPanel = new PasswordModalFormPanel("passwordForm");
+        PasswordModalFormPanel passwordModalFormPanel = new PasswordModalFormPanel("passwordForm", userService, discussionService);
         add(passwordModalFormPanel);
 
-        add(new DiscussionListView("discussionList", discussion, passwordModalFormPanel.getPasswordForm()));
+        add(new DiscussionListView("discussionList", discussion, passwordModalFormPanel.getPasswordForm(), discussionService));
 
     }
 }

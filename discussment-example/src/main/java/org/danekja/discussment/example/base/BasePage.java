@@ -1,17 +1,20 @@
 package org.danekja.discussment.example.base;
 
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.example.LoginForm;
-import org.danekja.discussment.example.RegistrationForm;
-import org.danekja.discussment.example.article.ArticlePage;
-import org.danekja.discussment.example.dashboard.DashboardPage;
-import org.danekja.discussment.example.discussion.DiscussionPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
+import org.danekja.discussment.core.dao.jpa.PermissionJPA;
+import org.danekja.discussment.core.dao.jpa.UserJPA;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.imp.UserService;
+import org.danekja.discussment.example.LoginForm;
+import org.danekja.discussment.example.RegistrationForm;
+import org.danekja.discussment.example.article.ArticlePage;
+import org.danekja.discussment.example.dashboard.DashboardPage;
+import org.danekja.discussment.example.discussion.DiscussionPage;
 
 
 /**
@@ -76,8 +79,8 @@ public abstract class BasePage extends WebPage {
         add(titleLabel);
 
 
-        add(new LoginForm("loginForm"));
-        add(new RegistrationForm("registrationForm"));
+        add(new LoginForm("loginForm", new UserService(new UserJPA(), new PermissionJPA())));
+        add(new RegistrationForm("registrationForm", new UserService(new UserJPA(), new PermissionJPA())));
     }
 
     private void setMenu() {

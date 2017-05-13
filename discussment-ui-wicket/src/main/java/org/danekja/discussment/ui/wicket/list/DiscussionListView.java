@@ -1,10 +1,5 @@
 package org.danekja.discussment.ui.wicket.list;
 
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.ui.wicket.form.PasswordForm;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -16,6 +11,11 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IDiscussionService;
+import org.danekja.discussment.ui.wicket.form.PasswordForm;
 
 import java.util.List;
 
@@ -24,10 +24,14 @@ import java.util.List;
  */
 public class DiscussionListView extends ListView<Discussion> {
 
+    private IDiscussionService discussionService;
+
     private PasswordForm passwordForm;
 
-    public DiscussionListView(String id, IModel<? extends List<Discussion>> model, PasswordForm passwordForm) {
+    public DiscussionListView(String id, IModel<? extends List<Discussion>> model, PasswordForm passwordForm, IDiscussionService discussionService) {
         super(id, model);
+
+        this.discussionService = discussionService;
 
         this.passwordForm = passwordForm;
     }
@@ -78,7 +82,7 @@ public class DiscussionListView extends ListView<Discussion> {
         Link remove = new Link("remove") {
             @Override
             public void onClick() {
-                DiscussionService.removeDiscussion(discussion);
+                discussionService.removeDiscussion(discussion);
             }
         };
         listItem.add(remove);

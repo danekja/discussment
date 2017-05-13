@@ -1,6 +1,8 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.service.imp.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,16 +15,28 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TopicServiceTest {
 
+    private ITopicService topicService;
+    private ICategoryService categoryService;
+    private IUserService userService;
+    private IDiscussionService discussionService;
+    private IPostService postService;
+
     private Category category;
 
     @Before
     public void setUp() throws Exception {
-        category = CategoryService.createCategory(new Category("text"));
+        topicService = new TopicService(new TopicJPA(), new CategoryJPA());
+        categoryService = new CategoryService(new CategoryJPA());
+        userService = new UserService(new UserJPA(), new PermissionJPA());
+        discussionService = new DiscussionService(new DiscussionJPA());
+        postService = new PostService(new PostJPA());
+
+        category = categoryService.createCategory(new Category("text"));
     }
 
     @After
     public void tearDown() throws Exception {
-        CategoryService.removeCategory(category);
+        categoryService.removeCategory(category);
     }
 
     @Test
@@ -31,7 +45,7 @@ public class TopicServiceTest {
         topic.setName("test");
         topic.setDescription("test det");
 
-        topic = TopicService.createTopic(topic);
+        topic = topicService.createTopic(topic);
 
         assertNotNull(topic);
     }
@@ -42,7 +56,7 @@ public class TopicServiceTest {
         topic.setName("test");
         topic.setDescription("test det");
 
-        topic = TopicService.createTopic(topic, category);
+        topic = topicService.createTopic(topic, category);
 
         assertNotNull(topic);
     }
@@ -52,14 +66,14 @@ public class TopicServiceTest {
         Topic topic1 = new Topic();
         topic1.setName("test1");
         topic1.setDescription("test det");
-        TopicService.createTopic(topic1, category);
+        topicService.createTopic(topic1, category);
 
         Topic topic2 = new Topic();
         topic2.setName("test2");
         topic2.setDescription("test det");
-        TopicService.createTopic(topic2, category);
+        topicService.createTopic(topic2, category);
 
-        assertEquals(2, TopicService.getTopicsByCategory(category).size());
+        assertEquals(2, topicService.getTopicsByCategory(category).size());
     }
 
     @Test
@@ -67,46 +81,46 @@ public class TopicServiceTest {
         Topic topic1 = new Topic();
         topic1.setName("test1");
         topic1.setDescription("test det");
-        TopicService.createTopic(topic1);
+        topicService.createTopic(topic1);
 
         Topic topic2 = new Topic();
         topic2.setName("test2");
         topic2.setDescription("test det");
-        TopicService.createTopic(topic2, category);
+        topicService.createTopic(topic2, category);
 
         Topic topic3 = new Topic();
         topic3.setName("test3");
         topic3.setDescription("test det");
-        TopicService.createTopic(topic3, category);
+        topicService.createTopic(topic3, category);
 
-        assertEquals(1, TopicService.getTopicsWithoutCategory().size());
+        assertEquals(1, topicService.getTopicsWithoutCategory().size());
     }
 
     @Test
     public void removeTopic() throws Exception {
-        User user = UserService.addUser(new User("test", "", ""), new Permission());
+        User user = userService.addUser(new User("test", "", ""), new Permission());
 
         Topic topic = new Topic();
         topic.setName("test");
         topic.setDescription("test det");
-        topic = TopicService.createTopic(topic, category);
+        topic = topicService.createTopic(topic, category);
 
-        Discussion discussion = DiscussionService.createDiscussion(new Discussion("test"), topic);
+        Discussion IDiscussion = discussionService.createDiscussion(new Discussion("test"), topic);
 
         Post post = new Post();
         post.setText("text");
         post.setUser(user);
-        post = PostService.sendPost(discussion, post);
+        post = postService.sendPost(IDiscussion, post);
 
         Post reply = new Post();
         reply.setText("reply1Text");
         reply.setUser(user);
-        PostService.sendReply(reply, post);
+        postService.sendReply(reply, post);
 
-        TopicService.removeTopic(topic);
+        topicService.removeTopic(topic);
 
         //clear
-        UserService.removeUser(user);
+        userService.removeUser(user);
     }
 
 }

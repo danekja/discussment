@@ -1,13 +1,13 @@
 package org.danekja.discussment.example;
 
-import org.danekja.discussment.core.domain.Permission;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.UserService;
-import org.danekja.discussment.example.dashboard.DashboardPage;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.example.dashboard.DashboardPage;
 
 import java.util.HashMap;
 
@@ -15,6 +15,8 @@ import java.util.HashMap;
  * Created by Martin Bláha on 21.01.17.
  */
 public class RegistrationForm extends Form {
+
+    private IUserService userService;
 
     private String usernameRegistration;
     private boolean createCategoryRegistration;
@@ -32,8 +34,10 @@ public class RegistrationForm extends Form {
 
     private boolean readPrivateDiscussionRegistration;
 
-    public RegistrationForm(String id) {
+    public RegistrationForm(String id, IUserService userService) {
         super(id);
+
+        this.userService = userService;
 
         setDefaultModel(new CompoundPropertyModel(this));
 
@@ -82,7 +86,7 @@ public class RegistrationForm extends Form {
         user.setName("");
         user.setLastname("");
 
-        getSession().setAttribute("user", UserService.addUser(user, permission));
+        getSession().setAttribute("user", userService.addUser(user, permission));
 
         setResponsePage(DashboardPage.class);
     }

@@ -1,12 +1,13 @@
 package org.danekja.discussment.ui.wicket.panel.discussion;
 
+import org.apache.wicket.markup.html.panel.Panel;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IPostService;
 import org.danekja.discussment.ui.wicket.form.panel.post.PostFormPanel;
 import org.danekja.discussment.ui.wicket.form.panel.reply.ReplyModalFormPanel;
 import org.danekja.discussment.ui.wicket.list.panel.thread.ThreadListViewPanel;
 import org.danekja.discussment.ui.wicket.model.ThreadWicketModel;
-import org.apache.wicket.markup.html.panel.Panel;
 
 
 /**
@@ -29,16 +30,16 @@ public class DiscussionPanel extends Panel {
         }
     }
 
-    public DiscussionPanel(String id, Discussion discussion) {
+    public DiscussionPanel(String id, Discussion discussion, IPostService postService) {
         super(id);
 
-        this.postFormPanel = new PostFormPanel("postForm", discussion);
+        this.postFormPanel = new PostFormPanel("postForm", discussion, postService);
         add(postFormPanel);
 
-        ReplyModalFormPanel replyModalFormPanel = new ReplyModalFormPanel("replyForm");
+        ReplyModalFormPanel replyModalFormPanel = new ReplyModalFormPanel("replyForm", postService);
         add(replyModalFormPanel);
 
-        add(new ThreadListViewPanel("threadPanel", new ThreadWicketModel(discussion), replyModalFormPanel));
+        add(new ThreadListViewPanel("threadPanel", new ThreadWicketModel(discussion), replyModalFormPanel, postService));
     }
 
 

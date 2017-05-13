@@ -1,5 +1,6 @@
 package org.danekja.discussment.ui.wicket.form.panel.reply;
 
+import org.danekja.discussment.core.service.IPostService;
 import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -11,10 +12,10 @@ public class ReplyModalFormPanel extends Panel {
 
     private ReplyForm replyForm;
 
-    public ReplyModalFormPanel(String id) {
+    public ReplyModalFormPanel(String id, IPostService postService) {
         super(id);
 
-        replyForm = new ReplyForm("replyForm");
+        replyForm = new ReplyForm("replyForm", postService);
         add(replyForm);
 
     }

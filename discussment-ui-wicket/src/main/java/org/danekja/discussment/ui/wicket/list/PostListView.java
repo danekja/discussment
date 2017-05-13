@@ -1,9 +1,5 @@
 package org.danekja.discussment.ui.wicket.list;
 
-import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -14,6 +10,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IPostService;
+import org.danekja.discussment.ui.wicket.form.ReplyForm;
 
 import java.util.List;
 
@@ -22,10 +22,14 @@ import java.util.List;
  */
 public class PostListView extends ListView<Post> {
 
+    private IPostService postService;
+
     private ReplyForm replyForm;
 
-    public PostListView(String id, IModel<? extends List<Post>> model, ReplyForm replyForm) {
+    public PostListView(String id, IModel<? extends List<Post>> model, ReplyForm replyForm, IPostService postService) {
         super(id, model);
+
+        this.postService = postService;
 
         this.replyForm = replyForm;
     }
@@ -61,7 +65,7 @@ public class PostListView extends ListView<Post> {
         Link removeLink = new Link("remove") {
             @Override
             public void onClick() {
-                PostService.removePost(post);
+                postService.removePost(post);
             }
         };
         listItem.add(removeLink);
@@ -71,10 +75,9 @@ public class PostListView extends ListView<Post> {
             @Override
             public void onClick() {
                 if (post.isDisabled()) {
-                    PostService.enablePost(post);
+                    postService.enablePost(post);
                 } else {
-                    PostService.disablePost(post);
-
+                    postService.disablePost(post);
                 }
             }
         };

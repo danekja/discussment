@@ -1,6 +1,9 @@
 package org.danekja.discussment.example.discussion;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.dao.jpa.*;
+import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.core.service.imp.*;
 import org.danekja.discussment.example.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
 
@@ -20,7 +23,13 @@ public class DiscussionPage extends BasePage {
 	 */
     public DiscussionPage(final PageParameters parameters) {
 
-        add(new ForumPanel("content", parameters));
+        IDiscussionService discussionService = new DiscussionService(new DiscussionJPA());
+        ICategoryService categoryService = new CategoryService(new CategoryJPA());
+        ITopicService topicService = new TopicService(new TopicJPA(), new CategoryJPA());
+        IPostService postService = new PostService(new PostJPA());
+        IUserService userService = new UserService(new UserJPA(), new PermissionJPA());
+
+        add(new ForumPanel("content", parameters, discussionService, topicService, categoryService, postService, userService));
 
     }
 

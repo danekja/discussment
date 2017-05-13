@@ -1,17 +1,16 @@
 package org.danekja.discussment.ui.wicket.panel.forum;
 
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.TopicService;
+import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.ui.wicket.list.panel.content.ContentListViewPanel;
 import org.danekja.discussment.ui.wicket.list.panel.discussion.DiscussionListViewPanel;
 import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
@@ -19,7 +18,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class ForumPanel extends Panel {
 
-    public ForumPanel(String id, PageParameters parameters) {
+    public ForumPanel(String id, PageParameters parameters, IDiscussionService discussionService, ITopicService topicService, ICategoryService categoryService, IPostService postService, IUserService userService) {
 
         super(id);
 
@@ -34,15 +33,15 @@ public class ForumPanel extends Panel {
         }
 
         if (topicId == -1 && discussionId == -1) {
-            add(new ContentListViewPanel("content", new CategoryWicketModel(), new TopicWicketModel()));
+            add(new ContentListViewPanel("content", new CategoryWicketModel(categoryService), new TopicWicketModel(topicService), categoryService, topicService));
         } else if (topicId != -1) {
-            add(new DiscussionListViewPanel("content", new DiscussionWicketModel(TopicService.getTopicById(topicId))));
+            add(new DiscussionListViewPanel("content", new DiscussionWicketModel(topicService.getTopicById(topicId), discussionService), topicService, discussionService, userService));
         } else {
             User user = (User) getSession().getAttribute("user");
-            Discussion discussion = DiscussionService.getDiscussionById(discussionId);
+            Discussion discussion = discussionService.getDiscussionById(discussionId);
 
 
-            add(new DiscussionPanel("content", discussion));
+            add(new DiscussionPanel("content", discussion, postService));
 
             /*if (discussion.getPass() == null || user != null && user.isAdmin() || discussion.getAccessList().contains(user)) {
                 //add(new DiscussionPanel("content", discussionId));

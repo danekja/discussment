@@ -1,17 +1,19 @@
 package org.danekja.discussment.ui.wicket.form;
 
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.PostService;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.IPostService;
 
 /**
  * Created by Martin Bláha on 21.01.17.
  */
 public class PostForm extends Form {
+
+    private IPostService postService;
 
     private String text;
 
@@ -19,8 +21,10 @@ public class PostForm extends Form {
 
     private TextArea<String> ta;
 
-    public PostForm(String id, Discussion discussion) {
+    public PostForm(String id, Discussion discussion, IPostService postService) {
         super(id);
+
+        this.postService = postService;
 
         this.discussion = discussion;
 
@@ -38,7 +42,7 @@ public class PostForm extends Form {
         post.setText(text);
         post.setUser((User) getSession().getAttribute("user"));
 
-        PostService.sendPost(discussion, post);
+        postService.sendPost(discussion, post);
 
         text = "";
 
