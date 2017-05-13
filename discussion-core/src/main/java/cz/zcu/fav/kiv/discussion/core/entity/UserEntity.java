@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static cz.zcu.fav.kiv.discussion.core.entity.UserEntity.GET_USERS;
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM UserEntity u WHERE u.username = :username"),
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM UserEntity u")
 })
-public class UserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity implements Serializable {
 
     public static final String GET_BY_USERNAME = "User.getByUsername";
     public static final String GET_USERS = "User.getUsers";

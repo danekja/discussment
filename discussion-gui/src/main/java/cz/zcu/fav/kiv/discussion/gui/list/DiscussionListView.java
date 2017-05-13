@@ -1,8 +1,8 @@
 package cz.zcu.fav.kiv.discussion.gui.list;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
-import cz.zcu.fav.kiv.discussion.core.model.PostModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
 import cz.zcu.fav.kiv.discussion.gui.form.PasswordForm;
 import org.apache.wicket.AttributeModifier;
@@ -22,26 +22,26 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 03.02.17.
  */
-public class DiscussionListView extends ListView<DiscussionModel> {
+public class DiscussionListView extends ListView<DiscussionEntity> {
 
     private PasswordForm passwordForm;
 
-    public DiscussionListView(String id, IModel<? extends List<DiscussionModel>> model, PasswordForm passwordForm) {
+    public DiscussionListView(String id, IModel<? extends List<DiscussionEntity>> model, PasswordForm passwordForm) {
         super(id, model);
 
         this.passwordForm = passwordForm;
     }
 
-    protected void populateItem(ListItem<DiscussionModel> listItem) {
-        final DiscussionModel discussion = listItem.getModelObject();
+    protected void populateItem(ListItem<DiscussionEntity> listItem) {
+        final DiscussionEntity discussion = listItem.getModelObject();
 
         final boolean access;
 
         WebMarkupContainer div = new WebMarkupContainer("passDiv");
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
-        if (discussion.getPass() == null || user != null && user.getPermission().isReadPrivateDiscussion() || discussion.getAccessList().contains(user)) {
+        if (discussion.getPass() == null || user != null && user.getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(user)) {
             div.add(new AttributeModifier("href", "#"));
             div.add(new AttributeModifier("data-target", "#"));
             access = true;
@@ -69,7 +69,7 @@ public class DiscussionListView extends ListView<DiscussionModel> {
 
         listItem.add(new Label("numberOfPosts", discussion.getNumberOfPosts()));
 
-        PostModel lastPost = discussion.getLastPost();
+        PostEntity lastPost = discussion.getLastPost();
 
         listItem.add(new Label("lastUsername", lastPost == null ? "" : lastPost.getUser().getUsername()));
         listItem.add(new Label("lastCreated", lastPost == null ? "" : lastPost.getCreatedFormat()));
@@ -78,12 +78,12 @@ public class DiscussionListView extends ListView<DiscussionModel> {
         Link remove = new Link("remove") {
             @Override
             public void onClick() {
-                DiscussionService.removeDiscussionById(discussion.getId());
+                DiscussionService.removeDiscussion(discussion);
             }
         };
         listItem.add(remove);
 
-        if (user != null && user.getPermission().isRemoveDiscussion()) {
+        if (user != null && user.getPermissions().isRemoveDiscussion()) {
             remove.setVisible(true);
         } else {
             remove.setVisible(false);

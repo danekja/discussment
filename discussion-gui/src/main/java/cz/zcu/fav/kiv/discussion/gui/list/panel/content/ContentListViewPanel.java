@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.gui.list.panel.content;
 
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.category.CategoryModalFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.topic.TopicModalFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.list.panel.category.CategoryListViewPanel;
@@ -24,15 +24,15 @@ public class ContentListViewPanel extends Panel {
     protected void onBeforeRender() {
         super.onBeforeRender();
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
-        if (user != null && user.getPermission().isCreateCategory()) {
+        if (user != null && user.getPermissions().isCreateCategory()) {
             createCategory.setVisible(true);
         } else {
             createCategory.setVisible(false);
         }
 
-        if (user != null && user.getPermission().isCreateTopic()) {
+        if (user != null && user.getPermissions().isCreateTopic()) {
             createTopic.setVisible(true);
         } else {
             createTopic.setVisible(false);

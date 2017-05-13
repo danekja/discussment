@@ -15,7 +15,7 @@ public class UserDao extends GenericDao<UserEntity> {
         super(UserEntity.class);
     }
 
-    public UserEntity getByUsername(String username) {
+    public UserEntity getUserByUsername(String username) {
         TypedQuery<UserEntity> q = em.createNamedQuery(UserEntity.GET_BY_USERNAME, UserEntity.class);
         q.setParameter("username", username);
         try {

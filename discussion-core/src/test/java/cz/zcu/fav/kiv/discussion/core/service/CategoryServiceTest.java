@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.model.*;
+import cz.zcu.fav.kiv.discussion.core.entity.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,47 +13,55 @@ public class CategoryServiceTest {
 
     @Test
     public void createCategory() throws Exception {
-        CategoryModel category = CategoryService.createCategory("category");
+
+        CategoryEntity category = CategoryService.createCategory(new CategoryEntity("category"));
 
         assertNotNull(category);
 
         //clear
-        CategoryService.removeCategoryById(category.getId());
+        CategoryService.removeCategory(category);
     }
 
     @Test
-    public void getCategoryById() throws Exception {
-        CategoryModel category = CategoryService.createCategory("category");
+    public void getCategory() throws Exception {
+        CategoryEntity category = CategoryService.createCategory(new CategoryEntity("category"));
 
         assertNotNull(CategoryService.getCategoryById(category.getId()));
 
         //clear
-        CategoryService.removeCategoryById(category.getId());
+        CategoryService.removeCategory(category);
     }
 
     @Test
     public void getCategories() throws Exception {
-        CategoryService.createCategory("category1");
-        CategoryService.createCategory("category2");
+        CategoryService.createCategory(new CategoryEntity("category1"));
+        CategoryService.createCategory(new CategoryEntity("category2"));
 
         assertEquals(2, CategoryService.getCategories().size());
     }
 
     @Test
-    public void removeCategoryById() throws Exception {
-        UserModel user = UserService.addUser("test", "", "");
+    public void removeCategory() throws Exception {
 
-        CategoryModel category = CategoryService.createCategory("category");
+        UserEntity user = UserService.addUser(new UserEntity("test", "", ""), new PermissionEntity());
+        CategoryEntity category = CategoryService.createCategory(new CategoryEntity("category"));
 
-        TopicModel topic = TopicService.createTopic("test1", "test des", category.getId());
-        DiscussionModel discussion = DiscussionService.createDiscussion("test", topic.getId());
-        PostModel post = PostService.sendPost(discussion.getId(), user.getId(), "text");
-        PostService.sendReply(user.getId(), "reply text", post.getId());
+        TopicEntity topic = new TopicEntity();
+        topic.setName("test1");
+        topic.setDescription("test des");
 
-        CategoryService.removeCategoryById(category.getId());
+        topic = TopicService.createTopic(topic, category);
+
+        DiscussionEntity discussion = new DiscussionEntity("test");
+        discussion = DiscussionService.createDiscussion(discussion, topic);
+
+        PostEntity post = PostService.sendPost(discussion, new PostEntity(user, "text"));
+        PostService.sendReply(new PostEntity(user, "reply text"), post);
+
+        CategoryService.removeCategory(category);
 
         //clear
-        UserService.removeUserById(user.getId());
+        UserService.removeUser(user);
     }
 
 }

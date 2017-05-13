@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.example;
 
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.UserService;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -24,7 +24,7 @@ public class LoginForm extends Form {
     @Override
     protected void onSubmit() {
 
-        UserModel user = UserService.getUserByUsername(username);
+        UserEntity user = UserService.getUserByUsername(username);
 
         if (user != null) {
             getSession().setAttribute("user", user);

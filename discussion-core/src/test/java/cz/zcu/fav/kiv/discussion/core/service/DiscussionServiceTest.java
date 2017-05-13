@@ -1,9 +1,6 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
-import cz.zcu.fav.kiv.discussion.core.model.PostModel;
-import cz.zcu.fav.kiv.discussion.core.model.TopicModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,73 +14,87 @@ import static org.junit.Assert.assertNotNull;
 public class DiscussionServiceTest {
 
 
-    private TopicModel topic;
+    private TopicEntity topic;
 
     @Before
     public void setUp() throws Exception {
-        topic = TopicService.createTopic("testTopic", "testDes");
+        topic = new TopicEntity();
+        topic.setName("testTopic");
+        topic.setDescription("testDes");
+
+        topic = TopicService.createTopic(topic);
     }
 
     @After
     public void tearDown() throws Exception {
-        TopicService.removeTopicById(topic.getId());
+        TopicService.removeTopic(topic);
     }
 
     @Test
     public void createDiscussion() throws Exception {
-        DiscussionModel discussion = DiscussionService.createDiscussion("test");
+        DiscussionEntity discussion = DiscussionService.createDiscussion(new DiscussionEntity("test"));
 
         assertNotNull(discussion);
 
         //clear
-        DiscussionService.removeDiscussionById(discussion.getId());
+        DiscussionService.removeDiscussion(discussion);
     }
 
     @Test
     public void createDiscussionWithTopic() throws Exception {
-        DiscussionModel discussion = DiscussionService.createDiscussion("test", topic.getId());
+        DiscussionEntity discussion = DiscussionService.createDiscussion(new DiscussionEntity("test"), topic);
 
         assertNotNull(discussion);
 
         //clear
-        DiscussionService.removeDiscussionById(discussion.getId());
+        DiscussionService.removeDiscussion(discussion);
     }
 
     @Test
-    public void getDiscussionsByTopicId() throws Exception {
-        DiscussionModel discussion1 = DiscussionService.createDiscussion("test1", topic.getId());
-        DiscussionModel discussion2 = DiscussionService.createDiscussion("test2", topic.getId());
+    public void getDiscussionsByTopic() throws Exception {
+        DiscussionEntity discussion1 = DiscussionService.createDiscussion(new DiscussionEntity("test1"), topic);
+        DiscussionEntity discussion2 = DiscussionService.createDiscussion(new DiscussionEntity("test"), topic);
 
-        assertEquals(2, DiscussionService.getDiscussionsByTopicId(topic.getId()).size());
+        assertEquals(2, DiscussionService.getDiscussionsByTopic(topic).size());
 
         //clear
-        DiscussionService.removeDiscussionById(discussion1.getId());
-        DiscussionService.removeDiscussionById(discussion2.getId());
+        DiscussionService.removeDiscussion(discussion1);
+        DiscussionService.removeDiscussion(discussion2);
     }
 
     @Test
     public void getDiscussionById() throws Exception {
-        DiscussionModel discussion = DiscussionService.createDiscussion("test", topic.getId());
+        DiscussionEntity discussion = DiscussionService.createDiscussion(new DiscussionEntity("test"), topic);
 
 
         assertNotNull(DiscussionService.getDiscussionById(discussion.getId()));
 
         //clear
-        DiscussionService.removeDiscussionById(discussion.getId());
+        DiscussionService.removeDiscussion(discussion);
     }
 
     @Test
-    public void removeDiscussionById() throws Exception {
-        UserModel user = UserService.addUser("test", "", "");
+    public void removeDiscussion() throws Exception {
+        UserEntity user = UserService.addUser(new UserEntity("test", "", ""), new PermissionEntity());
 
-        DiscussionModel discussion = DiscussionService.createDiscussion("test", topic.getId());
-        PostModel post = PostService.sendPost(discussion.getId(), user.getId(), "text");
-        PostService.sendReply(user.getId(), "reply text", post.getId());
+        DiscussionEntity discussion = DiscussionService.createDiscussion(new DiscussionEntity("test"), topic);
 
-        DiscussionService.removeDiscussionById(discussion.getId());
+        PostEntity post = new PostEntity();
+        post.setText("text");
+        post.setUser(user);
+
+        post = PostService.sendPost(discussion, post);
+
+        PostEntity reply = new PostEntity();
+        post.setText("reply test");
+        post.setUser(user);
+
+        PostService.sendReply(reply, post);
+
+        DiscussionService.removeDiscussion(discussion);
 
         //clear
-        UserService.removeUserById(user.getId());
+        UserService.removeUser(user);
     }
 
 }

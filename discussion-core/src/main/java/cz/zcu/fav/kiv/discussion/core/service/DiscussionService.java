@@ -1,13 +1,9 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
 import cz.zcu.fav.kiv.discussion.core.dao.DiscussionDao;
-import cz.zcu.fav.kiv.discussion.core.dao.TopicDao;
 import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
-import cz.zcu.fav.kiv.discussion.core.utils.MapUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,71 +12,32 @@ import java.util.List;
 public class DiscussionService {
 
     private static DiscussionDao discussionDao = new DiscussionDao();
-    private static TopicDao topicDao = new TopicDao();
 
-    public static DiscussionModel createDiscussion(String discussionName) {
-        DiscussionEntity discussionEntity = new DiscussionEntity(discussionName);
+    public static DiscussionEntity createDiscussion(DiscussionEntity discussionEntity) {
 
-
-        DiscussionEntity entity = discussionDao.save(discussionEntity);
-
-        return MapUtil.mapDiscussionEntityModal(entity);
+        return discussionDao.save(discussionEntity);
     }
 
-    public static DiscussionModel createDiscussion(String discussionName, long topicId) {
-
-        TopicEntity topic = topicDao.getById(topicId);
-
-        DiscussionEntity discussionEntity = new DiscussionEntity(discussionName);
+    public static DiscussionEntity createDiscussion(DiscussionEntity discussionEntity, TopicEntity topic) {
 
         topic.getDiscussions().add(discussionEntity);
         discussionEntity.setTopic(topic);
 
-        discussionEntity = discussionDao.save(discussionEntity);
-
-        return MapUtil.mapDiscussionEntityModal(discussionEntity);
+        return discussionDao.save(discussionEntity);
     }
 
-    public static DiscussionModel createDiscussion(String discussionName, long topicId, String pass) {
+    public static List<DiscussionEntity> getDiscussionsByTopic(TopicEntity topicEntity) {
 
-        TopicEntity topic = topicDao.getById(topicId);
-
-        DiscussionEntity discussionEntity = new DiscussionEntity(discussionName);
-
-        topic.getDiscussions().add(discussionEntity);
-        discussionEntity.setTopic(topic);
-        discussionEntity.setPass(pass);
-
-
-        discussionEntity = discussionDao.save(discussionEntity);
-
-        return MapUtil.mapDiscussionEntityModal(discussionEntity);
+        return discussionDao.getDiscussionsByTopic(topicEntity);
     }
 
-    public static List<DiscussionModel> getDiscussionsByTopicId(long topicId) {
-        List<DiscussionModel> discussionModels = new ArrayList<DiscussionModel>();
+    public static DiscussionEntity getDiscussionById(long discussionId) {
 
-        for (DiscussionEntity discussionEntity : discussionDao.getDiscussionsByTopicId(topicId)) {
-            DiscussionModel model = MapUtil.mapDiscussionEntityModal(discussionEntity);
-            discussionModels.add(model);
-        }
-
-        return discussionModels;
+        return discussionDao.getById(discussionId);
     }
 
-    public static DiscussionModel getDiscussionById(long discussionId) {
-        DiscussionEntity entity = discussionDao.getById(discussionId);
+    public static void removeDiscussion(DiscussionEntity discussionEntity) {
 
-        if (entity == null) {
-            return null;
-        }
-
-        return MapUtil.mapDiscussionEntityModal(entity);
-    }
-
-    public static void removeDiscussionById(long discussionId) {
-
-        DiscussionEntity discussionEntity = discussionDao.getById(discussionId);
         if (discussionEntity.getTopic() != null) {
             discussionEntity.getTopic().getDiscussions().remove(discussionEntity);
         }

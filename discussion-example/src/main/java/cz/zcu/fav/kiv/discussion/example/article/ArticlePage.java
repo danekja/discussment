@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.example.article;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
 import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
 import cz.zcu.fav.kiv.discussion.example.base.BasePage;
 import cz.zcu.fav.kiv.discussion.gui.panel.discussion.DiscussionPanel;
@@ -24,14 +24,14 @@ public class ArticlePage extends BasePage {
 	 */
     public ArticlePage(final PageParameters parameters) {
 
-        DiscussionModel discussion = DiscussionService.getDiscussionById(DISCUSSION_ID);
+        DiscussionEntity discussion = DiscussionService.getDiscussionById(DISCUSSION_ID);
 
 
         if (discussion== null) {
-            discussion = DiscussionService.createDiscussion("article name");
+            discussion = DiscussionService.createDiscussion(new DiscussionEntity("article name"));
         }
 
-        add(new DiscussionPanel("content", discussion.getId()));
+        add(new DiscussionPanel("content", discussion));
 
 
     }

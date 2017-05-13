@@ -1,7 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.form;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
 import cz.zcu.fav.kiv.discussion.core.service.UserService;
 import org.apache.wicket.markup.html.form.Form;
@@ -37,16 +37,16 @@ public class PasswordForm extends Form {
     @Override
     protected void onSubmit() {
 
-        DiscussionModel dis = DiscussionService.getDiscussionById(discussionId);
+        DiscussionEntity dis = DiscussionService.getDiscussionById(discussionId);
 
         PageParameters pageParameters = new PageParameters();
 
         if (dis.getPass().equals(password)) {
 
-            UserModel user = (UserModel) getSession().getAttribute("user");
+            UserEntity user = (UserEntity) getSession().getAttribute("user");
 
             if (user != null) {
-                UserService.addAccessToDiscussion(user.getId(), discussionId);
+                UserService.addAccessToDiscussion(user, dis);
             }
 
             pageParameters.add("discussionId", discussionId);

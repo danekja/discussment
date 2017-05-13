@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.panel.discussion;
 
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.post.PostFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.reply.ReplyModalFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.list.panel.thread.ThreadListViewPanel;
@@ -19,25 +20,25 @@ public class DiscussionPanel extends Panel {
     protected void onBeforeRender() {
         super.onBeforeRender();
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
-        if (user != null && user.getPermission().isCreatePost()) {
+        if (user != null && user.getPermissions().isCreatePost()) {
             postFormPanel.setVisible(true);
         } else {
             postFormPanel.setVisible(false);
         }
     }
 
-    public DiscussionPanel(String id, long discussionId) {
+    public DiscussionPanel(String id, DiscussionEntity discussionEntity) {
         super(id);
 
-        this.postFormPanel = new PostFormPanel("postForm", discussionId);
+        this.postFormPanel = new PostFormPanel("postForm", discussionEntity);
         add(postFormPanel);
 
         ReplyModalFormPanel replyModalFormPanel = new ReplyModalFormPanel("replyForm");
         add(replyModalFormPanel);
 
-        add(new ThreadListViewPanel("threadPanel", new ThreadWicketModel(discussionId), replyModalFormPanel));
+        add(new ThreadListViewPanel("threadPanel", new ThreadWicketModel(discussionEntity), replyModalFormPanel));
     }
 
 

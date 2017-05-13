@@ -3,12 +3,13 @@ package cz.zcu.fav.kiv.discussion.core.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * Created by Martin Bláha on 04.01.17.
  */
 @MappedSuperclass
-public class BaseEntity {
+public class BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue

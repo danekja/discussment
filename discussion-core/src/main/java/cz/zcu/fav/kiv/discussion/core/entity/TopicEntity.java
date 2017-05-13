@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import static cz.zcu.fav.kiv.discussion.core.entity.TopicEntity.GET_TOPICS_WITHO
         @NamedQuery(name = GET_TOPICS_BY_CATEGORY_ID, query = "SELECT t FROM TopicEntity t WHERE t.category.id = :categoryId"),
         @NamedQuery(name = GET_TOPICS_WITHOUT_CATEGORY, query = "SELECT t FROM TopicEntity t WHERE t.category.id = 0")
 })
-public class TopicEntity extends BaseEntity {
+public class TopicEntity extends BaseEntity implements Serializable {
 
     public static final String GET_TOPICS_BY_CATEGORY_ID = "TopicEntity.getTopicsByCategoryId";
     public static final String GET_TOPICS_WITHOUT_CATEGORY = "FileEntity.getTopicsWithoutCategory";
@@ -60,5 +61,19 @@ public class TopicEntity extends BaseEntity {
 
     public void setDiscussions(List<DiscussionEntity> discussions) {
         this.discussions = discussions;
+    }
+
+    public int getNumberOfThreads() {
+        return discussions.size();
+    }
+
+    public int getNumberOfPosts() {
+        int numberOfPosts = 0;
+
+        for (DiscussionEntity discussion: discussions) {
+            numberOfPosts += discussion.getNumberOfPosts();
+        }
+
+        return numberOfPosts;
     }
 }

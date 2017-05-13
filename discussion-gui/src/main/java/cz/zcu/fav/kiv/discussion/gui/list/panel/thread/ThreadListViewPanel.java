@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.gui.list.panel.thread;
 
-import cz.zcu.fav.kiv.discussion.core.model.PostModel;
+import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.reply.ReplyModalFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.list.ThreadListView;
 import cz.zcu.fav.kiv.discussion.gui.list.panel.post.PostListViewPanel;
@@ -20,10 +20,10 @@ public class ThreadListViewPanel extends Panel {
 
         ThreadListView threadListView = new ThreadListView("threadListView", threadWicketModel){
             @Override
-            protected void populateItem(ListItem<PostModel> listItem) {
+            protected void populateItem(ListItem<PostEntity> listItem) {
                 super.populateItem(listItem);
 
-                PostModel posts = listItem.getModelObject();
+                PostEntity posts = listItem.getModelObject();
 
                 listItem.add(new PostListViewPanel("postPanel", new PostWicketModel(posts), replyModalFormPanel));
 

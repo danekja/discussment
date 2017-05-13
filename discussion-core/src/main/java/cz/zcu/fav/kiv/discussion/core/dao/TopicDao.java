@@ -1,5 +1,6 @@
 package cz.zcu.fav.kiv.discussion.core.dao;
 
+import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
 import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 
 import javax.persistence.TypedQuery;
@@ -14,9 +15,9 @@ public class TopicDao extends GenericDao<TopicEntity> {
         super(TopicEntity.class);
     }
 
-    public List<TopicEntity> getTopicsByCategoryId(long categoryId) {
+    public List<TopicEntity> getTopicsByCategory(CategoryEntity category) {
         TypedQuery<TopicEntity> q = em.createNamedQuery(TopicEntity.GET_TOPICS_BY_CATEGORY_ID, TopicEntity.class);
-        q.setParameter("categoryId", categoryId);
+        q.setParameter("categoryId", category.getId());
         return q.getResultList();
     }
 

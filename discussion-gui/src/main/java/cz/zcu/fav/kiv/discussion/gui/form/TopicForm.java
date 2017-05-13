@@ -1,5 +1,8 @@
 package cz.zcu.fav.kiv.discussion.gui.form;
 
+import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
+import cz.zcu.fav.kiv.discussion.core.service.CategoryService;
 import cz.zcu.fav.kiv.discussion.core.service.TopicService;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -12,7 +15,7 @@ public class TopicForm extends Form {
 
     private String name;
     private String description;
-    private long categoryId;
+    private CategoryEntity categoryEntity;
 
 
     public TopicForm(String id) {
@@ -25,24 +28,26 @@ public class TopicForm extends Form {
 
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public CategoryEntity getCategory() {
+        return categoryEntity;
     }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(CategoryEntity categoryEntity) {
+        this.categoryEntity = categoryEntity;
     }
 
     @Override
     protected void onSubmit() {
 
-        if (categoryId == -1) {
-            TopicService.createTopic(name, description);
-        } else {
-            TopicService.createTopic(name, description, categoryId);
+        TopicEntity topic = new TopicEntity();
+        topic.setName(name);
+        topic.setDescription(description);
+
+        if (categoryEntity == null) {
+            categoryEntity = CategoryService.getCategoryById(CategoryEntity.WITHOUT_CATEGORY);
         }
 
-        categoryId = -1;
+        TopicService.createTopic(topic, categoryEntity);
 
     }
 }

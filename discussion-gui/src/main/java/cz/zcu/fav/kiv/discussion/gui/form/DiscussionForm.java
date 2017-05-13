@@ -1,5 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.form;
 
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,12 +18,12 @@ public class DiscussionForm extends Form {
     private boolean priv;
     private String pass;
 
-    private long topicId;
+    private TopicEntity topicEntity;
 
-    public DiscussionForm(String id, long topicId) {
+    public DiscussionForm(String id, TopicEntity topicEntity) {
         super(id);
 
-        this.topicId = topicId;
+        this.topicEntity = topicEntity;
 
         setDefaultModel(new CompoundPropertyModel(this));
 
@@ -32,18 +34,16 @@ public class DiscussionForm extends Form {
 
     @Override
     protected void onSubmit() {
-        if (priv == false) {
-            if (topicId == -1) {
-                DiscussionService.createDiscussion(name);
-            } else {
-                DiscussionService.createDiscussion(name, topicId);
-            }
-        } else {
-            DiscussionService.createDiscussion(name, topicId, pass);
-        }
+
+        DiscussionEntity discussionEntity = new DiscussionEntity();
+        discussionEntity.setName(name);
+        discussionEntity.setTopic(topicEntity);
+        discussionEntity.setPass(pass);
+
+        DiscussionService.createDiscussion(discussionEntity);
 
         PageParameters pageParameters = new PageParameters();
-        pageParameters.add("topicId", topicId);
+        pageParameters.add("topicId", topicEntity.getId());
 
     }
 }

@@ -1,8 +1,6 @@
 package cz.zcu.fav.kiv.discussion.core.service;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
-import cz.zcu.fav.kiv.discussion.core.model.TopicModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,16 +12,16 @@ import static org.junit.Assert.*;
  */
 public class UserServiceTest {
 
-    private UserModel user;
+    private UserEntity user;
 
     @Before
     public void setUp() throws Exception {
-        user = UserService.addUser("username", "name", "lastname");
+        user = UserService.addUser(new UserEntity("username", "name", "lastname"), new PermissionEntity());
     }
 
     @After
     public void tearDown() throws Exception {
-        UserService.removeUserById(user.getId());
+        UserService.removeUser(user);
     }
 
     @Test
@@ -37,10 +35,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void removeUserById() throws Exception {
-        UserModel removeUser = UserService.addUser("test", "test", "test");
+    public void removeUser() throws Exception {
+        UserEntity removeUser = UserService.addUser(new UserEntity("test", "test", "test"), new PermissionEntity());
 
-        UserService.removeUserById(removeUser.getId());
+        UserService.removeUser(removeUser);
 
         assertNull("Must be null", UserService.getUserById(removeUser.getId()));
     }
@@ -52,57 +50,26 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserByUsername() throws Exception {
-        assertEquals(user, UserService.getUserByUsername("username"));
-    }
-
-    @Test
-    public void setUsername() throws Exception {
-        UserService.setUsername(user.getId(), "username1");
-        user = UserService.getUserById(user.getId());
-
-        assertEquals("The username must be 'username1'", "username1", user.getUsername());
-
-        //clear
-        UserService.setUsername(user.getId(), "username");
-        user = UserService.getUserById(user.getId());
-    }
-
-    @Test
-    public void setName() throws Exception {
-        UserService.setName(user.getId(), "name1");
-        user = UserService.getUserById(user.getId());
-
-        assertEquals("The name must be 'name1'", "name1", user.getName());
-
-        //clear
-        UserService.setName(user.getId(), "name");
-        user = UserService.getUserById(user.getId());
-    }
-
-    @Test
-    public void setLastname() throws Exception {
-        UserService.setLastname(user.getId(), "lastname1");
-        user = UserService.getUserById(user.getId());
-
-        assertEquals("The lastname must be 'lastname1'", "lastname1", user.getLastname());
-
-        //clear
-        UserService.setLastname(user.getId(), "lastname");
-        user = UserService.getUserById(user.getId());
-    }
-
-    @Test
     public void addAccessToDiscussion() throws Exception {
         //prepare
-        TopicModel topic = TopicService.createTopic("testTopic", "", 0);
-        DiscussionModel discussion = DiscussionService.createDiscussion("test", topic.getId(), "password");
+
+        TopicEntity topic = new TopicEntity();
+        topic.setName("testTopic");
+        topic.setDescription("");
+        topic.setCategory(CategoryService.getCategoryById(CategoryEntity.WITHOUT_CATEGORY));
+        topic = TopicService.createTopic(topic);
+
+        DiscussionEntity discussion = new DiscussionEntity();
+        discussion.setPass("password");
+        discussion.setName("test");
+
+        discussion = DiscussionService.createDiscussion(discussion, topic);
 
         //test
-        UserService.addAccessToDiscussion(user.getId(), discussion.getId());
+        UserService.addAccessToDiscussion(user, discussion);
 
         //clear
-        DiscussionService.removeDiscussionById(discussion.getId());
+        DiscussionService.removeDiscussion(discussion);
 
     }
 

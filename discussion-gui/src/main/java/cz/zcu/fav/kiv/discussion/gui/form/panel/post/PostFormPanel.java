@@ -1,5 +1,6 @@
 package cz.zcu.fav.kiv.discussion.gui.form.panel.post;
 
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
 import cz.zcu.fav.kiv.discussion.gui.form.PostForm;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -10,10 +11,10 @@ public class PostFormPanel extends Panel {
 
     private PostForm postForm;
 
-    public PostFormPanel(String id, long discussionId) {
+    public PostFormPanel(String id, DiscussionEntity discussionEntity) {
         super(id);
 
-        postForm = new PostForm("postForm", discussionId);
+        postForm = new PostForm("postForm", discussionEntity);
         add(postForm);
 
     }

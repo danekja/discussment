@@ -1,7 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.list;
 
-import cz.zcu.fav.kiv.discussion.core.model.TopicModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.TopicService;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -16,14 +16,14 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 03.02.17.
  */
-public class TopicListView extends ListView<TopicModel> {
+public class TopicListView extends ListView<TopicEntity> {
 
-    public TopicListView(String id, IModel<? extends List<TopicModel>> model) {
+    public TopicListView(String id, IModel<? extends List<TopicEntity>> model) {
         super(id, model);
     }
 
-    protected void populateItem(ListItem<TopicModel> listItem) {
-        final TopicModel topic = listItem.getModelObject();
+    protected void populateItem(ListItem<TopicEntity> listItem) {
+        final TopicEntity topic = listItem.getModelObject();
 
         Link nameLink = new Link("nameLink") {
             @Override
@@ -42,7 +42,7 @@ public class TopicListView extends ListView<TopicModel> {
         Link removeLink = new Link("remove") {
             @Override
             public void onClick() {
-                TopicService.removeTopicById(topic.getId());
+                TopicService.removeTopic(topic);
             }
         };
         listItem.add(removeLink);
@@ -52,9 +52,9 @@ public class TopicListView extends ListView<TopicModel> {
         listItem.add(new Label("numberOfPosts", topic.getNumberOfPosts()));
 
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
-        if (user != null && user.getPermission().isRemoveTopic()) {
+        if (user != null && user.getPermissions().isRemoveTopic()) {
             removeLink.setVisible(true);
         } else {
             removeLink.setVisible(false);

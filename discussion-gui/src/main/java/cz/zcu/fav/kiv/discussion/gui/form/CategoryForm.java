@@ -1,5 +1,6 @@
 package cz.zcu.fav.kiv.discussion.gui.form;
 
+import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
 import cz.zcu.fav.kiv.discussion.core.service.CategoryService;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -23,7 +24,7 @@ public class CategoryForm extends Form {
     @Override
     protected void onSubmit() {
 
-        CategoryService.createCategory(name);
+        CategoryService.createCategory(new CategoryEntity(name));
 
     }
 }

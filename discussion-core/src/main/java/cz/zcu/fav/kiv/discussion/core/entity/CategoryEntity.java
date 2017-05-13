@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,11 @@ import static cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity.GET_CATEGORIE
 @NamedQueries({
         @NamedQuery(name = GET_CATEGORIES, query = "SELECT c FROM CategoryEntity c WHERE id != 0"),
 })
-public class CategoryEntity extends BaseEntity {
+public class CategoryEntity extends BaseEntity implements Serializable {
 
     public static final String GET_CATEGORIES = "FileEntity.getCategories";
+
+    public static final int WITHOUT_CATEGORY = 0;
 
     private String name;
 

@@ -1,8 +1,9 @@
 package cz.zcu.fav.kiv.discussion.gui.panel.forum;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
+import cz.zcu.fav.kiv.discussion.core.service.TopicService;
 import cz.zcu.fav.kiv.discussion.gui.list.panel.content.ContentListViewPanel;
 import cz.zcu.fav.kiv.discussion.gui.list.panel.discussion.DiscussionListViewPanel;
 import cz.zcu.fav.kiv.discussion.gui.model.CategoryWicketModel;
@@ -35,13 +36,13 @@ public class ForumPanel extends Panel {
         if (topicId == -1 && discussionId == -1) {
             add(new ContentListViewPanel("content", new CategoryWicketModel(), new TopicWicketModel()));
         } else if (topicId != -1) {
-            add(new DiscussionListViewPanel("content", new DiscussionWicketModel(topicId)));
+            add(new DiscussionListViewPanel("content", new DiscussionWicketModel(TopicService.getTopicById(topicId))));
         } else {
-            UserModel user = (UserModel) getSession().getAttribute("user");
-            DiscussionModel discussion = DiscussionService.getDiscussionById(discussionId);
+            UserEntity user = (UserEntity) getSession().getAttribute("user");
+            DiscussionEntity discussion = DiscussionService.getDiscussionById(discussionId);
 
 
-            add(new DiscussionPanel("content", discussionId));
+            add(new DiscussionPanel("content", discussion));
 
             /*if (discussion.getPass() == null || user != null && user.isAdmin() || discussion.getAccessList().contains(user)) {
                 //add(new DiscussionPanel("content", discussionId));

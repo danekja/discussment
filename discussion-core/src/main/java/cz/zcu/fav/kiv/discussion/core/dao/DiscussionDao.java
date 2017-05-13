@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.dao;
 
 import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -14,9 +15,9 @@ public class DiscussionDao extends GenericDao<DiscussionEntity> {
         super(DiscussionEntity.class);
     }
 
-    public List<DiscussionEntity> getDiscussionsByTopicId(long topicId) {
+    public List<DiscussionEntity> getDiscussionsByTopic(TopicEntity topicEntity) {
         TypedQuery<DiscussionEntity> q = em.createNamedQuery(DiscussionEntity.GET_DISCUSSIONS_BY_TOPIC_ID, DiscussionEntity.class);
-        q.setParameter("topicId", topicId);
+        q.setParameter("topicId", topicEntity.getId());
         return q.getResultList();
     }
 }

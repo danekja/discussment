@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.form;
 
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.PostService;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -13,7 +14,7 @@ public class ReplyForm extends Form {
 
     private String replyText;
 
-    private long postId;
+    private PostEntity postEntity;
 
     public ReplyForm(String id) {
         super(id);
@@ -23,22 +24,22 @@ public class ReplyForm extends Form {
         add(new TextArea("replyText"));
     }
 
-    public long getPostId() {
-        return postId;
+    public PostEntity getPost() {
+        return postEntity;
     }
 
-    public void setPostId(long postId) {
-        this.postId = postId;
+    public void setPost(PostEntity postEntity) {
+        this.postEntity = postEntity;
     }
 
     @Override
     protected void onSubmit() {
 
-        PostService.sendReply(
-                ((UserModel) getSession().getAttribute("user")).getId(),
-                replyText,
-                postId
-        );
+        PostEntity post = new PostEntity();
+        post.setUser(((UserEntity) getSession().getAttribute("user")));
+        post.setText(replyText);
+
+        PostService.sendReply(post, postEntity);
 
         setResponsePage(getPage());
     }

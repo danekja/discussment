@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.example.base;
 
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.example.LoginForm;
 import cz.zcu.fav.kiv.discussion.example.RegistrationForm;
 import cz.zcu.fav.kiv.discussion.example.article.ArticlePage;
@@ -28,7 +28,7 @@ public abstract class BasePage extends WebPage {
     protected void onBeforeRender() {
         super.onBeforeRender();
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
         if (user == null) {
             loginLink.setVisible(true);

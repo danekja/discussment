@@ -1,7 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.model;
 
-import cz.zcu.fav.kiv.discussion.core.model.PostModel;
-import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
@@ -9,32 +9,32 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 25.01.17.
  */
-public class ThreadWicketModel implements IModel<List<PostModel>> {
+public class ThreadWicketModel implements IModel<List<PostEntity>> {
 
 
-    private long discussionId;
+    private DiscussionEntity discussionEntity;
 
-    public ThreadWicketModel(long discussionId) {
+    public ThreadWicketModel(DiscussionEntity discussionEntity) {
 
-        this.discussionId = discussionId;
+        this.discussionEntity = discussionEntity;
 
     }
 
-    public long getDiscussionId() {
-        return discussionId;
+    public DiscussionEntity getDiscussion() {
+        return discussionEntity;
     }
 
-    public void setDiscussionId(long discussionId) {
-        this.discussionId = discussionId;
+    public void setDiscussion(DiscussionEntity discussionEntity) {
+        this.discussionEntity = discussionEntity;
     }
 
     public void detach() {
     }
 
-    public List<PostModel> getObject() {
-        return DiscussionService.getDiscussionById(discussionId).getPosts();
+    public List<PostEntity> getObject() {
+        return discussionEntity.getPosts();
     }
 
-    public void setObject(List<PostModel> object) {
+    public void setObject(List<PostEntity> object) {
     }
 }

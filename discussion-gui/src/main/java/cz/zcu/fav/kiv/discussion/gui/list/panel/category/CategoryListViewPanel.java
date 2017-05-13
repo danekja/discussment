@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.gui.list.panel.category;
 
-import cz.zcu.fav.kiv.discussion.core.model.CategoryModel;
+import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.topic.TopicModalFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.list.CategoryListView;
 import cz.zcu.fav.kiv.discussion.gui.list.panel.topic.TopicListViewPanel;
@@ -20,12 +20,12 @@ public class CategoryListViewPanel extends Panel {
 
         CategoryListView categoryListView = new CategoryListView("categoryList", categoryWicketModel, topicModalFormPanel.getTopicForm()) {
             @Override
-            protected void populateItem(ListItem<CategoryModel> listItem) {
+            protected void populateItem(ListItem<CategoryEntity> listItem) {
                 super.populateItem(listItem);
 
-                CategoryModel category = listItem.getModelObject();
+                CategoryEntity category = listItem.getModelObject();
 
-                TopicListViewPanel topicListViewPanel = new TopicListViewPanel("topicListPanel", new TopicWicketModel(category.getId()));
+                TopicListViewPanel topicListViewPanel = new TopicListViewPanel("topicListPanel", new TopicWicketModel(category));
                 topicListViewPanel.setOutputMarkupId(true);
 
                 int generateId = getGenerateId();

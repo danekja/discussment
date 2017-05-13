@@ -3,12 +3,30 @@ package cz.zcu.fav.kiv.discussion.core.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created by Martin Bláha on 19.01.17.
  */
 @Entity
-public class PermissionEntity extends BaseEntity {
+public class PermissionEntity extends BaseEntity implements Serializable {
+
+    public static final int CREATE_CATEGORY = 1;
+    public static final int REMOVE_CATEGORY = 2;
+
+    public static final int CREATE_TOPIC = 3;
+    public static final int REMOVE_TOPIC = 4;
+
+    public static final int CREATE_DISCUSSION = 5;
+    public static final int REMOVE_DISCUSSION = 6;
+
+    public static final int CREATE_POST = 7;
+    public static final int REMOVE_POST = 8;
+    public static final int DISABLE_POST = 9;
+
+    public static final int READ_PRIVATE_DISCUSSION = 10;
+
 
     @OneToOne
     private UserEntity user;
@@ -27,6 +45,47 @@ public class PermissionEntity extends BaseEntity {
     private boolean disablePost;
 
     private boolean readPrivateDiscussion;
+
+    public void setPermissions(Map<Integer, Boolean> permissions) {
+        for (Map.Entry<Integer, Boolean> entry : permissions.entrySet()) {
+            setPermission(entry.getKey(), entry.getValue());
+        }
+    }
+
+    public void setPermission(int permission, boolean value) {
+        switch (permission) {
+            case CREATE_CATEGORY:
+                setCreateCategory(value);
+                break;
+            case REMOVE_CATEGORY:
+                setRemoveCategory(value);
+                break;
+            case CREATE_TOPIC:
+                setCreateTopic(value);
+                break;
+            case REMOVE_TOPIC:
+                setRemoveTopic(value);
+                break;
+            case CREATE_DISCUSSION:
+                setCreateDiscussion(value);
+                break;
+            case REMOVE_DISCUSSION:
+                setRemoveDiscussion(value);
+                break;
+            case CREATE_POST:
+                setCreatePost(value);
+                break;
+            case REMOVE_POST:
+                setRemovePost(value);
+                break;
+            case DISABLE_POST:
+                setDisablePost(value);
+                break;
+            case READ_PRIVATE_DISCUSSION:
+                setReadPrivateDiscussion(value);
+                break;
+        }
+    }
 
     public UserEntity getUser() {
         return user;

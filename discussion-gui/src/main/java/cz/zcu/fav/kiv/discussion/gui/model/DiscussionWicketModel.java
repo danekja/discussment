@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.model;
 
-import cz.zcu.fav.kiv.discussion.core.model.DiscussionModel;
+import cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.TopicEntity;
 import cz.zcu.fav.kiv.discussion.core.service.DiscussionService;
 import org.apache.wicket.model.IModel;
 
@@ -9,31 +10,31 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 25.01.17.
  */
-public class DiscussionWicketModel implements IModel<List<DiscussionModel>> {
+public class DiscussionWicketModel implements IModel<List<DiscussionEntity>> {
 
-    private long topicId;
+    private TopicEntity topicEntity;
 
-    public DiscussionWicketModel(long topicId) {
+    public DiscussionWicketModel(TopicEntity topicEntity) {
 
-        this.topicId = topicId;
+        this.topicEntity = topicEntity;
 
     }
 
-    public long getTopicId() {
-        return topicId;
+    public TopicEntity getTopic() {
+        return topicEntity;
     }
 
-    public void setTopicId(long topicId) {
-        this.topicId = topicId;
+    public void setTopic(TopicEntity topicEntity) {
+        this.topicEntity = topicEntity;
     }
 
     public void detach() {
     }
 
-    public List<DiscussionModel> getObject() {
-        return DiscussionService.getDiscussionsByTopicId(topicId);
+    public List<DiscussionEntity> getObject() {
+        return DiscussionService.getDiscussionsByTopic(topicEntity);
     }
 
-    public void setObject(List<DiscussionModel> object) {
+    public void setObject(List<DiscussionEntity> object) {
     }
 }

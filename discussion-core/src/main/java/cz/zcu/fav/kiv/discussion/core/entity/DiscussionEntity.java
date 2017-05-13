@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.discussion.core.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static cz.zcu.fav.kiv.discussion.core.entity.DiscussionEntity.*;
         @NamedQuery(name = GET_DISCUSSIONS_BY_TOPIC_ID,
                 query = "SELECT d FROM DiscussionEntity d WHERE d.topic.id = :topicId")
 })
-public class DiscussionEntity extends BaseEntity {
+public class DiscussionEntity extends BaseEntity implements Serializable {
 
     public static final String GET_BY_NAME = "Discussion.getByUsername";
     public static final String GET_DISCUSSIONS_BY_TOPIC_ID = "Discussion.getBytopicId";
@@ -89,6 +90,38 @@ public class DiscussionEntity extends BaseEntity {
         if (post.getDiscussion() != this) {
             post.setDiscussion(this);
         }
+    }
+
+    public int getNumberOfPosts() {
+        int numberOfPosts = 0;
+
+        for (PostEntity post: posts) {
+            numberOfPosts += post.getNumberOfReplies();
+        }
+
+        return numberOfPosts;
+    }
+
+    public PostEntity getLastPost() {
+        PostEntity lastPost = null;
+
+        for (PostEntity post: posts) {
+            if (lastPost == null) {
+                lastPost = post;
+            }
+
+            PostEntity a = lastPost.getLastPost();
+            PostEntity b = post.getLastPost();
+
+            if (b.getCreated().compareTo(a.getCreated()) > 0) {
+                lastPost = b;
+            } else {
+                lastPost = a;
+            }
+
+        }
+
+        return lastPost;
     }
 
 }

@@ -1,6 +1,8 @@
 package cz.zcu.fav.kiv.discussion.core.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
  * Created by Martin Bláha on 19.01.17.
  */
 @Entity
-public class PostEntity extends BaseEntity {
+public class PostEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     private UserEntity user;
@@ -58,6 +60,12 @@ public class PostEntity extends BaseEntity {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getCreatedFormat() {
+        SimpleDateFormat formatData = new SimpleDateFormat("d.M.yyyy H:mm:ss");
+
+        return formatData.format(created);
     }
 
     public boolean isDisabled() {
@@ -114,5 +122,44 @@ public class PostEntity extends BaseEntity {
             reply.setPost(this);
         }
     }
+
+    public int getNumberOfReplies() {
+
+        return getNumberOfReplies(this, 0);
+    }
+
+    private int getNumberOfReplies(PostEntity postModel, int count) {
+
+        count++;
+
+        for (PostEntity post: postModel.getReplies()) {
+            count = getNumberOfReplies(post, count);
+        }
+        return count;
+    }
+
+    public PostEntity getLastPost() {
+        return getLastPost(this);
+    }
+
+    private PostEntity getLastPost(PostEntity postModel) {
+        PostEntity lastPost = null;
+
+        for (PostEntity post: postModel.getReplies()) {
+            lastPost = getLastPost(post);
+
+            if (post.getCreated().compareTo(lastPost.getCreated()) > 0) {
+                lastPost = post;
+            }
+        }
+
+        if (lastPost == null) {
+            return this;
+        } else {
+            return lastPost;
+        }
+
+    }
+
 
 }

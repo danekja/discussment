@@ -1,6 +1,6 @@
 package cz.zcu.fav.kiv.discussion.gui.list.panel.discussion;
 
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.TopicService;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.discussion.DiscussionModalFormPanel;
 import cz.zcu.fav.kiv.discussion.gui.form.panel.password.PasswordModalFormPanel;
@@ -22,9 +22,9 @@ public class DiscussionListViewPanel extends Panel {
     protected void onBeforeRender() {
         super.onBeforeRender();
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
-        if (user != null && user.getPermission().isCreateDiscussion()) {
+        if (user != null && user.getPermissions().isCreateDiscussion()) {
             createDiscussion.setVisible(true);
         } else {
             createDiscussion.setVisible(false);
@@ -35,7 +35,7 @@ public class DiscussionListViewPanel extends Panel {
         super(id);
 
 
-        add(new Label("topicName", TopicService.getTopicById(discussion.getTopicId()).getName()));
+        add(new Label("topicName", TopicService.getTopicById(discussion.getTopic().getId()).getName()));
 
         createDiscussion = new AjaxLink("createDiscussion") {
             @Override
@@ -43,7 +43,7 @@ public class DiscussionListViewPanel extends Panel {
         };
         add(createDiscussion);
 
-        add(new DiscussionModalFormPanel("discussionForm", discussion.getTopicId()));
+        add(new DiscussionModalFormPanel("discussionForm", discussion.getTopic()));
 
         PasswordModalFormPanel passwordModalFormPanel = new PasswordModalFormPanel("passwordForm");
         add(passwordModalFormPanel);

@@ -1,7 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.list;
 
-import cz.zcu.fav.kiv.discussion.core.model.PostModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.PostEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.PostService;
 import cz.zcu.fav.kiv.discussion.gui.form.ReplyForm;
 import org.apache.wicket.AttributeModifier;
@@ -20,18 +20,18 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 03.02.17.
  */
-public class PostListView extends ListView<PostModel> {
+public class PostListView extends ListView<PostEntity> {
 
     private ReplyForm replyForm;
 
-    public PostListView(String id, IModel<? extends List<PostModel>> model, ReplyForm replyForm) {
+    public PostListView(String id, IModel<? extends List<PostEntity>> model, ReplyForm replyForm) {
         super(id, model);
 
         this.replyForm = replyForm;
     }
 
-    protected void populateItem(ListItem<PostModel> listItem) {
-        final PostModel post = listItem.getModelObject();
+    protected void populateItem(ListItem<PostEntity> listItem) {
+        final PostEntity post = listItem.getModelObject();
 
 
         Label text = new Label("text", post.getText());
@@ -53,7 +53,7 @@ public class PostListView extends ListView<PostModel> {
         AjaxLink replyLink = new AjaxLink("reply") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                replyForm.setPostId(post.getId());
+                replyForm.setPost(post);
             }
         };
         listItem.add(replyLink);
@@ -61,7 +61,7 @@ public class PostListView extends ListView<PostModel> {
         Link removeLink = new Link("remove") {
             @Override
             public void onClick() {
-                PostService.removePostById(post.getId());
+                PostService.removePost(post);
             }
         };
         listItem.add(removeLink);
@@ -71,9 +71,9 @@ public class PostListView extends ListView<PostModel> {
             @Override
             public void onClick() {
                 if (post.isDisabled()) {
-                    PostService.enablePost(post.getId());
+                    PostService.enablePost(post);
                 } else {
-                    PostService.disablePost(post.getId());
+                    PostService.disablePost(post);
 
                 }
             }
@@ -90,21 +90,21 @@ public class PostListView extends ListView<PostModel> {
         listItem.add(new AttributeModifier("style", "padding-left: " + post.getLevel() * 30 + "px"));
 
 
-        UserModel user = (UserModel)getSession().getAttribute("user");
+        UserEntity user = (UserEntity)getSession().getAttribute("user");
 
-        if (user != null && user.getPermission().isCreatePost()) {
+        if (user != null && user.getPermissions().isCreatePost()) {
             replyLink.setVisible(true);
         } else {
             replyLink.setVisible(false);
         }
 
-        if (user != null && user.getPermission().isRemovePost()) {
+        if (user != null && user.getPermissions().isRemovePost()) {
             removeLink.setVisible(true);
         } else {
             removeLink.setVisible(false);
         }
 
-        if (user != null && user.getPermission().isDisablePost()) {
+        if (user != null && user.getPermissions().isDisablePost()) {
             disableLink.setVisible(true);
         } else {
             disableLink.setVisible(false);

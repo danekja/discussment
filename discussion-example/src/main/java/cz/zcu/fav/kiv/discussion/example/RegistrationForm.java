@@ -1,7 +1,7 @@
 package cz.zcu.fav.kiv.discussion.example;
 
-import cz.zcu.fav.kiv.discussion.core.model.PermissionModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.PermissionEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.UserService;
 import cz.zcu.fav.kiv.discussion.example.dashboard.DashboardPage;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -59,26 +59,30 @@ public class RegistrationForm extends Form {
     protected void onSubmit() {
 
         HashMap<Integer, Boolean> permissions = new HashMap<Integer, Boolean>();
-        permissions.put(PermissionModel.CREATE_CATEGORY, createCategoryRegistration);
-        permissions.put(PermissionModel.REMOVE_CATEGORY, removeCategoryRegistration);
+        permissions.put(PermissionEntity.CREATE_CATEGORY, createCategoryRegistration);
+        permissions.put(PermissionEntity.REMOVE_CATEGORY, removeCategoryRegistration);
 
-        permissions.put(PermissionModel.CREATE_TOPIC, createTopicRegistration);
-        permissions.put(PermissionModel.REMOVE_TOPIC, removeTopicRegistration);
+        permissions.put(PermissionEntity.CREATE_TOPIC, createTopicRegistration);
+        permissions.put(PermissionEntity.REMOVE_TOPIC, removeTopicRegistration);
 
-        permissions.put(PermissionModel.CREATE_DISCUSSION, createDiscussionRegistration);
-        permissions.put(PermissionModel.REMOVE_DISCUSSION, removeDiscussionRegistration);
+        permissions.put(PermissionEntity.CREATE_DISCUSSION, createDiscussionRegistration);
+        permissions.put(PermissionEntity.REMOVE_DISCUSSION, removeDiscussionRegistration);
 
-        permissions.put(PermissionModel.CREATE_POST, createPostRegistration);
-        permissions.put(PermissionModel.REMOVE_POST, removePostRegistration);
-        permissions.put(PermissionModel.DISABLE_POST, disablePostRegistration);
+        permissions.put(PermissionEntity.CREATE_POST, createPostRegistration);
+        permissions.put(PermissionEntity.REMOVE_POST, removePostRegistration);
+        permissions.put(PermissionEntity.DISABLE_POST, disablePostRegistration);
 
-        permissions.put(PermissionModel.READ_PRIVATE_DISCUSSION, readPrivateDiscussionRegistration);
+        permissions.put(PermissionEntity.READ_PRIVATE_DISCUSSION, readPrivateDiscussionRegistration);
 
+        PermissionEntity permissionEntity = new PermissionEntity();
+        permissionEntity.setPermissions(permissions);
 
-        UserService.addUser(usernameRegistration, "", "", permissions);
+        UserEntity user = new UserEntity();
+        user.setUsername(usernameRegistration);
+        user.setName("");
+        user.setLastname("");
 
-        UserModel user = UserService.getUserByUsername(usernameRegistration);
-        getSession().setAttribute("user", user);
+        getSession().setAttribute("user", UserService.addUser(user, permissionEntity));
 
         setResponsePage(DashboardPage.class);
     }

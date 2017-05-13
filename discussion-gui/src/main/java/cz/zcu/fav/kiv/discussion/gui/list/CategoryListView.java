@@ -1,7 +1,7 @@
 package cz.zcu.fav.kiv.discussion.gui.list;
 
-import cz.zcu.fav.kiv.discussion.core.model.CategoryModel;
-import cz.zcu.fav.kiv.discussion.core.model.UserModel;
+import cz.zcu.fav.kiv.discussion.core.entity.CategoryEntity;
+import cz.zcu.fav.kiv.discussion.core.entity.UserEntity;
 import cz.zcu.fav.kiv.discussion.core.service.CategoryService;
 import cz.zcu.fav.kiv.discussion.gui.form.TopicForm;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,20 +19,20 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 03.02.17.
  */
-public class CategoryListView extends ListView<CategoryModel> {
+public class CategoryListView extends ListView<CategoryEntity> {
 
     private TopicForm topicForm;
 
     private int generateId = 0;
 
-    public CategoryListView(String id, IModel<? extends List<CategoryModel>> model, TopicForm topicForm) {
+    public CategoryListView(String id, IModel<? extends List<CategoryEntity>> model, TopicForm topicForm) {
         super(id, model);
 
         this.topicForm = topicForm;
     }
 
-    protected void populateItem(ListItem<CategoryModel> listItem) {
-        final CategoryModel category = listItem.getModelObject();
+    protected void populateItem(ListItem<CategoryEntity> listItem) {
+        final CategoryEntity category = listItem.getModelObject();
 
         WebMarkupContainer categoryHeader = new WebMarkupContainer("categoryHeader");
         listItem.add(categoryHeader);
@@ -45,7 +45,7 @@ public class CategoryListView extends ListView<CategoryModel> {
         AjaxLink newTopic = new AjaxLink("newTopic") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                topicForm.setCategoryId(category.getId());
+                topicForm.setCategory(category);
             }
         };
         categoryHeader.add(newTopic);
@@ -54,21 +54,21 @@ public class CategoryListView extends ListView<CategoryModel> {
         Link removeCategory = new Link("remove") {
             @Override
             public void onClick() {
-                CategoryService.removeCategoryById(category.getId());
+                CategoryService.removeCategory(category);
             }
         };
         categoryHeader.add(removeCategory);
 
 
-        UserModel user = (UserModel) getSession().getAttribute("user");
+        UserEntity user = (UserEntity) getSession().getAttribute("user");
 
-        if (user != null && user.getPermission().isRemoveCategory()) {
+        if (user != null && user.getPermissions().isRemoveCategory()) {
             removeCategory.setVisible(true);
         } else {
             removeCategory.setVisible(false);
         }
 
-        if (user != null && user.getPermission().isCreateTopic()) {
+        if (user != null && user.getPermissions().isCreateTopic()) {
             newTopic.setVisible(true);
         } else {
             newTopic.setVisible(false);
