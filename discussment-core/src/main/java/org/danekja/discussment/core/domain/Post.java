@@ -41,6 +41,10 @@ public class Post extends BaseEntity implements Serializable {
 
     public Post() {}
 
+    public Post(String text) {
+        this.text = text;
+    }
+
     public Post(User user, String text) {
         this.user = user;
         this.text = text;

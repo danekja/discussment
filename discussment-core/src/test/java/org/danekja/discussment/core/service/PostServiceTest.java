@@ -38,7 +38,8 @@ public class PostServiceTest {
         discussionService = new DiscussionService(new DiscussionJPA());
         postService = new PostService(new PostJPA());
 
-        discussion = discussionService.createDiscussion(new Discussion("test"));
+        discussion = new Discussion("test");
+        discussion = discussionService.createDiscussion(discussion);
         user = userService.addUser(new User("test", "test", "test"), new Permission());
     }
 
@@ -110,7 +111,7 @@ public class PostServiceTest {
         assertEquals("replyText", reply.getText());
 
         //clear
-        postService.removePost(post);
+        //postService.removePost(post);
     }
 
     @Test

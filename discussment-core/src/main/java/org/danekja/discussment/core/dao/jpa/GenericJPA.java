@@ -33,6 +33,7 @@ public class GenericJPA<T extends BaseEntity> implements IGenericDao<T> {
             em.merge(obj);
         }
         em.getTransaction().commit();
+        em.clear();
         return obj;
     }
 

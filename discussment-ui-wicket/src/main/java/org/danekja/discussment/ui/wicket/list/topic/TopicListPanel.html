@@ -1,0 +1,24 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <div class="topic_container">
+        <div wicket:id="topicList" class="topic_row row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="glyphicon glyphicon-folder-open col-md-1" aria-hidden="true"></div>
+                    <div class="col-md-11">
+                        <div class="row">
+                            <a wicket:id="openTopic" class="col-md-12"></a>
+                            <span wicket:id="description" class="col-md-12"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <span wicket:id="numberOfDiscussions"></span>
+                <span wicket:id="numberOfPosts"></span>
+            </div>
+            <div class="col-md-1 text-right">
+                <a wicket:id="remove"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+            </div>
+        </div>
+    </div>
+</wicket:panel>

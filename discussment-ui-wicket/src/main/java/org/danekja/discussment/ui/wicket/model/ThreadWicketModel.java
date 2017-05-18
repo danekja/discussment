@@ -1,40 +1,25 @@
 package org.danekja.discussment.ui.wicket.model;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
-
-import java.util.List;
 
 /**
  * Created by Martin Bláha on 25.01.17.
  */
-public class ThreadWicketModel implements IModel<List<Post>> {
+public class ThreadWicketModel extends LoadableDetachableModel {
 
 
-    private Discussion discussion;
+    private IModel<Discussion> discussionModel;
 
-    public ThreadWicketModel(Discussion discussion) {
+    public ThreadWicketModel(IModel<Discussion> discussionModel) {
 
-        this.discussion = discussion;
+        this.discussionModel = discussionModel;
 
     }
 
-    public Discussion getDiscussion() {
-        return discussion;
+    protected Object load() {
+        return discussionModel.getObject().getPosts();
     }
 
-    public void setDiscussion(Discussion IDiscussion) {
-        this.discussion = discussion;
-    }
-
-    public void detach() {
-    }
-
-    public List<Post> getObject() {
-        return discussion.getPosts();
-    }
-
-    public void setObject(List<Post> object) {
-    }
 }

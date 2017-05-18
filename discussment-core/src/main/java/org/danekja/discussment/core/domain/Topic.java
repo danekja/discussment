@@ -25,11 +25,20 @@ public class Topic extends BaseEntity implements Serializable {
     private String name;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Category category;
+
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.REMOVE)
     private List<Discussion> discussions = new ArrayList<Discussion>();
+
+    public Topic() {
+    }
+
+    public Topic(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public String getName() {
         return name;
@@ -63,7 +72,7 @@ public class Topic extends BaseEntity implements Serializable {
         this.discussions = discussions;
     }
 
-    public int getNumberOfThreads() {
+    public int getNumberOfDiscussions() {
         return discussions.size();
     }
 

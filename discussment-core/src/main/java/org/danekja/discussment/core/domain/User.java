@@ -1,5 +1,7 @@
 package org.danekja.discussment.core.domain;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class User extends BaseEntity implements Serializable {
     @OneToOne(orphanRemoval = true)
     private Permission permissions;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_discussion",
             joinColumns = {
                     @JoinColumn(
@@ -80,9 +82,12 @@ public class User extends BaseEntity implements Serializable {
         this.lastname = lastname;
     }
 
-    public boolean isAccessToDiscussion() {
-        //todo
-        return true;
+    public boolean isAccessToDiscussion(Discussion discussion) {
+
+        if (discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this)) {
+            return true;
+        }
+        return false;
     }
 
     public List<Discussion> getAccessListToDiscussion() {

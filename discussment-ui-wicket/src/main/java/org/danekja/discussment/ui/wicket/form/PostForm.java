@@ -1,12 +1,13 @@
 package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.IPostService;
+import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 
 /**
  * Created by Martin Bláha on 21.01.17.
@@ -15,37 +16,47 @@ public class PostForm extends Form {
 
     private IPostService postService;
 
-    private String text;
+    private IModel<Discussion> discussionModel;
+    private IModel<Post> postModel;
 
-    private Discussion discussion;
+    public PostForm(String id, IModel<Discussion> discussionModel) {
+        this(id, null, discussionModel);
+    }
 
-    private TextArea<String> ta;
-
-    public PostForm(String id, Discussion discussion, IPostService postService) {
+    public PostForm(String id, IPostService postService, IModel<Discussion> discussionModel) {
         super(id);
 
         this.postService = postService;
+        this.discussionModel = discussionModel;
 
-        this.discussion = discussion;
+        this.postModel = new Model<Post>();
+    }
 
-        setDefaultModel(new CompoundPropertyModel(this));
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
-        ta = new TextArea<String>("text");
+        add(new PostFormComponent("postFormComponent", postModel));
+    }
 
-        add(ta);
+    public void setPostService(IPostService postService) {
+        this.postService = postService;
     }
 
     @Override
     protected void onSubmit() {
 
-        Post post = new Post();
-        post.setText(text);
-        post.setUser((User) getSession().getAttribute("user"));
+        if (postService != null) {
 
-        postService.sendPost(discussion, post);
+            Post post = postModel.getObject();
+            post.setUser((User) getSession().getAttribute("user"));
 
-        text = "";
+            postService.sendPost(
+                    discussionModel.getObject(),
+                    post
+            );
 
-        setResponsePage(getPage());
+            setResponsePage(getPage());
+        }
     }
 }

@@ -1,3 +1,89 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+
+    <div id="categoryModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="categoryForm">
+                    <div class="modal-header">
+                        <span wicket:id="categoryFormComponent"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Create category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="topicModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="topicForm">
+                    <div class="modal-header">
+                        <span wicket:id="topicFormComponent"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Create topic
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="replyModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="replyForm">
+                    <div class="modal-header">
+                        <span wicket:id="replyFormComponent"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Reply
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="discussionModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="discussionForm">
+                    <div class="modal-header">
+                        <span wicket:id="discussionFormComponent"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Create discussion
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="passwordForm">
+                    <div class="modal-header">
+                        <span wicket:id="passwordFormComponent"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Send
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <span wicket:id="content"></span>
 </wicket:panel>

@@ -7,7 +7,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.IUserService;
-import org.danekja.discussment.example.dashboard.DashboardPage;
 
 import java.util.HashMap;
 
@@ -88,6 +87,6 @@ public class RegistrationForm extends Form {
 
         getSession().setAttribute("user", userService.addUser(user, permission));
 
-        setResponsePage(DashboardPage.class);
+        setResponsePage(getWebPage().getClass());
     }
 }

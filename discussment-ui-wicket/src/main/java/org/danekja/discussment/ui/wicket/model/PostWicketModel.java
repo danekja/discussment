@@ -1,6 +1,6 @@
 package org.danekja.discussment.ui.wicket.model;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.danekja.discussment.core.domain.Post;
 
 import java.util.ArrayList;
@@ -9,34 +9,18 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 23.01.17.
  */
-public class PostWicketModel implements IModel<List<Post>> {
+public class PostWicketModel extends LoadableDetachableModel {
 
-    private List<Post> posts;
-
-    public PostWicketModel() {
-        posts = new ArrayList<Post>();
-    }
+    private Post post;
 
     public PostWicketModel(Post post) {
-        posts = new ArrayList<Post>();
+        this.post = post;
+    }
 
+    @Override
+    protected Object load() {
+        List<Post> posts = new ArrayList<Post>();
         createList(post, posts);
-
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Post post) {
-        posts = new ArrayList<Post>();
-        createList(post, posts);
-    }
-
-    public void detach() {
-    }
-
-    public List<Post> getObject() {
         return posts;
     }
 
@@ -49,6 +33,5 @@ public class PostWicketModel implements IModel<List<Post>> {
         }
     }
 
-    public void setObject(List<Post> object) {
-    }
+
 }

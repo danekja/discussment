@@ -2,10 +2,7 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
-import org.danekja.discussment.core.service.imp.CategoryService;
-import org.danekja.discussment.core.service.imp.DiscussionService;
-import org.danekja.discussment.core.service.imp.TopicService;
-import org.danekja.discussment.core.service.imp.UserService;
+import org.danekja.discussment.core.service.imp.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +23,9 @@ public class UserServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        topicService = new TopicService(new TopicJPA(), new CategoryJPA());
+
         categoryService = new CategoryService(new CategoryJPA());
+        topicService = new TopicService(new TopicJPA(), new CategoryJPA());
         userService = new UserService(new UserJPA(), new PermissionJPA());
         discussionService = new DiscussionService(new DiscussionJPA());
 
@@ -66,27 +64,23 @@ public class UserServiceTest {
 
     @Test
     public void addAccessToDiscussion() throws Exception {
-        //prepare
+        Category category = new Category("category");
+        category = categoryService.createCategory(category);
 
-        Topic topic = new Topic();
-        topic.setName("testTopic");
-        topic.setDescription("");
-        topic.setCategory(categoryService.getCategoryById(Category.WITHOUT_CATEGORY));
-        topic = topicService.createTopic(topic);
+        Topic topic = new Topic("topic", "");
+        topic = topicService.createTopic(topic, category);
 
-        Discussion discussion = new Discussion();
-        discussion.setPass("password");
-        discussion.setName("test");
-
+        Discussion discussion = new Discussion("name", "password");
         discussion = discussionService.createDiscussion(discussion, topic);
 
-        //test
         userService.addAccessToDiscussion(user, discussion);
 
-        //clear
-        discussionService.removeDiscussion(discussion);
+        categoryService.removeCategory(category);
+
 
     }
+
+
 
 
 }

@@ -1,6 +1,12 @@
 package org.danekja.discussment.core.domain;
 
+import org.hibernate.annotations.*;
+
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +39,6 @@ public class Discussion extends BaseEntity implements Serializable {
 
     @ManyToMany(mappedBy = "accessListToDiscussion")
     private List<User> userAccessList = new ArrayList<User>();
-
 
     @ManyToOne
     private Topic topic;

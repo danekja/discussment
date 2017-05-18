@@ -1,59 +1,54 @@
 package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.ICategoryService;
 import org.danekja.discussment.core.service.ITopicService;
+import org.danekja.discussment.ui.wicket.form.topic.TopicFormComponent;
 
 /**
  * Created by Martin Bláha on 25.01.17.
  */
 public class TopicForm extends Form {
 
-    private ICategoryService categoryService;
     private ITopicService topicService;
 
-    private String name;
-    private String description;
-    private Category category;
+    private IModel<Topic> topicModel;
+    private IModel<Category> categoryModel;
 
+    public TopicForm(String id, IModel<Category> categoryModel) {
+        this(id, null, categoryModel);
+    }
 
-    public TopicForm(String id, ICategoryService categoryService, ITopicService topicService) {
+    public TopicForm(String id, ITopicService topicService, IModel<Category> categoryModel) {
         super(id);
 
-        this.categoryService = categoryService;
+        this.categoryModel = categoryModel;
         this.topicService = topicService;
 
-        setDefaultModel(new CompoundPropertyModel(this));
-
-        add(new TextField("name"));
-        add(new TextField("description"));
-
+        this.topicModel = new Model<Topic>();
     }
 
-    public Category getCategory() {
-        return category;
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        add(new TopicFormComponent("topicFormComponent", topicModel));
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setTopicService(ITopicService topicService) {
+        this.topicService = topicService;
     }
+
 
     @Override
     protected void onSubmit() {
 
-        Topic topic = new Topic();
-        topic.setName(name);
-        topic.setDescription(description);
-
-        if (category == null) {
-            category = categoryService.getCategoryById(Category.WITHOUT_CATEGORY);
+        if (topicService != null) {
+            topicService.createTopic(topicModel.getObject(), categoryModel.getObject());
         }
-
-        topicService.createTopic(topic, category);
 
     }
 }

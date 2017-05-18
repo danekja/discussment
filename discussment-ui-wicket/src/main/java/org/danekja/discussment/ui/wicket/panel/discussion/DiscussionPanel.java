@@ -1,12 +1,15 @@
 package org.danekja.discussment.ui.wicket.panel.discussion;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.IPostService;
-import org.danekja.discussment.ui.wicket.form.panel.post.PostFormPanel;
-import org.danekja.discussment.ui.wicket.form.panel.reply.ReplyModalFormPanel;
-import org.danekja.discussment.ui.wicket.list.panel.thread.ThreadListViewPanel;
+import org.danekja.discussment.ui.wicket.form.PostForm;
+import org.danekja.discussment.ui.wicket.form.ReplyForm;
+import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
 import org.danekja.discussment.ui.wicket.model.ThreadWicketModel;
 
 
@@ -15,34 +18,46 @@ import org.danekja.discussment.ui.wicket.model.ThreadWicketModel;
  */
 public class DiscussionPanel extends Panel {
 
-    private PostFormPanel postFormPanel;
+    private IModel<Discussion> discussionModel;
+    private IModel<Post> selectedPost;
 
-    @Override
-    protected void onBeforeRender() {
-        super.onBeforeRender();
+    private IPostService postService;
 
-        User user = (User) getSession().getAttribute("user");
+    private Discussion discussion;
 
-        if (user != null && user.getPermissions().isCreatePost()) {
-            postFormPanel.setVisible(true);
-        } else {
-            postFormPanel.setVisible(false);
-        }
-    }
-
-    public DiscussionPanel(String id, Discussion discussion, IPostService postService) {
+    public DiscussionPanel(String id, Discussion discussion, IPostService postService, IModel<Post> selectedPost) {
         super(id);
 
-        this.postFormPanel = new PostFormPanel("postForm", discussion, postService);
-        add(postFormPanel);
+        this.selectedPost = selectedPost;
+        this.postService = postService;
+        this.discussion = discussion;
 
-        ReplyModalFormPanel replyModalFormPanel = new ReplyModalFormPanel("replyForm", postService);
-        add(replyModalFormPanel);
+        this.discussionModel = new Model<Discussion>();
 
-        add(new ThreadListViewPanel("threadPanel", new ThreadWicketModel(discussion), replyModalFormPanel, postService));
     }
 
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
+        discussionModel.setObject(discussion);
 
+        add(new ReplyForm("replyForm", postService, selectedPost));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(discussionModel), selectedPost, postService));
 
+        add(createPostForm());
+    }
+
+    private PostForm createPostForm() {
+        return new PostForm("postForm", postService, discussionModel) {
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                User user = (User) getSession().getAttribute("user");
+                this.setVisible(user != null && user.getPermissions().isCreatePost());
+            }
+        };
+    }
 }

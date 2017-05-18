@@ -1,16 +1,18 @@
 package org.danekja.discussment.ui.wicket.panel.forum;
 
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.User;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.*;
-import org.danekja.discussment.ui.wicket.list.panel.content.ContentListViewPanel;
-import org.danekja.discussment.ui.wicket.list.panel.discussion.DiscussionListViewPanel;
+import org.danekja.discussment.ui.wicket.form.*;
+import org.danekja.discussment.ui.wicket.list.content.ContentListPanel;
+import org.danekja.discussment.ui.wicket.list.discussion.DiscussionListPanel;
 import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
-import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
+
+import java.util.HashMap;
 
 
 /**
@@ -18,39 +20,71 @@ import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
  */
 public class ForumPanel extends Panel {
 
-    public ForumPanel(String id, PageParameters parameters, IDiscussionService discussionService, ITopicService topicService, ICategoryService categoryService, IPostService postService, IUserService userService) {
+    private IModel<HashMap<String, Integer>> parametersModel;
 
+    private ICategoryService categoryService;
+    private IPostService postService;
+    private ITopicService topicService;
+    private IDiscussionService discussionService;
+    private IUserService userService;
+
+    private IModel<Category> categoryModel;
+    private IModel<Discussion> discussionModel;
+    private IModel<Topic> topicModel;
+    private IModel<Post> postModel;
+
+    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, IDiscussionService discussionService, ITopicService topicService, ICategoryService categoryService, IPostService postService, IUserService userService) {
         super(id);
 
-        long topicId = -1;
-        if (!parameters.get("topicId").isNull()) {
-            topicId = Long.parseLong(parameters.get("topicId").toString());
-        }
+        this.parametersModel = parametersModel;
 
-        long discussionId = -1;
-        if (!parameters.get("discussionId").isNull()) {
-            discussionId = Long.parseLong(parameters.get("discussionId").toString());
-        }
+        this.categoryService = categoryService;
+        this.postService = postService;
+        this.topicService = topicService;
+        this.discussionService = discussionService;
+        this.userService = userService;
 
-        if (topicId == -1 && discussionId == -1) {
-            add(new ContentListViewPanel("content", new CategoryWicketModel(categoryService), new TopicWicketModel(topicService), categoryService, topicService));
-        } else if (topicId != -1) {
-            add(new DiscussionListViewPanel("content", new DiscussionWicketModel(topicService.getTopicById(topicId), discussionService), topicService, discussionService, userService));
-        } else {
-            User user = (User) getSession().getAttribute("user");
-            Discussion discussion = discussionService.getDiscussionById(discussionId);
-
-
-            add(new DiscussionPanel("content", discussion, postService));
-
-            /*if (discussion.getPass() == null || user != null && user.isAdmin() || discussion.getAccessList().contains(user)) {
-                //add(new DiscussionPanel("content", discussionId));
-            } else {
-                if (discussion.getTopic().getId() == 0) {
-                    //getResponse()
-                }
-
-            }*/
-        }
+        this.categoryModel = new Model<Category>();
+        this.discussionModel = new Model<Discussion>();
+        this.topicModel = new Model<Topic>();
+        this.postModel = new Model<Post>();
     }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        add(new CategoryForm("categoryForm", categoryService));
+        add(new ReplyForm("replyForm", postService, postModel));
+        add(new TopicForm("topicForm", topicService, categoryModel));
+        add(new DiscussionForm("discussionForm", discussionService, topicModel));
+        add(new PasswordForm("passwordForm", userService, discussionModel));
+
+
+        if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
+            add(new ContentListPanel("content",
+                new CategoryWicketModel(categoryService),
+                new TopicWicketModel(topicService), categoryService, topicService, categoryModel)
+            );
+
+        } else if (parametersModel.getObject().get("topicId") != -1) {
+            Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
+            topicModel.setObject(topic);
+
+            add(new DiscussionListPanel("content", topic, discussionService,discussionModel));
+        } else {
+            Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
+
+            User user = (User) getSession().getAttribute("user");
+
+            if (user.isAccessToDiscussion(discussion)) {
+                add(new DiscussionPanel("content", discussion, postService, postModel));
+            } else {
+                setResponsePage(getPage().getClass());
+            }
+        }
+
+    }
+
+
 }

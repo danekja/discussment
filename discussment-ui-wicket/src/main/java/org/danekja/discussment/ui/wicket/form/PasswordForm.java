@@ -1,66 +1,70 @@
 package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IDiscussionService;
 import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
 
 /**
  * Created by Martin Bláha on 25.01.17.
  */
 public class PasswordForm extends Form {
 
+    private IModel<Discussion> discussionModel;
     private IUserService userService;
-    private IDiscussionService discussionService;
 
-    private String password;
+    private IModel<String> passwordModel;
 
-    private long discussionId;
+    public PasswordForm(String id, IModel<Discussion> discussionModel) {
+        this(id, null, discussionModel);
+    }
 
-    public PasswordForm(String id, IUserService userService, IDiscussionService discussionService) {
+    public PasswordForm(String id, IUserService userService, IModel<Discussion> discussionModel) {
         super(id);
 
         this.userService = userService;
-        this.discussionService = discussionService;
+        this.discussionModel = discussionModel;
 
-        setDefaultModel(new CompoundPropertyModel(this));
-
-        add(new TextField("password"));
+        this.passwordModel = new Model<String>();
     }
 
-    public long getDiscussionId() {
-        return discussionId;
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        add(new PasswordFormComponent("passwordFormComponent", passwordModel));
     }
 
-    public void setDiscussionId(long discussionId) {
-        this.discussionId = discussionId;
+    public void setUserService(IUserService userService) {
+        this.userService = userService;
     }
 
     @Override
     protected void onSubmit() {
 
-        Discussion dis = discussionService.getDiscussionById(discussionId);
-
         PageParameters pageParameters = new PageParameters();
 
-        if (dis.getPass().equals(password)) {
+        if (userService != null) {
 
-            User user = (User) getSession().getAttribute("user");
+            if (discussionModel.getObject().getPass().equals(passwordModel.getObject())) {
 
-            if (user != null) {
-                userService.addAccessToDiscussion(user, dis);
+                User user = (User) getSession().getAttribute("user");
+
+                if (user != null) {
+                    userService.addAccessToDiscussion(user, discussionModel.getObject());
+                }
+
+                pageParameters.add("discussionId", discussionModel.getObject().getId());
+            } else {
+                pageParameters.add("topicId", discussionModel.getObject().getTopic().getId());
+                pageParameters.add("error", "denied");
             }
 
-            pageParameters.add("discussionId", discussionId);
-        } else {
-            pageParameters.add("error", "denied");
+            setResponsePage(getPage().getClass(), pageParameters);
         }
-
-        setResponsePage(getPage().getClass(), pageParameters);
-
     }
 }
