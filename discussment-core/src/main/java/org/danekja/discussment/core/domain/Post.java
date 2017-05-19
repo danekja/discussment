@@ -7,11 +7,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
+
 /**
  * Created by Martin Bláha on 19.01.17.
  */
 @Entity
+@NamedQueries({
+        @NamedQuery(name = GET_BY_DISCUSSION,
+                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId")
+})
 public class Post extends BaseEntity implements Serializable {
+
+    public static final String GET_BY_DISCUSSION = "Post.getByDiscussion";
 
     @ManyToOne
     private User user;
