@@ -27,10 +27,10 @@ public class DiscussionServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        topicService = new TopicService(new TopicJPA(), new CategoryJPA());
-        userService = new UserService(new UserJPA(), new PermissionJPA());
-        discussionService = new DiscussionService(new DiscussionJPA());
-        postService = new PostService(new PostJPA());
+        topicService = new TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        discussionService = new DiscussionService(new DiscussionDaoJPA());
+        postService = new PostService(new PostDaoJPA());
 
         topic = new Topic();
         topic.setName("testTopic");

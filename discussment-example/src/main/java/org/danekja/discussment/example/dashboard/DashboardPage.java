@@ -3,8 +3,8 @@ package org.danekja.discussment.example.dashboard;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.danekja.discussment.core.dao.jpa.PermissionJPA;
-import org.danekja.discussment.core.dao.jpa.UserJPA;
+import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.IUserService;
 import org.danekja.discussment.core.service.imp.UserService;
@@ -17,7 +17,7 @@ public class DashboardPage extends BasePage {
 
     public DashboardPage() {
 
-        IUserService userService = new UserService(new UserJPA(), new PermissionJPA());
+        IUserService userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
 
         add(new ListView<User>("usersListView", userService.getUsers()) {
 

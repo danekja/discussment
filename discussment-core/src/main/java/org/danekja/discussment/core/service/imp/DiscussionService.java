@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.dao.IDiscussionDao;
+import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.IDiscussionService;
@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class DiscussionService implements IDiscussionService {
 
-    private IDiscussionDao discussionDao;
+    private DiscussionDao discussionDao;
 
-    public DiscussionService(IDiscussionDao discussionDao) {
+    public DiscussionService(DiscussionDao discussionDao) {
         this.discussionDao = discussionDao;
     }
 

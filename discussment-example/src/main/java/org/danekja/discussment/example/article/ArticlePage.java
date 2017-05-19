@@ -2,8 +2,8 @@ package org.danekja.discussment.example.article;
 
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.dao.jpa.DiscussionJPA;
-import org.danekja.discussment.core.dao.jpa.PostJPA;
+import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.IDiscussionService;
@@ -34,8 +34,8 @@ public class ArticlePage extends BasePage {
 	 */
     public ArticlePage(final PageParameters parameters) {
 
-        this.discussionService = new DiscussionService(new DiscussionJPA());
-        this.postService = new PostService(new PostJPA());
+        this.discussionService = new DiscussionService(new DiscussionDaoJPA());
+        this.postService = new PostService(new PostDaoJPA());
     }
 
     @Override

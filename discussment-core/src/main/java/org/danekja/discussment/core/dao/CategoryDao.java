@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface ICategoryDao extends IGenericDao<Category> {
+public interface CategoryDao extends GenericDao<Category> {
     List<Category> getCategories();
 }

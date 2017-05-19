@@ -24,10 +24,10 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
 
-        categoryService = new CategoryService(new CategoryJPA());
-        topicService = new TopicService(new TopicJPA(), new CategoryJPA());
-        userService = new UserService(new UserJPA(), new PermissionJPA());
-        discussionService = new DiscussionService(new DiscussionJPA());
+        categoryService = new CategoryService(new CategoryDaoJPA());
+        topicService = new TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        discussionService = new DiscussionService(new DiscussionDaoJPA());
 
         user = userService.addUser(new User("username", "name", "lastname"), new Permission());
     }

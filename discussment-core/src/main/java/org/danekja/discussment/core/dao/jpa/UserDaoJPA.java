@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.dao.jpa;
 
-import org.danekja.discussment.core.dao.IUserDao;
+import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.domain.User;
 
 import javax.persistence.NoResultException;
@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 04.01.17.
  */
-public class UserJPA extends GenericJPA<User> implements IUserDao {
+public class UserDaoJPA extends GenericDaoJPA<User> implements UserDao {
 
-    public UserJPA() {
+    public UserDaoJPA() {
         super(User.class);
     }
 

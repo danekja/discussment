@@ -1,9 +1,9 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.jpa.DiscussionJPA;
-import org.danekja.discussment.core.dao.jpa.PermissionJPA;
-import org.danekja.discussment.core.dao.jpa.PostJPA;
-import org.danekja.discussment.core.dao.jpa.UserJPA;
+import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
+import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
@@ -34,9 +34,9 @@ public class PostServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userService = new UserService(new UserJPA(), new PermissionJPA());
-        discussionService = new DiscussionService(new DiscussionJPA());
-        postService = new PostService(new PostJPA());
+        userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        discussionService = new DiscussionService(new DiscussionDaoJPA());
+        postService = new PostService(new PostDaoJPA());
 
         discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(discussion);

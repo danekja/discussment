@@ -39,16 +39,16 @@ public class DiscussionPage extends BasePage {
 
         this.parameters = parameters;
 
-        CategoryJPA categoryJPA = new CategoryJPA();
-        TopicJPA topicJPA = new TopicJPA();
-        UserJPA userJPA = new UserJPA();
-        DiscussionJPA discussionJPA = new DiscussionJPA();
-        PermissionJPA permissionJPA = new PermissionJPA();
-        PostJPA postJPA = new PostJPA();
+        CategoryDaoJPA categoryDaoJPA = new CategoryDaoJPA();
+        TopicDaoJPA topicJPA = new TopicDaoJPA();
+        UserDaoJPA userJPA = new UserDaoJPA();
+        DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA();
+        PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
+        PostDaoJPA postJPA = new PostDaoJPA();
 
         this.discussionService = new DiscussionService(discussionJPA);
-        this.categoryService = new CategoryService(categoryJPA);
-        this.topicService = new TopicService(topicJPA, categoryJPA);
+        this.categoryService = new CategoryService(categoryDaoJPA);
+        this.topicService = new TopicService(topicJPA, categoryDaoJPA);
         this.postService = new PostService(postJPA);
         this.userService = new UserService(userJPA, permissionJPA);
 

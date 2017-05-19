@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.dao.jpa;
 
-import org.danekja.discussment.core.dao.ITopicDao;
+import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 
@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class TopicJPA extends GenericJPA<Topic> implements ITopicDao {
+public class TopicDaoJPA extends GenericDaoJPA<Topic> implements TopicDao {
 
-    public TopicJPA() {
+    public TopicDaoJPA() {
         super(Topic.class);
     }
 

@@ -8,6 +8,6 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface IDiscussionDao extends IGenericDao<Discussion> {
+public interface DiscussionDao extends GenericDao<Discussion> {
     List<Discussion> getDiscussionsByTopic(Topic ITopic);
 }

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface IUserDao extends IGenericDao<User> {
+public interface UserDao extends GenericDao<User> {
     User getUserByUsername(String username);
 
     List<User> getUsers();

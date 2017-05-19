@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.dao.IPermissionDao;
-import org.danekja.discussment.core.dao.IUserDao;
+import org.danekja.discussment.core.dao.PermissionDao;
+import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.User;
@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class UserService implements IUserService {
 
-    private IUserDao userDao;
-    private IPermissionDao permissionDao;
+    private UserDao userDao;
+    private PermissionDao permissionDao;
 
-    public UserService(IUserDao userDao, IPermissionDao permissionDao) {
+    public UserService(UserDao userDao, PermissionDao permissionDao) {
         this.userDao = userDao;
         this.permissionDao = permissionDao;
     }

@@ -6,8 +6,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.dao.jpa.PermissionJPA;
-import org.danekja.discussment.core.dao.jpa.UserJPA;
+import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.imp.UserService;
 import org.danekja.discussment.example.LoginForm;
@@ -79,8 +79,8 @@ public abstract class BasePage extends WebPage {
         add(titleLabel);
 
 
-        add(new LoginForm("loginForm", new UserService(new UserJPA(), new PermissionJPA())));
-        add(new RegistrationForm("registrationForm", new UserService(new UserJPA(), new PermissionJPA())));
+        add(new LoginForm("loginForm", new UserService(new UserDaoJPA(), new PermissionDaoJPA())));
+        add(new RegistrationForm("registrationForm", new UserService(new UserDaoJPA(), new PermissionDaoJPA())));
     }
 
     private void setMenu() {

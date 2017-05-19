@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.dao.ICategoryDao;
-import org.danekja.discussment.core.dao.ITopicDao;
+import org.danekja.discussment.core.dao.CategoryDao;
+import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.ITopicService;
@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class TopicService implements ITopicService {
 
-    private ITopicDao topicDao;
+    private TopicDao topicDao;
     private CategoryService categoryService;
 
-    public TopicService(ITopicDao topicDao, ICategoryDao categoryDao) {
+    public TopicService(TopicDao topicDao, CategoryDao categoryDao) {
         this.topicDao = topicDao;
         categoryService = new CategoryService(categoryDao);
     }

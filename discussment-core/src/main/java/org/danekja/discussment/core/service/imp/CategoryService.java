@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.dao.ICategoryDao;
+import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.ICategoryService;
 
@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class CategoryService implements ICategoryService {
 
-    private ICategoryDao categoryDao;
+    private CategoryDao categoryDao;
 
-    public CategoryService(ICategoryDao categoryDao) {
+    public CategoryService(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
     }
 

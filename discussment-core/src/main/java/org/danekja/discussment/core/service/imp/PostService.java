@@ -2,7 +2,7 @@ package org.danekja.discussment.core.service.imp;
 
 import java.util.List;
 
-import org.danekja.discussment.core.dao.IPostDao;
+import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.IPostService;
@@ -12,9 +12,9 @@ import org.danekja.discussment.core.service.IPostService;
  */
 public class PostService implements IPostService {
 
-    private IPostDao postDao;
+    private PostDao postDao;
 
-    public PostService(IPostDao postDao) {
+    public PostService(PostDao postDao) {
         this.postDao = postDao;
     }
 
