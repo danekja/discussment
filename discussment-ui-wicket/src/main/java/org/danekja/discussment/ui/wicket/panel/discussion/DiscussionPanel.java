@@ -35,7 +35,7 @@ public class DiscussionPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ReplyForm("replyForm", postService, selectedPost, new Model<Post>()));
+        add(new ReplyForm("replyForm", postService, selectedPost, new Model<Post>(new Post())));
         add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService));
 
         add(createPostForm());

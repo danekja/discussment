@@ -46,6 +46,8 @@ public class ReplyForm extends Form {
             reply.setUser((User) getSession().getAttribute("user"));
 
             postService.sendReply(reply, postModel.getObject());
+
+            replyModel.setObject(new Post());
         }
 
         setResponsePage(getPage());
