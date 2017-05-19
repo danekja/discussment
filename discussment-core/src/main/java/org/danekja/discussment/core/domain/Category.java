@@ -23,7 +23,7 @@ public class Category extends BaseEntity implements Serializable {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     private List<Topic> topics = new ArrayList<Topic>();
 
     public Category() {}
