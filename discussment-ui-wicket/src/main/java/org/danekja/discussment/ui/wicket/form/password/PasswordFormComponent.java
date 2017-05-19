@@ -1,41 +1,27 @@
 package org.danekja.discussment.ui.wicket.form.password;
 
-import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.domain.Discussion;
 
 /**
  * Created by Martin Bláha on 03.02.17.
  */
-public class PasswordFormComponent extends FormComponentPanel {
+public class PasswordFormComponent extends Panel {
 
-    private TextField<String> password;
-
-    private IModel<String> passwordModel;
-
-    public PasswordFormComponent(String id, IModel<String> passwordModel) {
+    public PasswordFormComponent(String id, IModel<Discussion> passwordModel) {
         super(id, passwordModel);
-
-        this.passwordModel = passwordModel;
-
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        password = new TextField<String>("password", new Model<String>(""));
+        TextField<String> password = new TextField<String>("password", new PropertyModel<String>(getDefaultModel(), "pass"));
+        password.setRequired(true);
         add(password);
 
     }
-
-    @Override
-    public void updateModel() {
-        super.updateModel();
-
-        passwordModel.setObject(password.getModelObject());
-
-    }
-
 }

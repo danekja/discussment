@@ -17,7 +17,7 @@ public class PasswordForm extends Form {
     private IModel<Discussion> discussionModel;
     private UserService userService;
 
-    private IModel<String> passwordModel;
+    private IModel<Discussion> passwordModel;
 
     public PasswordForm(String id, IModel<Discussion> discussionModel) {
         this(id, null, discussionModel);
@@ -29,7 +29,7 @@ public class PasswordForm extends Form {
         this.userService = userService;
         this.discussionModel = discussionModel;
 
-        this.passwordModel = new Model<String>(new String());
+        this.passwordModel = new Model<Discussion>(new Discussion());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PasswordForm extends Form {
 
         if (userService != null) {
 
-            if (discussionModel.getObject().getPass().equals(passwordModel.getObject())) {
+            if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
 
                 User user = (User) getSession().getAttribute("user");
 
@@ -64,7 +64,7 @@ public class PasswordForm extends Form {
                 pageParameters.add("error", "denied");
             }
 
-            passwordModel.setObject(new String());
+            passwordModel.setObject(new Discussion());
 
             setResponsePage(getPage().getClass(), pageParameters);
         }
