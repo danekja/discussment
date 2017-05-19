@@ -6,7 +6,7 @@ import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IPostService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 
 /**
@@ -14,7 +14,7 @@ import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
  */
 public class PostForm extends Form {
 
-    private IPostService postService;
+    private PostService postService;
 
     private IModel<Discussion> discussionModel;
     private IModel<Post> postModel;
@@ -23,7 +23,7 @@ public class PostForm extends Form {
         this(id, null, discussionModel);
     }
 
-    public PostForm(String id, IPostService postService, IModel<Discussion> discussionModel) {
+    public PostForm(String id, PostService postService, IModel<Discussion> discussionModel) {
         super(id);
 
         this.postService = postService;
@@ -39,7 +39,7 @@ public class PostForm extends Form {
         add(new PostFormComponent("postFormComponent", postModel));
     }
 
-    public void setPostService(IPostService postService) {
+    public void setPostService(PostService postService) {
         this.postService = postService;
     }
 

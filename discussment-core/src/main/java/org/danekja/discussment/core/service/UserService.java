@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface IUserService {
+public interface UserService {
     User addUser(User entity, Permission permission);
 
     List<User> getUsers();

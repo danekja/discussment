@@ -6,7 +6,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.core.service.UserService;
 import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
 
 /**
@@ -15,7 +15,7 @@ import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
 public class PasswordForm extends Form {
 
     private IModel<Discussion> discussionModel;
-    private IUserService userService;
+    private UserService userService;
 
     private IModel<String> passwordModel;
 
@@ -23,7 +23,7 @@ public class PasswordForm extends Form {
         this(id, null, discussionModel);
     }
 
-    public PasswordForm(String id, IUserService userService, IModel<Discussion> discussionModel) {
+    public PasswordForm(String id, UserService userService, IModel<Discussion> discussionModel) {
         super(id);
 
         this.userService = userService;
@@ -39,7 +39,7 @@ public class PasswordForm extends Form {
         add(new PasswordFormComponent("passwordFormComponent", passwordModel));
     }
 
-    public void setUserService(IUserService userService) {
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 

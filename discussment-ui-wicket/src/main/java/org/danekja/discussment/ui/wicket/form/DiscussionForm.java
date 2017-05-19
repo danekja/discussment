@@ -6,7 +6,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.IDiscussionService;
+import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.ui.wicket.form.discussion.DiscussionFormComponent;
 
 /**
@@ -14,7 +14,7 @@ import org.danekja.discussment.ui.wicket.form.discussion.DiscussionFormComponent
  */
 public class DiscussionForm extends Form {
 
-    private IDiscussionService discussionService;
+    private DiscussionService discussionService;
     private IModel<Topic> topicModel;
 
     private IModel<Discussion> discussionModel;
@@ -23,7 +23,7 @@ public class DiscussionForm extends Form {
         this(id, null, topicModel);
     }
 
-    public DiscussionForm(String id, IDiscussionService discussionService, IModel<Topic> topicModel) {
+    public DiscussionForm(String id, DiscussionService discussionService, IModel<Topic> topicModel) {
         super(id);
 
         this.discussionService = discussionService;
@@ -39,7 +39,7 @@ public class DiscussionForm extends Form {
         add(new DiscussionFormComponent("discussionFormComponent", discussionModel));
     }
 
-    public void setDiscussionService(IDiscussionService discussionService) {
+    public void setDiscussionService(DiscussionService discussionService) {
         this.discussionService = discussionService;
     }
 

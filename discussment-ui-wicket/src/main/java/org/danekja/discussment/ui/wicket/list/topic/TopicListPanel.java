@@ -9,7 +9,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.ITopicService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 
 /**
@@ -17,10 +17,10 @@ import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
  */
 public class TopicListPanel extends Panel {
 
-    private ITopicService topicService;
+    private TopicService topicService;
     private TopicWicketModel topicWicketModel;
 
-    public TopicListPanel(String id, TopicWicketModel topicWicketModel, ITopicService topicService) {
+    public TopicListPanel(String id, TopicWicketModel topicWicketModel, TopicService topicService) {
         super(id);
 
         this.topicService = topicService;

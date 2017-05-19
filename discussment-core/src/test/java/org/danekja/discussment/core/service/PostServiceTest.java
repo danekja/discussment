@@ -8,9 +8,6 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.imp.DiscussionService;
-import org.danekja.discussment.core.service.imp.PostService;
-import org.danekja.discussment.core.service.imp.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,18 +22,18 @@ import static org.junit.Assert.assertNull;
  */
 public class PostServiceTest {
 
-    private IUserService userService;
-    private IDiscussionService discussionService;
-    private IPostService postService;
+    private UserService userService;
+    private DiscussionService discussionService;
+    private PostService postService;
 
     private Discussion discussion;
     private User user;
 
     @Before
     public void setUp() throws Exception {
-        userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new DiscussionService(new DiscussionDaoJPA());
-        postService = new PostService(new PostDaoJPA());
+        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
+        postService = new org.danekja.discussment.core.service.imp.PostService(new PostDaoJPA());
 
         discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(discussion);

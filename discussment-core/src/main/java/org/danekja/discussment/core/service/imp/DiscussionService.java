@@ -3,14 +3,13 @@ package org.danekja.discussment.core.service.imp;
 import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.IDiscussionService;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 20.01.17.
  */
-public class DiscussionService implements IDiscussionService {
+public class DiscussionService implements org.danekja.discussment.core.service.DiscussionService {
 
     private DiscussionDao discussionDao;
 

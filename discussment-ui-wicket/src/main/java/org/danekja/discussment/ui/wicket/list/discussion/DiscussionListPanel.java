@@ -16,7 +16,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IDiscussionService;
+import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 
 
@@ -25,13 +25,13 @@ import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
  */
 public class DiscussionListPanel extends Panel {
 
-    private IDiscussionService discussionService;
+    private DiscussionService discussionService;
     private IModel<Discussion> discussionModel;
 
     private Topic topic;
 
 
-    public DiscussionListPanel(String id, Topic topic, final IDiscussionService discussionService, final IModel<Discussion> discussionModel) {
+    public DiscussionListPanel(String id, Topic topic, final DiscussionService discussionService, final IModel<Discussion> discussionModel) {
         super(id);
 
         this.discussionService = discussionService;

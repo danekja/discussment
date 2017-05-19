@@ -5,7 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.ITopicService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.form.topic.TopicFormComponent;
 
 /**
@@ -13,7 +13,7 @@ import org.danekja.discussment.ui.wicket.form.topic.TopicFormComponent;
  */
 public class TopicForm extends Form {
 
-    private ITopicService topicService;
+    private TopicService topicService;
 
     private IModel<Topic> topicModel;
     private IModel<Category> categoryModel;
@@ -22,7 +22,7 @@ public class TopicForm extends Form {
         this(id, null, categoryModel);
     }
 
-    public TopicForm(String id, ITopicService topicService, IModel<Category> categoryModel) {
+    public TopicForm(String id, TopicService topicService, IModel<Category> categoryModel) {
         super(id);
 
         this.categoryModel = categoryModel;
@@ -38,7 +38,7 @@ public class TopicForm extends Form {
         add(new TopicFormComponent("topicFormComponent", topicModel));
     }
 
-    public void setTopicService(ITopicService topicService) {
+    public void setTopicService(TopicService topicService) {
         this.topicService = topicService;
     }
 

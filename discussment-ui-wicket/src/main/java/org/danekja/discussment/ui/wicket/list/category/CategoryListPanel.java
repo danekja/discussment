@@ -12,8 +12,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.ICategoryService;
-import org.danekja.discussment.core.service.ITopicService;
+import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
 import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
@@ -26,14 +26,14 @@ public class CategoryListPanel extends Panel {
 
     private static int generateId = 0;
 
-    private ICategoryService categoryService;
-    private ITopicService topicService;
+    private CategoryService categoryService;
+    private TopicService topicService;
 
     private IModel<Category> categoryModel;
 
     private CategoryWicketModel categoryWicketModel;
 
-    public CategoryListPanel(String id, CategoryWicketModel categoryWicketModel, IModel<Category> categoryModel, final ICategoryService categoryService, final ITopicService topicService) {
+    public CategoryListPanel(String id, CategoryWicketModel categoryWicketModel, IModel<Category> categoryModel, final CategoryService categoryService, final TopicService topicService) {
         super(id);
 
         this.topicService = topicService;

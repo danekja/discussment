@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface ICategoryService {
+public interface CategoryService {
     Category createCategory(Category entity);
 
     Category getCategoryById(long categoryId);

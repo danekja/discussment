@@ -2,10 +2,6 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
-import org.danekja.discussment.core.service.imp.DiscussionService;
-import org.danekja.discussment.core.service.imp.PostService;
-import org.danekja.discussment.core.service.imp.TopicService;
-import org.danekja.discussment.core.service.imp.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,19 +14,19 @@ import static org.junit.Assert.assertNotNull;
  */
 public class DiscussionServiceTest {
 
-    private ITopicService topicService;
-    private IUserService userService;
-    private IDiscussionService discussionService;
-    private IPostService postService;
+    private TopicService topicService;
+    private UserService userService;
+    private DiscussionService discussionService;
+    private PostService postService;
 
     private Topic topic;
 
     @Before
     public void setUp() throws Exception {
-        topicService = new TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new DiscussionService(new DiscussionDaoJPA());
-        postService = new PostService(new PostDaoJPA());
+        topicService = new org.danekja.discussment.core.service.imp.TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
+        postService = new org.danekja.discussment.core.service.imp.PostService(new PostDaoJPA());
 
         topic = new Topic();
         topic.setName("testTopic");

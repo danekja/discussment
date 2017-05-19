@@ -8,7 +8,7 @@ import org.danekja.discussment.core.domain.Post;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface IPostService {
+public interface PostService {
     void removePost(Post post);
 
     Post getPostById(long postId);

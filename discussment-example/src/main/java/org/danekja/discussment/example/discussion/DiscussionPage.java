@@ -4,8 +4,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.*;
-import org.danekja.discussment.core.service.*;
-import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.core.service.TopicService;
+import org.danekja.discussment.core.service.UserService;
 import org.danekja.discussment.example.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
 
@@ -19,11 +22,11 @@ public class DiscussionPage extends BasePage {
 
 	private static final long serialVersionUID = 1L;
 
-    private IDiscussionService discussionService;
-    private ICategoryService categoryService;
-    private ITopicService topicService;
-    private IPostService postService;
-    private IUserService userService;
+    private DiscussionService discussionService;
+    private CategoryService categoryService;
+    private TopicService topicService;
+    private PostService postService;
+    private UserService userService;
 
     private IModel<HashMap<String, Integer>> parametersModel;
 
@@ -46,11 +49,11 @@ public class DiscussionPage extends BasePage {
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
         PostDaoJPA postJPA = new PostDaoJPA();
 
-        this.discussionService = new DiscussionService(discussionJPA);
-        this.categoryService = new CategoryService(categoryDaoJPA);
-        this.topicService = new TopicService(topicJPA, categoryDaoJPA);
-        this.postService = new PostService(postJPA);
-        this.userService = new UserService(userJPA, permissionJPA);
+        this.discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(discussionJPA);
+        this.categoryService = new org.danekja.discussment.core.service.imp.CategoryService(categoryDaoJPA);
+        this.topicService = new org.danekja.discussment.core.service.imp.TopicService(topicJPA, categoryDaoJPA);
+        this.postService = new org.danekja.discussment.core.service.imp.PostService(postJPA);
+        this.userService = new org.danekja.discussment.core.service.imp.UserService(userJPA, permissionJPA);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());

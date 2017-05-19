@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface ITopicService {
+public interface TopicService {
     Topic createTopic(Topic topic);
 
     Topic createTopic(Topic topic, Category category);

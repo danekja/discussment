@@ -15,7 +15,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IPostService;
+import org.danekja.discussment.core.service.PostService;
 
 /**
  * Created by Martin Bláha on 04.02.17.
@@ -23,10 +23,10 @@ import org.danekja.discussment.core.service.IPostService;
 public class PostListPanel extends Panel {
 
     private IModel<Post> selectedPost;
-    private IPostService postService;
+    private PostService postService;
     private IModel<List<Post>> postListModel;
 
-    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> selectedPost, final IPostService postService) {
+    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> selectedPost, final PostService postService) {
         super(id);
 
         this.selectedPost = selectedPost;

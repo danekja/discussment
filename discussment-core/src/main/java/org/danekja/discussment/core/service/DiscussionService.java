@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  */
-public interface IDiscussionService {
+public interface DiscussionService {
     Discussion createDiscussion(Discussion discussion);
 
     Discussion createDiscussion(Discussion discussion, Topic topic);

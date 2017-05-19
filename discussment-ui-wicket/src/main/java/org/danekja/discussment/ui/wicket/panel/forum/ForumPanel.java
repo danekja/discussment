@@ -10,11 +10,11 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.ICategoryService;
-import org.danekja.discussment.core.service.IDiscussionService;
-import org.danekja.discussment.core.service.IPostService;
-import org.danekja.discussment.core.service.ITopicService;
-import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.core.service.TopicService;
+import org.danekja.discussment.core.service.UserService;
 import org.danekja.discussment.ui.wicket.form.CategoryForm;
 import org.danekja.discussment.ui.wicket.form.DiscussionForm;
 import org.danekja.discussment.ui.wicket.form.PasswordForm;
@@ -34,18 +34,18 @@ public class ForumPanel extends Panel {
 
     private IModel<HashMap<String, Integer>> parametersModel;
 
-    private ICategoryService categoryService;
-    private IPostService postService;
-    private ITopicService topicService;
-    private IDiscussionService discussionService;
-    private IUserService userService;
+    private CategoryService categoryService;
+    private PostService postService;
+    private TopicService topicService;
+    private DiscussionService discussionService;
+    private UserService userService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
     private IModel<Topic> topicModel;
     private IModel<Post> postModel;
 
-    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, IDiscussionService discussionService, ITopicService topicService, ICategoryService categoryService, IPostService postService, IUserService userService) {
+    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, UserService userService) {
         super(id);
 
         this.parametersModel = parametersModel;

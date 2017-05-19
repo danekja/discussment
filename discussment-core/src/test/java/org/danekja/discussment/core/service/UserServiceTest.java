@@ -2,7 +2,6 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
-import org.danekja.discussment.core.service.imp.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,20 +13,20 @@ import static org.junit.Assert.*;
  */
 public class UserServiceTest {
 
-    private ITopicService topicService;
-    private ICategoryService categoryService;
-    private IUserService userService;
-    private IDiscussionService discussionService;
+    private TopicService topicService;
+    private CategoryService categoryService;
+    private UserService userService;
+    private DiscussionService discussionService;
 
     private User user;
 
     @Before
     public void setUp() throws Exception {
 
-        categoryService = new CategoryService(new CategoryDaoJPA());
-        topicService = new TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        userService = new UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new DiscussionService(new DiscussionDaoJPA());
+        categoryService = new org.danekja.discussment.core.service.imp.CategoryService(new CategoryDaoJPA());
+        topicService = new org.danekja.discussment.core.service.imp.TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
 
         user = userService.addUser(new User("username", "name", "lastname"), new Permission());
     }

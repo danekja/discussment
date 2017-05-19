@@ -4,18 +4,18 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.core.service.UserService;
 
 /**
  * Created by Martin Bláha on 21.01.17.
  */
 public class LoginForm extends Form {
 
-    private IUserService userService;
+    private UserService userService;
 
     private String username;
 
-    public LoginForm(String id, IUserService userService) {
+    public LoginForm(String id, UserService userService) {
         super(id);
 
         this.userService = userService;

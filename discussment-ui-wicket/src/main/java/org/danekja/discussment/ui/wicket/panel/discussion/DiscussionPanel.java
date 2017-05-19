@@ -6,7 +6,7 @@ import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IPostService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostForm;
 import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
@@ -21,9 +21,9 @@ public class DiscussionPanel extends Panel {
     private IModel<Discussion> discussionModel;
     private IModel<Post> selectedPost;
 
-    private IPostService postService;
+    private PostService postService;
 
-    public DiscussionPanel(String id, IModel<Discussion> discussion, IPostService postService, IModel<Post> selectedPost) {
+    public DiscussionPanel(String id, IModel<Discussion> discussion, PostService postService, IModel<Post> selectedPost) {
         super(id);
 
         this.selectedPost = selectedPost;

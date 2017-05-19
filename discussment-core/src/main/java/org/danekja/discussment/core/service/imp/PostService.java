@@ -5,12 +5,11 @@ import java.util.List;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.IPostService;
 
 /**
  * Created by Martin Bláha on 07.02.17.
  */
-public class PostService implements IPostService {
+public class PostService implements org.danekja.discussment.core.service.PostService {
 
     private PostDao postDao;
 

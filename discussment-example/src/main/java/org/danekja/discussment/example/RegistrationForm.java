@@ -6,7 +6,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.IUserService;
+import org.danekja.discussment.core.service.UserService;
 
 import java.util.HashMap;
 
@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class RegistrationForm extends Form {
 
-    private IUserService userService;
+    private UserService userService;
 
     private String usernameRegistration;
     private boolean createCategoryRegistration;
@@ -33,7 +33,7 @@ public class RegistrationForm extends Form {
 
     private boolean readPrivateDiscussionRegistration;
 
-    public RegistrationForm(String id, IUserService userService) {
+    public RegistrationForm(String id, UserService userService) {
         super(id);
 
         this.userService = userService;
