@@ -23,27 +23,20 @@ public class DiscussionPanel extends Panel {
 
     private IPostService postService;
 
-    private Discussion discussion;
-
-    public DiscussionPanel(String id, Discussion discussion, IPostService postService, IModel<Post> selectedPost) {
+    public DiscussionPanel(String id, IModel<Discussion> discussion, IPostService postService, IModel<Post> selectedPost) {
         super(id);
 
         this.selectedPost = selectedPost;
         this.postService = postService;
-        this.discussion = discussion;
-
-        this.discussionModel = new Model<Discussion>();
-
+        this.discussionModel = discussion;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        discussionModel.setObject(discussion);
-
-        add(new ReplyForm("replyForm", postService, selectedPost));
-        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(discussionModel), selectedPost, postService));
+        add(new ReplyForm("replyForm", postService, selectedPost, new Model<Post>()));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService));
 
         add(createPostForm());
     }

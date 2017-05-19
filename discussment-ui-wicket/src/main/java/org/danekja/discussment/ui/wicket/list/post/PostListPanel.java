@@ -1,5 +1,7 @@
 package org.danekja.discussment.ui.wicket.list.post;
 
+import java.util.List;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -14,7 +16,6 @@ import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.IPostService;
-import org.danekja.discussment.ui.wicket.model.PostWicketModel;
 
 /**
  * Created by Martin Bláha on 04.02.17.
@@ -23,21 +24,21 @@ public class PostListPanel extends Panel {
 
     private IModel<Post> selectedPost;
     private IPostService postService;
-    private PostWicketModel postWicketModel;
+    private IModel<List<Post>> postListModel;
 
-    public PostListPanel(String id, PostWicketModel postWicketModel, IModel<Post> selectedPost, final IPostService postService) {
+    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> selectedPost, final IPostService postService) {
         super(id);
 
         this.selectedPost = selectedPost;
         this.postService = postService;
-        this.postWicketModel = postWicketModel;
+        this.postListModel = postListModel;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ListView<Post>("postListView", postWicketModel) {
+        add(new ListView<Post>("postListView", postListModel) {
             protected void populateItem(ListItem<Post> listItem) {
                 final Post post = listItem.getModelObject();
 
@@ -102,7 +103,7 @@ public class PostListPanel extends Panel {
     }
 
     private Link createDisableLink(final Post post) {
-        IModel<String> model = new Model() {
+        IModel<String> model = new Model<String>() {
             @Override
             public String getObject() {
                 if (post.isDisabled()) {

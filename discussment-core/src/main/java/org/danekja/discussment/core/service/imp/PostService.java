@@ -1,5 +1,7 @@
 package org.danekja.discussment.core.service.imp;
 
+import java.util.List;
+
 import org.danekja.discussment.core.dao.IPostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -64,4 +66,11 @@ public class PostService implements IPostService {
 
     }
 
+    public List<Post> listPostHierarchy(Discussion discussion) {
+        //implement this so that single database query is used
+        //this is hard to achieve with SQL, but necessary performance-wise;
+        //easiest solution is to fetch posts belonging to discussion in a list
+        //and building the tree hierarchy in code
+        throw new UnsupportedOperationException("To be implemented");
+    }
 }

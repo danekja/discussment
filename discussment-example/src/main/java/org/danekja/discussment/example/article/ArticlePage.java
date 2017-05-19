@@ -48,7 +48,7 @@ public class ArticlePage extends BasePage {
             discussion = discussionService.createDiscussion(new Discussion("article name"));
         }
 
-        add(new DiscussionPanel("content", discussion, postService, new Model<Post>()));
+        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>()));
     }
 
     @Override
