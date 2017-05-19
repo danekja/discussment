@@ -42,17 +42,23 @@ public class PostListPanel extends Panel {
             protected void populateItem(ListItem<Post> listItem) {
                 final Post post = listItem.getModelObject();
 
-                Label text = new Label("text", post.getText());
+                Label text = new Label("text", post.getText()) {
+                    @Override
+                    protected void onConfigure() {
+                        super.onConfigure();
+                        this.setVisible(!post.isDisabled());
+                    }
+                };
                 listItem.add(text);
 
-                WebMarkupContainer dis = new WebMarkupContainer("disabled");
+                WebMarkupContainer dis = new WebMarkupContainer("disabled") {
+                    @Override
+                    protected void onConfigure() {
+                        super.onConfigure();
+                        this.setVisible(post.isDisabled());
+                    }
+                };
                 listItem.add(dis);
-
-                if (post.isDisabled() == true) {
-                    text.setVisible(false);
-                } else {
-                    dis.setVisible(false);
-                }
 
                 listItem.add(new Label("username", post.getUser().getUsername()));
                 listItem.add(new Label("created", post.getCreatedFormat()));
