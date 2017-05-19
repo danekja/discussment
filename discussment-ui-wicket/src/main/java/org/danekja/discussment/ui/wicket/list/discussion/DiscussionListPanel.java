@@ -27,28 +27,26 @@ public class DiscussionListPanel extends Panel {
 
     private DiscussionService discussionService;
     private IModel<Discussion> discussionModel;
+    private IModel<Topic> topicListModel;
 
-    private Topic topic;
 
-
-    public DiscussionListPanel(String id, Topic topic, final DiscussionService discussionService, final IModel<Discussion> discussionModel) {
+    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel) {
         super(id);
 
         this.discussionService = discussionService;
         this.discussionModel = discussionModel;
-
-        this.topic = topic;
+        this.topicListModel = topicListModel;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new Label("topicName", topic.getName()));
+        add(new Label("topicName", topicListModel.getObject().getName()));
         add(createDiscussionAjaxLink());
 
 
-        add(new ListView<Discussion>("discussionList", new DiscussionWicketModel(topic, discussionService)) {
+        add(new ListView<Discussion>("discussionList", new DiscussionWicketModel(topicListModel, discussionService)) {
             protected void populateItem(ListItem<Discussion> listItem) {
                 final Discussion discussion = listItem.getModelObject();
 

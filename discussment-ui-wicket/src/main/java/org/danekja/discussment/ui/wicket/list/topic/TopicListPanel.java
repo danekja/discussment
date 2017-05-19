@@ -5,12 +5,14 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
@@ -18,20 +20,20 @@ import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 public class TopicListPanel extends Panel {
 
     private TopicService topicService;
-    private TopicWicketModel topicWicketModel;
+    private IModel<List<Topic>>  topicListModel;
 
-    public TopicListPanel(String id, TopicWicketModel topicWicketModel, TopicService topicService) {
+    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService) {
         super(id);
 
         this.topicService = topicService;
-        this.topicWicketModel = topicWicketModel;
+        this.topicListModel = topicListModel;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ListView<Topic>("topicList", topicWicketModel) {
+        add(new ListView<Topic>("topicList", topicListModel) {
             protected void populateItem(ListItem<Topic> listItem) {
                 final Topic topic = listItem.getModelObject();
 

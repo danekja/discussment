@@ -5,13 +5,14 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
-import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
-import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
+
+import java.util.List;
 
 
 /**
@@ -22,14 +23,14 @@ public class ContentListPanel extends Panel {
     private TopicService topicService;
     private CategoryService categoryService;
     private IModel<Category> categoryModel;
-    private CategoryWicketModel categoryWicketModel;
-    private TopicWicketModel topicWicketModel;
+    private IModel<List<Category>>  categoryListModel;
+    private IModel<List<Topic>>  topicWicketModel;
 
-    public ContentListPanel(String id, CategoryWicketModel categoryWicketModel, TopicWicketModel topicWicketModel, final CategoryService categoryService, TopicService topicService, IModel<Category> categoryModel) {
+    public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, CategoryService categoryService, TopicService topicService, IModel<Category> categoryModel) {
         super(id);
 
         this.topicService = topicService;
-        this.categoryWicketModel = categoryWicketModel;
+        this.categoryListModel = categoryListModel;
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
         this.topicWicketModel = topicWicketModel;
@@ -42,7 +43,7 @@ public class ContentListPanel extends Panel {
         add(createCategoryAjaxLink());
         add(createTopicAjaxLink());
 
-        add(new CategoryListPanel("categoryPanel", categoryWicketModel, categoryModel, categoryService, topicService));
+        add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService));
         add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService));
     }
 

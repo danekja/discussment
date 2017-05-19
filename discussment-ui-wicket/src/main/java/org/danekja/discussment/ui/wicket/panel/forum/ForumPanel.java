@@ -71,7 +71,7 @@ public class ForumPanel extends Panel {
             Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
             topicModel.setObject(topic);
 
-            add(new DiscussionListPanel("content", topic, discussionService,discussionModel));
+            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel));
         } else {
             Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
 

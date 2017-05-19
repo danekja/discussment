@@ -10,13 +10,15 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
-import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
@@ -28,16 +30,14 @@ public class CategoryListPanel extends Panel {
 
     private CategoryService categoryService;
     private TopicService topicService;
-
     private IModel<Category> categoryModel;
+    private IModel<List<Category>> categoryListModel;
 
-    private CategoryWicketModel categoryWicketModel;
-
-    public CategoryListPanel(String id, CategoryWicketModel categoryWicketModel, IModel<Category> categoryModel, final CategoryService categoryService, final TopicService topicService) {
+    public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService) {
         super(id);
 
         this.topicService = topicService;
-        this.categoryWicketModel = categoryWicketModel;
+        this.categoryListModel = categoryListModel;
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
     }
@@ -46,9 +46,9 @@ public class CategoryListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ListView<Category>("categoryList", categoryWicketModel) {
+        add(new ListView<Category>("categoryList", categoryListModel) {
             protected void populateItem(ListItem<Category> listItem) {
-                final Category category = listItem.getModelObject();
+                Category category = listItem.getModelObject();
 
                 listItem.add(createCategoryHeader(category));
                 listItem.add(createTopicListViewPanel(category));
@@ -59,7 +59,7 @@ public class CategoryListPanel extends Panel {
     }
 
     private TopicListPanel createTopicListViewPanel(Category category) {
-        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(category, topicService), topicService);
+        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(new Model<Category>(category), topicService), topicService);
         topicListViewPanel.setOutputMarkupId(true);
         topicListViewPanel.setMarkupId("id" + generateId);
 

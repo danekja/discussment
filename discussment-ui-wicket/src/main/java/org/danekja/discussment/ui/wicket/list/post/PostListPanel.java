@@ -22,14 +22,14 @@ import java.util.List;
  */
 public class PostListPanel extends Panel {
 
-    private IModel<Post> selectedPost;
+    private IModel<Post> postModel;
     private PostService postService;
     private IModel<List<Post>> postListModel;
 
-    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> selectedPost, final PostService postService) {
+    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService) {
         super(id);
 
-        this.selectedPost = selectedPost;
+        this.postModel = postModel;
         this.postService = postService;
         this.postListModel = postListModel;
     }
@@ -78,7 +78,7 @@ public class PostListPanel extends Panel {
         return new AjaxLink("reply") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                selectedPost.setObject(post);
+                postModel.setObject(post);
             }
 
             @Override

@@ -1,5 +1,6 @@
 package org.danekja.discussment.ui.wicket.model;
 
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
@@ -11,16 +12,16 @@ public class DiscussionWicketModel extends LoadableDetachableModel {
 
     private DiscussionService discussionService;
 
-    private Topic topic;
+    private IModel<Topic> topicModel;
 
-    public DiscussionWicketModel(Topic topic, DiscussionService discussionService) {
+    public DiscussionWicketModel(IModel<Topic> topicModel, DiscussionService discussionService) {
 
-        this.topic = topic;
+        this.topicModel = topicModel;
         this.discussionService = discussionService;
     }
 
     protected Object load() {
-        return discussionService.getDiscussionsByTopic(topic);
+        return discussionService.getDiscussionsByTopic(topicModel.getObject());
     }
 
 

@@ -16,15 +16,15 @@ import java.util.List;
  */
 public class ThreadListPanel extends Panel {
 
-    private IModel<List<Post>> threadWicketModel;
-    private IModel<Post> selectedPost;
+    private IModel<List<Post>> threadListModel;
+    private IModel<Post> postModel;
     private PostService postService;
 
-    public ThreadListPanel(String id, IModel<List<Post>> threadWicketModel, IModel<Post> selectedPost, final PostService postService) {
+    public ThreadListPanel(String id, IModel<List<Post>> threadListModel, IModel<Post> postModel, PostService postService) {
         super(id);
 
-        this.threadWicketModel = threadWicketModel;
-        this.selectedPost = selectedPost;
+        this.threadListModel = threadListModel;
+        this.postModel = postModel;
         this.postService = postService;
     }
 
@@ -32,9 +32,9 @@ public class ThreadListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ListView<Post>("threadListView", threadWicketModel) {
+        add(new ListView<Post>("threadListView", threadListModel) {
             protected void populateItem(ListItem<Post> listItem) {
-                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel()), selectedPost, postService));
+                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel()), postModel, postService));
             }
         });
     }
