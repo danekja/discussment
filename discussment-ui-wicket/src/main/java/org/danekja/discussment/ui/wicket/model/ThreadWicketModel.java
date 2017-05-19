@@ -1,12 +1,12 @@
 package org.danekja.discussment.ui.wicket.model;
 
-import java.util.List;
-
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 25.01.17.

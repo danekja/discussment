@@ -29,7 +29,7 @@ public class DiscussionForm extends Form {
         this.discussionService = discussionService;
         this.topicModel = topicModel;
 
-        this.discussionModel = new Model<Discussion>();
+        this.discussionModel = new Model<Discussion>(new Discussion());
     }
 
     @Override
@@ -51,6 +51,8 @@ public class DiscussionForm extends Form {
 
         if (discussionService != null) {
             discussionService.createDiscussion(discussion);
+
+            discussionModel.setObject(new Discussion());
 
             PageParameters pageParameters = new PageParameters();
             pageParameters.add("topicId", topicModel.getObject().getId());

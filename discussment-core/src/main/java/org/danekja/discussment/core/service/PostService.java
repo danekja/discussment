@@ -1,9 +1,9 @@
 package org.danekja.discussment.core.service;
 
-import java.util.List;
-
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 13.05.17.

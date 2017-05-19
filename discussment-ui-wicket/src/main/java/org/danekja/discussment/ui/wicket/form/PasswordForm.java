@@ -29,7 +29,7 @@ public class PasswordForm extends Form {
         this.userService = userService;
         this.discussionModel = discussionModel;
 
-        this.passwordModel = new Model<String>();
+        this.passwordModel = new Model<String>(new String());
     }
 
     @Override
@@ -63,6 +63,8 @@ public class PasswordForm extends Form {
                 pageParameters.add("topicId", discussionModel.getObject().getTopic().getId());
                 pageParameters.add("error", "denied");
             }
+
+            passwordModel.setObject(new String());
 
             setResponsePage(getPage().getClass(), pageParameters);
         }

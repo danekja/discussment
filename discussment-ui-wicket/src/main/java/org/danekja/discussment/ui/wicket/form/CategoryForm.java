@@ -25,7 +25,7 @@ public class CategoryForm extends Form {
 
         this.categoryService = categoryService;
 
-        this.categoryModel = new Model<Category>();
+        this.categoryModel = new Model<Category>(new Category());
     }
 
     @Override
@@ -44,6 +44,8 @@ public class CategoryForm extends Form {
 
         if (categoryService != null) {
             categoryService.createCategory(categoryModel.getObject());
+
+            categoryModel.setObject(new Category());
         }
 
     }

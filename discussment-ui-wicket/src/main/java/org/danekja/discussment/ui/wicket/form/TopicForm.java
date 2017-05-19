@@ -28,7 +28,7 @@ public class TopicForm extends Form {
         this.categoryModel = categoryModel;
         this.topicService = topicService;
 
-        this.topicModel = new Model<Topic>();
+        this.topicModel = new Model<Topic>(new Topic());
     }
 
     @Override
@@ -48,6 +48,8 @@ public class TopicForm extends Form {
 
         if (topicService != null) {
             topicService.createTopic(topicModel.getObject(), categoryModel.getObject());
+
+            topicModel.setObject(new Topic());
         }
 
     }

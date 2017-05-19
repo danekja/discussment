@@ -1,7 +1,5 @@
 package org.danekja.discussment.ui.wicket.list.post;
 
-import java.util.List;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -16,6 +14,8 @@ import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.PostService;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
@@ -86,7 +86,7 @@ public class PostListPanel extends Panel {
                 super.onConfigure();
 
                 User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreatePost());
+                this.setVisible(user != null && user.getPermissions().isCreatePost() && !post.isDisabled());
             }
         };
     }

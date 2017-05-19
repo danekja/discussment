@@ -1,7 +1,5 @@
 package org.danekja.discussment.ui.wicket.list.thread;
 
-import java.util.List;
-
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -10,6 +8,8 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.list.post.PostListPanel;
 import org.danekja.discussment.ui.wicket.model.PostWicketModel;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.

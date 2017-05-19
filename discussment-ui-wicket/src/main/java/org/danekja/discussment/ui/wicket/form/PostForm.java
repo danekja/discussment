@@ -19,6 +19,8 @@ public class PostForm extends Form {
     private IModel<Discussion> discussionModel;
     private IModel<Post> postModel;
 
+    PostFormComponent postFormComponent;
+
     public PostForm(String id, IModel<Discussion> discussionModel) {
         this(id, null, discussionModel);
     }
@@ -29,14 +31,15 @@ public class PostForm extends Form {
         this.postService = postService;
         this.discussionModel = discussionModel;
 
-        this.postModel = new Model<Post>();
+        this.postModel = new Model<Post>(new Post());
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new PostFormComponent("postFormComponent", postModel));
+        postFormComponent = new PostFormComponent("postFormComponent", postModel);
+        add(postFormComponent);
     }
 
     public void setPostService(PostService postService) {
@@ -47,7 +50,6 @@ public class PostForm extends Form {
     protected void onSubmit() {
 
         if (postService != null) {
-
             Post post = postModel.getObject();
             post.setUser((User) getSession().getAttribute("user"));
 
@@ -55,6 +57,8 @@ public class PostForm extends Form {
                     discussionModel.getObject(),
                     post
             );
+
+            postModel.setObject(new Post());
 
             setResponsePage(getPage());
         }

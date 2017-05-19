@@ -1,30 +1,18 @@
 package org.danekja.discussment.ui.wicket.panel.forum;
 
-import java.util.HashMap;
-
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.domain.Category;
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.CategoryService;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.core.service.UserService;
-import org.danekja.discussment.ui.wicket.form.CategoryForm;
-import org.danekja.discussment.ui.wicket.form.DiscussionForm;
-import org.danekja.discussment.ui.wicket.form.PasswordForm;
-import org.danekja.discussment.ui.wicket.form.ReplyForm;
-import org.danekja.discussment.ui.wicket.form.TopicForm;
+import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.ui.wicket.form.*;
 import org.danekja.discussment.ui.wicket.list.content.ContentListPanel;
 import org.danekja.discussment.ui.wicket.list.discussion.DiscussionListPanel;
 import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
+
+import java.util.HashMap;
 
 
 /**
