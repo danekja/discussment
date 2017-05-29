@@ -4,13 +4,14 @@ import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.UserService;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 20.01.17.
  */
-public class DefaultUserService implements org.danekja.discussment.core.service.UserService {
+public class DefaultUserService implements UserService {
 
     private UserDao userDao;
     private PermissionDao permissionDao;

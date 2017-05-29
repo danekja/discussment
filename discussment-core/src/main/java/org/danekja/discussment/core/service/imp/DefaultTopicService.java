@@ -4,13 +4,14 @@ import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.service.TopicService;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class DefaultTopicService implements org.danekja.discussment.core.service.TopicService {
+public class DefaultTopicService implements TopicService {
 
     private TopicDao topicDao;
     private DefaultCategoryService categoryService;

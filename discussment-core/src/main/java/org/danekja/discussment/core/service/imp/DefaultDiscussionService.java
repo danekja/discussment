@@ -4,13 +4,14 @@ import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.DiscussionService;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 20.01.17.
  */
-public class DefaultDiscussionService implements org.danekja.discussment.core.service.DiscussionService {
+public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;
 

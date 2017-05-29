@@ -4,13 +4,14 @@ package org.danekja.discussment.core.service.imp;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.service.PostService;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 07.02.17.
  */
-public class DefaultPostService implements org.danekja.discussment.core.service.PostService {
+public class DefaultPostService implements PostService {
 
     private PostDao postDao;
 
