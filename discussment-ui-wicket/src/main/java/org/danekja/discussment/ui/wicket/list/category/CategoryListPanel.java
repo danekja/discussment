@@ -10,7 +10,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.CategoryService;
@@ -48,43 +48,42 @@ public class CategoryListPanel extends Panel {
 
         add(new ListView<Category>("categoryList", categoryListModel) {
             protected void populateItem(ListItem<Category> listItem) {
-                Category category = listItem.getModelObject();
 
-                listItem.add(createCategoryHeader(category));
-                listItem.add(createTopicListViewPanel(category));
+                listItem.add(createCategoryHeader(listItem.getModel()));
+                listItem.add(createTopicListViewPanel(listItem.getModel()));
 
                 generateId++;
             }
         });
     }
 
-    private TopicListPanel createTopicListViewPanel(Category category) {
-        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(new Model<Category>(category), topicService), topicService);
+    private TopicListPanel createTopicListViewPanel(IModel<Category> cm) {
+        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService);
         topicListViewPanel.setOutputMarkupId(true);
         topicListViewPanel.setMarkupId("id" + generateId);
 
         return topicListViewPanel;
     }
 
-    private WebMarkupContainer createCategoryHeader(Category category) {
+    private WebMarkupContainer createCategoryHeader(IModel<Category> cm) {
         WebMarkupContainer categoryHeader = new WebMarkupContainer("categoryHeader");
 
         WebMarkupContainer categoryIcon = new WebMarkupContainer("categoryIcon");
         categoryIcon.add(new AttributeAppender("data-target", "id" + generateId));
 
         categoryHeader.add(categoryIcon);
-        categoryHeader.add(new Label("categoryName", category.getName()));
-        categoryHeader.add(createNewTopicAjaxLink(category));
-        categoryHeader.add(createRemoveCategoryLink(category));
+        categoryHeader.add(new Label("categoryName", new PropertyModel<String>(cm, "name")));
+        categoryHeader.add(createNewTopicAjaxLink(cm));
+        categoryHeader.add(createRemoveCategoryLink(cm));
 
         return categoryHeader;
     }
 
-    private AjaxLink createNewTopicAjaxLink(final Category category) {
+    private AjaxLink createNewTopicAjaxLink(final IModel<Category> cm) {
         return new AjaxLink("newTopic") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                categoryModel.setObject(category);
+                categoryModel.setObject(cm.getObject());
             }
 
             @Override
@@ -97,11 +96,12 @@ public class CategoryListPanel extends Panel {
         };
     }
 
-    private Link createRemoveCategoryLink(final Category category) {
+    private Link createRemoveCategoryLink(final IModel<Category> cm) {
         return new Link("remove") {
             @Override
             public void onClick() {
-                categoryService.removeCategory(category);
+                categoryService.removeCategory(cm.getObject());
+                setResponsePage(getWebPage().getClass());
             }
 
             @Override

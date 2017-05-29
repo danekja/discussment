@@ -2,6 +2,10 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.service.imp.DefaultCategoryService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
+import org.danekja.discussment.core.service.imp.DefaultUserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +20,7 @@ public class UserServiceTest {
     private TopicService topicService;
     private CategoryService categoryService;
     private UserService userService;
+    private UserDaoJPA userDaoJPA;
     private DiscussionService discussionService;
 
     private User user;
@@ -23,17 +28,18 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
 
-        categoryService = new org.danekja.discussment.core.service.imp.CategoryService(new CategoryDaoJPA());
-        topicService = new org.danekja.discussment.core.service.imp.TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
+        categoryService = new DefaultCategoryService(new CategoryDaoJPA());
+        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        this.userDaoJPA = new UserDaoJPA();
+        userService = new DefaultUserService(userDaoJPA, new PermissionDaoJPA());
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
 
         user = userService.addUser(new User("username", "name", "lastname"), new Permission());
     }
 
     @After
     public void tearDown() throws Exception {
-        userService.removeUser(user);
+        userDaoJPA.remove(user);
     }
 
     @Test
@@ -50,7 +56,7 @@ public class UserServiceTest {
     public void removeUser() throws Exception {
         User removeUser = userService.addUser(new User("test", "test", "test"), new Permission());
 
-        userService.removeUser(removeUser);
+        userDaoJPA.remove(removeUser);
 
         assertNull("Must be null", userService.getUserById(removeUser.getId()));
     }
@@ -72,14 +78,8 @@ public class UserServiceTest {
         Discussion discussion = new Discussion("name", "password");
         discussion = discussionService.createDiscussion(discussion, topic);
 
-        userService.addAccessToDiscussion(user, discussion);
+        discussionService.addAccessToDiscussion(user, discussion);
 
         categoryService.removeCategory(category);
-
-
     }
-
-
-
-
 }

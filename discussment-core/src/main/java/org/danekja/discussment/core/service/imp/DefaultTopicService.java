@@ -10,14 +10,14 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class TopicService implements org.danekja.discussment.core.service.TopicService {
+public class DefaultTopicService implements org.danekja.discussment.core.service.TopicService {
 
     private TopicDao topicDao;
-    private CategoryService categoryService;
+    private DefaultCategoryService categoryService;
 
-    public TopicService(TopicDao topicDao, CategoryDao categoryDao) {
+    public DefaultTopicService(TopicDao topicDao, CategoryDao categoryDao) {
         this.topicDao = topicDao;
-        categoryService = new CategoryService(categoryDao);
+        categoryService = new DefaultCategoryService(categoryDao);
     }
 
     public Topic createTopic(Topic topic) {
@@ -54,7 +54,6 @@ public class TopicService implements org.danekja.discussment.core.service.TopicS
 
     public void removeTopic(Topic topic) {
 
-        topic.getCategory().getTopics().remove(topic);
         topicDao.remove(topic);
     }
 

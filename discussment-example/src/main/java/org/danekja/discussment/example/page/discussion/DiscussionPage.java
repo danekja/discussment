@@ -1,15 +1,12 @@
-package org.danekja.discussment.example.discussion;
+package org.danekja.discussment.example.page.discussion;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.*;
-import org.danekja.discussment.core.service.imp.CategoryService;
-import org.danekja.discussment.core.service.imp.DiscussionService;
-import org.danekja.discussment.core.service.imp.PostService;
-import org.danekja.discussment.core.service.imp.TopicService;
-import org.danekja.discussment.core.service.imp.UserService;
-import org.danekja.discussment.example.base.BasePage;
+import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
 
 import java.util.HashMap;
@@ -30,7 +27,7 @@ public class DiscussionPage extends BasePage {
 
     private IModel<HashMap<String, Integer>> parametersModel;
 
-    private PageParameters parameters;
+    final PageParameters parameters;
 
     /**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -49,11 +46,11 @@ public class DiscussionPage extends BasePage {
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
         PostDaoJPA postJPA = new PostDaoJPA();
 
-        this.discussionService = new DiscussionService(discussionJPA);
-        this.categoryService = new CategoryService(categoryDaoJPA);
-        this.topicService = new TopicService(topicJPA, categoryDaoJPA);
-        this.postService = new PostService(postJPA);
-        this.userService = new UserService(userJPA, permissionJPA);
+        this.discussionService = new DefaultDiscussionService(discussionJPA);
+        this.categoryService = new DefaultCategoryService(categoryDaoJPA);
+        this.topicService = new DefaultTopicService(topicJPA, categoryDaoJPA);
+        this.postService = new DefaultPostService(postJPA);
+        this.userService = new DefaultUserService(userJPA, permissionJPA);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());

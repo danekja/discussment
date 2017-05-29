@@ -1,12 +1,14 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
     <h1>Forum</h1>
 
-    <a data-toggle="modal" data-target="#categoryModal">
-        <span wicket:id="createCategory">Create category</span>
-    </a>
-    <a data-toggle="modal" data-target="#topicModal">
-        <span wicket:id="createTopic">Create topic</span>
-    </a>
+    <div class="actions_create">
+        <a data-toggle="modal" data-target="#categoryModal">
+            <span wicket:id="createCategory">Create category</span>
+        </a>
+        <a data-toggle="modal" data-target="#topicModal">
+            <span wicket:id="createTopic">Create topic</span>
+        </a>
+    </div>
 
     <!--kategorie s topicy-->
     <panel wicket:id="categoryPanel"></panel>

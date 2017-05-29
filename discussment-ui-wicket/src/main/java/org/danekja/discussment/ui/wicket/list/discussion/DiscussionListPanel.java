@@ -11,9 +11,9 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.DiscussionService;
@@ -42,60 +42,84 @@ public class DiscussionListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        add(createPasswordAlert());
+
         add(new Label("topicName", topicListModel.getObject().getName()));
         add(createDiscussionAjaxLink());
 
 
         add(new ListView<Discussion>("discussionList", new DiscussionWicketModel(topicListModel, discussionService)) {
-            protected void populateItem(ListItem<Discussion> listItem) {
-                final Discussion discussion = listItem.getModelObject();
+            protected void populateItem(final ListItem<Discussion> listItem) {
 
-                listItem.add(createPasswordDivWebMarkupContainer(discussion));
+                listItem.add(createPasswordDivWebMarkupContainer(listItem.getModel()));
 
-                Post lastPost = discussion.getLastPost();
+                listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
+                listItem.add(new Label("lastUsername", new PropertyModel<String>(listItem.getModel(), "lastPost.user.Username")));
+                listItem.add(new Label("lastCreated", new PropertyModel<String>(listItem.getModel(), "lastPost.getCreatedFormat")));
 
-                listItem.add(new Label("numberOfPosts", discussion.getNumberOfPosts()));
-                listItem.add(new Label("lastUsername", lastPost == null ? "" : lastPost.getUser().getUsername()));
-                listItem.add(new Label("lastCreated", lastPost == null ? "" : lastPost.getCreatedFormat()));
-
-                listItem.add(createRemoveDiscussionLink(discussion));
+                listItem.add(createRemoveDiscussionLink(listItem.getModel()));
             }
         });
     }
 
-    private WebMarkupContainer createPasswordDivWebMarkupContainer(Discussion discussion) {
-        WebMarkupContainer div = new WebMarkupContainer("passwordDiv");
+    private WebMarkupContainer createPasswordAlert() {
+        return new WebMarkupContainer("alertPassword") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
 
-        User user = (User) getSession().getAttribute("user");
+                if (getSession().getAttribute("error") != null && getSession().getAttribute("error").equals("password")) {
+                    setVisible(true);
+                    getSession().setAttribute("error", null);
+                } else {
+                    setVisible(false);
+                }
 
-        if (user.isAccessToDiscussion(discussion)) {
-            div.add(new AttributeModifier("href", "#"));
-            div.add(new AttributeModifier("data-target", "#"));
 
-            div.add(createOpenDiscussionAjaxLink(discussion, true));
-        } else {
-            div.add(createOpenDiscussionAjaxLink(discussion, false));
-        }
+            }
+        };
+    }
+
+    private WebMarkupContainer createPasswordDivWebMarkupContainer(final IModel<Discussion> dm) {
+
+        WebMarkupContainer div = new WebMarkupContainer("passwordDiv") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                User user = (User) getSession().getAttribute("user");
+
+                if (user != null && user.isAccessToDiscussion(dm.getObject())) {
+                    add(new AttributeModifier("href", "#"));
+                    add(new AttributeModifier("data-target", "#"));
+
+                    add(createOpenDiscussionAjaxLink(dm, true));
+                } else {
+                    add(createOpenDiscussionAjaxLink(dm, false));
+                }
+            }
+        };
 
         return div;
     }
 
-    private AjaxLink createOpenDiscussionAjaxLink(final Discussion discussion, final boolean access) {
+    private AjaxLink createOpenDiscussionAjaxLink(final IModel<Discussion> dm, final boolean access) {
         AjaxLink discussionNameLink = new AjaxLink("openDiscussion") {
 
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                discussionModel.setObject(discussion);
+
+                discussionModel.setObject(dm.getObject());
 
                 if (access) {
                     PageParameters pageParameters = new PageParameters();
-                    pageParameters.add("discussionId", discussion.getId());
+                    pageParameters.add("discussionId", dm.getObject().getId());
 
                     setResponsePage(getWebPage().getClass(), pageParameters);
                 }
             }
         };
 
-        discussionNameLink.setBody(Model.of(discussion.getName()));
+        discussionNameLink.setBody(Model.of(dm.getObject().getName()));
 
         return discussionNameLink;
     }
@@ -115,11 +139,12 @@ public class DiscussionListPanel extends Panel {
         };
     }
 
-    private Link createRemoveDiscussionLink(final Discussion discussion) {
+    private Link createRemoveDiscussionLink(final IModel<Discussion> dm) {
         return new Link("remove") {
             @Override
             public void onClick() {
-                discussionService.removeDiscussion(discussion);
+                discussionService.removeDiscussion(dm.getObject());
+                setResponsePage(getWebPage().getClass(), getWebPage().getPageParameters());
             }
 
             @Override

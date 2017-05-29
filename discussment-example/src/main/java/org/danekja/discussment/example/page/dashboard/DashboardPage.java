@@ -1,22 +1,24 @@
-package org.danekja.discussment.example.dashboard;
+package org.danekja.discussment.example.page.dashboard;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.UserService;
-import org.danekja.discussment.example.base.BasePage;
+import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.example.page.base.BasePage;
 
 /**
  * Created by Martin Bláha on 21.01.17.
  */
 public class DashboardPage extends BasePage {
 
-    public DashboardPage() {
+    public DashboardPage(final PageParameters parameters) {
 
-        UserService userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
+        UserService userService = new DefaultUserService(new UserDaoJPA(), new PermissionDaoJPA());
 
         add(new ListView<User>("usersListView", userService.getUsers()) {
 
@@ -25,8 +27,6 @@ public class DashboardPage extends BasePage {
                 final User user = item.getModelObject();
 
                 item.add(new Label("username", user.getUsername()));
-                item.add(new Label("name", user.getName()));
-                item.add(new Label("lastname", user.getLastname()));
 
                 item.add(new Label("cc", user.getPermissions().isCreateCategory()));
                 item.add(new Label("rc", user.getPermissions().isRemoveCategory()));

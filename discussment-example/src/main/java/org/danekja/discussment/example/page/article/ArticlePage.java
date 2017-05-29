@@ -1,4 +1,4 @@
-package org.danekja.discussment.example.article;
+package org.danekja.discussment.example.page.article;
 
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -6,9 +6,11 @@ import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.imp.DiscussionService;
-import org.danekja.discussment.core.service.imp.PostService;
-import org.danekja.discussment.example.base.BasePage;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
 
 
@@ -32,8 +34,8 @@ public class ArticlePage extends BasePage {
 	 */
     public ArticlePage(final PageParameters parameters) {
 
-        this.discussionService = new DiscussionService(new DiscussionDaoJPA());
-        this.postService = new PostService(new PostDaoJPA());
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        this.postService = new DefaultPostService(new PostDaoJPA());
     }
 
     @Override

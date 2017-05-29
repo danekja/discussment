@@ -2,7 +2,6 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.ui.wicket.form.category.CategoryFormComponent;
@@ -16,16 +15,15 @@ public class CategoryForm extends Form {
 
     private IModel<Category> categoryModel;
 
-    public CategoryForm(String id) {
-        this(id, null);
+    public CategoryForm(String id, IModel<Category> categoryModel) {
+        this(id, null, categoryModel);
     }
 
-    public CategoryForm(String id, CategoryService categoryService) {
+    public CategoryForm(String id, CategoryService categoryService, IModel<Category> categoryModel) {
         super(id);
 
         this.categoryService = categoryService;
-
-        this.categoryModel = new Model<Category>(new Category());
+        this.categoryModel = categoryModel;
     }
 
     @Override

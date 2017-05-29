@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.User;
@@ -33,26 +34,32 @@ public class TopicListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        if (topicListModel.getObject().size() == 0) {
+            setVisible(false);
+        } else {
+            setVisible(true);
+        }
+
         add(new ListView<Topic>("topicList", topicListModel) {
             protected void populateItem(ListItem<Topic> listItem) {
-                final Topic topic = listItem.getModelObject();
 
-                listItem.add(createOpenTopicLink(topic));
-                listItem.add(createRemoveLink(topic));
+                listItem.add(createOpenTopicLink(listItem.getModel()));
+                listItem.add(createRemoveLink(listItem.getModel()));
 
-                listItem.add(new Label("description", topic.getDescription()));
-                listItem.add(new Label("numberOfDiscussions", topic.getNumberOfDiscussions()));
-                listItem.add(new Label("numberOfPosts", topic.getNumberOfPosts()));
+                listItem.add(new Label("description", new PropertyModel<String>(listItem.getModel(), "description")));
+                listItem.add(new Label("numberOfDiscussions", new PropertyModel<String>(listItem.getModel(), "numberOfDiscussions")));
+                listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
+
             }
         });
     }
 
-    private Link createOpenTopicLink(final Topic topic) {
+    private Link createOpenTopicLink(final IModel<Topic> tm) {
         return new Link("openTopic") {
             @Override
             public void onClick() {
                 PageParameters pageParameters = new PageParameters();
-                pageParameters.add("topicId", topic.getId());
+                pageParameters.add("topicId", tm.getObject().getId());
 
                 setResponsePage(getWebPage().getClass(), pageParameters);
             }
@@ -61,16 +68,18 @@ public class TopicListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                setBody(Model.of(topic.getName()));
+                setBody(Model.of(tm.getObject().getName()));
             }
         };
     }
 
-    private Link createRemoveLink(final Topic topic) {
+    private Link createRemoveLink(final IModel<Topic> tm) {
         return new Link("remove") {
             @Override
             public void onClick() {
-                topicService.removeTopic(topic);
+
+                topicService.removeTopic(tm.getObject());
+                setResponsePage(getWebPage().getClass());
             }
 
             @Override

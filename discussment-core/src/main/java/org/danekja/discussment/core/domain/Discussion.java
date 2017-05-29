@@ -37,7 +37,21 @@ public class Discussion extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "discussion", orphanRemoval = true)
     private List<Post> posts = new ArrayList<Post>();
 
-    @ManyToMany(mappedBy = "accessListToDiscussion")
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "user_discussion",
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            name = "user_id",
+                            referencedColumnName = "id"
+                    )
+            },
+            joinColumns = {
+                    @JoinColumn(
+                            name = "discussion_id",
+                            referencedColumnName = "id"
+                    )
+            }
+    )
     private List<User> userAccessList = new ArrayList<User>();
 
     @ManyToOne
@@ -89,13 +103,6 @@ public class Discussion extends BaseEntity implements Serializable {
 
     public void setUserAccessList(List<User> accessList) {
         this.userAccessList = accessList;
-    }
-
-    public void addPost(Post post) {
-        posts.add(post);
-        if (post.getDiscussion() != this) {
-            post.setDiscussion(this);
-        }
     }
 
     public int getNumberOfPosts() {

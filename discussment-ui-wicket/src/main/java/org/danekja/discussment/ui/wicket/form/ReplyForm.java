@@ -39,7 +39,6 @@ public class ReplyForm extends Form {
     @Override
     protected void onSubmit() {
 
-
         if (postService != null) {
 
             Post reply = replyModel.getObject();

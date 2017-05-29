@@ -10,7 +10,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.PostService;
@@ -39,14 +39,14 @@ public class PostListPanel extends Panel {
         super.onInitialize();
 
         add(new ListView<Post>("postListView", postListModel) {
-            protected void populateItem(ListItem<Post> listItem) {
-                final Post post = listItem.getModelObject();
+            protected void populateItem(final ListItem<Post> listItem) {
 
-                Label text = new Label("text", post.getText()) {
+
+                Label text = new Label("text", new PropertyModel<String>(listItem.getModel(), "text")) {
                     @Override
                     protected void onConfigure() {
                         super.onConfigure();
-                        this.setVisible(!post.isDisabled());
+                        this.setVisible(!listItem.getModelObject().isDisabled());
                     }
                 };
                 listItem.add(text);
@@ -55,30 +55,30 @@ public class PostListPanel extends Panel {
                     @Override
                     protected void onConfigure() {
                         super.onConfigure();
-                        this.setVisible(post.isDisabled());
+                        this.setVisible(listItem.getModelObject().isDisabled());
                     }
                 };
                 listItem.add(dis);
 
-                listItem.add(new Label("username", post.getUser().getUsername()));
-                listItem.add(new Label("created", post.getCreatedFormat()));
+                listItem.add(new Label("username", new PropertyModel<String>(listItem.getModel(), "user.username")));
+                listItem.add(new Label("created", new PropertyModel<String>(listItem.getModel(), "created")));
 
 
-                listItem.add(createReplyAjaxLink(post));
-                listItem.add(createRemoveLink(post));
-                listItem.add(createDisableLink(post));
+                listItem.add(createReplyAjaxLink(listItem.getModel()));
+                listItem.add(createRemoveLink(listItem.getModel()));
+                listItem.add(createDisableLink(listItem.getModel()));
 
-                listItem.add(new AttributeModifier("style", "padding-left: " + post.getLevel() * 30 + "px"));
+                listItem.add(new AttributeModifier("style", "padding-left: " + listItem.getModelObject().getLevel() * 30 + "px"));
 
             }
         });
     }
 
-    private AjaxLink createReplyAjaxLink(final Post post) {
+    private AjaxLink createReplyAjaxLink(final IModel<Post> pm) {
         return new AjaxLink("reply") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                postModel.setObject(post);
+                postModel.setObject(pm.getObject());
             }
 
             @Override
@@ -86,16 +86,17 @@ public class PostListPanel extends Panel {
                 super.onConfigure();
 
                 User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreatePost() && !post.isDisabled());
+                this.setVisible(user != null && user.getPermissions().isCreatePost() && !pm.getObject().isDisabled());
             }
         };
     }
 
-    private Link createRemoveLink(final Post post) {
+    private Link createRemoveLink(final IModel<Post> pm) {
         return new Link("remove") {
             @Override
             public void onClick() {
-                postService.removePost(post);
+                postService.removePost(pm.getObject());
+                setResponsePage(getWebPage().getClass(), getWebPage().getPageParameters());
             }
 
             @Override
@@ -108,25 +109,15 @@ public class PostListPanel extends Panel {
         };
     }
 
-    private Link createDisableLink(final Post post) {
-        IModel<String> model = new Model<String>() {
-            @Override
-            public String getObject() {
-                if (post.isDisabled()) {
-                    return "Enable";
-                } else {
-                    return "Disable";
-                }
-            }
-        };
+    private Link createDisableLink(final IModel<Post> pm) {
 
         Link disableLink = new Link("disable") {
             @Override
             public void onClick() {
-                if (post.isDisabled()) {
-                    postService.enablePost(post);
+                if (pm.getObject().isDisabled()) {
+                    postService.enablePost(pm.getObject());
                 } else {
-                    postService.disablePost(post);
+                    postService.disablePost(pm.getObject());
                 }
             }
 
@@ -138,7 +129,20 @@ public class PostListPanel extends Panel {
                 this.setVisible(user != null && user.getPermissions().isDisablePost());
             }
         };
-        disableLink.setBody(model);
+
+        WebMarkupContainer span = new WebMarkupContainer("disable_icon") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                if (pm.getObject().isDisabled()) {
+                    add(new AttributeModifier("class", "glyphicon glyphicon-ok-circle"));
+                } else {
+                    add(new AttributeModifier("class", "glyphicon glyphicon-ban-circle"));
+                }
+            }
+        };
+        disableLink.add(span);
 
         return disableLink;
     }

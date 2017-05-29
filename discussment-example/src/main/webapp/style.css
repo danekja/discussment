@@ -18,17 +18,26 @@
     font-size: 25px;
 }
 
-div.topic_container > div:nth-of-type(even) {
+/*div.topic_container > div:nth-of-type(even) {
     background: whitesmoke;
 }
 
 div.post_container > div:nth-of-type(odd) {
     background: whitesmoke;
+}*/
+
+.post_container {
+    padding: 5px;
 }
 
 .post {
    padding: 10px;
+   border-top: solid 1px whitesmoke;
 }
+
+/*.post:nth-child(1n + 2) {
+
+}*/
 
 .thread {
     margin-bottom: 20px;
@@ -36,4 +45,31 @@ div.post_container > div:nth-of-type(odd) {
 
 #dashboardPage {
     padding-left: 0; !important;
+}
+
+.numberOf {
+    display: inline-block;
+    width: 85px;
+}
+
+.actions_create {
+    margin-bottom: 10px;
+}
+
+.submit_button_div {
+    margin-bottom: 20px;
+    margin-top: 10px;
+    text-align: right;
+}
+
+.postedOn {
+    padding-right: 10px;
+    font-style: italic;
+}
+
+.authorOfPost {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 17px;
+    padding-right: 5px;
 }

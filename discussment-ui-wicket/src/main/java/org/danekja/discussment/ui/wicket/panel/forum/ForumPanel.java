@@ -26,7 +26,6 @@ public class ForumPanel extends Panel {
     private PostService postService;
     private TopicService topicService;
     private DiscussionService discussionService;
-    private UserService userService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
@@ -42,7 +41,6 @@ public class ForumPanel extends Panel {
         this.postService = postService;
         this.topicService = topicService;
         this.discussionService = discussionService;
-        this.userService = userService;
 
         this.categoryModel = new Model<Category>();
         this.discussionModel = new Model<Discussion>();
@@ -54,11 +52,11 @@ public class ForumPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new CategoryForm("categoryForm", categoryService));
+        add(new CategoryForm("categoryForm", categoryService, new Model<Category>(new Category())));
         add(new ReplyForm("replyForm", postService, postModel, new Model<Post>(new Post())));
-        add(new TopicForm("topicForm", topicService, categoryModel));
-        add(new DiscussionForm("discussionForm", discussionService, topicModel));
-        add(new PasswordForm("passwordForm", userService, discussionModel));
+        add(new TopicForm("topicForm", topicService, categoryModel, new Model<Topic>(new Topic())));
+        add(new DiscussionForm("discussionForm", discussionService, topicModel, new Model<Discussion>(new Discussion())));
+        add(new PasswordForm("passwordForm", discussionService, discussionModel, new Model<Discussion>(new Discussion())));
 
 
         if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
@@ -73,11 +71,14 @@ public class ForumPanel extends Panel {
 
             add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel));
         } else {
+
             Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
 
             User user = (User) getSession().getAttribute("user");
 
-            if (user.isAccessToDiscussion(discussion)) {
+            if ((user != null && user.isAccessToDiscussion(discussion)) ||
+               ((Boolean) getSession().getAttribute("access") && getSession().getAttribute("discussionId").equals(discussion.getId()))) {
+
                 add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel));
             } else {
                 setResponsePage(getPage().getClass());

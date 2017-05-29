@@ -2,6 +2,7 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.User;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface DiscussionService {
     Discussion getDiscussionById(long discussionId);
 
     void removeDiscussion(Discussion discussion);
+
+    void addAccessToDiscussion(User entity, Discussion en);
 }

@@ -8,11 +8,11 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class CategoryService implements org.danekja.discussment.core.service.CategoryService {
+public class DefaultCategoryService implements org.danekja.discussment.core.service.CategoryService {
 
     private CategoryDao categoryDao;
 
-    public CategoryService(CategoryDao categoryDao) {
+    public DefaultCategoryService(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
     }
 

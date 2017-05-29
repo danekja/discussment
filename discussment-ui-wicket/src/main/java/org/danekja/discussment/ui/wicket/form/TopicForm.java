@@ -2,7 +2,6 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
@@ -18,17 +17,16 @@ public class TopicForm extends Form {
     private IModel<Topic> topicModel;
     private IModel<Category> categoryModel;
 
-    public TopicForm(String id, IModel<Category> categoryModel) {
-        this(id, null, categoryModel);
+    public TopicForm(String id, IModel<Category> categoryModel, IModel<Topic> topicModel) {
+        this(id, null, categoryModel, topicModel);
     }
 
-    public TopicForm(String id, TopicService topicService, IModel<Category> categoryModel) {
+    public TopicForm(String id, TopicService topicService, IModel<Category> categoryModel, IModel<Topic> topicModel) {
         super(id);
 
         this.categoryModel = categoryModel;
         this.topicService = topicService;
-
-        this.topicModel = new Model<Topic>(new Topic());
+        this.topicModel = topicModel;
     }
 
     @Override
@@ -50,6 +48,7 @@ public class TopicForm extends Form {
             topicService.createTopic(topicModel.getObject(), categoryModel.getObject());
 
             topicModel.setObject(new Topic());
+            setResponsePage(getWebPage().getClass());
         }
 
     }

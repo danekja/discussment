@@ -1,6 +1,6 @@
 package org.danekja.discussment.example;
 
-import org.danekja.discussment.example.dashboard.DashboardPage;
+import org.danekja.discussment.example.page.dashboard.DashboardPage;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**

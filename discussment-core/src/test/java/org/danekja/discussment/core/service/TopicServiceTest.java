@@ -2,7 +2,7 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
-import org.junit.After;
+import org.danekja.discussment.core.service.imp.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,22 +20,21 @@ public class TopicServiceTest {
     private DiscussionService discussionService;
     private PostService postService;
 
+    private UserDaoJPA userDao;
+
     private Category category;
 
     @Before
     public void setUp() throws Exception {
-        topicService = new org.danekja.discussment.core.service.imp.TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        categoryService = new org.danekja.discussment.core.service.imp.CategoryService(new CategoryDaoJPA());
-        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
-        postService = new org.danekja.discussment.core.service.imp.PostService(new PostDaoJPA());
+        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        categoryService = new DefaultCategoryService(new CategoryDaoJPA());
+        this.userDao = new UserDaoJPA();
+        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
+
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        postService = new DefaultPostService(new PostDaoJPA());
 
         category = categoryService.createCategory(new Category("text"));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        categoryService.removeCategory(category);
     }
 
     @Test
@@ -119,7 +118,29 @@ public class TopicServiceTest {
         topicService.removeTopic(topic);
 
         //clear
-        userService.removeUser(user);
+        userDao.remove(user);
+    }
+
+    @Test
+    public void removeTopicWithUserAccess() throws Exception {
+        User user = userService.addUser(new User("test", "", ""), new Permission());
+
+        Topic topic = new Topic();
+        topic.setName("test");
+        topic.setDescription("test det");
+        topic = topicService.createTopic(topic, category);
+
+        Discussion discussion = discussionService.createDiscussion(new Discussion("test"), topic);
+
+
+        discussionService.addAccessToDiscussion(user, discussion);
+
+
+        topicService.removeTopic(topic);
+
+
+        //clear
+        userDao.remove(user);
     }
 
 }

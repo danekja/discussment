@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
@@ -8,6 +9,9 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.core.service.imp.DefaultUserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +27,8 @@ import static org.junit.Assert.assertNull;
 public class PostServiceTest {
 
     private UserService userService;
+    private UserDao userDao;
+
     private DiscussionService discussionService;
     private PostService postService;
 
@@ -31,9 +37,10 @@ public class PostServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
-        postService = new org.danekja.discussment.core.service.imp.PostService(new PostDaoJPA());
+        this.userDao = new UserDaoJPA();
+        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        postService = new DefaultPostService(new PostDaoJPA());
 
         discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(discussion);
@@ -42,8 +49,8 @@ public class PostServiceTest {
 
     @After
     public void tearDown() throws Exception {
-        discussionService.removeDiscussion(discussion);
-        userService.removeUser(user);
+        //discussionService.removeDiscussion(discussion);
+        userDao.remove(user);
     }
 
     @Test
@@ -108,7 +115,7 @@ public class PostServiceTest {
         assertEquals("replyText", reply.getText());
 
         //clear
-        //postService.removePost(post);
+        postService.removePost(post);
     }
 
     @Test

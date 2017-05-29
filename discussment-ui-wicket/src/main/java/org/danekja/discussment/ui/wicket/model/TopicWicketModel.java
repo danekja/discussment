@@ -4,12 +4,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
+
+import java.util.List;
 
 /**
  * Created by Martin Bláha on 25.01.17.
  */
-public class TopicWicketModel extends LoadableDetachableModel {
+public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
 
     private TopicService topicService;
     private IModel<Category> categoryModel;
@@ -25,7 +28,7 @@ public class TopicWicketModel extends LoadableDetachableModel {
         this.topicService = topicService;
     }
 
-    protected Object load() {
+    protected List<Topic> load() {
 
         if (categoryModel.getObject() == null) {
             return topicService.getTopicsWithoutCategory();

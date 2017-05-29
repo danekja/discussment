@@ -1,8 +1,9 @@
 package org.danekja.discussment.core.domain;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +34,7 @@ public class User extends BaseEntity implements Serializable {
     @OneToOne(orphanRemoval = true)
     private Permission permissions;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_discussion",
-            joinColumns = {
-                    @JoinColumn(
-                            name = "user_id",
-                            referencedColumnName = "id"
-                    )
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(
-                            name = "discussion_id",
-                            referencedColumnName = "id"
-                    )
-            }
-    )
+    @ManyToMany(mappedBy = "userAccessList")
     private List<Discussion> accessListToDiscussion = new ArrayList<Discussion>();
 
     public User() {}

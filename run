@@ -1,0 +1,8 @@
+cd discussment-core/
+mvn install -DskipTests
+
+cd ../discussment-ui-wicket/
+mvn install
+
+cd ../discussment-example/
+mvn tomcat7:run

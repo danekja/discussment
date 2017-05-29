@@ -1,13 +1,19 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.dao.jpa.*;
-import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
+import org.danekja.discussment.core.service.imp.DefaultUserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by Martin Bláha on 19.02.17.
@@ -17,16 +23,17 @@ public class DiscussionServiceTest {
     private TopicService topicService;
     private UserService userService;
     private DiscussionService discussionService;
-    private PostService postService;
+
+    private UserDao userDao;
 
     private Topic topic;
 
     @Before
     public void setUp() throws Exception {
-        topicService = new org.danekja.discussment.core.service.imp.TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
-        postService = new org.danekja.discussment.core.service.imp.PostService(new PostDaoJPA());
+        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        this.userDao = new UserDaoJPA();
+        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
 
         topic = new Topic();
         topic.setName("testTopic");
@@ -87,24 +94,13 @@ public class DiscussionServiceTest {
     public void removeDiscussion() throws Exception {
         User user = userService.addUser(new User("test", "", ""), new Permission());
 
-        Discussion discussion = discussionService.createDiscussion(new Discussion("test"), topic);
-
-        Post post = new Post();
-        post.setText("text");
-        post.setUser(user);
-
-        post = postService.sendPost(discussion, post);
-
-        Post reply = new Post();
-        post.setText("reply test");
-        post.setUser(user);
-
-        postService.sendReply(reply, post);
-
+        Discussion discussion = discussionService.createDiscussion(new Discussion("test"));
         discussionService.removeDiscussion(discussion);
 
+        assertNull("Must be null", userService.getUserById(discussion.getId()));
+
         //clear
-        userService.removeUser(user);
+        userDao.remove(user);
     }
 
 }

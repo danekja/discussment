@@ -1,8 +1,5 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
-
-    <!--<span wicket:id="discussionForm"></span>
-    <span wicket:id="passwordForm"></span>-->
-
+    <div wicket:id="alertPassword" class="alert alert-danger" role="alert">Wrong password</div>
 
     <h1>Forum</h1>
     <div class="panel panel-default">
@@ -29,18 +26,19 @@
                         <div class="col-md-11">
                             <div class="row">
                                 <a wicket:id="passwordDiv" class="col-md-12" data-toggle="modal" data-target="#passwordModal">
-                                    <span wicket:id="openDiscussion"></span>
+                                    <div wicket:id="openDiscussion"></div>
                                 </a>
                             </div>
-
                         </div>
                     </div>
                 </div>
-                <div class="col-md-1">
-                    Posts:
-                    <span wicket:id="numberOfPosts"></span>
+                <div class="col-md-2">
+                    <div>
+                        <span>Posts: </span>
+                        <span wicket:id="numberOfPosts"></span>
+                    </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <span wicket:id="lastUsername"></span>
                     <span wicket:id="lastCreated"></span>
                 </div>

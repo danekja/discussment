@@ -2,7 +2,6 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.User;
@@ -21,17 +20,16 @@ public class PostForm extends Form {
 
     PostFormComponent postFormComponent;
 
-    public PostForm(String id, IModel<Discussion> discussionModel) {
-        this(id, null, discussionModel);
+    public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel) {
+        this(id, null, discussionModel, postModel);
     }
 
-    public PostForm(String id, PostService postService, IModel<Discussion> discussionModel) {
+    public PostForm(String id, PostService postService, IModel<Discussion> discussionModel, IModel<Post> postModel) {
         super(id);
 
         this.postService = postService;
         this.discussionModel = discussionModel;
-
-        this.postModel = new Model<Post>(new Post());
+        this.postModel = postModel;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.User;
 
@@ -14,11 +13,7 @@ public interface UserService {
 
     List<User> getUsers();
 
-    void removeUser(User user);
-
     User getUserById(long userId);
-
-    void addAccessToDiscussion(User entity, Discussion en);
 
     User getUserByUsername(String username);
 }

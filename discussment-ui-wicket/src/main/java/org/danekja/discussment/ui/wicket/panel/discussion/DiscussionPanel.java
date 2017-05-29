@@ -42,7 +42,7 @@ public class DiscussionPanel extends Panel {
     }
 
     private PostForm createPostForm() {
-        return new PostForm("postForm", postService, discussionModel) {
+        return new PostForm("postForm", postService, discussionModel, new Model<Post>(new Post())) {
 
             @Override
             protected void onConfigure() {

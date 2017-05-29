@@ -34,7 +34,7 @@ public class ThreadListPanel extends Panel {
 
         add(new ListView<Post>("threadListView", threadListModel) {
             protected void populateItem(ListItem<Post> listItem) {
-                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel()), postModel, postService));
+                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel(), postService), postModel, postService));
             }
         });
     }

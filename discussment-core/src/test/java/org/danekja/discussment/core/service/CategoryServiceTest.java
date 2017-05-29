@@ -1,7 +1,9 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.service.imp.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,13 +21,16 @@ public class CategoryServiceTest {
     private DiscussionService discussionService;
     private PostService postService;
 
+    private UserDao userDao;
+
     @Before
     public void setUp() throws Exception {
-        topicService = new org.danekja.discussment.core.service.imp.TopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        categoryService = new org.danekja.discussment.core.service.imp.CategoryService(new CategoryDaoJPA());
-        userService = new org.danekja.discussment.core.service.imp.UserService(new UserDaoJPA(), new PermissionDaoJPA());
-        discussionService = new org.danekja.discussment.core.service.imp.DiscussionService(new DiscussionDaoJPA());
-        postService = new org.danekja.discussment.core.service.imp.PostService(new PostDaoJPA());
+        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
+        categoryService = new DefaultCategoryService(new CategoryDaoJPA());
+        this.userDao = new UserDaoJPA();
+        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        postService = new DefaultPostService(new PostDaoJPA());
 
     }
 
@@ -79,7 +84,7 @@ public class CategoryServiceTest {
         categoryService.removeCategory(category);
 
         //clear
-        userService.removeUser(user);
+        userDao.remove(user);
     }
 
 }

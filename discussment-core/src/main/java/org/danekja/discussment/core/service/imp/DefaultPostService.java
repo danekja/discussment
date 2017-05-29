@@ -10,11 +10,11 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 07.02.17.
  */
-public class PostService implements org.danekja.discussment.core.service.PostService {
+public class DefaultPostService implements org.danekja.discussment.core.service.PostService {
 
     private PostDao postDao;
 
-    public PostService(PostDao postDao) {
+    public DefaultPostService(PostDao postDao) {
         this.postDao = postDao;
     }
 
@@ -45,7 +45,7 @@ public class PostService implements org.danekja.discussment.core.service.PostSer
 
     public Post sendPost(Discussion discussion, Post post) {
 
-        discussion.addPost(post);
+        post.setDiscussion(discussion);
 
         return postDao.save(post);
     }
@@ -67,11 +67,7 @@ public class PostService implements org.danekja.discussment.core.service.PostSer
     }
 
     public List<Post> listPostHierarchy(Discussion discussion) {
-        //implement this so that single database query is used
-        //this is hard to achieve with SQL, but necessary performance-wise;
-        //easiest solution is to fetch posts belonging to discussion in a list
-        //and building the tree hierarchy in code
-        //throw new UnsupportedOperationException("To be implemented");
+
         return postDao.getPostsByDiscussion(discussion);
     }
 }

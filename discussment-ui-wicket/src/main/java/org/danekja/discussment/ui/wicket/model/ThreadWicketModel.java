@@ -22,6 +22,7 @@ public class ThreadWicketModel extends LoadableDetachableModel<List<Post>> {
     }
 
     protected List<Post> load() {
+
         return postService.listPostHierarchy(discussionModel.getObject());
     }
 
