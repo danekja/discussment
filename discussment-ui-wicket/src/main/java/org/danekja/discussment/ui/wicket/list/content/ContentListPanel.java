@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 29.01.17.
+ *
+ * The class creates the panel contains the categories with the topics and the topics without the category.
  */
 public class ContentListPanel extends Panel {
 
@@ -26,6 +28,16 @@ public class ContentListPanel extends Panel {
     private IModel<List<Category>>  categoryListModel;
     private IModel<List<Topic>>  topicWicketModel;
 
+    /**
+     * Constructor for creating a instance of the panel contains the categories with the topics and the topics without the category.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryListModel model for getting the categories
+     * @param topicWicketModel model for getting the topics
+     * @param categoryService instance of the category service
+     * @param topicService instance of the topic service
+     * @param categoryModel model for setting the selected category
+     */
     public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, CategoryService categoryService, TopicService topicService, IModel<Category> categoryModel) {
         super(id);
 

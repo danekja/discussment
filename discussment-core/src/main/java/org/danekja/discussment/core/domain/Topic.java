@@ -10,6 +10,8 @@ import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_WITHOUT_CATEG
 
 /**
  * Created by Martin Bláha on 19.01.17.
+ *
+ * The class represents a topic in the forum.
  */
 
 @Entity
@@ -19,16 +21,36 @@ import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_WITHOUT_CATEG
 })
 public class Topic extends BaseEntity implements Serializable {
 
+    /**
+     * The constant contains name of query for getting topics by category id
+     */
     public static final String GET_TOPICS_BY_CATEGORY_ID = "Topic.getTopicsByCategoryId";
+
+    /**
+     * The constant contains name of query for getting topics without a category
+     */
     public static final String GET_TOPICS_WITHOUT_CATEGORY = "FileEntity.getTopicsWithoutCategory";
 
+    /**
+     * Name of the topic
+     */
     private String name;
+
+    /**
+     * Description of the topic
+     */
     private String description;
 
+    /**
+     * Category in which the topic is
+     */
     @ManyToOne(cascade = CascadeType.MERGE)
     private Category category;
 
 
+    /**
+     * List contains discussion in the topic. If the topic is removed, the discussions are removed too.
+     */
     @OneToMany(mappedBy = "topic", cascade = CascadeType.REMOVE)
     private List<Discussion> discussions = new ArrayList<Discussion>();
 

@@ -15,6 +15,9 @@ import org.danekja.discussment.ui.wicket.model.ThreadWicketModel;
 
 /**
  * Created by Martin Bláha on 29.01.17.
+ *
+ * The class creates the panel which contains the discussion. This panel can be used below a article like
+ * a discussion about the article.
  */
 public class DiscussionPanel extends Panel {
 
@@ -23,6 +26,14 @@ public class DiscussionPanel extends Panel {
 
     private PostService postService;
 
+    /**
+     * Constructor for creating the panel which contains the discussion.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param discussion discussion in the panel
+     * @param postService instance of the post service
+     * @param selectedPost instance contains the selected post in the discussion
+     */
     public DiscussionPanel(String id, IModel<Discussion> discussion, PostService postService, IModel<Post> selectedPost) {
         super(id);
 

@@ -8,11 +8,18 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 25.01.17.
+ *
+ * The class for getting the categories via the category service.
  */
 public class CategoryWicketModel extends LoadableDetachableModel<List<Category>> {
 
     private CategoryService categoryService;
 
+    /**
+     * Constructor for creating a instance of getting the categories.
+     *
+     * @param categoryService instance of the category service
+     */
     public CategoryWicketModel(CategoryService categoryService) {
         this.categoryService = categoryService;
     }

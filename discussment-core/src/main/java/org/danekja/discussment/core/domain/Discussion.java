@@ -1,7 +1,5 @@
 package org.danekja.discussment.core.domain;
 
-import org.hibernate.annotations.*;
-
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,32 +9,45 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.danekja.discussment.core.domain.Discussion.GET_BY_NAME;
 import static org.danekja.discussment.core.domain.Discussion.GET_DISCUSSIONS_BY_TOPIC_ID;
 
 /**
  * Created by Martin Bláha on 19.01.17.
+ *
+ * The class represents one discussion in the discussion.
  */
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = GET_BY_NAME,
-                query = "SELECT d FROM Discussion d WHERE d.name = :name"),
         @NamedQuery(name = GET_DISCUSSIONS_BY_TOPIC_ID,
                 query = "SELECT d FROM Discussion d WHERE d.topic.id = :topicId")
 })
 public class Discussion extends BaseEntity implements Serializable {
 
-    public static final String GET_BY_NAME = "Discussion.getByUsername";
+    /**
+     * The constant contains name of query for getting discussions by topic id
+     */
     public static final String GET_DISCUSSIONS_BY_TOPIC_ID = "Discussion.getBytopicId";
 
+    /**
+     * Name of the discussion
+     */
     private String name;
+
+    /**
+     * Password of the discussion. If the discussion has not a password, is null.
+     */
     private String pass;
 
-
+    /**
+     * List contains posts in the discussion. If the discussion is removed, the posts are removed too.
+     */
     @OneToMany(mappedBy = "discussion", orphanRemoval = true)
     private List<Post> posts = new ArrayList<Post>();
 
+    /**
+     * List contains users which have access to a discussion. If the discussion is removed, the users still exist.
+     */
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_discussion",
             inverseJoinColumns = {
@@ -54,6 +65,9 @@ public class Discussion extends BaseEntity implements Serializable {
     )
     private List<User> userAccessList = new ArrayList<User>();
 
+    /**
+     * Topic in which the discussion is.
+     */
     @ManyToOne
     private Topic topic;
 

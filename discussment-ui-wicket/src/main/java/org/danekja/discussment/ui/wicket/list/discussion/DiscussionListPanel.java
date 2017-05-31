@@ -22,6 +22,8 @@ import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 
 /**
  * Created by Martin Bláha on 29.01.17.
+ *
+ * The class creates the panel contains the discussions
  */
 public class DiscussionListPanel extends Panel {
 
@@ -30,6 +32,14 @@ public class DiscussionListPanel extends Panel {
     private IModel<Topic> topicListModel;
 
 
+    /**
+     * Constructor for creating a instance of the panel contains the discussions
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param topicListModel model for getting the topics
+     * @param discussionService instance of the discussion service
+     * @param discussionModel model for setting the selected discussion
+     */
     public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel) {
         super(id);
 

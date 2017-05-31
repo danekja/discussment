@@ -8,9 +8,17 @@ import org.danekja.discussment.core.domain.Topic;
 
 /**
  * Created by Martin Bláha on 03.02.17.
+ *
+ * The class contains the input fields for getting a name and description
  */
 public class TopicFormComponent extends Panel {
 
+    /**
+     * Constructor for creating a instance of getting a name and description of athe post.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param topicModel variable contains the topic for setting the name and description
+     */
     public TopicFormComponent(String id, IModel<Topic> topicModel) {
         super(id, topicModel);
     }

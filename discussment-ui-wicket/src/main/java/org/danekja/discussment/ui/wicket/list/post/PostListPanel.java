@@ -19,6 +19,8 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
+ *
+ * The class creates the panel contains the posts
  */
 public class PostListPanel extends Panel {
 
@@ -26,6 +28,14 @@ public class PostListPanel extends Panel {
     private PostService postService;
     private IModel<List<Post>> postListModel;
 
+    /**
+     * Constructor for creating a instance of the panel contains the posts
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param postListModel model for getting the posts
+     * @param postModel model for setting the selected post
+     * @param postService instance of the post service
+     */
     public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService) {
         super(id);
 

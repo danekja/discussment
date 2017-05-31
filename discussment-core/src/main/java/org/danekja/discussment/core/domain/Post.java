@@ -11,6 +11,8 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 
 /**
  * Created by Martin Bláha on 19.01.17.
+ *
+ * The class represents a post in the discussion.
  */
 @Entity
 @NamedQueries({
@@ -19,26 +21,53 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 })
 public class Post extends BaseEntity implements Serializable {
 
+    /**
+     * The constant contains name of query for getting posts by discussion
+     */
     public static final String GET_BY_DISCUSSION = "Post.getByDiscussion";
 
+    /**
+     * The user which the post created
+     */
     @ManyToOne
     private User user;
 
+    /**
+     * Text of the post
+     */
     private String text;
 
+    /**
+     * If the variable is true, the post is disabled. If false, the post is enabled.
+     */
     private boolean disabled;
 
+    /**
+     * Level of the post. Value 0 is a first thread.
+     */
     private int level;
 
+    /**
+     * The time when the post was created.
+     */
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    /**
+     * The Discussion where the post is. If the post is removed, the discussion still exists
+     */
     @ManyToOne
     private Discussion discussion;
 
+    /**
+     * The parent post, if the parent post does not exist, is null
+     */
     @ManyToOne
     private Post post;
 
+    /**
+     * List constant all replies. If the post is removed, tje replies are removed too.
+     */
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Post> replies = new ArrayList<Post>();
 

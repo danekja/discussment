@@ -10,10 +10,18 @@ import org.danekja.discussment.core.domain.Discussion;
 
 /**
  * Created by Martin Bláha on 03.02.17.
+ *
+ * The class contains the input fields for getting a name and password
  */
 public class DiscussionFormComponent extends Panel {
 
 
+    /**
+     * Constructor for creating a instance of getting the name and password of the discussion.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param discussionModel variable contains the category for setting the name and password
+     */
     public DiscussionFormComponent(String id, IModel<Discussion> discussionModel) {
         super(id, discussionModel);
     }

@@ -17,12 +17,21 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
+ *
+ * The class creates the panel contains the topics
  */
 public class TopicListPanel extends Panel {
 
     private TopicService topicService;
     private IModel<List<Topic>>  topicListModel;
 
+    /**
+     * Constructor for creating a instance of the panel contains the topics
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param topicListModel model for getting the topics
+     * @param topicService instance of the topic service
+     */
     public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService) {
         super(id);
 

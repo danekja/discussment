@@ -17,6 +17,8 @@ import java.util.HashMap;
 
 /**
  * Created by Martin Bláha on 29.01.17.
+ *
+ * The class creates the panel which contains the forum. The forum can be added to a separate page.
  */
 public class ForumPanel extends Panel {
 
@@ -32,6 +34,17 @@ public class ForumPanel extends Panel {
     private IModel<Topic> topicModel;
     private IModel<Post> postModel;
 
+    /**
+     * Constructor for creating the panel which contains the forum.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param parametersModel variable contains a map of the page parameters
+     * @param discussionService instance of the discussion service
+     * @param topicService instance of the topic service
+     * @param categoryService instance of the category service
+     * @param postService instance of the post service
+     * @param userService instance of the user service
+     */
     public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, UserService userService) {
         super(id);
 

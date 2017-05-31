@@ -7,7 +7,17 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 13.05.17.
+ *
+ * The interface extends GenericDao on methods for working with discussions in a database
  */
 public interface DiscussionDao extends GenericDao<Discussion> {
-    List<Discussion> getDiscussionsByTopic(Topic ITopic);
+
+
+    /**
+     * Get discussions in a database based on its topic
+     *
+     * @param topic Topic containing discussions
+     * @return list of Discussion
+     */
+    List<Discussion> getDiscussionsByTopic(Topic topic);
 }

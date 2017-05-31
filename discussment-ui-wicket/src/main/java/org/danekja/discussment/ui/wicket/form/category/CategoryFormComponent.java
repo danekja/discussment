@@ -8,9 +8,17 @@ import org.danekja.discussment.core.domain.Category;
 
 /**
  * Created by Martin Bláha on 15.05.17.
+ *
+ * The class contains the input field for getting a name
  */
 public class CategoryFormComponent extends Panel {
 
+    /**
+     * Constructor for creating a instance of getting a name of the category.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryModel variable contains the category for setting the name
+     */
     public CategoryFormComponent(String id, IModel<Category> categoryModel) {
         super(id, categoryModel);
     }
@@ -24,5 +32,4 @@ public class CategoryFormComponent extends Panel {
         add(name);
 
     }
-
 }

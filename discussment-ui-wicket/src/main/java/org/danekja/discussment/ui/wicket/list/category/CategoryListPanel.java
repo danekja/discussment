@@ -22,9 +22,10 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
+ *
+ * The class creates the panel contains categories with the topics
  */
 public class CategoryListPanel extends Panel {
-
 
     private static int generateId = 0;
 
@@ -33,6 +34,15 @@ public class CategoryListPanel extends Panel {
     private IModel<Category> categoryModel;
     private IModel<List<Category>> categoryListModel;
 
+    /**
+     * Constructor for creating a instance of the panel contains categories with the topics
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryListModel model for getting the categories
+     * @param categoryModel model for setting the selected category
+     * @param categoryService instance of the category service
+     * @param topicService instance of the topic service
+     */
     public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService) {
         super(id);
 

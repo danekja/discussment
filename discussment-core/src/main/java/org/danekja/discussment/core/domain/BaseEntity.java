@@ -7,10 +7,15 @@ import java.io.Serializable;
 
 /**
  * Created by Martin Bláha on 04.01.17.
+ *
+ * The class is a base entity for domain objects.
  */
 @MappedSuperclass
 public class BaseEntity implements Serializable {
 
+    /**
+     * Id of a object.
+     */
     @Id
     @GeneratedValue
     private Long id;

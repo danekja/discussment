@@ -13,9 +13,10 @@ import static org.danekja.discussment.core.domain.User.GET_USERS;
 
 /**
  * Created by Martin Bláha on 04.01.17.
+ *
+ * The class represents a user in the discussion.
  */
 
-//@SuppressWarnings("serial")
 @Entity
 @NamedQueries({
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
@@ -23,17 +24,41 @@ import static org.danekja.discussment.core.domain.User.GET_USERS;
 })
 public class User extends BaseEntity implements Serializable {
 
+    /**
+     * The constant contains name of query for getting an user by username
+     */
     public static final String GET_BY_USERNAME = "User.getByUsername";
+
+    /**
+     * The constant contains name of query for getting all users in a database
+     */
     public static final String GET_USERS = "User.getUsers";
 
+    /**
+     * Username of the user. User name must be unique.
+     */
     @Column(unique=true)
     private String username;
+
+    /**
+     * Name of the user.
+     */
     private String name;
+
+    /**
+     * Lastname of the user.
+     */
     private String lastname;
 
+    /**
+     * Permission of the user. If the user is removed, the permissions are removed too.
+     */
     @OneToOne(orphanRemoval = true)
     private Permission permissions;
 
+    /**
+     * List contains the discussions which the user has access.
+     */
     @ManyToMany(mappedBy = "userAccessList")
     private List<Discussion> accessListToDiscussion = new ArrayList<Discussion>();
 

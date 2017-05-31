@@ -8,42 +8,117 @@ import java.util.Map;
 
 /**
  * Created by Martin Bláha on 19.01.17.
+ *
+ * The class represents a permission for the user.
  */
 @Entity
 public class Permission extends BaseEntity implements Serializable {
 
+    /**
+     * The constant contains index for setting of creating the category.
+     */
     public static final int CREATE_CATEGORY = 1;
+
+    /**
+     * The constant contains index for setting of removing the category.
+     */
     public static final int REMOVE_CATEGORY = 2;
 
+    /**
+     * The constant contains index for setting of creating the topic.
+     */
     public static final int CREATE_TOPIC = 3;
+
+    /**
+     * The constant contains index for setting of removing the topic.
+     */
     public static final int REMOVE_TOPIC = 4;
 
+    /**
+     * The constant contains index for setting of creating the discussion.
+     */
     public static final int CREATE_DISCUSSION = 5;
+
+    /**
+     * The constant contains index for setting of removing the discussion.
+     */
     public static final int REMOVE_DISCUSSION = 6;
 
+    /**
+     * The constant contains index for setting of creating the post.
+     */
     public static final int CREATE_POST = 7;
+
+    /**
+     * The constant contains index for setting of removing the post.
+     */
     public static final int REMOVE_POST = 8;
+
+    /**
+     * The constant contains index for setting of disabling the post.
+     */
     public static final int DISABLE_POST = 9;
 
+    /**
+     * The constant contains index for setting of reading the private discussion.
+     */
     public static final int READ_PRIVATE_DISCUSSION = 10;
 
 
+    /**
+     * User which has this permissions.
+     */
     @OneToOne
     private User user;
 
+    /**
+     * If value is true, the user can create the category.
+     */
     private boolean createCategory;
+
+    /**
+     * If value is true, the user can remove the category.
+     */
     private boolean removeCategory;
 
+    /**
+     * If value is true, the user can create the topic.
+     */
     private boolean createTopic;
+
+    /**
+     * If value is true, the user can remove the topic.
+     */
     private boolean removeTopic;
 
+    /**
+     * If value is true, the user can create the discussion.
+     */
     private boolean createDiscussion;
+
+    /**
+     * If value is true, the user can remove the discussion.
+     */
     private boolean removeDiscussion;
 
+    /**
+     * If value is true, the user can create the post.
+     */
     private boolean createPost;
+
+    /**
+     * If value is true, the user can remove the post.
+     */
     private boolean removePost;
+
+    /**
+     * If value is true, the user can disable the post.
+     */
     private boolean disablePost;
 
+    /**
+     * If value is true, the user can read the private discussion.
+     */
     private boolean readPrivateDiscussion;
 
     public void setPermissions(Map<Integer, Boolean> permissions) {

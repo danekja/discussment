@@ -10,6 +10,8 @@ import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
 
 /**
  * Created by Martin Bláha on 25.01.17.
+ *
+ * The class creates the form for verification a password
  */
 public class PasswordForm extends Form {
 
@@ -18,10 +20,25 @@ public class PasswordForm extends Form {
 
     private IModel<Discussion> passwordModel;
 
-    public PasswordForm(String id, IModel<Discussion> discussionModel, IModel<Discussion> passwordModel, IModel<Boolean> accsess) {
+    /**
+     * Constructor for creating a instance of the form for verification the password
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param discussionModel model contains the discussion to verification access to the discussion
+     * @param passwordModel model contains the discussion for setting the form
+     */
+    public PasswordForm(String id, IModel<Discussion> discussionModel, IModel<Discussion> passwordModel) {
         this(id, null, discussionModel, passwordModel);
     }
 
+    /**
+     * Constructor for creating a instance of the form for verification a password
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param discussionService instance of the discussion service
+     * @param discussionModel model contains the discussion to verification access to the discussion
+     * @param passwordModel model contains the discussion for setting the form
+     */
     public PasswordForm(String id, DiscussionService discussionService, IModel<Discussion> discussionModel, IModel<Discussion> passwordModel) {
         super(id);
 

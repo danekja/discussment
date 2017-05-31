@@ -8,6 +8,8 @@ import org.danekja.discussment.ui.wicket.form.category.CategoryFormComponent;
 
 /**
  * Created by Martin Bláha on 25.01.17.
+ *
+ * The class creates the form for creating a new category
  */
 public class CategoryForm extends Form {
 
@@ -15,10 +17,23 @@ public class CategoryForm extends Form {
 
     private IModel<Category> categoryModel;
 
+    /**
+     * Constructor for creating a instance of the form for adding a new form
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryModel model contains the category for setting the form
+     */
     public CategoryForm(String id, IModel<Category> categoryModel) {
         this(id, null, categoryModel);
     }
 
+    /**
+     * Constructor for creating a instance of the form for adding a new form
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryService instance of the category service
+     * @param categoryModel model contains the category for setting the form
+     */
     public CategoryForm(String id, CategoryService categoryService, IModel<Category> categoryModel) {
         super(id);
 

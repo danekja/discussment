@@ -10,6 +10,8 @@ import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 
 /**
  * Created by Martin Bláha on 21.01.17.
+ *
+ * The class creates the form for creating a new post
  */
 public class PostForm extends Form {
 
@@ -18,12 +20,25 @@ public class PostForm extends Form {
     private IModel<Discussion> discussionModel;
     private IModel<Post> postModel;
 
-    PostFormComponent postFormComponent;
-
+    /**
+     * Constructor for creating a instance of the form for adding the post form
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param discussionModel model contains the discussion for adding a new post
+     * @param postModel model contains the post for setting a form
+     */
     public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel) {
         this(id, null, discussionModel, postModel);
     }
 
+    /**
+     * Constructor for creating a instance of a form for adding a post form
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param postService instance of the post service
+     * @param discussionModel model contains the discussion for adding a new post
+     * @param postModel model contains the post for setting the form
+     */
     public PostForm(String id, PostService postService, IModel<Discussion> discussionModel, IModel<Post> postModel) {
         super(id);
 
@@ -36,8 +51,7 @@ public class PostForm extends Form {
     protected void onInitialize() {
         super.onInitialize();
 
-        postFormComponent = new PostFormComponent("postFormComponent", postModel);
-        add(postFormComponent);
+        add(new PostFormComponent("postFormComponent", postModel));
     }
 
     public void setPostService(PostService postService) {

@@ -7,7 +7,16 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 13.05.17.
+ *
+ * The interface extends GenericDao on methods for working with posts in a database
  */
 public interface PostDao extends GenericDao<Post> {
+
+    /**
+     * Get posts in a database based on its discussion
+     *
+     * @param discussion Discussion containing posts
+     * @return list of Post
+     */
     List<Post> getPostsByDiscussion(Discussion discussion);
 }

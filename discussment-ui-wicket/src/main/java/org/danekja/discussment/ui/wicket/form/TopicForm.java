@@ -9,6 +9,8 @@ import org.danekja.discussment.ui.wicket.form.topic.TopicFormComponent;
 
 /**
  * Created by Martin Bláha on 25.01.17.
+ *
+ * The class creates the form for creating a new topic
  */
 public class TopicForm extends Form {
 
@@ -17,10 +19,25 @@ public class TopicForm extends Form {
     private IModel<Topic> topicModel;
     private IModel<Category> categoryModel;
 
+    /**
+     * Constructor for creating a instance of the form for creating a new topic
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryModel model contains the category for adding a new topic
+     * @param topicModel model contains the topic for setting the form
+     */
     public TopicForm(String id, IModel<Category> categoryModel, IModel<Topic> topicModel) {
         this(id, null, categoryModel, topicModel);
     }
 
+    /**
+     * Constructor for creating a instance of the form for creating a new topic
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param topicService instance of the topic service
+     * @param categoryModel model contains the category for adding a new topic
+     * @param topicModel model contains the topic for setting the form
+     */
     public TopicForm(String id, TopicService topicService, IModel<Category> categoryModel, IModel<Topic> topicModel) {
         super(id);
 

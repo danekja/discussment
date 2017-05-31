@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.02.17.
+ *
+ * The class creates the panel contains threads with the posts
  */
 public class ThreadListPanel extends Panel {
 
@@ -20,6 +22,14 @@ public class ThreadListPanel extends Panel {
     private IModel<Post> postModel;
     private PostService postService;
 
+    /**
+     * Constructor for creating a instance of the panel contains the threads with the posts
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param threadListModel model for getting the threads
+     * @param postModel model for setting the selected post
+     * @param postService instance of the post service
+     */
     public ThreadListPanel(String id, IModel<List<Post>> threadListModel, IModel<Post> postModel, PostService postService) {
         super(id);
 

@@ -9,6 +9,8 @@ import static org.danekja.discussment.core.domain.Category.GET_CATEGORIES;
 
 /**
  * Created by Martin Bláha on 19.01.17.
+ *
+ * The class represents the category in the forum.
  */
 
 @Entity
@@ -17,12 +19,24 @@ import static org.danekja.discussment.core.domain.Category.GET_CATEGORIES;
 })
 public class Category extends BaseEntity implements Serializable {
 
+    /**
+     * The constant contains name of query for getting categories
+     */
     public static final String GET_CATEGORIES = "FileEntity.getCategories";
 
+    /**
+     * The constant contains index which indicates a discussion in a article
+     */
     public static final int WITHOUT_CATEGORY = 0;
 
+    /**
+     * Name of the category
+     */
     private String name;
 
+    /**
+     * List contains topics in the category. If the category is removed, the topics are removed too.
+     */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<Topic>();
 

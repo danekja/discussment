@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 23.01.17.
+ *
+ * The class for getting the posts by post id via the post service.
  */
 public class PostWicketModel extends LoadableDetachableModel<List<Post>> {
 
@@ -17,6 +19,12 @@ public class PostWicketModel extends LoadableDetachableModel<List<Post>> {
 
     private PostService postService;
 
+    /**
+     * Constructor for creating a instance of getting the posts.
+     *
+     * @param post variable contains the post for getting the posts
+     * @param postService instance of the post service
+     */
     public PostWicketModel(IModel<Post> post, PostService postService) {
         this.post = post;
         this.postService = postService;

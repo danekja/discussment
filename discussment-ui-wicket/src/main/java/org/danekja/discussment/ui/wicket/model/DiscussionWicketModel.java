@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * Created by Martin Bláha on 25.01.17.
+ *
+ * The class for getting the discussions by topic id via the discussion service.
  */
 public class DiscussionWicketModel extends LoadableDetachableModel<List<Discussion>> {
 
@@ -17,6 +19,12 @@ public class DiscussionWicketModel extends LoadableDetachableModel<List<Discussi
 
     private IModel<Topic> topicModel;
 
+    /**
+     * Constructor for creating a instance of getting the categories.
+     *
+     * @param topicModel variable contains the topic for getting the categories
+     * @param discussionService instance of the discussion service
+     */
     public DiscussionWicketModel(IModel<Topic> topicModel, DiscussionService discussionService) {
 
         this.topicModel = topicModel;
