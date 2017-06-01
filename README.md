@@ -31,7 +31,7 @@ The __service__ package contains these interfaces:
 
 - __PostService__ contains methods for working with posts in the discussion.
 
-- __TopicService__ contains methods to work with topics in the forum.
+- __TopicService__ contains methods for working with topics in the forum.
 
 - __UserService__ contains methods for working with users who are in the discussion.
 
