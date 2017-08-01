@@ -63,7 +63,7 @@ public class Discussion extends BaseEntity implements Serializable {
                     )
             }
     )
-    private List<User> userAccessList = new ArrayList<User>();
+    private List<IDiscussionUser> userAccessList = new ArrayList<IDiscussionUser>();
 
     /**
      * Topic in which the discussion is.
@@ -111,11 +111,11 @@ public class Discussion extends BaseEntity implements Serializable {
         return posts;
     }
 
-    public List<User> getUserAccessList() {
+    public List<IDiscussionUser> getUserAccessList() {
         return userAccessList;
     }
 
-    public void setUserAccessList(List<User> accessList) {
+    public void setUserAccessList(List<IDiscussionUser> accessList) {
         this.userAccessList = accessList;
     }
 

@@ -28,7 +28,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.danekja.discussment.ui.wicket</groupId>
+            <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-ui-wicket</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

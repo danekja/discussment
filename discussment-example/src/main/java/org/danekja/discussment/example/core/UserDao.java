@@ -1,6 +1,6 @@
-package org.danekja.discussment.core.dao;
+package org.danekja.discussment.example.core;
 
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.dao.GenericDao;
 
 import java.util.List;
 

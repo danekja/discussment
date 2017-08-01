@@ -9,8 +9,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.TopicService;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
 public class TopicListPanel extends Panel {
 
     private TopicService topicService;
+    private PermissionService permissionService;
     private IModel<List<Topic>>  topicListModel;
 
     /**
@@ -32,10 +35,11 @@ public class TopicListPanel extends Panel {
      * @param topicListModel model for getting the topics
      * @param topicService instance of the topic service
      */
-    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService) {
+    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService, PermissionService permissionService) {
         super(id);
 
         this.topicService = topicService;
+        this.permissionService = permissionService;
         this.topicListModel = topicListModel;
     }
 
@@ -95,8 +99,9 @@ public class TopicListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isRemoveTopic());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                Permission p = permissionService.getUsersPermissions(user);
+                this.setVisible(user != null && p != null && p.isRemoveTopic());
             }
         };
     }

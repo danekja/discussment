@@ -5,10 +5,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
-import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.UserService;
-import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.example.core.UserDaoJPA;
+import org.danekja.discussment.example.core.User;
+import org.danekja.discussment.example.core.UserService;
+import org.danekja.discussment.example.core.DefaultUserService;
 import org.danekja.discussment.example.page.base.BasePage;
 
 /**

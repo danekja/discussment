@@ -2,9 +2,11 @@ package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PermissionService;
 
 import java.util.List;
 
@@ -15,8 +17,11 @@ public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;
 
-    public DefaultDiscussionService(DiscussionDao discussionDao) {
+    private PermissionService permissionService;
+
+    public DefaultDiscussionService(DiscussionDao discussionDao, PermissionService permissionService) {
         this.discussionDao = discussionDao;
+        this.permissionService = permissionService;
     }
 
     public Discussion createDiscussion(Discussion discussion) {
@@ -51,12 +56,24 @@ public class DefaultDiscussionService implements DiscussionService {
         discussionDao.remove(discussion);
     }
 
-    public void addAccessToDiscussion(User entity, Discussion en) {
+    public void addAccessToDiscussion(IDiscussionUser entity, Discussion en) {
 
         en.getUserAccessList().add(entity);
 
         discussionDao.save(en);
     }
 
+    public boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion) {
+        Permission p = permissionService.getUsersPermissions(user);
+
+        if(p == null) {
+            return  false;
+        }
+
+        if (discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this)) {
+            return true;
+        }
+        return false;
+    }
 }
 

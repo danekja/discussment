@@ -1,15 +1,16 @@
-package org.danekja.discussment.core.domain;
+package org.danekja.discussment.core.service.mock;
+
+import org.danekja.discussment.core.domain.BaseEntity;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.Permission;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.danekja.discussment.core.domain.User.GET_BY_USERNAME;
-import static org.danekja.discussment.core.domain.User.GET_USERS;
+import static org.danekja.discussment.core.service.mock.User.GET_BY_USERNAME;
+import static org.danekja.discussment.core.service.mock.User.GET_USERS;
 
 /**
  * Created by Martin Bláha on 04.01.17.
@@ -22,7 +23,8 @@ import static org.danekja.discussment.core.domain.User.GET_USERS;
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
 })
-public class User extends BaseEntity implements Serializable {
+// todo: replace with interface
+public class User extends BaseEntity implements IDiscussionUser {
 
     /**
      * The constant contains name of query for getting an user by username

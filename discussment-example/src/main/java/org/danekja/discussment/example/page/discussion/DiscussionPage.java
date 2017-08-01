@@ -6,6 +6,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.example.core.DefaultUserService;
+import org.danekja.discussment.example.core.UserDaoJPA;
+import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
 
@@ -24,6 +27,7 @@ public class DiscussionPage extends BasePage {
     private TopicService topicService;
     private PostService postService;
     private UserService userService;
+    private PermissionService permissionService;
 
     private IModel<HashMap<String, Integer>> parametersModel;
 
@@ -46,7 +50,8 @@ public class DiscussionPage extends BasePage {
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
         PostDaoJPA postJPA = new PostDaoJPA();
 
-        this.discussionService = new DefaultDiscussionService(discussionJPA);
+        this.permissionService = new DefaultPermissionService(permissionJPA);
+        this.discussionService = new DefaultDiscussionService(discussionJPA, permissionService);
         this.categoryService = new DefaultCategoryService(categoryDaoJPA);
         this.topicService = new DefaultTopicService(topicJPA, categoryDaoJPA);
         this.postService = new DefaultPostService(postJPA);
@@ -63,7 +68,7 @@ public class DiscussionPage extends BasePage {
         parametersModel.getObject().put("topicId", parameters.get("topicId").isNull() ? -1 : Integer.parseInt(parameters.get("topicId").toString()));
         parametersModel.getObject().put("discussionId", parameters.get("discussionId").isNull() ? -1 : Integer.parseInt(parameters.get("discussionId").toString()));
 
-        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService));
+        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, permissionService));
     }
 
     @Override

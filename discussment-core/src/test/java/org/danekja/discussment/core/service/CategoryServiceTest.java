@@ -1,9 +1,12 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
-import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.core.service.imp.DefaultCategoryService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
+import org.danekja.discussment.core.service.mock.*;
 import org.junit.Before;
 import org.junit.Test;
 

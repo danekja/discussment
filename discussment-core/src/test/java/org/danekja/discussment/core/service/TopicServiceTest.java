@@ -3,6 +3,10 @@ package org.danekja.discussment.core.service;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.core.service.mock.DefaultUserService;
+import org.danekja.discussment.core.service.mock.User;
+import org.danekja.discussment.core.service.mock.UserDaoJPA;
+import org.danekja.discussment.core.service.mock.UserService;
 import org.junit.Before;
 import org.junit.Test;
 

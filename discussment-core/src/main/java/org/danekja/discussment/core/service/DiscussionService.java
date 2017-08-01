@@ -1,8 +1,8 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
 
 import java.util.List;
 
@@ -59,5 +59,13 @@ public interface DiscussionService {
      * @param entity user
      * @param en discussion
      */
-    void addAccessToDiscussion(User entity, Discussion en);
+    void addAccessToDiscussion(IDiscussionUser entity, Discussion en);
+
+    /**
+     * Whether or has user access to discussion.
+     * @param user User.
+     * @param discussion Discussion.
+     * @return True if the user has access to discussion.
+     */
+    boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion);
 }

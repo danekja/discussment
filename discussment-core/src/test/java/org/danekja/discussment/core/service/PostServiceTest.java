@@ -1,17 +1,14 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
-import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
-import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.core.service.mock.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,10 +1,7 @@
-package org.danekja.discussment.core.service.imp;
+package org.danekja.discussment.example.core;
 
 import org.danekja.discussment.core.dao.PermissionDao;
-import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.domain.Permission;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.UserService;
 
 import java.util.List;
 
@@ -26,13 +23,10 @@ public class DefaultUserService implements UserService {
         permission = permissionDao.save(permission);
         permission.setUser(entity);
 
-        entity.setPermissions(permission);
-
         return userDao.save(entity);
     }
 
     public List<User> getUsers() {
-
         return userDao.getUsers();
     }
 

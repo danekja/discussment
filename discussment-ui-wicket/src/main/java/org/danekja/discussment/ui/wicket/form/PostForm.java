@@ -3,8 +3,8 @@ package org.danekja.discussment.ui.wicket.form;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 
@@ -63,7 +63,7 @@ public class PostForm extends Form {
 
         if (postService != null) {
             Post post = postModel.getObject();
-            post.setUser((User) getSession().getAttribute("user"));
+            post.setUser((IDiscussionUser) getSession().getAttribute("user"));
 
             postService.sendPost(
                     discussionModel.getObject(),

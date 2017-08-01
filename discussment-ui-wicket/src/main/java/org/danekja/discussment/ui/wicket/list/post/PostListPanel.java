@@ -11,8 +11,10 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.PostService;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class PostListPanel extends Panel {
     private IModel<Post> postModel;
     private PostService postService;
     private IModel<List<Post>> postListModel;
+    private PermissionService permissionService;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -36,12 +39,13 @@ public class PostListPanel extends Panel {
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
      */
-    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService) {
+    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService, PermissionService permissionService) {
         super(id);
 
         this.postModel = postModel;
         this.postService = postService;
         this.postListModel = postListModel;
+        this.permissionService = permissionService;
     }
 
     @Override
@@ -95,8 +99,9 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreatePost() && !pm.getObject().isDisabled());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                Permission p = permissionService.getUsersPermissions(user);
+                this.setVisible(user != null && p != null && p.isCreatePost() && !pm.getObject().isDisabled());
             }
         };
     }
@@ -113,8 +118,9 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isRemovePost());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                Permission p = permissionService.getUsersPermissions(user);
+                this.setVisible(user != null && p != null && p.isRemovePost());
             }
         };
     }
@@ -135,8 +141,9 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isDisablePost());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                Permission p = permissionService.getUsersPermissions(user);
+                this.setVisible(user != null && p != null && p.isDisablePost());
             }
         };
 

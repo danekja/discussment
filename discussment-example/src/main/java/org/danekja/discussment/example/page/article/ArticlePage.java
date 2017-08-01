@@ -3,12 +3,15 @@ package org.danekja.discussment.example.page.article;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
@@ -25,6 +28,7 @@ public class ArticlePage extends BasePage {
 
 	private DiscussionService discussionService;
 	private PostService postService;
+	private PermissionService permissionService;
 
     /**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -34,7 +38,8 @@ public class ArticlePage extends BasePage {
 	 */
     public ArticlePage(final PageParameters parameters) {
 
-        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        this.permissionService = new DefaultPermissionService(new PermissionDaoJPA());
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
         this.postService = new DefaultPostService(new PostDaoJPA());
     }
 
@@ -48,7 +53,7 @@ public class ArticlePage extends BasePage {
             discussion = discussionService.createDiscussion(new Discussion("article name"));
         }
 
-        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>()));
+        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), permissionService));
     }
 
     @Override

@@ -4,7 +4,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
 
@@ -68,7 +68,7 @@ public class PasswordForm extends Form {
 
             if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
 
                 if (user != null) {
                     discussionService.addAccessToDiscussion(user, discussionModel.getObject());

@@ -1,7 +1,6 @@
-package org.danekja.discussment.core.dao.jpa;
+package org.danekja.discussment.core.service.mock;
 
-import org.danekja.discussment.core.dao.UserDao;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;

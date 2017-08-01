@@ -68,8 +68,7 @@ public class Permission extends BaseEntity implements Serializable {
     /**
      * User which has this permissions.
      */
-    @OneToOne
-    private User user;
+    private IDiscussionUser user;
 
     /**
      * If value is true, the user can create the category.
@@ -162,11 +161,11 @@ public class Permission extends BaseEntity implements Serializable {
         }
     }
 
-    public User getUser() {
+    public IDiscussionUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(IDiscussionUser user) {
         this.user = user;
     }
 
