@@ -68,7 +68,7 @@ public class DiscussionListPanel extends Panel {
                 listItem.add(createPasswordDivWebMarkupContainer(listItem.getModel()));
 
                 listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
-                listItem.add(new Label("lastUsername", new PropertyModel<String>(listItem.getModel(), "lastPost.user.Username")));
+                listItem.add(new Label("lastUsername", new PropertyModel<String>(listItem.getModel(), "lastPost.userId")));
                 listItem.add(new Label("lastCreated", new PropertyModel<String>(listItem.getModel(), "lastPost.getCreatedFormat")));
 
                 listItem.add(createRemoveDiscussionLink(listItem.getModel()));

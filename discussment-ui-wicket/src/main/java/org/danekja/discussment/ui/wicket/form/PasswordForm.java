@@ -66,6 +66,7 @@ public class PasswordForm extends Form {
 
         if (discussionService != null) {
 
+            // todo: null pointer exception here
             if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
 
                 IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");

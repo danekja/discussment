@@ -74,7 +74,7 @@ public class PostListPanel extends Panel {
                 };
                 listItem.add(dis);
 
-                listItem.add(new Label("username", new PropertyModel<String>(listItem.getModel(), "user.username")));
+                listItem.add(new Label("username", new PropertyModel<String>(listItem.getModel(), "userId")));
                 listItem.add(new Label("created", new PropertyModel<String>(listItem.getModel(), "created")));
 
 
