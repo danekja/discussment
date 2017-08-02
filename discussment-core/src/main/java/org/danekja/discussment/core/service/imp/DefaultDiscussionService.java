@@ -1,10 +1,7 @@
 package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.dao.DiscussionDao;
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.IDiscussionUser;
-import org.danekja.discussment.core.domain.Permission;
-import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.PermissionService;
 
@@ -57,10 +54,8 @@ public class DefaultDiscussionService implements DiscussionService {
     }
 
     public void addAccessToDiscussion(IDiscussionUser entity, Discussion en) {
-
-        en.getUserAccessList().add(entity);
-
-        discussionDao.save(en);
+        UserDiscussion userDiscussion = new UserDiscussion(entity.getId(), en);
+        discussionDao.addAccessToDiscussion(userDiscussion);
     }
 
     public boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion) {
@@ -70,7 +65,8 @@ public class DefaultDiscussionService implements DiscussionService {
             return  false;
         }
 
-        if (discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this)) {
+        UserDiscussion ud = new UserDiscussion(user.getId(), discussion);
+        if (discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(ud)) {
             return true;
         }
         return false;

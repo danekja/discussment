@@ -46,24 +46,10 @@ public class Discussion extends BaseEntity implements Serializable {
     private List<Post> posts = new ArrayList<Post>();
 
     /**
-     * List contains users which have access to a discussion. If the discussion is removed, the users still exist.
+     * List of users which have access to this discussion.
      */
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_discussion",
-            inverseJoinColumns = {
-                    @JoinColumn(
-                            name = "user_id",
-                            referencedColumnName = "id"
-                    )
-            },
-            joinColumns = {
-                    @JoinColumn(
-                            name = "discussion_id",
-                            referencedColumnName = "id"
-                    )
-            }
-    )
-    private List<IDiscussionUser> userAccessList = new ArrayList<IDiscussionUser>();
+    @OneToMany(mappedBy = "discussion", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<UserDiscussion> userAccessList = new ArrayList<UserDiscussion>();
 
     /**
      * Topic in which the discussion is.
@@ -111,11 +97,11 @@ public class Discussion extends BaseEntity implements Serializable {
         return posts;
     }
 
-    public List<IDiscussionUser> getUserAccessList() {
+    public List<UserDiscussion> getUserAccessList() {
         return userAccessList;
     }
 
-    public void setUserAccessList(List<IDiscussionUser> accessList) {
+    public void setUserAccessList(List<UserDiscussion> accessList) {
         this.userAccessList = accessList;
     }
 

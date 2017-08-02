@@ -63,7 +63,7 @@ public class PostForm extends Form {
 
         if (postService != null) {
             Post post = postModel.getObject();
-            post.setUser((IDiscussionUser) getSession().getAttribute("user"));
+            post.setUser(((IDiscussionUser) getSession().getAttribute("user")).getId());
 
             postService.sendPost(
                     discussionModel.getObject(),

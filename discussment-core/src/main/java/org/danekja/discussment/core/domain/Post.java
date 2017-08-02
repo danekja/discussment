@@ -29,7 +29,7 @@ public class Post extends BaseEntity implements Serializable {
     /**
      * The user which the post created
      */
-    private IDiscussionUser user;
+    private Long userId;
 
     /**
      * Text of the post
@@ -82,7 +82,7 @@ public class Post extends BaseEntity implements Serializable {
     }
 
     public Post(IDiscussionUser user, String text) {
-        this.user = user;
+        this.userId = user.getId();
         this.text = text;
     }
 
@@ -128,8 +128,8 @@ public class Post extends BaseEntity implements Serializable {
         this.discussion = discussion;
     }
 
-    public IDiscussionUser getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
     public Post getPost() {
@@ -140,8 +140,12 @@ public class Post extends BaseEntity implements Serializable {
         this.post = post;
     }
 
+    public void setUser(Long userId) {
+        this.userId = userId;
+    }
+
     public void setUser(IDiscussionUser user) {
-        this.user = user;
+        this.userId = user.getId();
     }
 
     public String getText() {

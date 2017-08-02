@@ -2,14 +2,13 @@ package org.danekja.discussment.core.domain;
 
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Created by Martin Bláha on 19.01.17.
  *
- * The class represents a permission for the user.
+ * The class represents a permission for the userId.
  */
 @Entity
 public class Permission extends BaseEntity implements Serializable {
@@ -68,55 +67,55 @@ public class Permission extends BaseEntity implements Serializable {
     /**
      * User which has this permissions.
      */
-    private IDiscussionUser user;
+    private Long userId;
 
     /**
-     * If value is true, the user can create the category.
+     * If value is true, the userId can create the category.
      */
     private boolean createCategory;
 
     /**
-     * If value is true, the user can remove the category.
+     * If value is true, the userId can remove the category.
      */
     private boolean removeCategory;
 
     /**
-     * If value is true, the user can create the topic.
+     * If value is true, the userId can create the topic.
      */
     private boolean createTopic;
 
     /**
-     * If value is true, the user can remove the topic.
+     * If value is true, the userId can remove the topic.
      */
     private boolean removeTopic;
 
     /**
-     * If value is true, the user can create the discussion.
+     * If value is true, the userId can create the discussion.
      */
     private boolean createDiscussion;
 
     /**
-     * If value is true, the user can remove the discussion.
+     * If value is true, the userId can remove the discussion.
      */
     private boolean removeDiscussion;
 
     /**
-     * If value is true, the user can create the post.
+     * If value is true, the userId can create the post.
      */
     private boolean createPost;
 
     /**
-     * If value is true, the user can remove the post.
+     * If value is true, the userId can remove the post.
      */
     private boolean removePost;
 
     /**
-     * If value is true, the user can disable the post.
+     * If value is true, the userId can disable the post.
      */
     private boolean disablePost;
 
     /**
-     * If value is true, the user can read the private discussion.
+     * If value is true, the userId can read the private discussion.
      */
     private boolean readPrivateDiscussion;
 
@@ -161,12 +160,49 @@ public class Permission extends BaseEntity implements Serializable {
         }
     }
 
-    public IDiscussionUser getUser() {
-        return user;
+    public boolean getPermission(int permission) {
+        switch (permission) {
+            case CREATE_CATEGORY:
+                return isCreateCategory();
+            case REMOVE_CATEGORY:
+                return isRemoveCategory();
+            case CREATE_TOPIC:
+                return isCreateTopic();
+            case REMOVE_TOPIC:
+                return isRemoveTopic();
+            case CREATE_DISCUSSION:
+                return isCreateDiscussion();
+            case REMOVE_DISCUSSION:
+                return isRemoveDiscussion();
+            case CREATE_POST:
+                return isCreatePost();
+            case REMOVE_POST:
+                return isRemovePost();
+            case DISABLE_POST:
+                return isDisablePost();
+            case READ_PRIVATE_DISCUSSION:
+                return isReadPrivateDiscussion();
+            default:
+                return false;
+        }
     }
 
-    public void setUser(IDiscussionUser user) {
-        this.user = user;
+    /**
+     * Set permission from other object.
+     * @param other Current permissions will be updated from this object.
+     */
+    public void update(Permission other) {
+        for (int i = CREATE_CATEGORY; i <= READ_PRIVATE_DISCUSSION ; i++) {
+            this.setPermission(i, other.getPermission(i));
+        }
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public boolean isCreateCategory() {
@@ -247,5 +283,22 @@ public class Permission extends BaseEntity implements Serializable {
 
     public void setReadPrivateDiscussion(boolean readPrivateDiscussion) {
         this.readPrivateDiscussion = readPrivateDiscussion;
+    }
+
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "userId=" + userId +
+                ", createCategory=" + createCategory +
+                ", removeCategory=" + removeCategory +
+                ", createTopic=" + createTopic +
+                ", removeTopic=" + removeTopic +
+                ", createDiscussion=" + createDiscussion +
+                ", removeDiscussion=" + removeDiscussion +
+                ", createPost=" + createPost +
+                ", removePost=" + removePost +
+                ", disablePost=" + disablePost +
+                ", readPrivateDiscussion=" + readPrivateDiscussion +
+                '}';
     }
 }

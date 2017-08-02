@@ -1,8 +1,11 @@
 package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.dao.CategoryDao;
+import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.dao.TopicDao;
+import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
 
@@ -15,10 +18,12 @@ public class DefaultTopicService implements TopicService {
 
     private TopicDao topicDao;
     private DefaultCategoryService categoryService;
+    private DiscussionDao discussionDao;
 
     public DefaultTopicService(TopicDao topicDao, CategoryDao categoryDao) {
         this.topicDao = topicDao;
         categoryService = new DefaultCategoryService(categoryDao);
+        this.discussionDao = new DiscussionDaoJPA();
     }
 
     public Topic createTopic(Topic topic) {
@@ -54,6 +59,11 @@ public class DefaultTopicService implements TopicService {
     }
 
     public void removeTopic(Topic topic) {
+
+        for(Discussion d : topic.getDiscussions()) {
+            d.getUserAccessList().clear();
+            discussionDao.save(d);
+        }
 
         topicDao.remove(topic);
     }

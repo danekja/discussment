@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.imp.*;
@@ -20,22 +21,22 @@ public class TopicServiceTest {
 
     private TopicService topicService;
     private CategoryService categoryService;
-    private UserService userService;
     private DiscussionService discussionService;
     private PostService postService;
+    private PermissionService permissionService;
 
-    private UserDaoJPA userDao;
+    private PermissionDao permissionDao;
 
     private Category category;
 
     @Before
     public void setUp() throws Exception {
+        permissionDao = new PermissionDaoJPA();
         topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
         categoryService = new DefaultCategoryService(new CategoryDaoJPA());
-        this.userDao = new UserDaoJPA();
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
+        permissionService = new DefaultPermissionService(permissionDao);
 
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
         postService = new DefaultPostService(new PostDaoJPA());
 
         category = categoryService.createCategory(new Category("text"));
@@ -100,7 +101,9 @@ public class TopicServiceTest {
 
     @Test
     public void removeTopic() throws Exception {
-        User user = userService.addUser(new User("test", "", ""), new Permission());
+        User user = new User("test", "", "");
+        user.setId(-100L);
+        Permission p = permissionService.addPermissionForUser(new Permission(), user);
 
         Topic topic = new Topic();
         topic.setName("test");
@@ -111,23 +114,25 @@ public class TopicServiceTest {
 
         Post post = new Post();
         post.setText("text");
-        post.setUser(user);
+        post.setUser(user.getId());
         post = postService.sendPost(IDiscussion, post);
 
         Post reply = new Post();
         reply.setText("reply1Text");
-        reply.setUser(user);
+        reply.setUser(user.getId());
         postService.sendReply(reply, post);
 
         topicService.removeTopic(topic);
 
         //clear
-        userDao.remove(user);
+        permissionDao.remove(p);
     }
 
     @Test
     public void removeTopicWithUserAccess() throws Exception {
-        User user = userService.addUser(new User("test", "", ""), new Permission());
+        User user = new User("test", "", "");
+        user.setId(-100L);
+        Permission p = permissionService.addPermissionForUser(new Permission(), user);
 
         Topic topic = new Topic();
         topic.setName("test");
@@ -144,7 +149,7 @@ public class TopicServiceTest {
 
 
         //clear
-        userDao.remove(user);
+        permissionDao.remove(p);
     }
 
 }

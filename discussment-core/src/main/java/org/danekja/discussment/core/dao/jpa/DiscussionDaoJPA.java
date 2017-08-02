@@ -3,6 +3,7 @@ package org.danekja.discussment.core.dao.jpa;
 import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.UserDiscussion;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -20,6 +21,12 @@ public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements Discu
         TypedQuery<Discussion> q = em.createNamedQuery(Discussion.GET_DISCUSSIONS_BY_TOPIC_ID, Discussion.class);
         q.setParameter("topicId", topic.getId());
         return q.getResultList();
+    }
+
+    public UserDiscussion addAccessToDiscussion(UserDiscussion userDiscussion) {
+        em.persist(userDiscussion);
+
+        return userDiscussion;
     }
 }
 

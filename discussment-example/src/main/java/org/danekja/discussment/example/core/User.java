@@ -5,6 +5,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Permission;
 
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -55,17 +56,6 @@ public class User extends BaseEntity implements IDiscussionUser {
      */
     private String lastname;
 
-    /**
-     * Permission of the user. If the user is removed, the permissions are removed too.
-     */
-    @OneToOne(orphanRemoval = true)
-    private Permission permissions;
-
-    /**
-     * List contains the discussions which the user has access.
-     */
-    @ManyToMany(mappedBy = "userAccessList")
-    private List<Discussion> accessListToDiscussion = new ArrayList<Discussion>();
 
     public User() {}
 
@@ -99,27 +89,4 @@ public class User extends BaseEntity implements IDiscussionUser {
         this.lastname = lastname;
     }
 
-    public boolean isAccessToDiscussion(Discussion discussion) {
-
-        if (discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this)) {
-            return true;
-        }
-        return false;
-    }
-
-    public List<Discussion> getAccessListToDiscussion() {
-        return accessListToDiscussion;
-    }
-
-    public void setAccessListToDiscussion(List<Discussion> accessListToDiscussion) {
-        this.accessListToDiscussion = accessListToDiscussion;
-    }
-
-    public Permission getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Permission permissions) {
-        this.permissions = permissions;
-    }
 }

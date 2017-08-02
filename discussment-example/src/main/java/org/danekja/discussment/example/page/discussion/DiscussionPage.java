@@ -7,7 +7,8 @@ import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.core.service.imp.*;
 import org.danekja.discussment.example.core.DefaultUserService;
-import org.danekja.discussment.example.core.UserDaoJPA;
+import org.danekja.discussment.example.core.UserDao;
+import org.danekja.discussment.example.core.UserDaoMock;
 import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
@@ -45,7 +46,7 @@ public class DiscussionPage extends BasePage {
 
         CategoryDaoJPA categoryDaoJPA = new CategoryDaoJPA();
         TopicDaoJPA topicJPA = new TopicDaoJPA();
-        UserDaoJPA userJPA = new UserDaoJPA();
+        UserDao userDao = new UserDaoMock();
         DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA();
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
         PostDaoJPA postJPA = new PostDaoJPA();
@@ -55,7 +56,7 @@ public class DiscussionPage extends BasePage {
         this.categoryService = new DefaultCategoryService(categoryDaoJPA);
         this.topicService = new DefaultTopicService(topicJPA, categoryDaoJPA);
         this.postService = new DefaultPostService(postJPA);
-        this.userService = new DefaultUserService(userJPA, permissionJPA);
+        this.userService = new DefaultUserService(userDao, permissionJPA);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());

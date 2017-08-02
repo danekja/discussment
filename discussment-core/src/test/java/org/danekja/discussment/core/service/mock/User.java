@@ -23,7 +23,6 @@ import static org.danekja.discussment.core.service.mock.User.GET_USERS;
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
 })
-// todo: replace with interface
 public class User extends BaseEntity implements IDiscussionUser {
 
     /**

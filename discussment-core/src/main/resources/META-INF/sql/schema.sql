@@ -4,8 +4,8 @@
 CREATE DATABASE IF NOT EXISTS `discussment`;
 use discussment;
 
--- create user
-CREATE TABLE IF NOT EXISTS `user` (
+-- create userId
+CREATE TABLE IF NOT EXISTS `userId` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `username` varchar(255),
     `name` varchar(255),
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 );
 
 -- create permission
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE IF NOT EXISTS `userId` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `createCategory` tinyint(1),
     `removeCategory` tinyint(1),

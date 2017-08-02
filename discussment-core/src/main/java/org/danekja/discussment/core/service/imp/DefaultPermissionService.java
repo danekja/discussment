@@ -5,8 +5,6 @@ import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.service.PermissionService;
 
-import java.util.List;
-
 /**
  * Created by Zdenek Vales on 1.8.2017.
  */
@@ -23,5 +21,16 @@ public class DefaultPermissionService implements PermissionService {
             return null;
         }
         return permissionDao.getUsersPermissions(user);
+    }
+
+    public Permission addPermissionForUser(Permission permission, IDiscussionUser user) {
+        Permission current = getUsersPermissions(user);
+        if(current == null) {
+            permission.setUserId(user.getId());
+            return permissionDao.save(permission);
+        } else {
+            current.update(permission);
+            return permissionDao.save(permission);
+        }
     }
 }

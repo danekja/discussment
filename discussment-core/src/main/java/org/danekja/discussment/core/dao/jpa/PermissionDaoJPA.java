@@ -20,9 +20,9 @@ public class PermissionDaoJPA extends GenericDaoJPA<Permission> implements Permi
     public Permission getUsersPermissions(IDiscussionUser user) {
         String query = "SELECT p FROM "+Permission.class.getSimpleName()+" p " +
                 " WHERE " +
-                " p.user = :user";
+                " p.userId = :userId";
         Query q = em.createQuery(query);
-        q.setParameter("user", user);
+        q.setParameter("userId", user.getId());
         List<Permission> permissions = q.getResultList();
         return permissions.isEmpty() ? null : permissions.get(0);
     }

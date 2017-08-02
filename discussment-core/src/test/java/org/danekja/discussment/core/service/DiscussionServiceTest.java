@@ -1,10 +1,12 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.core.service.mock.*;
 import org.junit.After;
@@ -19,19 +21,19 @@ import static org.junit.Assert.*;
 public class DiscussionServiceTest {
 
     private TopicService topicService;
-    private UserService userService;
     private DiscussionService discussionService;
+    private PermissionService permissionService;
 
-    private UserDao userDao;
+    private PermissionDao permissionDao;
 
     private Topic topic;
 
     @Before
     public void setUp() throws Exception {
         topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        this.userDao = new UserDaoJPA();
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        this.permissionDao = new PermissionDaoJPA();
+        this.permissionService = new DefaultPermissionService(permissionDao);
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
 
         topic = new Topic();
         topic.setName("testTopic");
@@ -90,15 +92,17 @@ public class DiscussionServiceTest {
 
     @Test
     public void removeDiscussion() throws Exception {
-        User user = userService.addUser(new User("test", "", ""), new Permission());
+        User user = new User("test", "", "");
+        user.setId(-100L);
+        Permission p = permissionService.addPermissionForUser(new Permission(), user);
 
         Discussion discussion = discussionService.createDiscussion(new Discussion("test"));
         discussionService.removeDiscussion(discussion);
 
-        assertNull("Must be null", userService.getUserById(discussion.getId()));
+        assertNull("Must be null", discussionService.getDiscussionById(discussion.getId()));
 
         //clear
-        userDao.remove(user);
+        permissionDao.remove(p);
     }
 
 }

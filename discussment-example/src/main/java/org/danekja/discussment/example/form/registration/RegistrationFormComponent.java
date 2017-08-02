@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.example.core.User;
 
 /**
@@ -12,8 +13,11 @@ import org.danekja.discussment.example.core.User;
  */
 public class RegistrationFormComponent extends Panel {
 
-    public RegistrationFormComponent(String id, IModel<User> userModel) {
+    private IModel<Permission> permissionModel;
+
+    public RegistrationFormComponent(String id, IModel<User> userModel, IModel<Permission> permissionModel) {
         super(id, userModel);
+        this.permissionModel = permissionModel;
     }
 
     @Override
@@ -24,21 +28,24 @@ public class RegistrationFormComponent extends Panel {
         username.setRequired(true);
         add(username);
 
-        add(new CheckBox("createCategoryRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createCategory")));
-        add(new CheckBox("removeCategoryRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removeCategory")));
+        add(new CheckBox("createCategoryRegistration", new PropertyModel<Boolean>(permissionModel, "createCategory")));
+        add(new CheckBox("removeCategoryRegistration", new PropertyModel<Boolean>(permissionModel, "removeCategory")));
 
-        add(new CheckBox("createTopicRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createTopic")));
-        add(new CheckBox("removeTopicRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removeTopic")));
+        add(new CheckBox("createTopicRegistration", new PropertyModel<Boolean>(permissionModel, "createTopic")));
+        add(new CheckBox("removeTopicRegistration", new PropertyModel<Boolean>(permissionModel, "removeTopic")));
 
-        add(new CheckBox("createDiscussionRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createDiscussion")));
-        add(new CheckBox("removeDiscussionRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removeDiscussion")));
+        add(new CheckBox("createDiscussionRegistration", new PropertyModel<Boolean>(permissionModel, "createDiscussion")));
+        add(new CheckBox("removeDiscussionRegistration", new PropertyModel<Boolean>(permissionModel, "removeDiscussion")));
 
-        add(new CheckBox("createPostRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createPost")));
-        add(new CheckBox("removePostRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removePost")));
-        add(new CheckBox("disablePostRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.disablePost")));
+        add(new CheckBox("createPostRegistration", new PropertyModel<Boolean>(permissionModel, "createPost")));
+        add(new CheckBox("removePostRegistration", new PropertyModel<Boolean>(permissionModel, "removePost")));
+        add(new CheckBox("disablePostRegistration", new PropertyModel<Boolean>(permissionModel, "disablePost")));
 
-        add(new CheckBox("readPrivateDiscussionRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.readPrivateDiscussion")));
+        add(new CheckBox("readPrivateDiscussionRegistration", new PropertyModel<Boolean>(permissionModel, "readPrivateDiscussion")));
 
     }
 
+    public IModel<Permission> getPermissionModel() {
+        return permissionModel;
+    }
 }
