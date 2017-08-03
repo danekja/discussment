@@ -10,14 +10,13 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.IDiscussionUser;
-import org.danekja.discussment.core.domain.Permission;
-import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 
@@ -33,6 +32,7 @@ public class DiscussionListPanel extends Panel {
     private IModel<Discussion> discussionModel;
     private IModel<Topic> topicListModel;
     private PermissionService permissionService;
+    private DiscussionUserService userService;
 
 
     /**
@@ -43,13 +43,14 @@ public class DiscussionListPanel extends Panel {
      * @param discussionService instance of the discussion service
      * @param discussionModel model for setting the selected discussion
      */
-    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, PermissionService permissionService) {
+    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, PermissionService permissionService, DiscussionUserService userService) {
         super(id);
 
         this.discussionService = discussionService;
         this.discussionModel = discussionModel;
         this.topicListModel = topicListModel;
         this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     @Override
@@ -68,7 +69,17 @@ public class DiscussionListPanel extends Panel {
                 listItem.add(createPasswordDivWebMarkupContainer(listItem.getModel()));
 
                 listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
-                listItem.add(new Label("lastUsername", new PropertyModel<String>(listItem.getModel(), "lastPost.userId")));
+                listItem.add(new Label("lastUsername", new LoadableDetachableModel<String>() {
+                    protected String load() {
+                        Post post = listItem.getModel().getObject().getLastPost();
+                        if(post == null) {
+                            return "";
+                        }
+                        Long userId = post.getUserId();
+                        IDiscussionUser user = userService.getUserById(userId);
+                        return user == null ? "error!" : user.getUsername();
+                    }
+                }));
                 listItem.add(new Label("lastCreated", new PropertyModel<String>(listItem.getModel(), "lastPost.getCreatedFormat")));
 
                 listItem.add(createRemoveDiscussionLink(listItem.getModel()));

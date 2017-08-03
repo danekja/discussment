@@ -69,7 +69,7 @@ public class DiscussionPage extends BasePage {
         parametersModel.getObject().put("topicId", parameters.get("topicId").isNull() ? -1 : Integer.parseInt(parameters.get("topicId").toString()));
         parametersModel.getObject().put("discussionId", parameters.get("discussionId").isNull() ? -1 : Integer.parseInt(parameters.get("discussionId").toString()));
 
-        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, permissionService));
+        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, permissionService, userService));
     }
 
     @Override

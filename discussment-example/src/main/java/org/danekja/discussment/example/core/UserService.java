@@ -1,6 +1,7 @@
 package org.danekja.discussment.example.core;
 
 import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.service.DiscussionUserService;
 
 import javax.jws.soap.SOAPBinding;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * The interface contains service methods for working with the users.
  */
-public interface UserService {
+public interface UserService extends DiscussionUserService{
 
     /**
      * Add a new user to the discussion
@@ -20,14 +21,6 @@ public interface UserService {
      * @return new user
      */
     User addUser(User entity, Permission permission);
-
-    /**
-     * Get an user in the discussion based on his id.
-     *
-     * @param userId user id
-     * @return user by id
-     */
-    User getUserById(long userId);
 
     List<User> getUsers();
 

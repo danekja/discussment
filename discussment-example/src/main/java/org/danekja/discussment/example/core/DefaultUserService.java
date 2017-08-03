@@ -1,6 +1,7 @@
 package org.danekja.discussment.example.core;
 
 import org.danekja.discussment.core.dao.PermissionDao;
+import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Permission;
 
 import java.util.List;
@@ -27,8 +28,7 @@ public class DefaultUserService implements UserService {
         return userDao.getUsers();
     }
 
-    public User getUserById(long userId) {
-
+    public IDiscussionUser getUserById(Long userId) {
         return userDao.getById(userId);
     }
 

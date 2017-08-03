@@ -29,6 +29,7 @@ public class ForumPanel extends Panel {
     private TopicService topicService;
     private DiscussionService discussionService;
     private PermissionService permissionService;
+    private DiscussionUserService userService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
@@ -45,7 +46,7 @@ public class ForumPanel extends Panel {
      * @param categoryService instance of the category service
      * @param postService instance of the post service
      */
-    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, PermissionService permissionService) {
+    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, PermissionService permissionService, DiscussionUserService userService) {
         super(id);
 
         this.parametersModel = parametersModel;
@@ -55,6 +56,7 @@ public class ForumPanel extends Panel {
         this.topicService = topicService;
         this.discussionService = discussionService;
         this.permissionService = permissionService;
+        this.userService = userService;
 
         this.categoryModel = new Model<Category>();
         this.discussionModel = new Model<Discussion>();
@@ -83,7 +85,7 @@ public class ForumPanel extends Panel {
             Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
             topicModel.setObject(topic);
 
-            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, permissionService));
+            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, permissionService, userService));
         } else {
 
             Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
@@ -93,7 +95,7 @@ public class ForumPanel extends Panel {
             if ((user != null && discussionService.isAccessToDiscussion(user, discussion)) ||
                ((Boolean) getSession().getAttribute("access") && getSession().getAttribute("discussionId").equals(discussion.getId()))) {
 
-                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel, permissionService));
+                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel, permissionService, userService));
             } else {
                 setResponsePage(getPage().getClass());
             }

@@ -8,11 +8,14 @@ import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.example.core.DefaultUserService;
+import org.danekja.discussment.example.core.UserDaoMock;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
 
@@ -29,6 +32,7 @@ public class ArticlePage extends BasePage {
 	private DiscussionService discussionService;
 	private PostService postService;
 	private PermissionService permissionService;
+	private DiscussionUserService userService;
 
     /**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -40,6 +44,7 @@ public class ArticlePage extends BasePage {
 
         this.permissionService = new DefaultPermissionService(new PermissionDaoJPA());
         this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
+        this.userService = new DefaultUserService(new UserDaoMock(), new PermissionDaoJPA());
         this.postService = new DefaultPostService(new PostDaoJPA());
     }
 
@@ -53,7 +58,7 @@ public class ArticlePage extends BasePage {
             discussion = discussionService.createDiscussion(new Discussion("article name"));
         }
 
-        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), permissionService));
+        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), permissionService, userService));
     }
 
     @Override
