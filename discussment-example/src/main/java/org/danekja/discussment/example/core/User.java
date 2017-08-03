@@ -1,17 +1,12 @@
 package org.danekja.discussment.example.core;
 
 import org.danekja.discussment.core.domain.BaseEntity;
-import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.IDiscussionUser;
-import org.danekja.discussment.core.domain.Permission;
 
-import javax.jws.soap.SOAPBinding;
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.danekja.discussment.example.core.User.GET_BY_USERNAME;
 import static org.danekja.discussment.example.core.User.GET_USERS;
@@ -89,4 +84,12 @@ public class User extends BaseEntity implements IDiscussionUser {
         this.lastname = lastname;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                '}';
+    }
 }

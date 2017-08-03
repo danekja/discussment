@@ -118,4 +118,14 @@ public class User extends BaseEntity implements IDiscussionUser {
     public void setPermissions(Permission permissions) {
         this.permissions = permissions;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", permissions=" + permissions +
+                '}';
+    }
 }

@@ -3,6 +3,7 @@ package org.danekja.discussment.core.service.imp;
 import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PermissionService;
 
 /**
@@ -11,9 +12,16 @@ import org.danekja.discussment.core.service.PermissionService;
 public class DefaultPermissionService implements PermissionService {
 
     private PermissionDao permissionDao;
+    private DiscussionUserService userService;
 
-    public DefaultPermissionService(PermissionDao permissionDao) {
+    public DefaultPermissionService(PermissionDao permissionDao, DiscussionUserService userService) {
         this.permissionDao = permissionDao;
+        this.userService = userService;
+    }
+
+    public Permission getCurrentlyLoggedUsersPermission() {
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        return getUsersPermissions(user);
     }
 
     public Permission getUsersPermissions(IDiscussionUser user) {

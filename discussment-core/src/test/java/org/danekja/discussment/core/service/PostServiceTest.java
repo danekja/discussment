@@ -10,7 +10,9 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.core.service.mock.DefaultUserService;
 import org.danekja.discussment.core.service.mock.User;
+import org.danekja.discussment.core.service.mock.UserDaoJPA;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,9 +40,10 @@ public class PostServiceTest {
     @Before
     public void setUp() throws Exception {
         this.permissionDao = new PermissionDaoJPA();
-        this.permissionService = new DefaultPermissionService(permissionDao);
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
-        postService = new DefaultPostService(new PostDaoJPA());
+        DiscussionUserService userService = new DefaultUserService(new UserDaoJPA(), permissionDao);
+        this.permissionService = new DefaultPermissionService(permissionDao, userService);
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
+        postService = new DefaultPostService(new PostDaoJPA(), userService);
 
         discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(discussion);

@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Post;
 
 import java.util.List;
@@ -37,6 +38,15 @@ public interface PostService {
     Post sendReply(Post reply, Post post);
 
     /**
+     * Reply to the post as a current user.
+     * If no user is currently logged in, null will be returned and nothing will be saved to database.
+     * @param reply
+     * @param post
+     * @return
+     */
+    Post sendReplyAsCurrentUser(Post reply, Post post);
+
+    /**
      * Send a new post in the discussion
      *
      * @param discussion
@@ -44,6 +54,16 @@ public interface PostService {
      * @return new post
      */
     Post sendPost(Discussion discussion, Post post);
+
+    /**
+     * Sends a new post in the discussion as currently logged user.
+     * Returns null if no user is logged in and no post will be saved.
+     *
+     * @param discussion
+     * @param post
+     * @return
+     */
+    Post sendPostAsCurrentUser(Discussion discussion, Post post);
 
     /**
      * Disable the post
@@ -68,4 +88,11 @@ public interface PostService {
      *          and empty list if there are no posts or the discussion doesnt exist/is null
      */
     List<Post> listPostHierarchy(Discussion discussion);
+
+    /**
+     * Returns the username of posts's author.
+     * @param post
+     * @return
+     */
+    String getPostAuthor(Post post) throws DiscussionUserNotFoundException;
 }

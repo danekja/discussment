@@ -1,8 +1,8 @@
 package org.danekja.discussment.core.service.mock;
 
 import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.service.DiscussionUserService;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * The interface contains service methods for working with the users.
  */
-public interface UserService extends Serializable{
+public interface UserService extends DiscussionUserService{
 
     /**
      * Add a new user to the discussion

@@ -1,14 +1,20 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.dao.PermissionDao;
-import org.danekja.discussment.core.dao.jpa.*;
+import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
+import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
-import org.danekja.discussment.core.service.mock.*;
+import org.danekja.discussment.core.service.mock.DefaultUserService;
+import org.danekja.discussment.core.service.mock.User;
+import org.danekja.discussment.core.service.mock.UserDaoJPA;
+import org.danekja.discussment.core.service.mock.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +38,9 @@ public class DiscussionServiceTest {
     public void setUp() throws Exception {
         topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
         this.permissionDao = new PermissionDaoJPA();
-        this.permissionService = new DefaultPermissionService(permissionDao);
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
+        UserService userService = new DefaultUserService(new UserDaoJPA(), permissionDao);
+        this.permissionService = new DefaultPermissionService(permissionDao, userService);
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
 
         topic = new Topic();
         topic.setName("testTopic");

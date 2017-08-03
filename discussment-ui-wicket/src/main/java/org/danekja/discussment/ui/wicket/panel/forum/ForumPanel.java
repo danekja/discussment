@@ -3,7 +3,10 @@ package org.danekja.discussment.ui.wicket.panel.forum;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.ui.wicket.form.*;
 import org.danekja.discussment.ui.wicket.list.content.ContentListPanel;
@@ -11,6 +14,7 @@ import org.danekja.discussment.ui.wicket.list.discussion.DiscussionListPanel;
 import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
+import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 import java.util.HashMap;
 
@@ -29,7 +33,6 @@ public class ForumPanel extends Panel {
     private TopicService topicService;
     private DiscussionService discussionService;
     private PermissionService permissionService;
-    private DiscussionUserService userService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
@@ -46,7 +49,7 @@ public class ForumPanel extends Panel {
      * @param categoryService instance of the category service
      * @param postService instance of the post service
      */
-    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, PermissionService permissionService, DiscussionUserService userService) {
+    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, PermissionService permissionService) {
         super(id);
 
         this.parametersModel = parametersModel;
@@ -56,7 +59,6 @@ public class ForumPanel extends Panel {
         this.topicService = topicService;
         this.discussionService = discussionService;
         this.permissionService = permissionService;
-        this.userService = userService;
 
         this.categoryModel = new Model<Category>();
         this.discussionModel = new Model<Discussion>();
@@ -85,17 +87,16 @@ public class ForumPanel extends Panel {
             Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
             topicModel.setObject(topic);
 
-            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, permissionService, userService));
+            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, permissionService));
         } else {
 
             Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
 
-            IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-
-            if ((user != null && discussionService.isAccessToDiscussion(user, discussion)) ||
-               ((Boolean) getSession().getAttribute("access") && getSession().getAttribute("discussionId").equals(discussion.getId()))) {
-
-                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel, permissionService, userService));
+            Long dId = SessionUtil.getDiscussionId();
+            Boolean access = SessionUtil.getAccess();
+            if(discussionService.hasCurrentUserAccessToDiscussion(discussion) ||
+                    access != null && access.booleanValue() && dId != null && dId.equals(discussion.getId())) {
+                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel, permissionService));
             } else {
                 setResponsePage(getPage().getClass());
             }

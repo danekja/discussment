@@ -5,7 +5,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Category;
-import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.CategoryService;
@@ -71,9 +70,8 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isCreateCategory());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isCreateCategory());
             }
         };
     }
@@ -88,9 +86,8 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isCreateTopic());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isCreateTopic());
             }
         };
     }

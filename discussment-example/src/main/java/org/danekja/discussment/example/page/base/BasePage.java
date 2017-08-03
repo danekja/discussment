@@ -15,6 +15,7 @@ import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.example.core.DefaultUserService;
 import org.danekja.discussment.example.core.User;
 import org.danekja.discussment.example.core.UserDaoMock;
+import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.form.LoginForm;
 import org.danekja.discussment.example.form.RegistrationForm;
 import org.danekja.discussment.example.page.article.ArticlePage;
@@ -40,12 +41,13 @@ public abstract class BasePage extends WebPage {
         add(new Label("title", new Model<String>(getTitle())));
 
         PermissionDao permissionDao = new PermissionDaoJPA();
+        UserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
 
-        add(new LoginForm("loginForm", new DefaultUserService(new UserDaoMock(), new PermissionDaoJPA()), new Model<User>(new User())));
+        add(new LoginForm("loginForm", userService, new Model<User>(new User())));
         add(new RegistrationForm("registrationForm",
                 new DefaultUserService(new UserDaoMock(), permissionDao),
                 new Model<User>(new User()),
-                new DefaultPermissionService(permissionDao), Model.of(new Permission())));
+                new DefaultPermissionService(permissionDao, userService), Model.of(new Permission())));
     }
 
     private Label createUsernameLabel() {

@@ -13,6 +13,12 @@ import java.io.Serializable;
 public interface PermissionService extends Serializable {
 
     /**
+     * Returns the permission of currently logged user.
+     * @return Permission of currently logged user and null if no user is logged in.
+     */
+    Permission getCurrentlyLoggedUsersPermission();
+
+    /**
      * Get user's permissions.
      * @param user User object. If null, null is returned.
      * @return

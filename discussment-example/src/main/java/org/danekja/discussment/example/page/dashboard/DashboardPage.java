@@ -23,7 +23,7 @@ public class DashboardPage extends BasePage {
 
         final UserService userService = new DefaultUserService(new UserDaoMock(), new PermissionDaoJPA());
 
-        final PermissionService permissionService = new DefaultPermissionService(new PermissionDaoJPA());
+        final PermissionService permissionService = new DefaultPermissionService(new PermissionDaoJPA(), userService);
 
         add(new ListView<User>("usersListView", userService.getUsers()) {
 

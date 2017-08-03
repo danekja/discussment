@@ -12,10 +12,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.PostService;
 
@@ -32,7 +31,6 @@ public class PostListPanel extends Panel {
     private PostService postService;
     private IModel<List<Post>> postListModel;
     private PermissionService permissionService;
-    private DiscussionUserService userService;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -42,14 +40,13 @@ public class PostListPanel extends Panel {
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
      */
-    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService, PermissionService permissionService, DiscussionUserService userService) {
+    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService, PermissionService permissionService) {
         super(id);
 
         this.postModel = postModel;
         this.postService = postService;
         this.postListModel = postListModel;
         this.permissionService = permissionService;
-        this.userService = userService;
     }
 
     @Override
@@ -80,9 +77,11 @@ public class PostListPanel extends Panel {
 
                 listItem.add(new Label("username", new LoadableDetachableModel<String>() {
                     protected String load() {
-                        Long id = listItem.getModel().getObject().getUserId();
-                        IDiscussionUser user = userService.getUserById(id);
-                        return user == null ? "error!" : user.getUsername();
+                        try {
+                            return postService.getPostAuthor(listItem.getModel().getObject());
+                        } catch (DiscussionUserNotFoundException e) {
+                            return "Error: author not found";
+                        }
                     }
                 }));
                 listItem.add(new Label("created", new PropertyModel<String>(listItem.getModel(), "created")));
@@ -109,9 +108,8 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isCreatePost() && !pm.getObject().isDisabled());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isCreatePost() && !pm.getObject().isDisabled());
             }
         };
     }
@@ -128,9 +126,8 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isRemovePost());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isRemovePost());
             }
         };
     }
@@ -151,9 +148,8 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isDisablePost());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isDisablePost());
             }
         };
 

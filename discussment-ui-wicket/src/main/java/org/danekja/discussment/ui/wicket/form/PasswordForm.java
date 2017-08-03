@@ -4,9 +4,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
+import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 /**
  * Created by Martin Bláha on 25.01.17.
@@ -69,28 +69,23 @@ public class PasswordForm extends Form {
             if (discussionModel.getObject().getPass() == null){
                 // no password for discussion
 
-                getSession().setAttribute("access", new Boolean(true));
-                getSession().setAttribute("discussionId", new Long(discussionModel.getObject().getId()));
+                SessionUtil.setAccess(true);
+                SessionUtil.setDiscussionId(discussionModel.getObject().getId());
                 pageParameters.add("discussionId", discussionModel.getObject().getId());
             } else if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                discussionService.addCurrentUserToDiscussion(discussionModel.getObject());
 
-                if (user != null) {
-                    discussionService.addAccessToDiscussion(user, discussionModel.getObject());
-                }
-
-                getSession().setAttribute("access", new Boolean(true));
-                getSession().setAttribute("discussionId", new Long(discussionModel.getObject().getId()));
+                SessionUtil.setAccess(true);
+                SessionUtil.setDiscussionId(discussionModel.getObject().getId());
 
                 pageParameters.add("discussionId", discussionModel.getObject().getId());
             } else {
 
                 pageParameters.add("topicId", discussionModel.getObject().getTopic().getId());
 
-                getSession().setAttribute("access", new Boolean(false));
-                getSession().setAttribute("error", "password");
-
+                SessionUtil.setAccess(true);
+                SessionUtil.setError("password");
             }
 
             passwordModel.setObject(new Discussion());

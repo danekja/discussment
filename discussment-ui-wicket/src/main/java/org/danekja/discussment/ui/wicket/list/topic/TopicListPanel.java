@@ -9,7 +9,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.PermissionService;
@@ -99,9 +98,8 @@ public class TopicListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isRemoveTopic());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isRemoveTopic());
             }
         };
     }

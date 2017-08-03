@@ -42,10 +42,10 @@ public class ArticlePage extends BasePage {
 	 */
     public ArticlePage(final PageParameters parameters) {
 
-        this.permissionService = new DefaultPermissionService(new PermissionDaoJPA());
-        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService);
         this.userService = new DefaultUserService(new UserDaoMock(), new PermissionDaoJPA());
-        this.postService = new DefaultPostService(new PostDaoJPA());
+        this.permissionService = new DefaultPermissionService(new PermissionDaoJPA(), userService);
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
+        this.postService = new DefaultPostService(new PostDaoJPA(), userService);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ArticlePage extends BasePage {
             discussion = discussionService.createDiscussion(new Discussion("article name"));
         }
 
-        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), permissionService, userService));
+        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), permissionService));
     }
 
     @Override

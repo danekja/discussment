@@ -1,10 +1,6 @@
 package org.danekja.discussment.core.domain;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,4 +133,12 @@ public class Discussion extends BaseEntity implements Serializable {
         return lastPost;
     }
 
+    @Override
+    public String toString() {
+        return "Discussion{" +
+                "name='" + name + '\'' +
+                ", pass='" + pass + '\'' +
+                ", topic=" + topic +
+                '}';
+    }
 }

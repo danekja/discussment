@@ -11,7 +11,7 @@ import org.danekja.discussment.ui.wicket.form.discussion.DiscussionFormComponent
 /**
  * Created by Martin Bláha on 25.01.17.
  *
- * The class creates the form for creating a new category
+ * The class creates the form for creating a new discussion
  */
 public class DiscussionForm extends Form {
 
@@ -65,7 +65,8 @@ public class DiscussionForm extends Form {
         discussion.setTopic(topicModel.getObject());
 
         if (discussionService != null) {
-            discussionService.createDiscussion(discussion);
+            discussion = discussionService.createDiscussion(discussion);
+            discussionService.addCurrentUserToDiscussion(discussion);
 
             discussionModel.setObject(new Discussion());
 

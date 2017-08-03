@@ -3,7 +3,10 @@ package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PostService;
 
 import java.util.List;
@@ -14,9 +17,11 @@ import java.util.List;
 public class DefaultPostService implements PostService {
 
     private PostDao postDao;
+    private DiscussionUserService userService;
 
-    public DefaultPostService(PostDao postDao) {
+    public DefaultPostService(PostDao postDao, DiscussionUserService userService) {
         this.postDao = postDao;
+        this.userService = userService;
     }
 
     public void removePost(Post post) {
@@ -70,5 +75,29 @@ public class DefaultPostService implements PostService {
     public List<Post> listPostHierarchy(Discussion discussion) {
 
         return postDao.getPostsByDiscussion(discussion);
+    }
+
+    public Post sendPostAsCurrentUser(Discussion discussion, Post post) {
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        if(user == null) {
+            return null;
+        }
+
+        post.setUser(user);
+        return sendPost(discussion, post);
+    }
+
+    public Post sendReplyAsCurrentUser(Post reply, Post post) {
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        if(user == null) {
+            return null;
+        }
+
+        reply.setUser(user);
+        return sendReply(reply, post);
+    }
+
+    public String getPostAuthor(Post post) throws DiscussionUserNotFoundException {
+        return userService.getUserById(post.getUserId()).getUsername();
     }
 }

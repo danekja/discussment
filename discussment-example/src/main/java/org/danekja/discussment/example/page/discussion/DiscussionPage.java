@@ -51,12 +51,12 @@ public class DiscussionPage extends BasePage {
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
         PostDaoJPA postJPA = new PostDaoJPA();
 
-        this.permissionService = new DefaultPermissionService(permissionJPA);
-        this.discussionService = new DefaultDiscussionService(discussionJPA, permissionService);
+        this.userService = new DefaultUserService(userDao, permissionJPA);
+        this.permissionService = new DefaultPermissionService(permissionJPA, userService);
+        this.discussionService = new DefaultDiscussionService(discussionJPA, permissionService, userService);
         this.categoryService = new DefaultCategoryService(categoryDaoJPA);
         this.topicService = new DefaultTopicService(topicJPA, categoryDaoJPA);
-        this.postService = new DefaultPostService(postJPA);
-        this.userService = new DefaultUserService(userDao, permissionJPA);
+        this.postService = new DefaultPostService(postJPA, userService);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());
@@ -69,7 +69,7 @@ public class DiscussionPage extends BasePage {
         parametersModel.getObject().put("topicId", parameters.get("topicId").isNull() ? -1 : Integer.parseInt(parameters.get("topicId").toString()));
         parametersModel.getObject().put("discussionId", parameters.get("discussionId").isNull() ? -1 : Integer.parseInt(parameters.get("discussionId").toString()));
 
-        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, permissionService, userService));
+        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, permissionService));
     }
 
     @Override

@@ -14,9 +14,11 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.domain.*;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 
@@ -32,7 +34,6 @@ public class DiscussionListPanel extends Panel {
     private IModel<Discussion> discussionModel;
     private IModel<Topic> topicListModel;
     private PermissionService permissionService;
-    private DiscussionUserService userService;
 
 
     /**
@@ -43,14 +44,13 @@ public class DiscussionListPanel extends Panel {
      * @param discussionService instance of the discussion service
      * @param discussionModel model for setting the selected discussion
      */
-    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, PermissionService permissionService, DiscussionUserService userService) {
+    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, PermissionService permissionService) {
         super(id);
 
         this.discussionService = discussionService;
         this.discussionModel = discussionModel;
         this.topicListModel = topicListModel;
         this.permissionService = permissionService;
-        this.userService = userService;
     }
 
     @Override
@@ -71,13 +71,11 @@ public class DiscussionListPanel extends Panel {
                 listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
                 listItem.add(new Label("lastUsername", new LoadableDetachableModel<String>() {
                     protected String load() {
-                        Post post = listItem.getModel().getObject().getLastPost();
-                        if(post == null) {
-                            return "";
+                        try {
+                            return discussionService.getLastPostAuthor(listItem.getModelObject());
+                        } catch (DiscussionUserNotFoundException e) {
+                            return "Error: author of last post not found";
                         }
-                        Long userId = post.getUserId();
-                        IDiscussionUser user = userService.getUserById(userId);
-                        return user == null ? "error!" : user.getUsername();
                     }
                 }));
                 listItem.add(new Label("lastCreated", new PropertyModel<String>(listItem.getModel(), "lastPost.getCreatedFormat")));
@@ -112,9 +110,7 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-
-                if (user != null && discussionService.isAccessToDiscussion(user, dm.getObject())) {
+                if (discussionService.hasCurrentUserAccessToDiscussion(dm.getObject())) {
                     add(new AttributeModifier("href", "#"));
                     add(new AttributeModifier("data-target", "#"));
 
@@ -158,9 +154,8 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isCreateDiscussion());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isCreateDiscussion());
             }
         };
     }
@@ -177,9 +172,8 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
-                Permission p = permissionService.getUsersPermissions(user);
-                this.setVisible(user != null && p != null && p.isRemoveDiscussion());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isRemoveDiscussion());
             }
         };
     }

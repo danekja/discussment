@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Topic;
 
@@ -62,10 +63,30 @@ public interface DiscussionService {
     void addAccessToDiscussion(IDiscussionUser entity, Discussion en);
 
     /**
+     * Adds access for currently logged user to discussion.
+     * @param en
+     */
+    void addCurrentUserToDiscussion(Discussion en);
+
+    /**
      * Whether or has user access to discussion.
      * @param user User.
      * @param discussion Discussion.
      * @return True if the user has access to discussion.
      */
     boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion);
+
+    /**
+     * Whether or not has currently logged user access to discussion.
+     * @param discussion Discussion.
+     * @return True if the user has access to discussion and false if not or no user is logged in.
+     */
+    boolean hasCurrentUserAccessToDiscussion(Discussion discussion);
+
+    /**
+     * Returns the username of the last post in the discussion.
+     * @param discussion
+     * @return Username. Empty string if discussion has no posts.
+     */
+    String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException;
 }
