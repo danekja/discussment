@@ -6,7 +6,7 @@ import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.imp.*;
 import org.danekja.discussment.core.service.mock.DefaultUserService;
 import org.danekja.discussment.core.service.mock.User;
-import org.danekja.discussment.core.service.mock.UserDaoJPA;
+import org.danekja.discussment.core.service.mock.UserDaoMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class CategoryServiceTest {
     @Before
     public void setUp() throws Exception {
         this.permissionDao = new PermissionDaoJPA();
-        DiscussionUserService userService = new DefaultUserService(new UserDaoJPA(), permissionDao);
+        DiscussionUserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
         topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
         categoryService = new DefaultCategoryService(new CategoryDaoJPA());
         this.permissionService = new DefaultPermissionService(permissionDao, userService);
