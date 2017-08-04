@@ -61,7 +61,7 @@ The library contains these packages:
 
 - __form__ contains forms such as adding a new category to the forum.
 
-- __list__ contains panels that create parts of the userId interface. The panels use other the panels to create a larger unit. For example, CategoryListPanel, which displays categories and topics, uses TopicListPanel to display topics.
+- __list__ contains panels that create parts of the user interface. The panels use other the panels to create a larger unit. For example, CategoryListPanel, which displays categories and topics, uses TopicListPanel to display topics.
 
 - __model__ contains classes for data acquisition. Classes can be used as a parameter for creating a ListView instance.
 
@@ -69,12 +69,12 @@ The library contains these packages:
 
 __DiscussionPanel__ creates a panel which contains a discussion. This panel can be used below a article like a discussion about the article. The panel contains an input field for adding a new post and listing all posts and their replies.
 
-__ForumPanel__ creates a panel that contains a forum. The forum is ready for use on a separate page. The panel manages category and topics with discussions. The userId can create categories and topics according to their own needs, where forum users can create discussions.
+__ForumPanel__ creates a panel that contains a forum. The forum is ready for use on a separate page. The panel manages category and topics with discussions. The user can create categories and topics according to their own needs, where forum users can create discussions.
 
 ## Readme: discussment-example
 The example shows a simple use of the __discussion-ui-wicket__ library. 
 
-- How to add a userId with his permissions to the discussion.
+- How to add a user with his permissions to the discussion.
 - How to use the __DiscussionPanel__ below a article.
 - How to use __ForumPanel__ as a seperate forum.
 
