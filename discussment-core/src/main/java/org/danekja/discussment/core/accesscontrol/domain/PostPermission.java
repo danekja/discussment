@@ -1,5 +1,9 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Topic;
+
 import javax.persistence.Entity;
 
 /**
@@ -20,8 +24,16 @@ public class PostPermission extends AbstractPermission {
         super(userId, data);
     }
 
-    public PostPermission(String userId, PermissionLevel type, Long itemId, PermissionData data) {
-        super(userId, type, itemId, data);
+    public PostPermission(String userId, Discussion discussion, PermissionData data) {
+        super(userId, PermissionLevel.DISCUSSION, discussion.getId(), data);
+    }
+
+    public PostPermission(String userId, Topic topic, PermissionData data) {
+        super(userId, PermissionLevel.TOPIC, topic.getId(), data);
+    }
+
+    public PostPermission(String userId, Category category, PermissionData data) {
+        super(userId, PermissionLevel.CATEGORY, category.getId(), data);
     }
 
     protected PostPermission() {

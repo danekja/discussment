@@ -21,21 +21,6 @@ public class CategoryPermission extends AbstractPermission {
         super(userId, data);
     }
 
-    public CategoryPermission(String userId, PermissionLevel type, Long itemId, PermissionData data) {
-        super(userId, type, itemId, data);
-
-        switch (type) {
-            case CATEGORY:
-            case TOPIC:
-            case DISCUSSION:
-                throw new IllegalArgumentException("CATEGORY, TOPIC and DISCUSSION permission levels make no sense here!");
-            default:
-                //pass
-                break;
-
-        }
-    }
-
     protected CategoryPermission() {
     }
 }

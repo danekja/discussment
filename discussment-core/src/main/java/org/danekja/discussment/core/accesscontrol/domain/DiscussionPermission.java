@@ -1,5 +1,8 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Topic;
+
 import javax.persistence.Entity;
 
 /**
@@ -22,17 +25,13 @@ public class DiscussionPermission extends AbstractPermission {
         super(userId, data);
     }
 
-    public DiscussionPermission(String userId, PermissionLevel type, Long itemId, PermissionData data) {
-        super(userId, type, itemId, data);
 
-        switch (type) {
-            case DISCUSSION:
-                throw new IllegalArgumentException("DISCUSSION permission level makes no sense here!");
-            default:
-                //pass
-                break;
+    public DiscussionPermission(String userId, Topic topic, PermissionData data) {
+        super(userId, PermissionLevel.TOPIC, topic.getId(), data);
+    }
 
-        }
+    public DiscussionPermission(String userId, Category category, PermissionData data) {
+        super(userId, PermissionLevel.CATEGORY, category.getId(), data);
     }
 
     protected DiscussionPermission() {
