@@ -1,17 +1,18 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.UserDao;
+import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
-import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
-import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.core.service.mock.DefaultUserService;
+import org.danekja.discussment.core.service.mock.User;
+import org.danekja.discussment.core.service.mock.UserDaoMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,53 +27,57 @@ import static org.junit.Assert.assertNull;
  */
 public class PostServiceTest {
 
-    private UserService userService;
-    private UserDao userDao;
+    private PermissionDao permissionDao;
 
     private DiscussionService discussionService;
     private PostService postService;
+    private PermissionService permissionService;
 
     private Discussion discussion;
     private User user;
+    private Permission p;
 
     @Before
     public void setUp() throws Exception {
-        this.userDao = new UserDaoJPA();
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
-        postService = new DefaultPostService(new PostDaoJPA());
+        this.permissionDao = new PermissionDaoJPA();
+        DiscussionUserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
+        this.permissionService = new DefaultPermissionService(permissionDao, userService);
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
+        postService = new DefaultPostService(new PostDaoJPA(), userService);
 
         discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(discussion);
-        user = userService.addUser(new User("test", "test", "test"), new Permission());
+        user = new User("test", "", "");
+        user.setId(-100L);
+        p = permissionService.addPermissionForUser(new Permission(), user);
     }
 
     @After
     public void tearDown() throws Exception {
         //discussionService.removeDiscussion(discussion);
-        userDao.remove(user);
+        permissionDao.remove(p);
     }
 
     @Test
     public void removePost() throws Exception {
         Post post = new Post();
         post.setText("text");
-        post.setUser(user);
+        post.setUser(user.getId());
         post = postService.sendPost(discussion, post);
 
         Post reply1 = new Post();
         reply1.setText("reply1Text");
-        reply1.setUser(user);
+        reply1.setUser(user.getId());
         reply1 = postService.sendReply(reply1, post);
 
         Post reply2 = new Post();
         reply2.setText("reply2Text");
-        reply2.setUser(user);
+        reply2.setUser(user.getId());
         reply2 = postService.sendReply(reply2, post);
 
         Post reply3 = new Post();
         reply3.setText("reply3Text");
-        reply3.setUser(user);
+        reply3.setUser(user.getId());
         reply3 = postService.sendReply(reply3, reply2);
 
         postService.removePost(reply2);
@@ -87,7 +92,7 @@ public class PostServiceTest {
         //test
         Post post = new Post();
         post.setText("text");
-        post.setUser(user);
+        post.setUser(user.getId());
         post = postService.sendPost(discussion, post);
 
         assertEquals(0, post.getLevel());
@@ -102,13 +107,13 @@ public class PostServiceTest {
         //prepare
         Post post = new Post();
         post.setText("text");
-        post.setUser(user);
+        post.setUser(user.getId());
         post = postService.sendPost(discussion, post);
 
         //test
         Post reply = new Post();
         reply.setText("replyText");
-        reply.setUser(user);
+        reply.setUser(user.getId());
         reply = postService.sendReply(reply, post);
 
         assertEquals(1, reply.getLevel());
@@ -123,7 +128,7 @@ public class PostServiceTest {
         //prepare
         Post post = new Post();
         post.setText("text");
-        post.setUser(user);
+        post.setUser(user.getId());
         post = postService.sendPost(discussion, post);
 
         postService.enablePost(post);
@@ -141,7 +146,7 @@ public class PostServiceTest {
         //prepare
         Post post = new Post();
         post.setText("text");
-        post.setUser(user);
+        post.setUser(user.getId());
         post = postService.sendPost(discussion, post);
 
         postService.disablePost(post);

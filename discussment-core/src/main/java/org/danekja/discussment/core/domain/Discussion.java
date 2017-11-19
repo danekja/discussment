@@ -1,10 +1,6 @@
 package org.danekja.discussment.core.domain;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,24 +42,10 @@ public class Discussion extends BaseEntity implements Serializable {
     private List<Post> posts = new ArrayList<Post>();
 
     /**
-     * List contains users which have access to a discussion. If the discussion is removed, the users still exist.
+     * List of users which have access to this discussion.
      */
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_discussion",
-            inverseJoinColumns = {
-                    @JoinColumn(
-                            name = "user_id",
-                            referencedColumnName = "id"
-                    )
-            },
-            joinColumns = {
-                    @JoinColumn(
-                            name = "discussion_id",
-                            referencedColumnName = "id"
-                    )
-            }
-    )
-    private List<User> userAccessList = new ArrayList<User>();
+    @OneToMany(mappedBy = "discussion", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<UserDiscussion> userAccessList = new ArrayList<UserDiscussion>();
 
     /**
      * Topic in which the discussion is.
@@ -111,11 +93,11 @@ public class Discussion extends BaseEntity implements Serializable {
         return posts;
     }
 
-    public List<User> getUserAccessList() {
+    public List<UserDiscussion> getUserAccessList() {
         return userAccessList;
     }
 
-    public void setUserAccessList(List<User> accessList) {
+    public void setUserAccessList(List<UserDiscussion> accessList) {
         this.userAccessList = accessList;
     }
 
@@ -151,4 +133,12 @@ public class Discussion extends BaseEntity implements Serializable {
         return lastPost;
     }
 
+    @Override
+    public String toString() {
+        return "Discussion{" +
+                "name='" + name + '\'' +
+                ", pass='" + pass + '\'' +
+                ", topic=" + topic +
+                '}';
+    }
 }

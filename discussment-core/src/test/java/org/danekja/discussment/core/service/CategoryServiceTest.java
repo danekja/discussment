@@ -1,9 +1,12 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.UserDao;
+import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.core.service.mock.DefaultUserService;
+import org.danekja.discussment.core.service.mock.User;
+import org.danekja.discussment.core.service.mock.UserDaoMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,20 +20,21 @@ public class CategoryServiceTest {
 
     private TopicService topicService;
     private CategoryService categoryService;
-    private UserService userService;
     private DiscussionService discussionService;
     private PostService postService;
+    private PermissionService permissionService;
 
-    private UserDao userDao;
+    private PermissionDao permissionDao;
 
     @Before
     public void setUp() throws Exception {
+        this.permissionDao = new PermissionDaoJPA();
+        DiscussionUserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
         topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
         categoryService = new DefaultCategoryService(new CategoryDaoJPA());
-        this.userDao = new UserDaoJPA();
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
-        postService = new DefaultPostService(new PostDaoJPA());
+        this.permissionService = new DefaultPermissionService(permissionDao, userService);
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
+        postService = new DefaultPostService(new PostDaoJPA(), userService);
 
     }
 
@@ -66,7 +70,9 @@ public class CategoryServiceTest {
     @Test
     public void removeCategory() throws Exception {
 
-        User user = userService.addUser(new User("test", "", ""), new Permission());
+        User user = new User("test", "", "");
+        user.setId(-100L);
+        Permission p = permissionService.addPermissionForUser(new Permission(), user);
         Category category = categoryService.createCategory(new Category("category"));
 
         Topic topic = new Topic();
@@ -84,7 +90,7 @@ public class CategoryServiceTest {
         categoryService.removeCategory(category);
 
         //clear
-        userDao.remove(user);
+        permissionDao.remove(p);
     }
 
 }

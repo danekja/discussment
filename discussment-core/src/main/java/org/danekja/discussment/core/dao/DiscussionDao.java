@@ -1,7 +1,9 @@
 package org.danekja.discussment.core.dao;
 
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.UserDiscussion;
 
 import java.util.List;
 
@@ -20,4 +22,11 @@ public interface DiscussionDao extends GenericDao<Discussion> {
      * @return list of Discussion
      */
     List<Discussion> getDiscussionsByTopic(Topic topic);
+
+    /**
+     * Saves the userDiscussion entity.
+     * @param userDiscussion Connection between user and discussion to be saved.
+     * @return Saved object.
+     */
+    UserDiscussion addAccessToDiscussion(UserDiscussion userDiscussion);
 }

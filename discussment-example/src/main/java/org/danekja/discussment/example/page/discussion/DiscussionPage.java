@@ -6,6 +6,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.example.core.DefaultUserService;
+import org.danekja.discussment.example.core.UserDao;
+import org.danekja.discussment.example.core.UserDaoMock;
+import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
 
@@ -24,6 +28,7 @@ public class DiscussionPage extends BasePage {
     private TopicService topicService;
     private PostService postService;
     private UserService userService;
+    private PermissionService permissionService;
 
     private IModel<HashMap<String, Integer>> parametersModel;
 
@@ -41,16 +46,17 @@ public class DiscussionPage extends BasePage {
 
         CategoryDaoJPA categoryDaoJPA = new CategoryDaoJPA();
         TopicDaoJPA topicJPA = new TopicDaoJPA();
-        UserDaoJPA userJPA = new UserDaoJPA();
+        UserDao userDao = new UserDaoMock();
         DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA();
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
         PostDaoJPA postJPA = new PostDaoJPA();
 
-        this.discussionService = new DefaultDiscussionService(discussionJPA);
+        this.userService = new DefaultUserService(userDao, permissionJPA);
+        this.permissionService = new DefaultPermissionService(permissionJPA, userService);
+        this.discussionService = new DefaultDiscussionService(discussionJPA, permissionService, userService);
         this.categoryService = new DefaultCategoryService(categoryDaoJPA);
         this.topicService = new DefaultTopicService(topicJPA, categoryDaoJPA);
-        this.postService = new DefaultPostService(postJPA);
-        this.userService = new DefaultUserService(userJPA, permissionJPA);
+        this.postService = new DefaultPostService(postJPA, userService);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());
@@ -63,7 +69,7 @@ public class DiscussionPage extends BasePage {
         parametersModel.getObject().put("topicId", parameters.get("topicId").isNull() ? -1 : Integer.parseInt(parameters.get("topicId").toString()));
         parametersModel.getObject().put("discussionId", parameters.get("discussionId").isNull() ? -1 : Integer.parseInt(parameters.get("discussionId").toString()));
 
-        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService));
+        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, permissionService));
     }
 
     @Override

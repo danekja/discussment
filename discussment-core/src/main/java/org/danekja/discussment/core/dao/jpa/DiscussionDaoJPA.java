@@ -1,8 +1,10 @@
 package org.danekja.discussment.core.dao.jpa;
 
 import org.danekja.discussment.core.dao.DiscussionDao;
+import org.danekja.discussment.core.dao.GenericDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.domain.UserDiscussion;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -12,8 +14,11 @@ import java.util.List;
  */
 public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements DiscussionDao {
 
+    private GenericDao<UserDiscussion> userDiscussionDao;
+
     public DiscussionDaoJPA() {
         super(Discussion.class);
+        userDiscussionDao = new GenericDaoJPA<UserDiscussion>(UserDiscussion.class);
     }
 
     public List<Discussion> getDiscussionsByTopic(Topic topic) {
@@ -21,5 +26,11 @@ public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements Discu
         q.setParameter("topicId", topic.getId());
         return q.getResultList();
     }
+
+    public UserDiscussion addAccessToDiscussion(UserDiscussion userDiscussion) {
+        return userDiscussionDao.save(userDiscussion);
+    }
+
+
 }
 

@@ -5,9 +5,10 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
@@ -27,6 +28,7 @@ public class ContentListPanel extends Panel {
     private IModel<Category> categoryModel;
     private IModel<List<Category>>  categoryListModel;
     private IModel<List<Topic>>  topicWicketModel;
+    private PermissionService permissionService;
 
     /**
      * Constructor for creating a instance of the panel contains the categories with the topics and the topics without the category.
@@ -38,7 +40,7 @@ public class ContentListPanel extends Panel {
      * @param topicService instance of the topic service
      * @param categoryModel model for setting the selected category
      */
-    public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, CategoryService categoryService, TopicService topicService, IModel<Category> categoryModel) {
+    public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, CategoryService categoryService, TopicService topicService, IModel<Category> categoryModel, PermissionService permissionService) {
         super(id);
 
         this.topicService = topicService;
@@ -46,6 +48,7 @@ public class ContentListPanel extends Panel {
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
         this.topicWicketModel = topicWicketModel;
+        this.permissionService = permissionService;
     }
 
     @Override
@@ -55,8 +58,8 @@ public class ContentListPanel extends Panel {
         add(createCategoryAjaxLink());
         add(createTopicAjaxLink());
 
-        add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService));
-        add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService));
+        add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, permissionService));
+        add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, permissionService));
     }
 
     private AjaxLink createCategoryAjaxLink() {
@@ -67,8 +70,8 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreateCategory());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isCreateCategory());
             }
         };
     }
@@ -83,8 +86,8 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreateTopic());
+                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
+                this.setVisible(p != null && p.isCreateTopic());
             }
         };
     }

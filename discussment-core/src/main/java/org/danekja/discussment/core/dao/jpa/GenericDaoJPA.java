@@ -26,7 +26,9 @@ public class GenericDaoJPA<T extends BaseEntity> implements GenericDao<T> {
     }
 
     public T save(T obj) {
-        em.getTransaction().begin();
+        if(!em.getTransaction().isActive()) {
+            em.getTransaction().begin();
+        }
         if (obj.isNew()) {
             em.persist(obj);
         } else {
@@ -42,7 +44,9 @@ public class GenericDaoJPA<T extends BaseEntity> implements GenericDao<T> {
     }
 
     public void remove(T obj) {
-        em.getTransaction().begin();
+        if(!em.getTransaction().isActive()) {
+            em.getTransaction().begin();
+        }
         if (!obj.isNew()) {
             em.remove(em.contains(obj) ? obj : em.merge(obj));
         }

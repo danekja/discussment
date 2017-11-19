@@ -1,10 +1,10 @@
 package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.dao.DiscussionDao;
-import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.domain.*;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.DiscussionUserService;
+import org.danekja.discussment.core.service.PermissionService;
 
 import java.util.List;
 
@@ -15,8 +15,13 @@ public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;
 
-    public DefaultDiscussionService(DiscussionDao discussionDao) {
+    private PermissionService permissionService;
+    private DiscussionUserService userService;
+
+    public DefaultDiscussionService(DiscussionDao discussionDao, PermissionService permissionService, DiscussionUserService userService) {
         this.discussionDao = discussionDao;
+        this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     public Discussion createDiscussion(Discussion discussion) {
@@ -51,12 +56,49 @@ public class DefaultDiscussionService implements DiscussionService {
         discussionDao.remove(discussion);
     }
 
-    public void addAccessToDiscussion(User entity, Discussion en) {
-
-        en.getUserAccessList().add(entity);
-
-        discussionDao.save(en);
+    public void addAccessToDiscussion(IDiscussionUser entity, Discussion en) {
+        UserDiscussion userDiscussion = new UserDiscussion(entity.getId(), en);
+        discussionDao.addAccessToDiscussion(userDiscussion);
     }
 
+    public boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion) {
+        Permission p = permissionService.getUsersPermissions(user);
+
+        if(p == null) {
+            return  false;
+        }
+
+        UserDiscussion ud = new UserDiscussion(user.getId(), discussion);
+        if (discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(ud)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void addCurrentUserToDiscussion(Discussion en) {
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        if(user != null) {
+            addAccessToDiscussion(user, en);
+        } else {
+        }
+    }
+
+    public boolean hasCurrentUserAccessToDiscussion(Discussion discussion) {
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        if(user != null) {
+            return isAccessToDiscussion(user, discussion);
+        }
+
+        return false;
+    }
+
+    public String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException {
+        Post lasPost = discussion.getLastPost();
+        if(lasPost == null) {
+            return "";
+        }
+
+        return userService.getUserById(lasPost.getUserId()).getUsername();
+    }
 }
 

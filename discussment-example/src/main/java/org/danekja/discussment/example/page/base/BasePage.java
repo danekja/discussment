@@ -8,10 +8,14 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.danekja.discussment.core.dao.PermissionDao;
 import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
-import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.service.imp.DefaultPermissionService;
+import org.danekja.discussment.example.core.DefaultUserService;
+import org.danekja.discussment.example.core.User;
+import org.danekja.discussment.example.core.UserDaoMock;
+import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.form.LoginForm;
 import org.danekja.discussment.example.form.RegistrationForm;
 import org.danekja.discussment.example.page.article.ArticlePage;
@@ -36,8 +40,14 @@ public abstract class BasePage extends WebPage {
 
         add(new Label("title", new Model<String>(getTitle())));
 
-        add(new LoginForm("loginForm", new DefaultUserService(new UserDaoJPA(), new PermissionDaoJPA()), new Model<User>(new User())));
-        add(new RegistrationForm("registrationForm", new DefaultUserService(new UserDaoJPA(), new PermissionDaoJPA()), new Model<User>(new User())));
+        PermissionDao permissionDao = new PermissionDaoJPA();
+        UserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
+
+        add(new LoginForm("loginForm", userService, new Model<User>(new User())));
+        add(new RegistrationForm("registrationForm",
+                new DefaultUserService(new UserDaoMock(), permissionDao),
+                new Model<User>(new User()),
+                new DefaultPermissionService(permissionDao, userService), Model.of(new Permission())));
     }
 
     private Label createUsernameLabel() {
