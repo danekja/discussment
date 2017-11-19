@@ -1,5 +1,7 @@
 package org.danekja.discussment.core.domain;
 
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

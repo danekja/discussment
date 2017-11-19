@@ -1,7 +1,7 @@
-package org.danekja.discussment.core.service;
+package org.danekja.discussment.core.accesscontrol.service;
 
-import org.danekja.discussment.core.domain.IDiscussionUser;
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
 
 import java.io.Serializable;
 

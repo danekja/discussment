@@ -1,5 +1,7 @@
-package org.danekja.discussment.core.domain;
+package org.danekja.discussment.core.accesscontrol.domain;
 
+
+import org.danekja.discussment.core.domain.BaseEntity;
 
 import javax.persistence.Entity;
 import java.io.Serializable;

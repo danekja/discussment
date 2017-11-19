@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.service.mock;
 
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.service.DiscussionUserService;
 
 import java.util.List;

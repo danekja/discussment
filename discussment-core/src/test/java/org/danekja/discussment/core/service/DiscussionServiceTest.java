@@ -1,15 +1,16 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.impl.DefaultPermissionService;
 import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
-import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Permission;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
-import org.danekja.discussment.core.service.imp.DefaultPermissionService;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.core.service.mock.DefaultUserService;
 import org.danekja.discussment.core.service.mock.User;

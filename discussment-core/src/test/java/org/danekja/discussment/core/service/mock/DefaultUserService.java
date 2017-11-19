@@ -1,8 +1,8 @@
 package org.danekja.discussment.core.service.mock;
 
-import org.danekja.discussment.core.dao.PermissionDao;
-import org.danekja.discussment.core.domain.IDiscussionUser;
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
 
 import java.util.List;
 

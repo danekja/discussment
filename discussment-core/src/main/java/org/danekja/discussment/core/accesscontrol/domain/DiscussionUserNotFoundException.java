@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.domain;
+package org.danekja.discussment.core.accesscontrol.domain;
 
 /**
  * An exception thrown whenever user which should exist (has posts or discussions assigned) is not found

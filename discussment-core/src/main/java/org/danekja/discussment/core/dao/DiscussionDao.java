@@ -1,7 +1,6 @@
 package org.danekja.discussment.core.dao;
 
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.UserDiscussion;
 

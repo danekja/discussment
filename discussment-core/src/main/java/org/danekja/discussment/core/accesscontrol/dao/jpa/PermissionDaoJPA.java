@@ -1,8 +1,9 @@
-package org.danekja.discussment.core.dao.jpa;
+package org.danekja.discussment.core.accesscontrol.dao.jpa;
 
-import org.danekja.discussment.core.dao.PermissionDao;
-import org.danekja.discussment.core.domain.IDiscussionUser;
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
 import javax.persistence.Query;
 import java.util.List;

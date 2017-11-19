@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.domain;
+package org.danekja.discussment.core.accesscontrol.domain;
 
 import java.io.Serializable;
 

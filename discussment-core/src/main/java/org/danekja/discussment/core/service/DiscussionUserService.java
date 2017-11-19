@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
-import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 
 import java.io.Serializable;
 

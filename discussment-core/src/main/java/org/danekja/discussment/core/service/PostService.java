@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.accesscontrol.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Post;
 
 import java.util.List;

@@ -1,6 +1,11 @@
 package org.danekja.discussment.core.domain;
 
-import javax.persistence.*;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
