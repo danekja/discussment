@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 19.01.17.
  */
-public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements DiscussionDao {
+public class DiscussionDaoJPA extends GenericDaoJPA<Long, Discussion> implements DiscussionDao {
 
-    private GenericDao<UserDiscussion> userDiscussionDao;
+    private GenericDao<Long, UserDiscussion> userDiscussionDao;
 
     public DiscussionDaoJPA() {
         super(Discussion.class);
-        userDiscussionDao = new GenericDaoJPA<UserDiscussion>(UserDiscussion.class);
+        userDiscussionDao = new GenericDaoJPA<Long, UserDiscussion>(UserDiscussion.class);
     }
 
     public List<Discussion> getDiscussionsByTopic(Topic topic) {

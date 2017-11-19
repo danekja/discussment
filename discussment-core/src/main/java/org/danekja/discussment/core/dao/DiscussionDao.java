@@ -11,7 +11,7 @@ import java.util.List;
  *
  * The interface extends GenericDao on methods for working with discussions in a database
  */
-public interface DiscussionDao extends GenericDao<Discussion> {
+public interface DiscussionDao extends GenericDao<Long, Discussion> {
 
 
     /**

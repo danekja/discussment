@@ -9,7 +9,7 @@ import java.util.List;
  *
  * The interface extends GenericDao on methods for working with categories in a database
  */
-public interface CategoryDao extends GenericDao<Category> {
+public interface CategoryDao extends GenericDao<Long, Category> {
 
     /**
      * Get all categories in a database.

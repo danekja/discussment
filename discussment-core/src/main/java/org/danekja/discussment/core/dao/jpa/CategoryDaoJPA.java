@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class CategoryDaoJPA extends GenericDaoJPA<Category> implements CategoryDao {
+public class CategoryDaoJPA extends GenericDaoJPA<Long, Category> implements CategoryDao {
 
     public CategoryDaoJPA() {
         super(Category.class);

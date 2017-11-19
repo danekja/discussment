@@ -21,7 +21,7 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
         @NamedQuery(name = GET_BY_DISCUSSION,
                 query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId")
 })
-public class Post extends BaseEntity implements Serializable {
+public class Post extends LongEntity implements Serializable {
 
     /**
      * The constant contains name of query for getting posts by discussion
@@ -51,25 +51,21 @@ public class Post extends BaseEntity implements Serializable {
     /**
      * The time when the post was created.
      */
-    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
     /**
      * The Discussion where the post is. If the post is removed, the discussion still exists
      */
-    @ManyToOne
     private Discussion discussion;
 
     /**
      * The parent post, if the parent post does not exist, is null
      */
-    @ManyToOne
     private Post post;
 
     /**
      * List constant all replies. If the post is removed, tje replies are removed too.
      */
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Post> replies = new ArrayList<Post>();
 
     @PrePersist
@@ -96,6 +92,7 @@ public class Post extends BaseEntity implements Serializable {
         this.level = level;
     }
 
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getCreated() {
         return created;
     }
@@ -104,6 +101,7 @@ public class Post extends BaseEntity implements Serializable {
         this.created = created;
     }
 
+    @Transient
     public String getCreatedFormat() {
         SimpleDateFormat formatData = new SimpleDateFormat("d.M.yyyy H:mm:ss");
 
@@ -122,6 +120,7 @@ public class Post extends BaseEntity implements Serializable {
         this.replies = replies;
     }
 
+    @ManyToOne
     public Discussion getDiscussion() {
         return discussion;
     }
@@ -134,6 +133,11 @@ public class Post extends BaseEntity implements Serializable {
         return userId;
     }
 
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @ManyToOne
     public Post getPost() {
         return post;
     }
@@ -158,6 +162,7 @@ public class Post extends BaseEntity implements Serializable {
         this.text = text;
     }
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     public List<Post> getReplies() {
         return replies;
     }
@@ -169,11 +174,13 @@ public class Post extends BaseEntity implements Serializable {
         }
     }
 
+    @Transient
     public int getNumberOfReplies() {
 
         return getNumberOfReplies(this, 0);
     }
 
+    @Transient
     private int getNumberOfReplies(Post postModel, int count) {
 
         count++;
@@ -184,6 +191,7 @@ public class Post extends BaseEntity implements Serializable {
         return count;
     }
 
+    @Transient
     public Post getLastPost() {
         return getLastPost(this);
     }

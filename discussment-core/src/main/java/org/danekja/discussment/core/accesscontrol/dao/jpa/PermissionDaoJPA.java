@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Martin Bláha on 04.05.17.
  */
 
-public class PermissionDaoJPA extends GenericDaoJPA<Permission> implements PermissionDao {
+public class PermissionDaoJPA extends GenericDaoJPA<Long, Permission> implements PermissionDao {
 
     public PermissionDaoJPA() {
         super(Permission.class);

@@ -1,7 +1,8 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
+import org.danekja.discussment.core.domain.BaseEntity;
+
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Base class for all permission types.
@@ -11,18 +12,17 @@ import java.io.Serializable;
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "permission")
-abstract class AbstractPermission implements Serializable {
+public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 
-    private PermissionId id;
     private PermissionData data;
 
     AbstractPermission(String userId, PermissionData data) {
-        this.id = new PermissionId(userId);
+        this.setId(new PermissionId(userId));
         this.data = data;
     }
 
     AbstractPermission(String userId, PermissionLevel type, Long itemId, PermissionData data) {
-        this.id = new PermissionId(userId, type, itemId);
+        this.setId(new PermissionId(userId, type, itemId));
         this.data = data;
     }
 
@@ -36,12 +36,9 @@ abstract class AbstractPermission implements Serializable {
      * Permission's primary key.
      */
     @EmbeddedId
+    @Override
     public PermissionId getId() {
-        return id;
-    }
-
-    public void setId(PermissionId id) {
-        this.id = id;
+        return super.getId();
     }
 
 

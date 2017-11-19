@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class TopicDaoJPA extends GenericDaoJPA<Topic> implements TopicDao {
+public class TopicDaoJPA extends GenericDaoJPA<Long, Topic> implements TopicDao {
 
     public TopicDaoJPA() {
         super(Topic.class);

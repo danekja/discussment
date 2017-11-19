@@ -17,7 +17,7 @@ import static org.danekja.discussment.core.domain.Category.GET_CATEGORIES;
 @NamedQueries({
         @NamedQuery(name = GET_CATEGORIES, query = "SELECT c FROM Category c WHERE id != 0"),
 })
-public class Category extends BaseEntity implements Serializable {
+public class Category extends LongEntity implements Serializable {
 
     /**
      * The constant contains name of query for getting categories
@@ -37,7 +37,6 @@ public class Category extends BaseEntity implements Serializable {
     /**
      * List contains topics in the category. If the category is removed, the topics are removed too.
      */
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<Topic>();
 
     public Category() {}
@@ -54,6 +53,11 @@ public class Category extends BaseEntity implements Serializable {
         this.name = name;
     }
 
+
+    /**
+     * List contains topics in the category. If the category is removed, the topics are removed too.
+     */
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     public List<Topic> getTopics() {
         return topics;
     }

@@ -2,8 +2,8 @@ package org.danekja.discussment.core.service.mock;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
-import org.danekja.discussment.core.domain.BaseEntity;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.LongEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import static org.danekja.discussment.core.service.mock.User.GET_USERS;
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
 })
-public class User extends BaseEntity implements IDiscussionUser {
+public class User extends LongEntity implements IDiscussionUser {
 
     /**
      * The constant contains name of query for getting an user by username
@@ -97,10 +97,7 @@ public class User extends BaseEntity implements IDiscussionUser {
 
     public boolean isAccessToDiscussion(Discussion discussion) {
 
-        if (discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this)) {
-            return true;
-        }
-        return false;
+        return discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this);
     }
 
     public List<Discussion> getAccessListToDiscussion() {

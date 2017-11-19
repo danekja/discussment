@@ -18,7 +18,7 @@ import static org.danekja.discussment.core.domain.Discussion.GET_DISCUSSIONS_BY_
         @NamedQuery(name = GET_DISCUSSIONS_BY_TOPIC_ID,
                 query = "SELECT d FROM Discussion d WHERE d.topic.id = :topicId")
 })
-public class Discussion extends BaseEntity implements Serializable {
+public class Discussion extends LongEntity implements Serializable {
 
     /**
      * The constant contains name of query for getting discussions by topic id
@@ -38,19 +38,16 @@ public class Discussion extends BaseEntity implements Serializable {
     /**
      * List contains posts in the discussion. If the discussion is removed, the posts are removed too.
      */
-    @OneToMany(mappedBy = "discussion", orphanRemoval = true)
     private List<Post> posts = new ArrayList<Post>();
 
     /**
      * List of users which have access to this discussion.
      */
-    @OneToMany(mappedBy = "discussion", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<UserDiscussion> userAccessList = new ArrayList<UserDiscussion>();
 
     /**
      * Topic in which the discussion is.
      */
-    @ManyToOne
     private Topic topic;
 
     public Discussion() {}
@@ -65,6 +62,7 @@ public class Discussion extends BaseEntity implements Serializable {
         this.pass = pass;
     }
 
+    @ManyToOne
     public Topic getTopic() {
         return topic;
     }
@@ -89,10 +87,16 @@ public class Discussion extends BaseEntity implements Serializable {
         this.pass = pass;
     }
 
+    @OneToMany(mappedBy = "discussion", orphanRemoval = true)
     public List<Post> getPosts() {
         return posts;
     }
 
+    protected void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    @OneToMany(mappedBy = "discussion", orphanRemoval = true, cascade = CascadeType.REMOVE)
     public List<UserDiscussion> getUserAccessList() {
         return userAccessList;
     }
@@ -101,6 +105,7 @@ public class Discussion extends BaseEntity implements Serializable {
         this.userAccessList = accessList;
     }
 
+    @Transient
     public int getNumberOfPosts() {
         int numberOfPosts = 0;
 
@@ -111,6 +116,7 @@ public class Discussion extends BaseEntity implements Serializable {
         return numberOfPosts;
     }
 
+    @Transient
     public Post getLastPost() {
         Post lastPost = null;
 

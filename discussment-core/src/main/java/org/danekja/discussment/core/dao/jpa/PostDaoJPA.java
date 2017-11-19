@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 19.01.17.
  */
-public class PostDaoJPA extends GenericDaoJPA<Post> implements PostDao {
+public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
 
     public PostDaoJPA() {
         super(Post.class);

@@ -15,25 +15,22 @@ import java.io.Serializable;
  * Created by Zdenek Vales on 2.8.2017.
  */
 @Entity(name = "user_discussion")
-public class UserDiscussion extends BaseEntity implements Serializable {
+public class UserDiscussion extends LongEntity implements Serializable {
 
     /**
      * After the object is load from database, actual user object can be added
      * to this class. Note that this field is not persisted.
      */
-    @Transient
     private IDiscussionUser user;
 
     /**
      * Id of the user.
      */
-    @Column(name = "user_id")
     private Long userId;
 
     /**
      * Discussion he can access.
      */
-    @ManyToOne
     private Discussion discussion;
 
     public UserDiscussion() {
@@ -44,6 +41,7 @@ public class UserDiscussion extends BaseEntity implements Serializable {
         this.discussion = discussion;
     }
 
+    @Transient
     public IDiscussionUser getUser() {
         return user;
     }
@@ -52,6 +50,7 @@ public class UserDiscussion extends BaseEntity implements Serializable {
         this.user = user;
     }
 
+    @Column(name = "user_id")
     public Long getUserId() {
         return userId;
     }
@@ -60,6 +59,7 @@ public class UserDiscussion extends BaseEntity implements Serializable {
         this.userId = userId;
     }
 
+    @ManyToOne
     public Discussion getDiscussion() {
         return discussion;
     }

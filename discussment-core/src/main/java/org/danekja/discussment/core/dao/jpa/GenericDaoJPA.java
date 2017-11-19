@@ -5,12 +5,13 @@ import org.danekja.discussment.core.domain.BaseEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import java.io.Serializable;
 
 
 /**
  * Created by Martin Bláha on 04.01.17.
  */
-public class GenericDaoJPA<T extends BaseEntity> implements GenericDao<T> {
+public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> implements GenericDao<PK, T> {
 
     protected static EntityManager em;
 
@@ -39,7 +40,7 @@ public class GenericDaoJPA<T extends BaseEntity> implements GenericDao<T> {
         return obj;
     }
 
-    public T getById(Long id) {
+    public T getById(PK id) {
         return em.find(clazz, id);
     }
 

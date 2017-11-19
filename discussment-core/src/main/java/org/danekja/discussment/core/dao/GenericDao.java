@@ -2,13 +2,15 @@ package org.danekja.discussment.core.dao;
 
 import org.danekja.discussment.core.domain.BaseEntity;
 
+import java.io.Serializable;
+
 /**
  * Created by Martin Bláha on 13.05.17.
  *
  * The interface contains basic methods for accessing a database
  *
  */
-public interface GenericDao<T extends BaseEntity> {
+public interface GenericDao<PK extends Serializable, T extends BaseEntity<PK>> {
 
     /**
      * Save an object to the database.
@@ -24,7 +26,7 @@ public interface GenericDao<T extends BaseEntity> {
      * @param id id
      * @return object object
      */
-    T getById(Long id);
+    T getById(PK id);
 
     /**
      * Remove the specified object from database.

@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
 
-import org.danekja.discussment.core.domain.BaseEntity;
+import org.danekja.discussment.core.domain.LongEntity;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.Map;
  * The class represents a permission for the userId.
  */
 @Entity
-public class Permission extends BaseEntity implements Serializable {
+public class Permission extends LongEntity implements Serializable {
 
     /**
      * The constant contains index for setting of creating the category.
