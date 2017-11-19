@@ -9,9 +9,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.service.PermissionService;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.TopicService;
 
 import java.util.List;

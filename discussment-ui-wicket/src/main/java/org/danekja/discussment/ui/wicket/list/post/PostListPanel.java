@@ -12,10 +12,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.domain.DiscussionUserNotFoundException;
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.domain.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.service.PermissionService;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.PermissionService;
 import org.danekja.discussment.core.service.PostService;
 
 import java.util.List;

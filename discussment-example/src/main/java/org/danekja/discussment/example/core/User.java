@@ -1,7 +1,7 @@
 package org.danekja.discussment.example.core;
 
-import org.danekja.discussment.core.domain.BaseEntity;
-import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.LongEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ import static org.danekja.discussment.example.core.User.GET_USERS;
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
 })
 // todo: replace with interface
-public class User extends BaseEntity implements IDiscussionUser {
+public class User extends LongEntity implements IDiscussionUser {
 
     /**
      * The constant contains name of query for getting an user by username

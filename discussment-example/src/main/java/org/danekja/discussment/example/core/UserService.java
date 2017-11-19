@@ -1,9 +1,8 @@
 package org.danekja.discussment.example.core;
 
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.service.DiscussionUserService;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 /**

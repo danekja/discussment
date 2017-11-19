@@ -5,7 +5,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.example.core.User;
 
 /**

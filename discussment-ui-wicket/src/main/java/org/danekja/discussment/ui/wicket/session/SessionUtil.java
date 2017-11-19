@@ -1,7 +1,7 @@
 package org.danekja.discussment.ui.wicket.session;
 
 import org.apache.wicket.Session;
-import org.danekja.discussment.core.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 
 import java.io.Serializable;
 

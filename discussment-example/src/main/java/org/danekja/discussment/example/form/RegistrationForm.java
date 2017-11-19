@@ -2,9 +2,8 @@ package org.danekja.discussment.example.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.domain.Permission;
-import org.danekja.discussment.core.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.service.PermissionService;
 import org.danekja.discussment.example.core.User;
 import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.form.registration.RegistrationFormComponent;
