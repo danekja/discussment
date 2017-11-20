@@ -1,9 +1,9 @@
 package org.danekja.discussment.example.core;
 
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
-import org.danekja.discussment.core.accesscontrol.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 import java.util.List;

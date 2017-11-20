@@ -1,12 +1,12 @@
 package org.danekja.discussment.core.service.imp;
 
 
-import org.danekja.discussment.core.accesscontrol.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.DiscussionUserService;
 import org.danekja.discussment.core.service.PostService;
 
 import java.util.List;

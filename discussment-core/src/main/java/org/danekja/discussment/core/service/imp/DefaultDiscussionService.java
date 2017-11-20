@@ -1,8 +1,9 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.accesscontrol.domain.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionService;
 import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
@@ -10,7 +11,6 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.UserDiscussion;
 import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.DiscussionUserService;
 
 import java.util.List;
 
@@ -75,10 +75,7 @@ public class DefaultDiscussionService implements DiscussionService {
         }
 
         UserDiscussion ud = new UserDiscussion(user.getId(), discussion);
-        if (discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(ud)) {
-            return true;
-        }
-        return false;
+        return discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(ud);
     }
 
     public void addCurrentUserToDiscussion(Discussion en) {

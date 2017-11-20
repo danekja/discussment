@@ -3,8 +3,8 @@ package org.danekja.discussment.core.accesscontrol.service.impl;
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionService;
-import org.danekja.discussment.core.service.DiscussionUserService;
 
 /**
  * Created by Zdenek Vales on 1.8.2017.

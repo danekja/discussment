@@ -3,6 +3,7 @@ package org.danekja.discussment.core.service;
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionService;
 import org.danekja.discussment.core.accesscontrol.service.impl.DefaultPermissionService;
 import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
