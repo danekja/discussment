@@ -2,6 +2,7 @@ package org.danekja.discussment.core.accesscontrol.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -34,11 +35,27 @@ public class PermissionData implements Serializable {
      */
     private boolean view;
 
+    @Transient
+    public boolean canDo(Action action) {
+        switch (action) {
+            case EDIT:
+                return isEdit();
+            case VIEW:
+                return isView();
+            case DELETE:
+                return isDelete();
+            case CREATE:
+                return isCreate();
+            default:
+                throw new UnsupportedOperationException("Action not implemented yet!");
+        }
+    }
+
     /**
      * User is allowed to create new items.
      */
     @Column(name = "create", nullable = false)
-    public boolean isCreate() {
+    protected boolean isCreate() {
         return create;
     }
 
@@ -50,7 +67,7 @@ public class PermissionData implements Serializable {
      * User is allowed to remove items of other users
      */
     @Column(name = "delete", nullable = false)
-    public boolean isDelete() {
+    protected boolean isDelete() {
         return delete;
     }
 
@@ -62,7 +79,7 @@ public class PermissionData implements Serializable {
      * User is allowed to edit items of other users.
      */
     @Column(name = "edit", nullable = false)
-    public boolean isEdit() {
+    protected boolean isEdit() {
         return edit;
     }
 
@@ -74,7 +91,7 @@ public class PermissionData implements Serializable {
      * User is allowed to read respective items.
      */
     @Column(name = "view", nullable = false)
-    public boolean isView() {
+    protected boolean isView() {
         return view;
     }
 
