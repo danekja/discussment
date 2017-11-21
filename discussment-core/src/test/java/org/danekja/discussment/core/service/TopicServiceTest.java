@@ -127,12 +127,12 @@ public class TopicServiceTest {
 
         Post post = new Post();
         post.setText("text");
-        post.setUser(user.getId());
+        post.setUserId(user.getDiscussionUserId());
         post = postService.sendPost(IDiscussion, post);
 
         Post reply = new Post();
         reply.setText("reply1Text");
-        reply.setUser(user.getId());
+        reply.setUserId(user.getDiscussionUserId());
         postService.sendReply(reply, post);
 
         topicService.removeTopic(topic);

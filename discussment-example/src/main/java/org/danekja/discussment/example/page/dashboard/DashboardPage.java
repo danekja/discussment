@@ -31,7 +31,7 @@ public class DashboardPage extends BasePage {
 
                 final User user = item.getModelObject();
 
-                item.add(new Label("username", user.getUsername()));
+                item.add(new Label("username", user.getDisplayName()));
 
                 Permission p = permissionService.getUsersPermissions(user);
                 item.add(new Label("cc", p.isCreateCategory()));

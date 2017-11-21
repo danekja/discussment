@@ -33,7 +33,7 @@ public class LoginForm extends Form {
     @Override
     protected void onSubmit() {
 
-        User user = userService.getUserByUsername(userModel.getObject().getUsername());
+        User user = userService.getUserByUsername(userModel.getObject().getDisplayName());
 
         if (user != null) {
             SessionUtil.setUser(user);

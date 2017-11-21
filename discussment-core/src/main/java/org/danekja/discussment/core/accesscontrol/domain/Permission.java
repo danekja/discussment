@@ -69,7 +69,7 @@ public class Permission extends LongEntity implements Serializable {
     /**
      * User which has this permissions.
      */
-    private Long userId;
+    private String userId;
 
     /**
      * If value is true, the userId can create the category.
@@ -199,11 +199,11 @@ public class Permission extends LongEntity implements Serializable {
         }
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

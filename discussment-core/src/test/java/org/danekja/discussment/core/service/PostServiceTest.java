@@ -64,22 +64,22 @@ public class PostServiceTest {
     public void removePost() throws Exception {
         Post post = new Post();
         post.setText("text");
-        post.setUser(user.getId());
+        post.setUserId(user.getDiscussionUserId());
         post = postService.sendPost(discussion, post);
 
         Post reply1 = new Post();
         reply1.setText("reply1Text");
-        reply1.setUser(user.getId());
+        reply1.setUserId(user.getDiscussionUserId());
         reply1 = postService.sendReply(reply1, post);
 
         Post reply2 = new Post();
         reply2.setText("reply2Text");
-        reply2.setUser(user.getId());
+        reply2.setUserId(user.getDiscussionUserId());
         reply2 = postService.sendReply(reply2, post);
 
         Post reply3 = new Post();
         reply3.setText("reply3Text");
-        reply3.setUser(user.getId());
+        reply3.setUserId(user.getDiscussionUserId());
         reply3 = postService.sendReply(reply3, reply2);
 
         postService.removePost(reply2);
@@ -94,7 +94,7 @@ public class PostServiceTest {
         //test
         Post post = new Post();
         post.setText("text");
-        post.setUser(user.getId());
+        post.setUserId(user.getDiscussionUserId());
         post = postService.sendPost(discussion, post);
 
         assertEquals(0, post.getLevel());
@@ -109,13 +109,13 @@ public class PostServiceTest {
         //prepare
         Post post = new Post();
         post.setText("text");
-        post.setUser(user.getId());
+        post.setUserId(user.getDiscussionUserId());
         post = postService.sendPost(discussion, post);
 
         //test
         Post reply = new Post();
         reply.setText("replyText");
-        reply.setUser(user.getId());
+        reply.setUserId(user.getDiscussionUserId());
         reply = postService.sendReply(reply, post);
 
         assertEquals(1, reply.getLevel());
@@ -130,7 +130,7 @@ public class PostServiceTest {
         //prepare
         Post post = new Post();
         post.setText("text");
-        post.setUser(user.getId());
+        post.setUserId(user.getDiscussionUserId());
         post = postService.sendPost(discussion, post);
 
         postService.enablePost(post);
@@ -148,7 +148,7 @@ public class PostServiceTest {
         //prepare
         Post post = new Post();
         post.setText("text");
-        post.setUser(user.getId());
+        post.setUserId(user.getDiscussionUserId());
         post = postService.sendPost(discussion, post);
 
         postService.disablePost(post);

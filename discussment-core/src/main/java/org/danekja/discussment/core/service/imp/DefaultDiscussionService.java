@@ -63,7 +63,7 @@ public class DefaultDiscussionService implements DiscussionService {
     }
 
     public void addAccessToDiscussion(IDiscussionUser entity, Discussion en) {
-        UserDiscussion userDiscussion = new UserDiscussion(entity.getId(), en);
+        UserDiscussion userDiscussion = new UserDiscussion(entity.getDiscussionUserId(), en);
         discussionDao.addAccessToDiscussion(userDiscussion);
     }
 
@@ -74,7 +74,7 @@ public class DefaultDiscussionService implements DiscussionService {
             return  false;
         }
 
-        UserDiscussion ud = new UserDiscussion(user.getId(), discussion);
+        UserDiscussion ud = new UserDiscussion(user.getDiscussionUserId(), discussion);
         return discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(ud);
     }
 
@@ -101,7 +101,7 @@ public class DefaultDiscussionService implements DiscussionService {
             return "";
         }
 
-        return userService.getUserById(lasPost.getUserId()).getUsername();
+        return userService.getUserById(lasPost.getUserId()).getDisplayName();
     }
 }
 

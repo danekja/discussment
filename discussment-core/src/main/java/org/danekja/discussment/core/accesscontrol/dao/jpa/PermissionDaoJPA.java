@@ -23,7 +23,7 @@ public class PermissionDaoJPA extends GenericDaoJPA<Long, Permission> implements
                 " WHERE " +
                 " p.userId = :userId";
         Query q = em.createQuery(query);
-        q.setParameter("userId", user.getId());
+        q.setParameter("userId", user.getDiscussionUserId());
         List<Permission> permissions = q.getResultList();
         return permissions.isEmpty() ? null : permissions.get(0);
     }

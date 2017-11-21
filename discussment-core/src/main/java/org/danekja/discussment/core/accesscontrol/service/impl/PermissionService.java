@@ -24,43 +24,43 @@ public class PermissionService implements PermissionManagementService, AccessCon
     }
 
     public void configurePostPermissions(IDiscussionUser user, Discussion discussion, PermissionData permissions) {
-        permissionDao.save(new PostPermission(user.getUsername(), discussion, permissions));
+        permissionDao.save(new PostPermission(user.getDisplayName(), discussion, permissions));
     }
 
     public void configurePostPermissions(IDiscussionUser user, Topic topic, PermissionData permissions) {
-        permissionDao.save(new PostPermission(user.getUsername(), topic, permissions));
+        permissionDao.save(new PostPermission(user.getDisplayName(), topic, permissions));
     }
 
     public void configurePostPermissions(IDiscussionUser user, Category category, PermissionData permissions) {
-        permissionDao.save(new PostPermission(user.getUsername(), category, permissions));
+        permissionDao.save(new PostPermission(user.getDisplayName(), category, permissions));
     }
 
     public void configurePostPermissions(IDiscussionUser user, PermissionData permissions) {
-        permissionDao.save(new PostPermission(user.getUsername(), permissions));
+        permissionDao.save(new PostPermission(user.getDisplayName(), permissions));
     }
 
     public void configureDiscussionPermissions(IDiscussionUser user, Topic topic, PermissionData permissions) {
-        permissionDao.save(new DiscussionPermission(user.getUsername(), topic, permissions));
+        permissionDao.save(new DiscussionPermission(user.getDisplayName(), topic, permissions));
     }
 
     public void configureDiscussionPermissions(IDiscussionUser user, Category category, PermissionData permissions) {
-        permissionDao.save(new DiscussionPermission(user.getUsername(), category, permissions));
+        permissionDao.save(new DiscussionPermission(user.getDisplayName(), category, permissions));
     }
 
     public void configureDiscussionPermissions(IDiscussionUser user, PermissionData permissions) {
-        permissionDao.save(new DiscussionPermission(user.getUsername(), permissions));
+        permissionDao.save(new DiscussionPermission(user.getDisplayName(), permissions));
     }
 
     public void configureTopicPermissions(IDiscussionUser user, Category category, PermissionData permissions) {
-        permissionDao.save(new TopicPermission(user.getUsername(), category, permissions));
+        permissionDao.save(new TopicPermission(user.getDisplayName(), category, permissions));
     }
 
     public void configureTopicPermissions(IDiscussionUser user, PermissionData permissions) {
-        permissionDao.save(new TopicPermission(user.getUsername(), permissions));
+        permissionDao.save(new TopicPermission(user.getDisplayName(), permissions));
     }
 
     public void configureCategoryPermissions(IDiscussionUser user, PermissionData permissions) {
-        permissionDao.save(new CategoryPermission(user.getUsername(), permissions));
+        permissionDao.save(new CategoryPermission(user.getDisplayName(), permissions));
     }
 
     public boolean canAddPost(Discussion discussion) {
@@ -73,7 +73,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
 
         if (user == null) {
             return false;
-        } else if (Objects.equals(user.getId(), post.getUserId())) {
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
             return true;
         }
 
@@ -86,7 +86,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
 
         if (user == null) {
             return false;
-        } else if (Objects.equals(user.getId(), post.getUserId())) {
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
             return true;
         }
 

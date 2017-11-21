@@ -10,8 +10,14 @@ import java.io.Serializable;
  */
 public interface IDiscussionUser extends Serializable {
 
-    Long getId();
+    /**
+     * @return unique identifier of the user within the hosting application
+     */
+    String getDiscussionUserId();
 
-    String getUsername();
+    /**
+     * @return presentable name of the user to be displayed in the UI
+     */
+    String getDisplayName();
 
 }

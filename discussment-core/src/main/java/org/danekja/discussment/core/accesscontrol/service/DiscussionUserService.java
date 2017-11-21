@@ -20,7 +20,7 @@ public interface DiscussionUserService extends Serializable {
      * @return
      * @throws Exception is thrown whenever user with this id is nout found.
      */
-    IDiscussionUser getUserById(Long userId) throws DiscussionUserNotFoundException;
+    IDiscussionUser getUserById(String userId) throws DiscussionUserNotFoundException;
 
     /**
      * Returns the user which is currently logged into application.

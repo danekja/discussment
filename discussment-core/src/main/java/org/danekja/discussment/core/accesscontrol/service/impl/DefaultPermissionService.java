@@ -34,7 +34,7 @@ public class DefaultPermissionService implements PermissionService {
     public Permission addPermissionForUser(Permission permission, IDiscussionUser user) {
         Permission current = getUsersPermissions(user);
         if(current == null) {
-            permission.setUserId(user.getId());
+            permission.setUserId(user.getDiscussionUserId());
             return permissionDao.save(permission);
         } else {
             current.update(permission);

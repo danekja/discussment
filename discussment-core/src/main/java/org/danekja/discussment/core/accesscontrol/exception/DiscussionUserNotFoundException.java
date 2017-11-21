@@ -8,9 +8,9 @@ package org.danekja.discussment.core.accesscontrol.exception;
  */
 public class DiscussionUserNotFoundException extends Exception {
 
-    public final Long userId;
+    public final String userId;
 
-    public DiscussionUserNotFoundException(Long userId) {
+    public DiscussionUserNotFoundException(String userId) {
         super("Discussion user with id "+userId+" not found!");
         this.userId = userId;
     }

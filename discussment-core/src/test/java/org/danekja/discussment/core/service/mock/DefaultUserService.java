@@ -22,7 +22,7 @@ public class DefaultUserService implements UserService {
     public User addUser(User entity, Permission permission) {
 
         permission = permissionDao.save(permission);
-        permission.setUserId(entity.getId());
+        permission.setUserId(entity.getDiscussionUserId());
 
         return userDao.save(entity);
     }
@@ -36,8 +36,8 @@ public class DefaultUserService implements UserService {
         return userDao.getById(userId);
     }
 
-    public IDiscussionUser getUserById(Long userId) {
-        return getUserById(userId);
+    public IDiscussionUser getUserById(String userId) {
+        return getUserById(Long.parseLong(userId));
     }
 
     public IDiscussionUser getCurrentlyLoggedUser() {

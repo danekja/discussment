@@ -31,7 +31,7 @@ public class Post extends LongEntity implements Serializable {
     /**
      * The user which the post created
      */
-    private Long userId;
+    private String userId;
 
     /**
      * Text of the post
@@ -80,7 +80,7 @@ public class Post extends LongEntity implements Serializable {
     }
 
     public Post(IDiscussionUser user, String text) {
-        this.userId = user.getId();
+        this.userId = user.getDiscussionUserId();
         this.text = text;
     }
 
@@ -129,11 +129,11 @@ public class Post extends LongEntity implements Serializable {
         this.discussion = discussion;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -144,14 +144,6 @@ public class Post extends LongEntity implements Serializable {
 
     public void setPost(Post post) {
         this.post = post;
-    }
-
-    public void setUser(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setUser(IDiscussionUser user) {
-        this.userId = user.getId();
     }
 
     public String getText() {

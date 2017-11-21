@@ -26,7 +26,7 @@ public class UserDiscussion extends LongEntity implements Serializable {
     /**
      * Id of the user.
      */
-    private Long userId;
+    private String userId;
 
     /**
      * Discussion he can access.
@@ -36,7 +36,7 @@ public class UserDiscussion extends LongEntity implements Serializable {
     public UserDiscussion() {
     }
 
-    public UserDiscussion(Long userId, Discussion discussion) {
+    public UserDiscussion(String userId, Discussion discussion) {
         this.userId = userId;
         this.discussion = discussion;
     }
@@ -51,11 +51,11 @@ public class UserDiscussion extends LongEntity implements Serializable {
     }
 
     @Column(name = "user_id")
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

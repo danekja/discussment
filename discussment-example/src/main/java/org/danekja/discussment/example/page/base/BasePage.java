@@ -59,7 +59,7 @@ public abstract class BasePage extends WebPage {
                 if (user == null) {
                     return "";
                 } else {
-                    return user.getUsername();
+                    return user.getDisplayName();
                 }
             }
         };

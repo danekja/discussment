@@ -83,7 +83,7 @@ public class DefaultPostService implements PostService {
             return null;
         }
 
-        post.setUser(user);
+        post.setUserId(user.getDiscussionUserId());
         return sendPost(discussion, post);
     }
 
@@ -93,11 +93,11 @@ public class DefaultPostService implements PostService {
             return null;
         }
 
-        reply.setUser(user);
+        reply.setUserId(user.getDiscussionUserId());
         return sendReply(reply, post);
     }
 
     public String getPostAuthor(Post post) throws DiscussionUserNotFoundException {
-        return userService.getUserById(post.getUserId()).getUsername();
+        return userService.getUserById(post.getUserId()).getDisplayName();
     }
 }

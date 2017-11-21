@@ -44,7 +44,7 @@ public class UserDaoMock implements UserDao {
 
     public User getUserByUsername(String username) {
         for (User u : userRepository) {
-            if(u.getUsername().equals(username)) {
+            if (u.getDisplayName().equals(username)) {
                 return u;
             }
         }

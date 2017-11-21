@@ -3,10 +3,7 @@ package org.danekja.discussment.example.core;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.LongEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 
 import static org.danekja.discussment.example.core.User.GET_BY_USERNAME;
 import static org.danekja.discussment.example.core.User.GET_USERS;
@@ -60,7 +57,13 @@ public class User extends LongEntity implements IDiscussionUser {
         this.lastname = lastname;
     }
 
-    public String getUsername() {
+    @Override
+    public String getDiscussionUserId() {
+        return getId() != null ? getId().toString() : null;
+    }
+
+    @Transient
+    public String getDisplayName() {
         return username;
     }
 

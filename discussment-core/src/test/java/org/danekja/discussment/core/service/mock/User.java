@@ -71,7 +71,14 @@ public class User extends LongEntity implements IDiscussionUser {
         this.lastname = lastname;
     }
 
-    public String getUsername() {
+    @Override
+    @Transient
+    public String getDiscussionUserId() {
+        return getId() != null ? getId().toString() : null;
+    }
+
+    @Transient
+    public String getDisplayName() {
         return username;
     }
 

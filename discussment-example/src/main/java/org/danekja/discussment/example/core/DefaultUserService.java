@@ -30,8 +30,8 @@ public class DefaultUserService implements UserService {
         return userDao.getUsers();
     }
 
-    public IDiscussionUser getUserById(Long userId) throws DiscussionUserNotFoundException {
-        IDiscussionUser user = userDao.getById(userId);
+    public IDiscussionUser getUserById(String userId) throws DiscussionUserNotFoundException {
+        IDiscussionUser user = userDao.getById(Long.getLong(userId));
         if(user == null) {
             throw new DiscussionUserNotFoundException(userId);
         }
