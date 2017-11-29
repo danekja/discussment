@@ -14,6 +14,11 @@ import javax.persistence.*;
 @Table(name = "permission")
 public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 
+    public static final String PARAM_USER_ID = "userId";
+    public static final String PARAM_DISCUSSION_ID = "discussionId";
+    public static final String PARAM_TOPIC_ID = "topicId";
+    public static final String PARAM_CATEGORY_ID = "categoryId";
+
     private PermissionData data;
 
     AbstractPermission(String userId, PermissionData data) {

@@ -35,6 +35,19 @@ public class PermissionData implements Serializable {
      */
     private boolean view;
 
+    public PermissionData(boolean create, boolean delete, boolean edit, boolean view) {
+        this.create = create;
+        this.delete = delete;
+        this.edit = edit;
+        this.view = view;
+    }
+
+    /**
+     * Only for JPA purposes.
+     */
+    protected PermissionData() {
+    }
+
     @Transient
     public boolean canDo(Action action) {
         switch (action) {

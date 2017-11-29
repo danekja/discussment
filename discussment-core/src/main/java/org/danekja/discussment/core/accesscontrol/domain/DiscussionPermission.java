@@ -4,6 +4,8 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * Permission class for access management related to discussions.
@@ -18,8 +20,20 @@ import javax.persistence.Entity;
  *
  * @author Jakub Danek
  */
+@NamedQueries({
+        @NamedQuery(name = DiscussionPermission.QUERY_BY_USER,
+                query = "SELECT dp FROM DiscussionPermission dp" +
+                        " WHERE dp.id.userId = :" + DiscussionPermission.PARAM_USER_ID +
+                        " AND ((dp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.TOPIC" +
+                        "       AND dp.id.itemId = :" + DiscussionPermission.PARAM_TOPIC_ID + ")" +
+                        " OR (dp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.CATEGORY" +
+                        "       AND dp.id.itemId = :" + DiscussionPermission.PARAM_CATEGORY_ID + ")" +
+                        " OR dp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL)")
+})
 @Entity
 public class DiscussionPermission extends AbstractPermission {
+
+    public static final String QUERY_BY_USER = "DiscussionPermission.findForUser";
 
     public DiscussionPermission(String userId, PermissionData data) {
         super(userId, data);
