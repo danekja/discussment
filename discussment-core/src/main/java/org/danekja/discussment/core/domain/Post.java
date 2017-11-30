@@ -84,6 +84,7 @@ public class Post extends LongEntity implements Serializable {
         this.text = text;
     }
 
+    @Column(name = "level")
     public int getLevel() {
         return level;
     }
@@ -93,6 +94,7 @@ public class Post extends LongEntity implements Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created")
     public Date getCreated() {
         return created;
     }
@@ -108,6 +110,7 @@ public class Post extends LongEntity implements Serializable {
         return formatData.format(created);
     }
 
+    @Column(name = "is_disabled")
     public boolean isDisabled() {
         return disabled;
     }
@@ -129,6 +132,7 @@ public class Post extends LongEntity implements Serializable {
         this.discussion = discussion;
     }
 
+    @Column(name = "user_id")
     public String getUserId() {
         return userId;
     }
@@ -138,6 +142,7 @@ public class Post extends LongEntity implements Serializable {
     }
 
     @ManyToOne
+    @JoinColumn(name = "parent_post_id")
     public Post getPost() {
         return post;
     }
@@ -146,6 +151,7 @@ public class Post extends LongEntity implements Serializable {
         this.post = post;
     }
 
+    @Column(name = "test")
     public String getText() {
         return text;
     }

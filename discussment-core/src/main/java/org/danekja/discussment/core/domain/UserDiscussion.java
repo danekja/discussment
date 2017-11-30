@@ -2,10 +2,7 @@ package org.danekja.discussment.core.domain;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -60,6 +57,7 @@ public class UserDiscussion extends LongEntity implements Serializable {
     }
 
     @ManyToOne
+    @JoinColumn(name = "discussion_id")
     public Discussion getDiscussion() {
         return discussion;
     }
