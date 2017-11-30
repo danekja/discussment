@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.OldPermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionService;
@@ -14,13 +14,13 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.mock.User;
+import org.danekja.discussment.core.mock.UserDaoMock;
 import org.danekja.discussment.core.service.imp.DefaultCategoryService;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.core.service.mock.DefaultUserService;
-import org.danekja.discussment.core.service.mock.User;
-import org.danekja.discussment.core.service.mock.UserDaoMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,6 +30,12 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by Martin Bláha on 20.02.17.
  */
+
+// TODO: write similar tests for new access control package
+// tests should check out the basic stuff - create post / discussion / topic, assign permission to some users
+// and check that they have access (also try different levels)
+// also check same stuff for users without permissions
+
 public class TopicServiceTest {
 
     private TopicService topicService;
@@ -44,7 +50,7 @@ public class TopicServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.permissionDao = new PermissionDaoJPA();
+        this.permissionDao = new OldPermissionDaoJPA();
         DiscussionUserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
         topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
         categoryService = new DefaultCategoryService(new CategoryDaoJPA());

@@ -33,12 +33,19 @@ public class DefaultTopicService implements TopicService {
 
     public Topic createTopic(Topic topic, Category category) {
 
+        // category is null => try to resolve it
         if (category == null) {
-            category = categoryService.getCategoryById(Category.WITHOUT_CATEGORY);
+            if(topic.getCategory() != null && topic.getCategory().getId() != null) {
+                category = categoryService.getCategoryById(topic.getCategory().getId());
+            }
         }
 
-        category.getTopics().add(topic);
-        topic.setCategory(category);
+        // category was successfully resolved
+        if (category != null) {
+            category.getTopics().add(topic);
+            topic.setCategory(category);
+        }
+
 
         return topicDao.save(topic);
 

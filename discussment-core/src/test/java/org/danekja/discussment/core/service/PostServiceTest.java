@@ -1,7 +1,7 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.OldPermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionService;
@@ -10,11 +10,11 @@ import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.mock.User;
+import org.danekja.discussment.core.mock.UserDaoMock;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.danekja.discussment.core.service.mock.DefaultUserService;
-import org.danekja.discussment.core.service.mock.User;
-import org.danekja.discussment.core.service.mock.UserDaoMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class PostServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.permissionDao = new PermissionDaoJPA();
+        this.permissionDao = new OldPermissionDaoJPA();
         DiscussionUserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
         this.permissionService = new DefaultPermissionService(permissionDao, userService);
         discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);

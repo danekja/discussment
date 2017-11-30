@@ -3,6 +3,9 @@ package org.danekja.discussment.core.service.mock;
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.mock.User;
+import org.danekja.discussment.core.mock.UserDao;
+import org.danekja.discussment.core.mock.UserService;
 
 import java.util.List;
 

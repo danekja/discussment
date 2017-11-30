@@ -17,7 +17,7 @@ import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_WITHOUT_CATEG
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_TOPICS_BY_CATEGORY_ID, query = "SELECT t FROM Topic t WHERE t.category.id = :categoryId"),
-        @NamedQuery(name = GET_TOPICS_WITHOUT_CATEGORY, query = "SELECT t FROM Topic t WHERE t.category.id = 0")
+        @NamedQuery(name = GET_TOPICS_WITHOUT_CATEGORY, query = "SELECT t FROM Topic t WHERE t.category.id is null")
 })
 public class Topic extends LongEntity implements Serializable {
 
