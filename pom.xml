@@ -14,6 +14,7 @@
         <hibernate.version>5.2.6.Final</hibernate.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wicket.version>7.6.0</wicket.version>
+        <flyway.version>4.2.0</flyway.version>
     </properties>
 
     <modules>

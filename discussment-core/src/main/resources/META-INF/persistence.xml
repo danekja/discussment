@@ -13,11 +13,11 @@
             <property name="javax.persistence.jdbc.password" value="r00t" />
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 
-            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-            <property name="hibernate.hbm2ddl.auto" value="create" />
-            <property name="hibernate.hbm2ddl.import_files" value="META-INF/sql/data.sql" />
+            <!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
+            <!--<property name="hibernate.hbm2ddl.import_files" value="/META-INF/sql/schema.sql, /META-INF/sql/data.sql" />-->
 
             <!-- Configuring Connection Pool -->
             <property name="hibernate.c3p0.min_size" value="5" />
