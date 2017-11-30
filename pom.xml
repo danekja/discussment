@@ -12,6 +12,7 @@
     <properties>
         <mysql.connector.version>6.0.5</mysql.connector.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
+        <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wicket.version>7.6.0</wicket.version>
     </properties>
@@ -25,6 +26,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- JPA -->
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>${jpa-2.1.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
@@ -48,6 +54,7 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- wicket -->
