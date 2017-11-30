@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.service.mock;
+package org.danekja.discussment.core.mock;
 
 import java.util.ArrayList;
 import java.util.HashSet;

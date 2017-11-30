@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.service.mock;
+package org.danekja.discussment.core.mock;
 
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;

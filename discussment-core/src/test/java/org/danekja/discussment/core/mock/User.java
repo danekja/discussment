@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.service.mock;
+package org.danekja.discussment.core.mock;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.danekja.discussment.core.service.mock.User.GET_BY_USERNAME;
-import static org.danekja.discussment.core.service.mock.User.GET_USERS;
+import static org.danekja.discussment.core.mock.User.GET_BY_USERNAME;
+import static org.danekja.discussment.core.mock.User.GET_USERS;
 
 /**
  * Created by Martin Bláha on 04.01.17.
@@ -71,7 +71,6 @@ public class User extends LongEntity implements IDiscussionUser {
         this.lastname = lastname;
     }
 
-    @Override
     @Transient
     public String getDiscussionUserId() {
         return getId() != null ? getId().toString() : null;

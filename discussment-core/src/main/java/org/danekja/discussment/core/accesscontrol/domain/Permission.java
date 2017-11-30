@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * The class represents a permission for the userId.
  */
-@Entity
+@Entity(name = "old_permission")
 public class Permission extends LongEntity implements Serializable {
 
     /**

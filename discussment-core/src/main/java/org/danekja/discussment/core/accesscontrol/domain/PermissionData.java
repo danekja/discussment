@@ -13,6 +13,9 @@ import java.io.Serializable;
  * For the remaining entities (topics, categories, discussions), the permissions don't influence posts themselves,
  * only the ability to add/remove groups and to manage their metadata (such as name, permissions, etc).
  *
+ * PremissionData object is immutable and permission may be set only via constructor. Setters and getters are protected
+ * for this reason.
+ *
  * @author Jakub Danek
  */
 @Embeddable
@@ -35,6 +38,20 @@ public class PermissionData implements Serializable {
      */
     private boolean view;
 
+    /**
+     * Creates new permission data object with each permission set to false.
+     */
+    public PermissionData() {
+        this(false, false, false, false);
+    }
+
+    public PermissionData(boolean create, boolean delete, boolean edit, boolean view) {
+        this.create = create;
+        this.delete = delete;
+        this.edit = edit;
+        this.view = view;
+    }
+
     @Transient
     public boolean canDo(Action action) {
         switch (action) {
@@ -54,7 +71,7 @@ public class PermissionData implements Serializable {
     /**
      * User is allowed to create new items.
      */
-    @Column(name = "create", nullable = false)
+    @Column(name = "can_create", nullable = false)
     protected boolean isCreate() {
         return create;
     }
@@ -66,7 +83,7 @@ public class PermissionData implements Serializable {
     /**
      * User is allowed to remove items of other users
      */
-    @Column(name = "delete", nullable = false)
+    @Column(name = "can_delete", nullable = false)
     protected boolean isDelete() {
         return delete;
     }
@@ -78,7 +95,7 @@ public class PermissionData implements Serializable {
     /**
      * User is allowed to edit items of other users.
      */
-    @Column(name = "edit", nullable = false)
+    @Column(name = "can_edit", nullable = false)
     protected boolean isEdit() {
         return edit;
     }
@@ -90,7 +107,7 @@ public class PermissionData implements Serializable {
     /**
      * User is allowed to read respective items.
      */
-    @Column(name = "view", nullable = false)
+    @Column(name = "can_view", nullable = false)
     protected boolean isView() {
         return view;
     }

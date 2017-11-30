@@ -9,6 +9,7 @@ import org.danekja.discussment.core.dao.GenericDao;
  *
  * The interface extends GenericDao on methods for working with permission in a database
  */
+@Deprecated
 public interface PermissionDao extends GenericDao<Long, Permission> {
 
     Permission getUsersPermissions(IDiscussionUser user);

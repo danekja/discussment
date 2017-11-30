@@ -1,30 +1,39 @@
 package org.danekja.discussment.core.accesscontrol.dao.jpa;
 
-import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
+import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
+import org.danekja.discussment.core.accesscontrol.domain.*;
 import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
-import javax.persistence.Query;
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 04.05.17.
  */
 
-public class PermissionDaoJPA extends GenericDaoJPA<Long, Permission> implements PermissionDao {
+public class PermissionDaoJPA extends GenericDaoJPA<PermissionId, AbstractPermission> implements NewPermissionDao {
 
     public PermissionDaoJPA() {
-        super(Permission.class);
+        super(AbstractPermission.class);
     }
 
-    public Permission getUsersPermissions(IDiscussionUser user) {
-        String query = "SELECT p FROM "+Permission.class.getSimpleName()+" p " +
-                " WHERE " +
-                " p.userId = :userId";
-        Query q = em.createQuery(query);
-        q.setParameter("userId", user.getDiscussionUserId());
-        List<Permission> permissions = q.getResultList();
-        return permissions.isEmpty() ? null : permissions.get(0);
+    public List<PostPermission> findForUser(IDiscussionUser user, Long discussionId, Long topicId, Long categoryId) {
+        return null;
     }
+
+    public List<DiscussionPermission> findForUser(IDiscussionUser user, Long topicId, Long categoryId) {
+        return null;
+    }
+
+    public List<TopicPermission> findForUser(IDiscussionUser user, Long categoryId) {
+        return null;
+    }
+
+    public List<CategoryPermission> findForUser(IDiscussionUser user) {
+        return null;
+    }
+
+    public <Z extends AbstractPermission> List<Z> findByType(IDiscussionUser user, Class<Z> type, PermissionLevel level, Long itemId) {
+        return null;
+    }
+
 }
