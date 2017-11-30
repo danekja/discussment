@@ -9,8 +9,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
 
@@ -24,7 +23,7 @@ import java.util.List;
 public class TopicListPanel extends Panel {
 
     private TopicService topicService;
-    private PermissionService permissionService;
+    private AccessControlService accessControlService;
     private IModel<List<Topic>>  topicListModel;
 
     /**
@@ -34,11 +33,11 @@ public class TopicListPanel extends Panel {
      * @param topicListModel model for getting the topics
      * @param topicService instance of the topic service
      */
-    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService, PermissionService permissionService) {
+    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService, AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
-        this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
         this.topicListModel = topicListModel;
     }
 
@@ -98,8 +97,7 @@ public class TopicListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isRemoveTopic());
+                setVisible(accessControlService.canRemoveTopic(tm.getObject()));
             }
         };
     }

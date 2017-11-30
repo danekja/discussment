@@ -14,9 +14,8 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
@@ -33,7 +32,7 @@ public class DiscussionListPanel extends Panel {
     private DiscussionService discussionService;
     private IModel<Discussion> discussionModel;
     private IModel<Topic> topicListModel;
-    private PermissionService permissionService;
+    private AccessControlService accessControlService;
 
 
     /**
@@ -44,13 +43,13 @@ public class DiscussionListPanel extends Panel {
      * @param discussionService instance of the discussion service
      * @param discussionModel model for setting the selected discussion
      */
-    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, PermissionService permissionService) {
+    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, AccessControlService accessControlService) {
         super(id);
 
         this.discussionService = discussionService;
         this.discussionModel = discussionModel;
         this.topicListModel = topicListModel;
-        this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -154,8 +153,7 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isCreateDiscussion());
+                this.setVisible(accessControlService.canAddDiscussion(topicListModel.getObject()));
             }
         };
     }
@@ -172,8 +170,7 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isRemoveDiscussion());
+                this.setVisible(accessControlService.canRemoveTopic(topicListModel.getObject()));
             }
         };
     }

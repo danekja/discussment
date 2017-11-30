@@ -3,17 +3,17 @@ package org.danekja.discussment.example.page.article;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
-import org.danekja.discussment.core.accesscontrol.service.impl.DefaultPermissionService;
+import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.core.service.imp.NewDiscussionService;
 import org.danekja.discussment.example.core.DefaultUserService;
 import org.danekja.discussment.example.core.UserDaoMock;
 import org.danekja.discussment.example.page.base.BasePage;
@@ -31,7 +31,7 @@ public class ArticlePage extends BasePage {
 
 	private DiscussionService discussionService;
 	private PostService postService;
-	private PermissionService permissionService;
+	private AccessControlService accessControlService;
 	private DiscussionUserService userService;
 
     /**
@@ -43,8 +43,8 @@ public class ArticlePage extends BasePage {
     public ArticlePage(final PageParameters parameters) {
 
         this.userService = new DefaultUserService(new UserDaoMock(), new PermissionDaoJPA());
-        this.permissionService = new DefaultPermissionService(new PermissionDaoJPA(), userService);
-        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
+        this.accessControlService = new PermissionService(new PermissionDaoJPA(), userService);
+        this.discussionService = new NewDiscussionService(new DiscussionDaoJPA(), accessControlService, userService);
         this.postService = new DefaultPostService(new PostDaoJPA(), userService);
     }
 
@@ -58,7 +58,7 @@ public class ArticlePage extends BasePage {
             discussion = discussionService.createDiscussion(new Discussion("article name"));
         }
 
-        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), permissionService));
+        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, new Model<Post>(), accessControlService));
     }
 
     @Override

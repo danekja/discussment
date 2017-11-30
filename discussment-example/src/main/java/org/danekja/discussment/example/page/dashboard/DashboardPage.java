@@ -3,11 +3,11 @@ package org.danekja.discussment.example.page.dashboard;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
-import org.danekja.discussment.core.accesscontrol.service.impl.DefaultPermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.example.core.DefaultUserService;
 import org.danekja.discussment.example.core.User;
 import org.danekja.discussment.example.core.UserDaoMock;
@@ -23,7 +23,7 @@ public class DashboardPage extends BasePage {
 
         final UserService userService = new DefaultUserService(new UserDaoMock(), new PermissionDaoJPA());
 
-        final PermissionService permissionService = new DefaultPermissionService(new PermissionDaoJPA(), userService);
+        final AccessControlService accessControlService = new PermissionService(new PermissionDaoJPA(), userService);
 
         add(new ListView<User>("usersListView", userService.getUsers()) {
 
@@ -33,21 +33,21 @@ public class DashboardPage extends BasePage {
 
                 item.add(new Label("username", user.getDisplayName()));
 
-                Permission p = permissionService.getUsersPermissions(user);
-                item.add(new Label("cc", p.isCreateCategory()));
-                item.add(new Label("rc", p.isRemoveCategory()));
+                // todo: replacement
+                item.add(new Label("cc", Model.of(false)));
+                item.add(new Label("rc", Model.of(false)));
 
-                item.add(new Label("ct", p.isCreateTopic()));
-                item.add(new Label("rt", p.isRemoveTopic()));
+                item.add(new Label("ct", Model.of(false)));
+                item.add(new Label("rt", Model.of(false)));
 
-                item.add(new Label("cd", p.isCreateCategory()));
-                item.add(new Label("rd", p.isRemoveCategory()));
+                item.add(new Label("cd", Model.of(false)));
+                item.add(new Label("rd", Model.of(false)));
 
-                item.add(new Label("cp", p.isCreatePost()));
-                item.add(new Label("rp", p.isRemovePost()));
-                item.add(new Label("dp", p.isDisablePost()));
+                item.add(new Label("cp", Model.of(false)));
+                item.add(new Label("rp", Model.of(false)));
+                item.add(new Label("dp", Model.of(false)));
 
-                item.add(new Label("rpd", p.isReadPrivateDiscussion()));
+                item.add(new Label("rpd", Model.of(false)));
 
             }
         });

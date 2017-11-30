@@ -3,7 +3,7 @@ package org.danekja.discussment.ui.wicket.panel.forum;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -36,7 +36,7 @@ public class ForumPanel extends Panel {
     private PostService postService;
     private TopicService topicService;
     private DiscussionService discussionService;
-    private PermissionService permissionService;
+    private AccessControlService accessControlService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
@@ -53,7 +53,13 @@ public class ForumPanel extends Panel {
      * @param categoryService instance of the category service
      * @param postService instance of the post service
      */
-    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, PermissionService permissionService) {
+    public ForumPanel(String id,
+                      IModel<HashMap<String, Integer>> parametersModel,
+                      DiscussionService discussionService,
+                      TopicService topicService,
+                      CategoryService categoryService,
+                      PostService postService,
+                      AccessControlService accessControlService) {
         super(id);
 
         this.parametersModel = parametersModel;
@@ -62,7 +68,7 @@ public class ForumPanel extends Panel {
         this.postService = postService;
         this.topicService = topicService;
         this.discussionService = discussionService;
-        this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
 
         this.categoryModel = new Model<Category>();
         this.discussionModel = new Model<Discussion>();
@@ -84,14 +90,15 @@ public class ForumPanel extends Panel {
         if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
             add(new ContentListPanel("content",
                 new CategoryWicketModel(categoryService),
-                new TopicWicketModel(topicService), categoryService, topicService, categoryModel, permissionService)
-            );
+                new TopicWicketModel(topicService), categoryModel,
+                categoryService, topicService, accessControlService)
+             );
 
         } else if (parametersModel.getObject().get("topicId") != -1) {
             Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
             topicModel.setObject(topic);
 
-            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, permissionService));
+            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, accessControlService));
         } else {
 
             Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
@@ -100,7 +107,7 @@ public class ForumPanel extends Panel {
             Boolean access = SessionUtil.getAccess();
             if(discussionService.hasCurrentUserAccessToDiscussion(discussion) ||
                     access != null && access.booleanValue() && dId != null && dId.equals(discussion.getId())) {
-                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel, permissionService));
+                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel, accessControlService));
             } else {
                 setResponsePage(getPage().getClass());
             }

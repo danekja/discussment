@@ -3,7 +3,7 @@ package org.danekja.discussment.example.form;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.example.core.User;
 import org.danekja.discussment.example.core.UserService;
 import org.danekja.discussment.example.form.registration.RegistrationFormComponent;
@@ -14,7 +14,7 @@ import org.danekja.discussment.example.form.registration.RegistrationFormCompone
 public class RegistrationForm extends Form {
 
     private UserService userService;
-    private PermissionService permissionService;
+    private PermissionManagementService permissionService;
 
     private IModel<User> userModel;
 
@@ -22,7 +22,7 @@ public class RegistrationForm extends Form {
 
     private RegistrationFormComponent registrationFormComponent;
 
-    public RegistrationForm(String id, UserService userService, IModel<User> userModel, PermissionService permissionService, IModel<Permission> permissionModel) {
+    public RegistrationForm(String id, UserService userService, IModel<User> userModel, PermissionManagementService permissionService, IModel<Permission> permissionModel) {
         super(id);
 
         this.userService = userService;
@@ -44,7 +44,7 @@ public class RegistrationForm extends Form {
 
         Permission p = registrationFormComponent.getPermissionModel().getObject();
         User u = userService.addUser(userModel.getObject(),p);
-        permissionService.addPermissionForUser(p, u);
+//        permissionService.addPermissionForUser(p, u);
         getSession().setAttribute("user", u);
 
         setResponsePage(getWebPage().getClass());

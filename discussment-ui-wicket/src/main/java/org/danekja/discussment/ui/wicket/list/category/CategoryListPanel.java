@@ -11,8 +11,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
@@ -34,7 +33,7 @@ public class CategoryListPanel extends Panel {
     private TopicService topicService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>> categoryListModel;
-    private PermissionService permissionService;
+    private AccessControlService accessControlService;
 
     /**
      * Constructor for creating a instance of the panel contains categories with the topics
@@ -45,14 +44,14 @@ public class CategoryListPanel extends Panel {
      * @param categoryService instance of the category service
      * @param topicService instance of the topic service
      */
-    public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, PermissionService permissionService) {
+    public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
         this.categoryListModel = categoryListModel;
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
-        this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -71,7 +70,7 @@ public class CategoryListPanel extends Panel {
     }
 
     private TopicListPanel createTopicListViewPanel(IModel<Category> cm) {
-        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService, permissionService);
+        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService, accessControlService);
         topicListViewPanel.setOutputMarkupId(true);
         topicListViewPanel.setMarkupId("id" + generateId);
 
@@ -103,8 +102,7 @@ public class CategoryListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isCreateTopic());
+                this.setVisible(accessControlService.canAddTopic(cm.getObject()));
             }
         };
     }
@@ -121,8 +119,7 @@ public class CategoryListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isRemoveCategory());
+                this.setVisible(accessControlService.canRemoveCategory(cm.getObject()));
             }
         };
     }

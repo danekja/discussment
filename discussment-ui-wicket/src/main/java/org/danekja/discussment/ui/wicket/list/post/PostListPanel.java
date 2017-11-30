@@ -12,9 +12,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 
@@ -30,7 +29,7 @@ public class PostListPanel extends Panel {
     private IModel<Post> postModel;
     private PostService postService;
     private IModel<List<Post>> postListModel;
-    private PermissionService permissionService;
+    private AccessControlService accessControlService;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -40,13 +39,13 @@ public class PostListPanel extends Panel {
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
      */
-    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService, PermissionService permissionService) {
+    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService, AccessControlService accessControlService) {
         super(id);
 
         this.postModel = postModel;
         this.postService = postService;
         this.postListModel = postListModel;
-        this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -108,8 +107,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isCreatePost() && !pm.getObject().isDisabled());
+                this.setVisible(accessControlService.canAddPost(pm.getObject().getDiscussion()));
             }
         };
     }
@@ -126,8 +124,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isRemovePost());
+                this.setVisible(accessControlService.canRemovePost(pm.getObject()));
             }
         };
     }
@@ -148,8 +145,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isDisablePost());
+                this.setVisible(accessControlService.canEditPost(pm.getObject()));
             }
         };
 

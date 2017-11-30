@@ -1,6 +1,6 @@
 package org.danekja.discussment.example.core;
 
-import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
@@ -14,9 +14,9 @@ import java.util.List;
 public class DefaultUserService implements UserService {
 
     private UserDao userDao;
-    private PermissionDao permissionDao;
+    private NewPermissionDao permissionDao;
 
-    public DefaultUserService(UserDao userDao, PermissionDao permissionDao) {
+    public DefaultUserService(UserDao userDao, NewPermissionDao permissionDao) {
         this.userDao = userDao;
         this.permissionDao = permissionDao;
     }

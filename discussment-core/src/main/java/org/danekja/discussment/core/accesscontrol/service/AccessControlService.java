@@ -12,6 +12,7 @@ public interface AccessControlService extends Serializable {
     /*
     ################### POST ACCESS ####################
      */
+    boolean canViewPost(Post post);
 
     boolean canAddPost(Discussion discussion);
 

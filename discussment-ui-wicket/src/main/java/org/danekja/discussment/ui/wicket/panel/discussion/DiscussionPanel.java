@@ -3,8 +3,7 @@ package org.danekja.discussment.ui.wicket.panel.discussion;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
-import org.danekja.discussment.core.accesscontrol.service.PermissionService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
@@ -26,7 +25,7 @@ public class DiscussionPanel extends Panel {
     private IModel<Post> selectedPost;
 
     private PostService postService;
-    private PermissionService permissionService;
+    private AccessControlService accessControlService;
 
     /**
      * Constructor for creating the panel which contains the discussion.
@@ -36,13 +35,13 @@ public class DiscussionPanel extends Panel {
      * @param postService instance of the post service
      * @param selectedPost instance contains the selected post in the discussion
      */
-    public DiscussionPanel(String id, IModel<Discussion> discussion, PostService postService, IModel<Post> selectedPost, PermissionService permissionService) {
+    public DiscussionPanel(String id, IModel<Discussion> discussion, PostService postService, IModel<Post> selectedPost, AccessControlService accessControlService) {
         super(id);
 
         this.selectedPost = selectedPost;
         this.postService = postService;
         this.discussionModel = discussion;
-        this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -50,7 +49,7 @@ public class DiscussionPanel extends Panel {
         super.onInitialize();
 
         add(new ReplyForm("replyForm", postService, selectedPost, new Model<Post>(new Post())));
-        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, permissionService));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, accessControlService));
 
         add(createPostForm());
     }
@@ -62,8 +61,7 @@ public class DiscussionPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                Permission p = permissionService.getCurrentlyLoggedUsersPermission();
-                this.setVisible(p != null && p.isCreatePost());
+                this.setVisibilityAllowed(accessControlService.canAddPost(discussionModel.getObject()));
             }
         };
     }
