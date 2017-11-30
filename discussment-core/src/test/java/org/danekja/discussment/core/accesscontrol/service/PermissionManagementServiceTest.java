@@ -1,89 +1,157 @@
 package org.danekja.discussment.core.accesscontrol.service;
 
 import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
-import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
+import org.danekja.discussment.core.accesscontrol.domain.*;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
-import org.danekja.discussment.core.dao.DiscussionDao;
-import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.mock.NewUserService;
-import org.danekja.discussment.core.mock.User;
-import org.danekja.discussment.core.mock.UserDao;
-import org.danekja.discussment.core.mock.UserDaoMock;
+import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.service.mock.User;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * Created by Zdenek Vales on 26.11.2017.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
 public class PermissionManagementServiceTest {
 
-    private PermissionManagementService permissionManagementService;
-    private AccessControlService accessControlService;
-    private UserDao userDao;
+    @Mock
+    private NewPermissionDao permissionDao;
+    @Mock
+    private DiscussionUserService userService;
 
-    private Discussion discussion;
-    private User user;
-    private User adminUser;
+    private PermissionManagementService pms;
+
+    private static User testUser;
+    private List<AbstractPermission> testPermissions = new ArrayList<>();
+
+    @BeforeClass
+    public static void setUpGlobal() throws Exception {
+        testUser = new User(-100L, "PMS Test User");
+    }
 
     @Before
-    public void setUp() {
-        NewPermissionDao newPermissionDao = new PermissionDaoJPA();
-        userDao = new UserDaoMock();
-        DiscussionUserService discussionUserService = new NewUserService(userDao);
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(PermissionManagementServiceTest.class);
+        pms = new PermissionService(permissionDao, userService);
+        testPermissions.clear();
 
-        DiscussionDao discussionDao = new DiscussionDaoJPA();
-        this.permissionManagementService = new PermissionService(newPermissionDao, discussionUserService);
-        this.accessControlService = (AccessControlService)this.permissionManagementService;
-
-        // test discussion
-        discussion = new Discussion("test discussion");
-        discussion = discussionDao.save(discussion);
-
-        // test admin with all permissions = every action is allowed on GLOBAL level
-        prepareAdminUser(-100L);
-
-        // test user with some permissions
-        prepareNormalUser(-101L);
+        when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
+        when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
+            AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
+            testPermissions.add(newPerm);
+            return newPerm;
+        });
     }
 
-    /**
-     * Creates and saves new user with all permission on GLOBAL level.
-     * @param userId Database id which will be assigned to user.
-     */
-    private void prepareAdminUser(Long userId) {
-        adminUser = new User("adminUser", "", "");
-        adminUser.setId(userId);
-        adminUser = userDao.save(adminUser);
-        PermissionData allPermissions = new PermissionData(true, true, true, true);
-        permissionManagementService.configureCategoryPermissions(adminUser,allPermissions );
-        permissionManagementService.configureDiscussionPermissions(adminUser, allPermissions);
-        permissionManagementService.configureTopicPermissions(adminUser, allPermissions);
-        permissionManagementService.configurePostPermissions(adminUser,allPermissions);
-    }
-
-    /**
-     * Creates and saves new user with permission to only view and create posts globaly.
-     * @param userId Database id which will be assigned to user.
-     */
-    private void prepareNormalUser(Long userId) {
-        user = new User("test", "", "");
-        user.setId(userId);
-        user = userDao.save(user);
-
-        // user can view and create posts on global level
-        PermissionData usersPostPermission = new PermissionData(true, false, false, true);
-        permissionManagementService.configurePostPermissions(user, usersPostPermission);
-    }
-
-    /**
-     * Try to add post to discussion without any permission.
-     */
     @Test
-    public void testAddPostNoPermission() {
-        Post p = new Post("Test post");
+    public void testConfigurePostPermissionsForDiscussion() throws Exception {
+        Discussion item = new Discussion(-10L, "PMS Test Discussion");
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configurePostPermissions(testUser, item, data);
 
+        testPermission(item.getId(), PermissionLevel.DISCUSSION, PostPermission.class, data);
+    }
+
+    @Test
+    public void testConfigurePostPermissionsForTopic() throws Exception {
+        Topic item = new Topic(-10L, "PMS Test Topic", "PMS Test Topic Description");
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configurePostPermissions(testUser, item, data);
+
+        testPermission(item.getId(), PermissionLevel.TOPIC, PostPermission.class, data);
+    }
+
+    @Test
+    public void testConfigurePostPermissionsForCategory() throws Exception {
+        Category item = new Category(-10L, "PMS Test Category");
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configurePostPermissions(testUser, item, data);
+
+        testPermission(item.getId(), PermissionLevel.CATEGORY, PostPermission.class, data);
+    }
+
+    @Test
+    public void testConfigurePostPermissionsGlobal() throws Exception {
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configurePostPermissions(testUser, data);
+
+        testPermission(null, PermissionLevel.GLOBAL, PostPermission.class, data);
+    }
+
+    @Test
+    public void testConfigureDiscussionPermissionsForTopic() throws Exception {
+        Topic item = new Topic(-10L, "PMS Test Topic", "PMS Test Topic Description");
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configureDiscussionPermissions(testUser, item, data);
+
+        testPermission(item.getId(), PermissionLevel.TOPIC, DiscussionPermission.class, data);
+    }
+
+    @Test
+    public void testConfigureDiscussionPermissionsForCategory() throws Exception {
+        Category item = new Category(-10L, "PMS Test Category");
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configureDiscussionPermissions(testUser, item, data);
+
+        testPermission(item.getId(), PermissionLevel.CATEGORY, DiscussionPermission.class, data);
+    }
+
+    @Test
+    public void testConfigureDiscussionPermissionsGlobal() throws Exception {
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configureDiscussionPermissions(testUser, data);
+
+        testPermission(null, PermissionLevel.GLOBAL, DiscussionPermission.class, data);
+    }
+
+    @Test
+    public void testConfigureTopicPermissionsForCategory() throws Exception {
+        Category item = new Category(-10L, "PMS Test Category");
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configureTopicPermissions(testUser, item, data);
+
+        testPermission(item.getId(), PermissionLevel.CATEGORY, TopicPermission.class, data);
+    }
+
+    @Test
+    public void testConfigureTopicPermissionsGlobal() throws Exception {
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configureTopicPermissions(testUser, data);
+
+        testPermission(null, PermissionLevel.GLOBAL, TopicPermission.class, data);
+    }
+
+    @Test
+    public void testConfigureCategoryPermissions() throws Exception {
+        PermissionData data = new PermissionData(true, false, true, false);
+        pms.configureCategoryPermissions(testUser, data);
+
+        testPermission(null, PermissionLevel.GLOBAL, CategoryPermission.class, data);
+    }
+
+    protected void testPermission(Long expectedItemId, PermissionLevel expectedPermissionLevel, Class<? extends AbstractPermission> expectedType, PermissionData expectedData) {
+        //one permission added
+        assertEquals(1, testPermissions.size());
+        AbstractPermission ap = testPermissions.get(0);
+        //post permission added
+        assertEquals(expectedType, ap.getClass());
+
+        //correct ID created
+        assertEquals(expectedItemId, ap.getId().getItemId());
+        assertEquals(expectedPermissionLevel, ap.getId().getLevel());
+        assertEquals(testUser.getDiscussionUserId(), ap.getId().getUserId());
+
+        assertEquals(expectedData, ap.getData());
     }
 }

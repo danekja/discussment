@@ -4,6 +4,8 @@ import org.danekja.discussment.core.domain.Category;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * Permission class for access management related to topics.
@@ -18,9 +20,19 @@ import javax.persistence.Entity;
  *
  * @author Jakub Danek
  */
+@NamedQueries({
+        @NamedQuery(name = TopicPermission.QUERY_BY_USER,
+                query = "SELECT tp FROM TopicPermission tp" +
+                        " WHERE tp.id.userId = :" + TopicPermission.PARAM_USER_ID +
+                        " AND ((tp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.CATEGORY" +
+                        "       AND tp.id.itemId = :" + TopicPermission.PARAM_CATEGORY_ID + ")" +
+                        " OR tp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL)")
+})
 @Entity
 @DiscriminatorValue("TOPIC")
 public class TopicPermission extends AbstractPermission {
+
+    public static final String QUERY_BY_USER = "TopicPermission.findForUser";
 
     public TopicPermission(String userId, PermissionData data) {
         super(userId, data, PermissionType.TOPIC);

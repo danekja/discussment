@@ -6,6 +6,8 @@ import org.danekja.discussment.core.domain.Topic;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * Permission class for access management related to posts.
@@ -18,9 +20,23 @@ import javax.persistence.Entity;
  *
  * @author Jakub Danek
  */
+@NamedQueries({
+        @NamedQuery(name = PostPermission.QUERY_BY_USER,
+                query = "SELECT pp FROM PostPermission pp" +
+                        " WHERE pp.id.userId = :" + PostPermission.PARAM_USER_ID +
+                        " AND ((pp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.DISCUSSION" +
+                        "       AND pp.id.itemId = :" + PostPermission.PARAM_DISCUSSION_ID + ")" +
+                        " OR (pp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.TOPIC" +
+                        "       AND pp.id.itemId = :" + PostPermission.PARAM_TOPIC_ID + ")" +
+                        " OR (pp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.CATEGORY" +
+                        "       AND pp.id.itemId = :" + PostPermission.PARAM_CATEGORY_ID + ")" +
+                        " OR pp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL)")
+})
 @Entity
 @DiscriminatorValue("POST")
 public class PostPermission extends AbstractPermission {
+
+    public static final String QUERY_BY_USER = "PostPermission.findForUser";
 
     public PostPermission(String userId, PermissionData data) {
         super(userId, data, PermissionType.POST);
