@@ -15,6 +15,13 @@ public abstract class BaseEntity<PK extends Serializable> implements Serializabl
      */
     private PK id;
 
+    protected BaseEntity(PK id) {
+        this.id = id;
+    }
+
+    protected BaseEntity() {
+    }
+
     @Transient
     public boolean isNew() {
         return id == null;

@@ -12,6 +12,13 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class LongEntity extends BaseEntity<Long> {
 
+    protected LongEntity(Long id) {
+        super(id);
+    }
+
+    protected LongEntity() {
+    }
+
     @Id
     @GeneratedValue
     @Override

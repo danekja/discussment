@@ -62,6 +62,11 @@ public class Discussion extends LongEntity implements Serializable {
         this.pass = pass;
     }
 
+    public Discussion(Long id, String name) {
+        super(id);
+        this.name = name;
+    }
+
     @ManyToOne
     public Topic getTopic() {
         return topic;
