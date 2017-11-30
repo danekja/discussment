@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.domain;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -13,7 +14,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class LongEntity extends BaseEntity<Long> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Override
     public Long getId() {
         return super.getId();

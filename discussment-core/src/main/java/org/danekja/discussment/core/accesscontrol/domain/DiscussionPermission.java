@@ -3,6 +3,7 @@ package org.danekja.discussment.core.accesscontrol.domain;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
@@ -19,19 +20,20 @@ import javax.persistence.Entity;
  * @author Jakub Danek
  */
 @Entity
+@DiscriminatorValue("DISCUSSION")
 public class DiscussionPermission extends AbstractPermission {
 
     public DiscussionPermission(String userId, PermissionData data) {
-        super(userId, data);
+        super(userId, data, PermissionType.DISCUSSION);
     }
 
 
     public DiscussionPermission(String userId, Topic topic, PermissionData data) {
-        super(userId, PermissionLevel.TOPIC, topic.getId(), data);
+        super(userId, PermissionLevel.TOPIC, topic.getId(), data, PermissionType.DISCUSSION);
     }
 
     public DiscussionPermission(String userId, Category category, PermissionData data) {
-        super(userId, PermissionLevel.CATEGORY, category.getId(), data);
+        super(userId, PermissionLevel.CATEGORY, category.getId(), data, PermissionType.DISCUSSION);
     }
 
     protected DiscussionPermission() {

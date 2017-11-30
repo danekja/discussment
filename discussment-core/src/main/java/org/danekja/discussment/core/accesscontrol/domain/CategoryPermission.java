@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
@@ -15,10 +16,11 @@ import javax.persistence.Entity;
  * @author Jakub Danek
  */
 @Entity
+@DiscriminatorValue("CATEGORY")
 public class CategoryPermission extends AbstractPermission {
 
     public CategoryPermission(String userId, PermissionData data) {
-        super(userId, data);
+        super(userId, data, PermissionType.CATEGORY);
     }
 
     protected CategoryPermission() {

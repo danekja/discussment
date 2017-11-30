@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
 import org.danekja.discussment.core.domain.BaseEntity;
+import org.hibernate.annotations.DiscriminatorFormula;
 
 import javax.persistence.*;
 
@@ -9,20 +10,25 @@ import javax.persistence.*;
  *
  * @author Jakub Danek
  */
-@MappedSuperclass
+//@MappedSuperclass
+@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorFormula(
+        "case when permission_type is not null then permission_type " +
+        "end"
+)
 @Table(name = "permission")
 public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 
     private PermissionData data;
 
-    AbstractPermission(String userId, PermissionData data) {
-        this.setId(new PermissionId(userId));
+    AbstractPermission(String userId, PermissionData data, PermissionType permissionType) {
+        this.setId(new PermissionId(userId, permissionType));
         this.data = data;
     }
 
-    AbstractPermission(String userId, PermissionLevel type, Long itemId, PermissionData data) {
-        this.setId(new PermissionId(userId, type, itemId));
+    AbstractPermission(String userId, PermissionLevel type, Long itemId, PermissionData data, PermissionType permisstionType) {
+        this.setId(new PermissionId(userId, type, itemId, permisstionType));
         this.data = data;
     }
 
@@ -40,7 +46,6 @@ public abstract class AbstractPermission extends BaseEntity<PermissionId> {
     public PermissionId getId() {
         return super.getId();
     }
-
 
     /**
      * Information on allowed/prohibited actions.

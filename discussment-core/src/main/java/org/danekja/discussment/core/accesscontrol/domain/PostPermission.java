@@ -4,6 +4,7 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
@@ -18,22 +19,23 @@ import javax.persistence.Entity;
  * @author Jakub Danek
  */
 @Entity
+@DiscriminatorValue("POST")
 public class PostPermission extends AbstractPermission {
 
     public PostPermission(String userId, PermissionData data) {
-        super(userId, data);
+        super(userId, data, PermissionType.POST);
     }
 
     public PostPermission(String userId, Discussion discussion, PermissionData data) {
-        super(userId, PermissionLevel.DISCUSSION, discussion.getId(), data);
+        super(userId, PermissionLevel.DISCUSSION, discussion.getId(), data, PermissionType.POST);
     }
 
     public PostPermission(String userId, Topic topic, PermissionData data) {
-        super(userId, PermissionLevel.TOPIC, topic.getId(), data);
+        super(userId, PermissionLevel.TOPIC, topic.getId(), data, PermissionType.POST);
     }
 
     public PostPermission(String userId, Category category, PermissionData data) {
-        super(userId, PermissionLevel.CATEGORY, category.getId(), data);
+        super(userId, PermissionLevel.CATEGORY, category.getId(), data, PermissionType.POST);
     }
 
     protected PostPermission() {
