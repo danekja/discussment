@@ -4,6 +4,7 @@ package org.danekja.discussment.core.accesscontrol.domain;
 import org.danekja.discussment.core.domain.LongEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -162,6 +163,7 @@ public class Permission extends LongEntity implements Serializable {
         }
     }
 
+    @Transient
     public boolean getPermission(int permission) {
         switch (permission) {
             case CREATE_CATEGORY:

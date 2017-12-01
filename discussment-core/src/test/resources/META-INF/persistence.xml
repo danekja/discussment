@@ -7,6 +7,9 @@
     <persistence-unit name="discussment-core" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
+        <!-- enable loading classes from main -->
+        <jar-file>${project.basedir}/target/classes</jar-file>
+
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC" />
             <property name="javax.persistence.jdbc.user" value="root" />

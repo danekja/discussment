@@ -1,7 +1,6 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
 import org.danekja.discussment.core.domain.BaseEntity;
-import org.hibernate.annotations.DiscriminatorFormula;
 
 import javax.persistence.*;
 
@@ -10,13 +9,9 @@ import javax.persistence.*;
  *
  * @author Jakub Danek
  */
-//@MappedSuperclass
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorFormula(
-        "case when permission_type is not null then permission_type " +
-        "end"
-)
+@DiscriminatorColumn(name = "permission_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "permission")
 public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 

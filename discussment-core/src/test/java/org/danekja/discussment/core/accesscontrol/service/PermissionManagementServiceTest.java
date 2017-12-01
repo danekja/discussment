@@ -6,7 +6,7 @@ import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.mock.User;
+import org.danekja.discussment.core.mock.User;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,6 +24,8 @@ import static org.mockito.BDDMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PermissionManagementServiceTest {
+
+    private final Long NULL_ITEM_ID = new Long(0);
 
     @Mock
     private NewPermissionDao permissionDao;
@@ -86,7 +88,7 @@ public class PermissionManagementServiceTest {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configurePostPermissions(testUser, data);
 
-        testPermission(null, PermissionLevel.GLOBAL, PostPermission.class, data);
+        testPermission(NULL_ITEM_ID, PermissionLevel.GLOBAL, PostPermission.class, data);
     }
 
     @Test
@@ -112,7 +114,7 @@ public class PermissionManagementServiceTest {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureDiscussionPermissions(testUser, data);
 
-        testPermission(null, PermissionLevel.GLOBAL, DiscussionPermission.class, data);
+        testPermission(NULL_ITEM_ID, PermissionLevel.GLOBAL, DiscussionPermission.class, data);
     }
 
     @Test
@@ -129,7 +131,7 @@ public class PermissionManagementServiceTest {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureTopicPermissions(testUser, data);
 
-        testPermission(null, PermissionLevel.GLOBAL, TopicPermission.class, data);
+        testPermission(NULL_ITEM_ID, PermissionLevel.GLOBAL, TopicPermission.class, data);
     }
 
     @Test
@@ -137,7 +139,7 @@ public class PermissionManagementServiceTest {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureCategoryPermissions(testUser, data);
 
-        testPermission(null, PermissionLevel.GLOBAL, CategoryPermission.class, data);
+        testPermission(NULL_ITEM_ID, PermissionLevel.GLOBAL, CategoryPermission.class, data);
     }
 
     protected void testPermission(Long expectedItemId, PermissionLevel expectedPermissionLevel, Class<? extends AbstractPermission> expectedType, PermissionData expectedData) {

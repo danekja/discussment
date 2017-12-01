@@ -6,8 +6,6 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.LongEntity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.danekja.discussment.core.mock.User.GET_BY_USERNAME;
 import static org.danekja.discussment.core.mock.User.GET_USERS;
@@ -20,8 +18,8 @@ import static org.danekja.discussment.core.mock.User.GET_USERS;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
-    @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
+        @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
+        @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
 })
 public class User extends LongEntity implements IDiscussionUser {
 
@@ -38,7 +36,6 @@ public class User extends LongEntity implements IDiscussionUser {
     /**
      * Username of the user. User name must be unique.
      */
-    @Column(unique=true)
     private String username;
 
     /**
@@ -54,14 +51,12 @@ public class User extends LongEntity implements IDiscussionUser {
     /**
      * Permission of the user. If the user is removed, the permissions are removed too.
      */
-    @OneToOne(orphanRemoval = true)
     private Permission permissions;
 
     /**
      * List contains the discussions which the user has access.
      */
-    @ManyToMany(mappedBy = "userAccessList")
-    private List<Discussion> accessListToDiscussion = new ArrayList<Discussion>();
+//    private List<UserDiscussion> accessListToDiscussion = new ArrayList<UserDiscussion>();
 
     public User() {}
 
@@ -71,6 +66,12 @@ public class User extends LongEntity implements IDiscussionUser {
         this.lastname = lastname;
     }
 
+    public User(Long id, String username) {
+        super(id);
+        this.username = username;
+    }
+
+    @Override
     @Transient
     public String getDiscussionUserId() {
         return getId() != null ? getId().toString() : null;
@@ -87,6 +88,11 @@ public class User extends LongEntity implements IDiscussionUser {
 
     public String getLastname() {
         return lastname;
+    }
+
+    @Column(unique=true)
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
@@ -106,14 +112,16 @@ public class User extends LongEntity implements IDiscussionUser {
         return discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this);
     }
 
-    public List<Discussion> getAccessListToDiscussion() {
-        return accessListToDiscussion;
-    }
+//    @OneToMany(mappedBy = "userAccessList", targetEntity = Discussion.class)
+//    public List<UserDiscussion> getAccessListToDiscussion() {
+//        return accessListToDiscussion;
+//    }
+//
+//    public void setAccessListToDiscussion(List<UserDiscussion> accessListToDiscussion) {
+//        this.accessListToDiscussion = accessListToDiscussion;
+//    }
 
-    public void setAccessListToDiscussion(List<Discussion> accessListToDiscussion) {
-        this.accessListToDiscussion = accessListToDiscussion;
-    }
-
+    @OneToOne(orphanRemoval = true, targetEntity = Permission.class)
     public Permission getPermissions() {
         return permissions;
     }
