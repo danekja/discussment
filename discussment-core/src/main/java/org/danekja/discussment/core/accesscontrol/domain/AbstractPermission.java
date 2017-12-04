@@ -9,7 +9,7 @@ import javax.persistence.*;
  *
  * @author Jakub Danek
  */
-@Entity
+@MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "permission_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "permission")
