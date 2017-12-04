@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.service;
+package org.danekja.discussment.core.service.old;
 
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.OldPermissionDaoJPA;
@@ -13,6 +13,8 @@ import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.mock.UserDaoMock;
 import org.danekja.discussment.core.mock.UserService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.core.service.mock.DefaultUserService;
