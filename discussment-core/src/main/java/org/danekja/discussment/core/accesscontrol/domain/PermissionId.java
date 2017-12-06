@@ -100,4 +100,14 @@ public class PermissionId implements Serializable {
         result = 31 * result + (int) (itemId ^ (itemId >>> 32));
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "PermissionId{" +
+                "userId='" + userId + '\'' +
+                ", level=" + level +
+                ", itemId=" + itemId +
+                ", permissionType=" + permissionType +
+                '}';
+    }
 }

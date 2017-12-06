@@ -10,6 +10,8 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -199,12 +201,12 @@ public class PermissionService implements PermissionManagementService, AccessCon
             return false;
         }
 
-        for (AbstractPermission permission : permissions) {
-            if (!permission.getData().canDo(action)) {
-                return false;
-            }
-        }
-        return true;
+        // only the lowest level (POST<DISCUSSION<TOPIC<CATEGORY) permission matters
+        List<? extends AbstractPermission> sortedPermissions = new ArrayList<>(permissions);
+        sortedPermissions.sort(Comparator.comparing(o -> o.getId().getPermissionType()));
+        return sortedPermissions.get(0).getData().canDo(action);
     }
+
+
 
 }

@@ -76,4 +76,12 @@ public abstract class AbstractPermission extends BaseEntity<PermissionId> {
         result = 31 * result + data.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractPermission{" +
+                "id=" + getId() +
+                "data=" + data +
+                '}';
+    }
 }

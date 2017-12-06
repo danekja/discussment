@@ -12,7 +12,6 @@ import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -165,9 +164,8 @@ public class AccessControlServiceTest {
      * Test that he can access post inside his discussion and also other posts in category properly.
      */
     @Test
-    @Ignore // ignore until decided if we goign to support this or not
     public void testPostOverrideAccess() {
-        // create user's category
+        // create user's discussion
         Discussion usersDiscussion = new Discussion(-11L, "Users own discussion");
         usersDiscussion.setTopic(topic);
         Post p = new Post("Post in user's discussion");
@@ -181,6 +179,16 @@ public class AccessControlServiceTest {
         pms.configurePostPermissions(testUser, usersDiscussion, discussionPostPerms);
         pms.configurePostPermissions(testUser, category, categoryPostPerms);
 
+        // override mock so that correct permissions are returned
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> {
+            Long discusionId = (Long) invocationOnMock.getArguments()[1];
+            if(discusionId != null && discusionId == -11L) {
+                return testPermissions;
+            } else {
+                return testPermissions.subList(1,2);
+            }
+        });
+
         // test access control in category
         assertTrue("Test user should be able to view posts in discussion!",accessControlService.canViewPosts(discussion));
         assertTrue("Test user should be able to add posts in discussion!", accessControlService.canAddPost(discussion));
@@ -192,7 +200,47 @@ public class AccessControlServiceTest {
         assertTrue("Test user should be able to add posts in his discussion!", accessControlService.canAddPost(usersDiscussion));
         assertTrue("Test user should be able to edit post in his discussion!", accessControlService.canEditPost(p));
         assertTrue("Test user should be able to remove post from his discussion!", accessControlService.canRemovePost(p));
+    }
 
+    /**
+     * User has an extended access to a category but also has limied permissions to one of the discussions in that category.
+     * Test that he can access post inside his discussion and also other posts in category properly.
+     */
+    @Test
+    public void testPostOverrideAccess2() {
+        // create discussion which will be limited for user
+        Discussion limitedDiscussion = new Discussion(-11L, "Limited discussion");
+        limitedDiscussion.setTopic(topic);
+        Post p = new Post("Post in limited discussion");
+        p.setDiscussion(limitedDiscussion);
 
+        // set permissions
+        // has full access to every post in category except the ones in the limited discussion
+        PermissionData categoryPostPerms = new PermissionData(true, true, true, true);
+        PermissionData discussionPostPerms = new PermissionData(true, false, false, true);
+        pms.configurePostPermissions(testUser, limitedDiscussion, discussionPostPerms);
+        pms.configurePostPermissions(testUser, category, categoryPostPerms);
+
+        // override mock so that correct permissions are returned
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> {
+            Long discusionId = (Long) invocationOnMock.getArguments()[1];
+            if(discusionId != null && discusionId == -11L) {
+                return testPermissions;
+            } else {
+                return testPermissions.subList(1,2);
+            }
+        });
+
+        // test access control in category
+        assertTrue("Test user should be able to view posts in discussion!",accessControlService.canViewPosts(discussion));
+        assertTrue("Test user should be able to add posts in discussion!", accessControlService.canAddPost(discussion));
+        assertTrue("Test user should be able to edit posts in discussion!", accessControlService.canEditPost(post));
+        assertTrue("Test user should be able to delete posts from discussion!", accessControlService.canRemovePost(post));
+
+        // test access in user's discussion
+        assertTrue("Test user should be able to view posts in limited discussion!",accessControlService.canViewPosts(limitedDiscussion));
+        assertTrue("Test user should be able to add posts in limited discussion!", accessControlService.canAddPost(limitedDiscussion));
+        assertFalse("Test user should not be able to edit post in limited discussion!", accessControlService.canEditPost(p));
+        assertFalse("Test user should not be able to remove post from limited discussion!", accessControlService.canRemovePost(p));
     }
 }

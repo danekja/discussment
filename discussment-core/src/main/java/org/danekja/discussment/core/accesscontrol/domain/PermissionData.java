@@ -137,4 +137,14 @@ public class PermissionData implements Serializable {
         result = 31 * result + (view ? 1 : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "PermissionData{" +
+                "create=" + create +
+                ", delete=" + delete +
+                ", edit=" + edit +
+                ", view=" + view +
+                '}';
+    }
 }
