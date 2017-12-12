@@ -1,11 +1,15 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.Action;
+import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.DiscussionDao;
+import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class NewDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;
+    private PostDao postDao;
     private AccessControlService accessControlService;
     private DiscussionUserService discussionUserService;
 
@@ -28,43 +33,53 @@ public class NewDiscussionService implements DiscussionService {
         this.discussionUserService = discussionUserService;
     }
 
-    public Discussion createDiscussion(Discussion discussion) {
-        return null;
+    public Discussion createDiscussion(Discussion discussion) throws AccessDeniedException {
+        return createDiscussion(discussion, discussion.getTopic());
     }
 
-    public Discussion createDiscussion(Discussion discussion, Topic topic) {
-        return null;
+    public Discussion createDiscussion(Discussion discussion, Topic topic) throws AccessDeniedException {
+        if(accessControlService.canAddDiscussion(topic)) {
+            return discussionDao.save(discussion);
+        } else {
+            throw new AccessDeniedException(Action.CREATE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
+        }
     }
 
-    public List<Discussion> getDiscussionsByTopic(Topic topic) {
-        return null;
+    public List<Discussion> getDiscussionsByTopic(Topic topic) throws AccessDeniedException {
+        if(accessControlService.canViewDiscussions(topic)) {
+            return discussionDao.getDiscussionsByTopic(topic);
+        } else {
+            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
+        }
     }
 
-    public Discussion getDiscussionById(long discussionId) {
-        return null;
+    public Discussion getDiscussionById(long discussionId) throws AccessDeniedException {
+        Discussion d = discussionDao.getById(discussionId);
+        if(accessControlService.canViewDiscussions(d.getTopic())) {
+            return d;
+        } else {
+            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), d.getTopic().getId(), PermissionType.DISCUSSION);
+        }
     }
 
-    public void removeDiscussion(Discussion discussion) {
-
+    public void removeDiscussion(Discussion discussion) throws AccessDeniedException {
+        if(accessControlService.canRemoveDiscussion(discussion)) {
+            discussionDao.remove(discussion);
+        } else {
+            throw new AccessDeniedException(Action.DELETE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.DISCUSSION);
+        }
     }
 
-    public void addAccessToDiscussion(IDiscussionUser entity, Discussion en) {
-
-    }
-
-    public void addCurrentUserToDiscussion(Discussion en) {
-
-    }
-
-    public boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion) {
-        return false;
-    }
-
-    public boolean hasCurrentUserAccessToDiscussion(Discussion discussion) {
-        return false;
-    }
-
-    public String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException {
-        return null;
+    public String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException {
+        if(accessControlService.canViewPosts(discussion)) {
+            List<Post> posts = postDao.getPostsByDiscussion(discussion);
+            if(posts.isEmpty()) {
+                return null;
+            } else {
+                return discussionUserService.getUserById(posts.get(posts.size() -1 ).getUserId()).getDisplayName();
+            }
+        } else {
+            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.POST);
+        }
     }
 }

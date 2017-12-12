@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface CategoryService {
      * @param entity new category
      * @return new category
      */
-    Category createCategory(Category entity);
+    Category createCategory(Category entity) throws AccessDeniedException;
 
     /**
      * Get a category in the forum based on its id.
@@ -25,19 +26,19 @@ public interface CategoryService {
      * @param categoryId category id
      * @return category by id
      */
-    Category getCategoryById(long categoryId);
+    Category getCategoryById(long categoryId) throws AccessDeniedException;
 
     /**
      * Get all categories in the forum
      *
      * @return list of Category
      */
-    List<Category> getCategories();
+    List<Category> getCategories() throws AccessDeniedException;
 
     /**
      * Remove a category in the forum
      *
      * @param entity category to remove
      */
-    void removeCategory(Category entity);
+    void removeCategory(Category entity) throws AccessDeniedException;
 }

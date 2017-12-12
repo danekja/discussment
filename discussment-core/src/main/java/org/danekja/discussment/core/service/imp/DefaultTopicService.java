@@ -26,11 +26,6 @@ public class DefaultTopicService implements TopicService {
         this.discussionDao = new DiscussionDaoJPA();
     }
 
-    public Topic createTopic(Topic topic) {
-        return createTopic(topic, null);
-    }
-
-
     public Topic createTopic(Topic topic, Category category) {
 
         // category is null => try to resolve it

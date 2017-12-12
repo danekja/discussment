@@ -1,7 +1,5 @@
 package org.danekja.discussment.core.service.imp;
 
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionService;
@@ -9,7 +7,6 @@ import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.UserDiscussion;
 import org.danekja.discussment.core.service.DiscussionService;
 
 import java.util.List;
@@ -60,39 +57,6 @@ public class DefaultDiscussionService implements DiscussionService {
         }
 
         discussionDao.remove(discussion);
-    }
-
-    public void addAccessToDiscussion(IDiscussionUser entity, Discussion en) {
-        UserDiscussion userDiscussion = new UserDiscussion(entity.getDiscussionUserId(), en);
-        discussionDao.addAccessToDiscussion(userDiscussion);
-    }
-
-    public boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion) {
-        Permission p = permissionService.getUsersPermissions(user);
-
-        if(p == null) {
-            return  false;
-        }
-
-        UserDiscussion ud = new UserDiscussion(user.getDiscussionUserId(), discussion);
-        return discussion.getPass() == null || p.isReadPrivateDiscussion() || discussion.getUserAccessList().contains(ud);
-    }
-
-    public void addCurrentUserToDiscussion(Discussion en) {
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-        if(user != null) {
-            addAccessToDiscussion(user, en);
-        } else {
-        }
-    }
-
-    public boolean hasCurrentUserAccessToDiscussion(Discussion discussion) {
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-        if(user != null) {
-            return isAccessToDiscussion(user, discussion);
-        }
-
-        return false;
     }
 
     public String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException {

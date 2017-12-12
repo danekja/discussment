@@ -1,5 +1,9 @@
 package org.danekja.discussment.core.service.imp;
 
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.Action;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
@@ -30,7 +34,7 @@ public class NewPostService implements PostService {
         this.discussionUserService = discussionUserService;
     }
 
-    public void removePost(Post post) {
+    public void removePost(Post post) throws AccessDeniedException {
         if( accessControlService.canRemovePost(post)) {
             if (post.getPost() != null) {
                 post.getPost().getReplies().remove(post);
@@ -39,81 +43,75 @@ public class NewPostService implements PostService {
             }
             postDao.remove(post);
         } else {
-            // todo: throw exception
+            throw new AccessDeniedException(Action.DELETE, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
     }
 
-    public Post getPostById(long postId) {
+    public Post getPostById(long postId) throws AccessDeniedException {
         Post post = postDao.getById(postId);
 
         if(accessControlService.canViewPost(post)) {
             return post;
         } else {
-            // todo: throw exception
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),postId, PermissionType.POST);
         }
-
-        return null;
     }
 
-    public Post sendReply(Post reply, Post post) {
-        return null;
+    public Post sendReply(Post reply, Post post) throws AccessDeniedException {
+        reply.setPost(post);
+        return sendPost(post.getDiscussion(), reply);
     }
 
-    public Post sendReplyAsCurrentUser(Post reply, Post post) {
-        return null;
-    }
-
-    public Post sendPost(Discussion discussion, Post post) {
+    public Post sendPost(Discussion discussion, Post post) throws AccessDeniedException {
         if(accessControlService.canAddPost(discussion)) {
             post.setDiscussion(discussion);
 
             return postDao.save(post);
         } else {
-            // todo: throw exception
+            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
-        return null;
     }
 
-    public Post sendPostAsCurrentUser(Discussion discussion, Post post) {
-        return null;
-    }
-
-    public Post disablePost(Post post) {
+    public Post disablePost(Post post) throws AccessDeniedException {
         if (accessControlService.canEditPost(post)) {
             post.setDisabled(true);
             return postDao.save(post);
         } else {
-            // todo: throw exception
+            throw new AccessDeniedException(Action.EDIT, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
-        return null;
     }
 
-    public Post enablePost(Post post) {
+    public Post enablePost(Post post) throws AccessDeniedException {
         if (accessControlService.canEditPost(post)) {
             post.setDisabled(false);
             return postDao.save(post);
         } else {
-            // todo: throw exception
+            throw new AccessDeniedException(Action.EDIT, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
-        return null;
     }
 
-    public List<Post> listPostHierarchy(Discussion discussion) {
+    public List<Post> listPostHierarchy(Discussion discussion) throws AccessDeniedException {
         if (accessControlService.canViewPosts(discussion)) {
             return postDao.getPostsByDiscussion(discussion);
         } else {
-            // todo: throw exception
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
-        return null;
     }
 
-    public String getPostAuthor(Post post) throws DiscussionUserNotFoundException {
-        // todo: check if post can be accessed
+    public String getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException {
         if(accessControlService.canViewPost(post)) {
             return discussionUserService.getUserById(post.getUserId()).getDisplayName();
         } else {
-            // todo: throw exception
-            return null;
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
+    }
+
+    /**
+     * Returns the id of the currently logged user. Used when throwing access denied exception.
+     * @return Id of the currently logged user or null if no user is logged.
+     */
+    private String getCurrentUserId() {
+        IDiscussionUser user = discussionUserService.getCurrentlyLoggedUser();
+        return user == null ? null : user.getDiscussionUserId();
     }
 }

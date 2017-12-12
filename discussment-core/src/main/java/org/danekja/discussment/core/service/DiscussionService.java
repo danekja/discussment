@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 13.05.17.
  *
- * The interface contains service methods for working with discussions
+ * The interface contains service methods for working with discussions.
+ * Each method should check permissions of currently logged user.
  */
 public interface DiscussionService {
 
@@ -20,7 +21,7 @@ public interface DiscussionService {
      * @param discussion new discussion
      * @return new discussion
      */
-    Discussion createDiscussion(Discussion discussion);
+    Discussion createDiscussion(Discussion discussion) throws AccessDeniedException;
 
     /**
      * Create a new discussion in the topic
@@ -29,7 +30,7 @@ public interface DiscussionService {
      * @param topic topic of the discussion
      * @return new discussion
      */
-    Discussion createDiscussion(Discussion discussion, Topic topic);
+    Discussion createDiscussion(Discussion discussion, Topic topic) throws AccessDeniedException;
 
     /**
      * Get all discussions in the forum based on its topic.
@@ -37,7 +38,7 @@ public interface DiscussionService {
      * @param topic topic of the discussions
      * @return list of Discussion
      */
-    List<Discussion> getDiscussionsByTopic(Topic topic);
+    List<Discussion> getDiscussionsByTopic(Topic topic) throws AccessDeniedException;
 
     /**
      * Get a discussion in the forum based on its id.
@@ -45,48 +46,19 @@ public interface DiscussionService {
      * @param discussionId discussion id
      * @return discussion by id
      */
-    Discussion getDiscussionById(long discussionId);
+    Discussion getDiscussionById(long discussionId) throws AccessDeniedException;
 
     /**
      * Remove a discussion
      *
      * @param discussion discussion to remove
      */
-    void removeDiscussion(Discussion discussion);
-
-    /**
-     * Add user access to a discussion
-     *
-     * @param entity user
-     * @param en discussion
-     */
-    void addAccessToDiscussion(IDiscussionUser entity, Discussion en);
-
-    /**
-     * Adds access for currently logged user to discussion.
-     * @param en
-     */
-    void addCurrentUserToDiscussion(Discussion en);
-
-    /**
-     * Whether or has user access to discussion.
-     * @param user User.
-     * @param discussion Discussion.
-     * @return True if the user has access to discussion.
-     */
-    boolean isAccessToDiscussion(IDiscussionUser user, Discussion discussion);
-
-    /**
-     * Whether or not has currently logged user access to discussion.
-     * @param discussion Discussion.
-     * @return True if the user has access to discussion and false if not or no user is logged in.
-     */
-    boolean hasCurrentUserAccessToDiscussion(Discussion discussion);
+    void removeDiscussion(Discussion discussion) throws AccessDeniedException;
 
     /**
      * Returns the username of the last post in the discussion.
      * @param discussion
      * @return Username. Empty string if discussion has no posts.
      */
-    String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException;
+    String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
 }
