@@ -40,7 +40,7 @@ public class AccessDeniedException extends Exception {
      * @param permissionType Type of failed permission (category, post, ...).
      */
     public AccessDeniedException(Action action, String userId, long itemId, PermissionType permissionType) {
-        super(String.format("Access permission (%s) check failed to authorize user with id %s to perform action %s over item with id %i.",
+        super(String.format("Access permission (%s) check failed to authorize user with id %s to perform action %s over item with id %d.",
                 permissionType.name(), userId == null ? "-" : userId, action.name(), itemId));
         this.action = action;
         this.userId = userId;
