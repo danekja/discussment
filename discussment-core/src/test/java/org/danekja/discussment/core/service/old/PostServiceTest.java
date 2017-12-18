@@ -10,6 +10,7 @@ import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.mock.UserDaoMock;
 import org.danekja.discussment.core.service.DiscussionService;
@@ -52,7 +53,7 @@ public class PostServiceTest {
         postService = new DefaultPostService(new PostDaoJPA(), userService);
 
         discussion = new Discussion("test");
-        discussion = discussionService.createDiscussion(discussion);
+        discussion = discussionService.createDiscussion(new Topic(), discussion);
         user = new User("test", "", "");
         user.setId(-100L);
         p = permissionService.addPermissionForUser(new Permission(), user);

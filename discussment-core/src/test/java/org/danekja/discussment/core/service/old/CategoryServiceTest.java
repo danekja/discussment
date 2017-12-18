@@ -99,7 +99,7 @@ public class CategoryServiceTest {
         topic = topicService.createTopic(topic, category);
 
         Discussion discussion = new Discussion("test");
-        discussion = discussionService.createDiscussion(discussion, topic);
+        discussion = discussionService.createDiscussion(topic, discussion);
 
         Post IPost = postService.sendPost(discussion, new Post(user, "text"));
         postService.sendReply(new Post(user, "reply text"), IPost);

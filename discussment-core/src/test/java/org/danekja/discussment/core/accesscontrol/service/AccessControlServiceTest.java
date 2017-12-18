@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 // TODO: test global permissions as well
-// TODO: test permission overriding
 public class AccessControlServiceTest {
 
     @Mock
@@ -58,7 +57,7 @@ public class AccessControlServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(PermissionManagementServiceTest.class);
+        MockitoAnnotations.initMocks(AccessControlServiceTest.class);
         pms = new PermissionService(permissionDao, userService);
         accessControlService = (AccessControlService) pms;
         testPermissions.clear();
