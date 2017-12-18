@@ -26,7 +26,7 @@ public class NewTopicService implements TopicService {
     }
 
     @Override
-    public Topic createTopic(Topic topic, Category category) throws AccessDeniedException {
+    public Topic createTopic(Category category, Topic topic) throws AccessDeniedException {
         if (accessControlService.canAddTopic(category)) {
             topic.setCategory(category);
             return topicDao.save(topic);
@@ -61,7 +61,7 @@ public class NewTopicService implements TopicService {
 
     @Override
     public List<Topic> getTopicsWithoutCategory() {
-        // todo: default no-category
+        // todo: [#24] default no-category
         return null;
     }
 

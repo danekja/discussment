@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.service.imp;
 
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.dao.TopicDao;
@@ -26,7 +27,8 @@ public class DefaultTopicService implements TopicService {
         this.discussionDao = new DiscussionDaoJPA();
     }
 
-    public Topic createTopic(Topic topic, Category category) {
+    @Override
+    public Topic createTopic(Category category, Topic topic) throws AccessDeniedException {
 
         // category is null => try to resolve it
         if (category == null) {
@@ -45,6 +47,7 @@ public class DefaultTopicService implements TopicService {
         return topicDao.save(topic);
 
     }
+
 
     public Topic getTopicById(long topicId) {
         return topicDao.getById(topicId);

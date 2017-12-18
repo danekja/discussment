@@ -16,12 +16,12 @@ public interface TopicService {
     /**
      * Add a new topic to the discussion with category
      *
-     * @param topic new topic
      * @param category category of the topic
+     * @param topic new topic
      * @return New topic
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to post to category.
      */
-    Topic createTopic(Topic topic, Category category) throws AccessDeniedException;
+    Topic createTopic(Category category, Topic topic) throws AccessDeniedException;
 
     /**
      * Get a topic in the discussion based on its id.

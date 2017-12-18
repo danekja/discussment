@@ -96,7 +96,7 @@ public class CategoryServiceTest {
         topic.setName("test1");
         topic.setDescription("test des");
 
-        topic = topicService.createTopic(topic, category);
+        topic = topicService.createTopic(category, topic);
 
         Discussion discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(topic, discussion);

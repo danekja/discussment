@@ -84,7 +84,7 @@ public class TopicServiceTest {
         topic.setName("test");
         topic.setDescription("test det");
 
-        topic = topicService.createTopic(topic, category);
+        topic = topicService.createTopic(category, topic);
 
         assertNotNull(topic);
     }
@@ -94,12 +94,12 @@ public class TopicServiceTest {
         Topic topic1 = new Topic();
         topic1.setName("test1");
         topic1.setDescription("test det");
-        topicService.createTopic(topic1, category);
+        topicService.createTopic(category, topic1);
 
         Topic topic2 = new Topic();
         topic2.setName("test2");
         topic2.setDescription("test det");
-        topicService.createTopic(topic2, category);
+        topicService.createTopic(category, topic2);
 
         assertEquals(2, topicService.getTopicsByCategory(category).size());
     }
@@ -115,12 +115,12 @@ public class TopicServiceTest {
         Topic topic2 = new Topic();
         topic2.setName("test2");
         topic2.setDescription("test det");
-        topicService.createTopic(topic2, category);
+        topicService.createTopic(category, topic2);
 
         Topic topic3 = new Topic();
         topic3.setName("test3");
         topic3.setDescription("test det");
-        topicService.createTopic(topic3, category);
+        topicService.createTopic(category, topic3);
 
         assertEquals(1, topicService.getTopicsWithoutCategory().size());
     }
@@ -134,7 +134,7 @@ public class TopicServiceTest {
         Topic topic = new Topic();
         topic.setName("test");
         topic.setDescription("test det");
-        topic = topicService.createTopic(topic, category);
+        topic = topicService.createTopic(category, topic);
 
         Discussion IDiscussion = discussionService.createDiscussion(topic,new Discussion("test"));
 
@@ -163,7 +163,7 @@ public class TopicServiceTest {
         Topic topic = new Topic();
         topic.setName("test");
         topic.setDescription("test det");
-        topic = topicService.createTopic(topic, category);
+        topic = topicService.createTopic(category, topic);
 
         Discussion discussion = discussionService.createDiscussion(topic, new Discussion("test"));
 

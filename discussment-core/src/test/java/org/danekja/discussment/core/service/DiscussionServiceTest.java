@@ -83,6 +83,7 @@ public class DiscussionServiceTest {
         assertNotNull("Discussion is null!", discussion);
         assertNotNull("Id is null!", discussion.getId());
         assertNull("There shouldn't be any posts in discussion!", discussionService.getLastPostAuthor(discussion));
+        assertNotNull("Discussion has null topic!", discussion.getTopic());
     }
 
     @Test
