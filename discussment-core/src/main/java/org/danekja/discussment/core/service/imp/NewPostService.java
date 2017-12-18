@@ -59,6 +59,8 @@ public class NewPostService implements PostService {
 
     public Post sendReply(Post reply, Post post) throws AccessDeniedException {
         reply.setPost(post);
+        reply.setChainId(post.getChainId());
+        reply.setLevel(post.getLevel()+1);
         return sendPost(post.getDiscussion(), reply);
     }
 

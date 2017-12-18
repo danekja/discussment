@@ -40,6 +40,7 @@ public class DefaultPostService implements PostService {
 
     public Post sendReply(Post reply, Post IPost) {
 
+        reply.setChainId(IPost.getChainId());
         int level = IPost.getLevel();
         reply.setLevel(++level);
 

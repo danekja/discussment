@@ -27,12 +27,7 @@ public class DefaultDiscussionService implements DiscussionService {
         this.userService = userService;
     }
 
-    public Discussion createDiscussion(Discussion discussion) {
-
-        return discussionDao.save(discussion);
-    }
-
-    public Discussion createDiscussion(Discussion discussion, Topic topic) {
+    public Discussion createDiscussion(Topic topic, Discussion discussion) {
 
         topic.getDiscussions().add(discussion);
         discussion.setTopic(topic);

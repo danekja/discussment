@@ -27,18 +27,16 @@ public class NewDiscussionService implements DiscussionService {
     private AccessControlService accessControlService;
     private DiscussionUserService discussionUserService;
 
-    public NewDiscussionService(DiscussionDao discussionDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
+    public NewDiscussionService(DiscussionDao discussionDao, PostDao postDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.discussionDao = discussionDao;
+        this.postDao = postDao;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
     }
 
-    public Discussion createDiscussion(Discussion discussion) throws AccessDeniedException {
-        return createDiscussion(discussion, discussion.getTopic());
-    }
-
-    public Discussion createDiscussion(Discussion discussion, Topic topic) throws AccessDeniedException {
+    public Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException {
         if(accessControlService.canAddDiscussion(topic)) {
+            discussion.setTopic(topic);
             return discussionDao.save(discussion);
         } else {
             throw new AccessDeniedException(Action.CREATE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
@@ -55,7 +53,7 @@ public class NewDiscussionService implements DiscussionService {
 
     public Discussion getDiscussionById(long discussionId) throws AccessDeniedException {
         Discussion d = discussionDao.getById(discussionId);
-        if(accessControlService.canViewDiscussions(d.getTopic())) {
+        if(d == null || accessControlService.canViewDiscussions(d.getTopic())) {
             return d;
         } else {
             throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), d.getTopic().getId(), PermissionType.DISCUSSION);

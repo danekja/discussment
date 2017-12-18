@@ -16,7 +16,7 @@ import java.util.List;
 public interface PostService {
 
     /**
-     * Remove a post in the discussion
+     * Remove a post in the discussion and its chain of replies.
      *
      * @param post post to remove
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to remove the post.

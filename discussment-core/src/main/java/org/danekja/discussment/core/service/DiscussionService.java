@@ -16,21 +16,13 @@ import java.util.List;
 public interface DiscussionService {
 
     /**
-     * Create a new discussion without a topic
-     *
-     * @param discussion new discussion
-     * @return new discussion
-     */
-    Discussion createDiscussion(Discussion discussion) throws AccessDeniedException;
-
-    /**
      * Create a new discussion in the topic
      *
-     * @param discussion new discussion
      * @param topic topic of the discussion
+     * @param discussion new discussion
      * @return new discussion
      */
-    Discussion createDiscussion(Discussion discussion, Topic topic) throws AccessDeniedException;
+    Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException;
 
     /**
      * Get all discussions in the forum based on its topic.

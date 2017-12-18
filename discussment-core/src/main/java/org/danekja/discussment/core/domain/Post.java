@@ -24,6 +24,11 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 public class Post extends LongEntity implements Serializable {
 
     /**
+     * String which will separate particular ids in chainId.
+     */
+    public static final String CHAIN_ID_SEPARATOR = ":";
+
+    /**
      * The constant contains name of query for getting posts by discussion
      */
     public static final String GET_BY_DISCUSSION = "Post.getByDiscussion";
@@ -64,7 +69,13 @@ public class Post extends LongEntity implements Serializable {
     private Post post;
 
     /**
-     * List constant all replies. If the post is removed, tje replies are removed too.
+     * Id of the reply chain. ChainId of each consists of chainId of parent post and id of this reply.
+     * This way every chain will have it's own prefix and every chainId will be unique.
+     */
+    private String chainId;
+
+    /**
+     * List contains all replies. If the post is removed, the replies are removed too.
      */
     private List<Post> replies = new ArrayList<Post>();
 
@@ -73,9 +84,13 @@ public class Post extends LongEntity implements Serializable {
         created = new Date();
     }
 
-    public Post() {}
+    public Post() {
+        chainId = "";
+        level = 0;
+    }
 
     public Post(String text) {
+        super();
         this.text = text;
     }
 
@@ -172,6 +187,15 @@ public class Post extends LongEntity implements Serializable {
         }
     }
 
+    @Column(name = "chain_id", unique = true, nullable = false)
+    public String getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
     @Transient
     public int getNumberOfReplies() {
 
@@ -211,6 +235,19 @@ public class Post extends LongEntity implements Serializable {
             return lastPost;
         }
 
+    }
+
+    /**
+     * Apeends separator+provided id to the current chain id.
+     * If the current chain id is null, it will be set to id.
+     * @param id Id to be appended to chainId.
+     */
+    public void appendToChainId(String id) {
+        if(getChainId() == null) {
+            setChainId(id);
+        } else {
+            setChainId(getChainId() + Post.CHAIN_ID_SEPARATOR + id);
+        }
     }
 
 
