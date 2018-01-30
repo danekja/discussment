@@ -1,0 +1,21 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+
+    <div id="articleModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form wicket:id="articleForm">
+                    <div class="modal-header">
+                        <span wicket:id="articleFormComponent"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" type="submit" name="action">
+                            Create article
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <span wicket:id="content"></span>
+</wicket:panel>
