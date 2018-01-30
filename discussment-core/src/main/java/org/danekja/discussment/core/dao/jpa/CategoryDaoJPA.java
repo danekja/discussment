@@ -3,6 +3,7 @@ package org.danekja.discussment.core.dao.jpa;
 import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.domain.Category;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -11,8 +12,8 @@ import java.util.List;
  */
 public class CategoryDaoJPA extends GenericDaoJPA<Category> implements CategoryDao {
 
-    public CategoryDaoJPA() {
-        super(Category.class);
+    public CategoryDaoJPA(EntityManager em) {
+        super(Category.class, em);
     }
 
     public List<Category> getCategories() {

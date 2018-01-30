@@ -4,6 +4,7 @@ import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
  */
 public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements DiscussionDao {
 
-    public DiscussionDaoJPA() {
-        super(Discussion.class);
+    public DiscussionDaoJPA(EntityManager em) {
+        super(Discussion.class, em);
     }
 
     public List<Discussion> getDiscussionsByTopic(Topic topic) {

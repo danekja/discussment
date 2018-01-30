@@ -4,6 +4,7 @@ import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
  */
 public class TopicDaoJPA extends GenericDaoJPA<Topic> implements TopicDao {
 
-    public TopicDaoJPA() {
-        super(Topic.class);
+    public TopicDaoJPA(EntityManager em) {
+        super(Topic.class, em);
     }
 
     public List<Topic> getTopicsByCategory(Category category) {
@@ -25,6 +26,10 @@ public class TopicDaoJPA extends GenericDaoJPA<Topic> implements TopicDao {
     public List<Topic> getTopicsWithoutCategory() {
         TypedQuery<Topic> q = em.createNamedQuery(Topic.GET_TOPICS_WITHOUT_CATEGORY, Topic.class);
         return q.getResultList();
+    }
+
+    public void helloWorld(){
+        String hw = "Hello world";
     }
 
 }

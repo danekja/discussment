@@ -9,16 +9,23 @@ import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.UserService;
 import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.example.WicketApplication;
 import org.danekja.discussment.example.page.base.BasePage;
+
+import javax.persistence.EntityManager;
 
 /**
  * Created by Martin Bláha on 21.01.17.
  */
 public class DashboardPage extends BasePage {
 
+    private EntityManager em;
+
     public DashboardPage(final PageParameters parameters) {
 
-        UserService userService = new DefaultUserService(new UserDaoJPA(), new PermissionDaoJPA());
+        em = WicketApplication.factory.createEntityManager();
+
+        UserService userService = new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em));
 
         add(new ListView<User>("usersListView", userService.getUsers()) {
 

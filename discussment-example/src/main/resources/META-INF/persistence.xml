@@ -4,11 +4,18 @@
              version="2.1">
 
 
-    <persistence-unit name="discussment-core" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="discussment-example" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>org.danekja.discussment.core.domain.BaseEntity</class>
+        <class>org.danekja.discussment.core.domain.Category</class>
+        <class>org.danekja.discussment.core.domain.Discussion</class>
+        <class>org.danekja.discussment.core.domain.Permission</class>
+        <class>org.danekja.discussment.core.domain.Post</class>
+        <class>org.danekja.discussment.core.domain.Topic</class>
+        <class>org.danekja.discussment.core.domain.User</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:8889/discussment?serverTimezone=UTC" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/discussment?serverTimezone=UTC" />
             <property name="javax.persistence.jdbc.user" value="root" />
             <property name="javax.persistence.jdbc.password" value="root" />
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />

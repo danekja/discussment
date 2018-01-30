@@ -12,11 +12,14 @@ import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.imp.DefaultUserService;
+import org.danekja.discussment.example.WicketApplication;
 import org.danekja.discussment.example.form.LoginForm;
 import org.danekja.discussment.example.form.RegistrationForm;
 import org.danekja.discussment.example.page.article.ArticlePage;
 import org.danekja.discussment.example.page.dashboard.DashboardPage;
 import org.danekja.discussment.example.page.discussion.DiscussionPage;
+
+import javax.persistence.EntityManager;
 
 
 /**
@@ -24,8 +27,11 @@ import org.danekja.discussment.example.page.discussion.DiscussionPage;
  */
 public abstract class BasePage extends WebPage {
 
+    private EntityManager em;
+
     public BasePage() {
 
+        em = WicketApplication.factory.createEntityManager();
         setMenu();
 
         add(createLogoutLink());
@@ -36,8 +42,8 @@ public abstract class BasePage extends WebPage {
 
         add(new Label("title", new Model<String>(getTitle())));
 
-        add(new LoginForm("loginForm", new DefaultUserService(new UserDaoJPA(), new PermissionDaoJPA()), new Model<User>(new User())));
-        add(new RegistrationForm("registrationForm", new DefaultUserService(new UserDaoJPA(), new PermissionDaoJPA()), new Model<User>(new User())));
+        add(new LoginForm("loginForm", new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em)), new Model<User>(new User())));
+        add(new RegistrationForm("registrationForm", new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em)), new Model<User>(new User())));
     }
 
     private Label createUsernameLabel() {
