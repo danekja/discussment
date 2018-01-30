@@ -3,6 +3,7 @@ package org.danekja.discussment.core.dao.jpa;
 import org.danekja.discussment.core.dao.UserDao;
 import org.danekja.discussment.core.domain.User;
 
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -12,8 +13,8 @@ import java.util.List;
  */
 public class UserDaoJPA extends GenericDaoJPA<User> implements UserDao {
 
-    public UserDaoJPA() {
-        super(User.class);
+    public UserDaoJPA(EntityManager em) {
+        super(User.class, em);
     }
 
     public User getUserByUsername(String username) {

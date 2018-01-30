@@ -10,8 +10,11 @@ import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.example.WicketApplication;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
+
+import javax.persistence.EntityManager;
 
 
 /**
@@ -20,6 +23,8 @@ import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
 public class ArticlePage extends BasePage {
 
 	private static final long serialVersionUID = 1L;
+
+    private EntityManager em;
 
 	private static final long DISCUSSION_ID = 0;
 
@@ -33,9 +38,10 @@ public class ArticlePage extends BasePage {
 	 *            Page parameters
 	 */
     public ArticlePage(final PageParameters parameters) {
+        this.em = WicketApplication.factory.createEntityManager();
 
-        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
-        this.postService = new DefaultPostService(new PostDaoJPA());
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em));
+        this.postService = new DefaultPostService(new PostDaoJPA(em));
     }
 
     @Override

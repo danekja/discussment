@@ -16,12 +16,8 @@ public class GenericDaoJPA<T extends BaseEntity> implements GenericDao<T> {
 
     private Class<T> clazz;
 
-    public GenericDaoJPA(Class<T> clazz) {
-
-        if (em == null) {
-            em = Persistence.createEntityManagerFactory("discussment-core").createEntityManager();
-        }
-
+    public GenericDaoJPA(Class<T> clazz, EntityManager em) {
+        this.em = em;
         this.clazz = clazz;
     }
 

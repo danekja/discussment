@@ -6,9 +6,11 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.example.WicketApplication;
 import org.danekja.discussment.example.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
 
+import javax.persistence.EntityManager;
 import java.util.HashMap;
 
 
@@ -18,6 +20,8 @@ import java.util.HashMap;
 public class DiscussionPage extends BasePage {
 
 	private static final long serialVersionUID = 1L;
+
+    private EntityManager em;
 
     private DiscussionService discussionService;
     private CategoryService categoryService;
@@ -37,14 +41,15 @@ public class DiscussionPage extends BasePage {
 	 */
     public DiscussionPage(final PageParameters parameters) {
 
+        this.em = WicketApplication.factory.createEntityManager();
         this.parameters = parameters;
 
-        CategoryDaoJPA categoryDaoJPA = new CategoryDaoJPA();
-        TopicDaoJPA topicJPA = new TopicDaoJPA();
-        UserDaoJPA userJPA = new UserDaoJPA();
-        DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA();
-        PermissionDaoJPA permissionJPA = new PermissionDaoJPA();
-        PostDaoJPA postJPA = new PostDaoJPA();
+        CategoryDaoJPA categoryDaoJPA = new CategoryDaoJPA(em);
+        TopicDaoJPA topicJPA = new TopicDaoJPA(em);
+        UserDaoJPA userJPA = new UserDaoJPA(em);
+        DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA(em);
+        PermissionDaoJPA permissionJPA = new PermissionDaoJPA(em);
+        PostDaoJPA postJPA = new PostDaoJPA(em);
 
         this.discussionService = new DefaultDiscussionService(discussionJPA);
         this.categoryService = new DefaultCategoryService(categoryDaoJPA);
