@@ -13,6 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.Assert.*;
 
 /**
@@ -20,6 +22,7 @@ import static org.junit.Assert.*;
  */
 public class DiscussionServiceTest {
 
+    private EntityManager em;
     private TopicService topicService;
     private UserService userService;
     private DiscussionService discussionService;
@@ -30,10 +33,10 @@ public class DiscussionServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        this.userDao = new UserDaoJPA();
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        topicService = new DefaultTopicService(new TopicDaoJPA(em), new CategoryDaoJPA(em));
+        this.userDao = new UserDaoJPA(em);
+        userService = new DefaultUserService(userDao, new PermissionDaoJPA(em));
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em));
 
         topic = new Topic();
         topic.setName("testTopic");

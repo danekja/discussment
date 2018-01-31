@@ -17,10 +17,14 @@ import java.util.List;
  */
 public class DefaultArticleService implements ArticleService {
     private ArticleDao articleDao;
+    private DiscussionService discussionService;
 
-    public DefaultArticleService(ArticleDao articleDao){ this.articleDao = articleDao; }
+    public DefaultArticleService(ArticleDao articleDao, DiscussionService discussionService){
+        this.articleDao = articleDao;
+        this.discussionService = discussionService;
+    }
 
-    public Article createArticle(Article entity, DiscussionService discussionService) {
+    public Article createArticle(Article entity) {
 
         Discussion discussion = discussionService.createDiscussion(new Discussion(entity.getName(), (null)));
         entity.setDiscussion(discussion);

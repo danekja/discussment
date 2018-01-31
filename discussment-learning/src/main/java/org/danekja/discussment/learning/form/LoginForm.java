@@ -15,7 +15,7 @@ public class LoginForm extends Form {
 
     private IModel<User> userModel;
 
-    public LoginForm(String id, UserService userService, IModel<User> userModel) {
+    public LoginForm(String id, IModel<User> userModel, UserService userService) {
         super(id);
 
         this.userService = userService;

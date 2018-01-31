@@ -12,7 +12,7 @@ import javax.persistence.Persistence;
  */
 public class WicketApplication extends WebApplication {
 
-	private static final String PERSISTENCE_UNIT = "discussment-learning";
+	private static final String PERSISTENCE_UNIT = "discussment-example";
 	public static EntityManagerFactory factory;
 
 	/**

@@ -16,6 +16,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.EntityManager;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -25,6 +27,7 @@ import static org.junit.Assert.assertNull;
  * Created by Martin Bláha on 19.02.17.
  */
 public class PostServiceTest {
+    private EntityManager em;
 
     private UserService userService;
     private UserDao userDao;
@@ -37,10 +40,10 @@ public class PostServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.userDao = new UserDaoJPA();
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA());
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
-        postService = new DefaultPostService(new PostDaoJPA());
+        this.userDao = new UserDaoJPA(em);
+        userService = new DefaultUserService(userDao, new PermissionDaoJPA(em));
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em));
+        postService = new DefaultPostService(new PostDaoJPA(em));
 
         discussion = new Discussion("test");
         discussion = discussionService.createDiscussion(discussion);
