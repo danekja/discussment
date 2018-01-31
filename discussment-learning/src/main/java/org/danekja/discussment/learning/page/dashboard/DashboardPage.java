@@ -38,18 +38,9 @@ public class DashboardPage extends BasePage {
                 item.add(new Label("cc", user.getPermissions().isCreateCategory()));
                 item.add(new Label("rc", user.getPermissions().isRemoveCategory()));
 
-                item.add(new Label("ct", user.getPermissions().isCreateTopic()));
-                item.add(new Label("rt", user.getPermissions().isRemoveTopic()));
-
-                item.add(new Label("cd", user.getPermissions().isCreateCategory()));
-                item.add(new Label("rd", user.getPermissions().isRemoveCategory()));
-
                 item.add(new Label("cp", user.getPermissions().isCreatePost()));
                 item.add(new Label("rp", user.getPermissions().isRemovePost()));
                 item.add(new Label("dp", user.getPermissions().isDisablePost()));
-
-                item.add(new Label("rpd", user.getPermissions().isReadPrivateDiscussion()));
-
             }
         });
 

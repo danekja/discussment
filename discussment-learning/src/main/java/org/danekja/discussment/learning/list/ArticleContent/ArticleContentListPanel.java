@@ -12,7 +12,7 @@ import org.danekja.discussment.learning.list.article.ArticleListPanel;
 import java.util.List;
 
 /**
- * The class creates the panel that contains list of articles link for creating new ones.
+ * The class creates the panel that contains list of articles and a link for creating new ones.
  *
  * Date: 30.1.18
  *
@@ -21,24 +21,21 @@ import java.util.List;
 public class ArticleContentListPanel extends Panel{
 
     private ArticleService articleService;
-    private IModel<Article> articleModel;
     private IModel<List<Article>> articleListModel;
 
 
     /**
-     * Constructor for creating a instance of the panel contains the list of articles and link for creating new ones.
+     * Constructor for creating a instance of the panel contains the list of articles and a link for creating new ones.
      *
      * @param id id of the element into which the panel is inserted
      * @param articleListModel model for getting the articles
      * @param articleService instance of the article service
-     * @param articleModel model for setting the selected article
      */
-    public ArticleContentListPanel (String id, IModel<List<Article>> articleListModel, ArticleService articleService, IModel<Article> articleModel){
+    public ArticleContentListPanel (String id, IModel<List<Article>> articleListModel, ArticleService articleService){
         super(id);
 
         this.articleListModel = articleListModel;
         this.articleService = articleService;
-        this.articleModel = articleModel;
     }
     @Override
     protected void onInitialize() {

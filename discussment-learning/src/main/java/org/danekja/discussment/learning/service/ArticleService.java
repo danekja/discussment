@@ -19,10 +19,9 @@ public interface ArticleService {
      * Creates a new article and its discussion.
      *
      * @param entity new article
-     * @param discussionService instance of the discussion service
      * @return new article
      */
-    Article createArticle(Article entity, DiscussionService discussionService);
+    Article createArticle(Article entity);
 
     /**
      * Get an article based on its id.

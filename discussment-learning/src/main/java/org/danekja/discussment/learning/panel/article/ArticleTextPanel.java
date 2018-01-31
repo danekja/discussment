@@ -31,14 +31,13 @@ public class ArticleTextPanel extends Panel {
      *
      * @param id id of the element into which the panel is inserted
      * @param article article in the panel
-     * @param discussion discussion in the panel
      * @param postService instance of the post service
      */
-    public ArticleTextPanel(String id, IModel<Article> article, IModel<Discussion> discussion, PostService postService){
+    public ArticleTextPanel(String id, IModel<Article> article, PostService postService){
         super(id);
 
         this.articleModel = article;
-        this.discussionModel = discussion;
+        this.discussionModel = new Model<Discussion>();
 
         this.postService = postService;
     }
@@ -48,8 +47,9 @@ public class ArticleTextPanel extends Panel {
         super.onInitialize();
 
         Label articleText = new Label ("articleText", new PropertyModel<String>(articleModel, "articleText"));
-
         add(articleText);
+
+        discussionModel = new PropertyModel(articleModel, "discussion");
         add(new DiscussionPanel("discussionPanel", discussionModel, postService, new Model<Post>()));
     }
 }

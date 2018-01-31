@@ -27,18 +27,9 @@ public class RegistrationFormComponent extends Panel {
         add(new CheckBox("createCategoryRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createCategory")));
         add(new CheckBox("removeCategoryRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removeCategory")));
 
-        add(new CheckBox("createTopicRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createTopic")));
-        add(new CheckBox("removeTopicRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removeTopic")));
-
-        add(new CheckBox("createDiscussionRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createDiscussion")));
-        add(new CheckBox("removeDiscussionRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removeDiscussion")));
-
         add(new CheckBox("createPostRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.createPost")));
         add(new CheckBox("removePostRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.removePost")));
         add(new CheckBox("disablePostRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.disablePost")));
-
-        add(new CheckBox("readPrivateDiscussionRegistration", new PropertyModel<Boolean>(getDefaultModel(), "permissions.readPrivateDiscussion")));
-
     }
 
 }

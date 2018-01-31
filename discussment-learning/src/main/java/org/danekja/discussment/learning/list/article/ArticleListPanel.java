@@ -9,6 +9,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.learning.domain.Article;
 import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.learning.page.article.ArticleTextPage;
 import org.danekja.discussment.learning.service.ArticleService;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class ArticleListPanel extends Panel {
                 PageParameters pageParameters = new PageParameters();
                 pageParameters.add("articleId", am.getObject().getId());
 
-                setResponsePage(getWebPage().getClass(), pageParameters);
+                setResponsePage(ArticleTextPage.class, pageParameters);
             }
 
             @Override

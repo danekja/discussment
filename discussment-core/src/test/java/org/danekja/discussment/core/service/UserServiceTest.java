@@ -10,12 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.Assert.*;
 
 /**
  * Created by Martin Bláha on 17.02.17.
  */
 public class UserServiceTest {
+    private EntityManager em;
 
     private TopicService topicService;
     private CategoryService categoryService;
@@ -28,11 +31,11 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
 
-        categoryService = new DefaultCategoryService(new CategoryDaoJPA());
-        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        this.userDaoJPA = new UserDaoJPA();
-        userService = new DefaultUserService(userDaoJPA, new PermissionDaoJPA());
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA());
+        categoryService = new DefaultCategoryService(new CategoryDaoJPA(em));
+        topicService = new DefaultTopicService(new TopicDaoJPA(em), new CategoryDaoJPA(em));
+        this.userDaoJPA = new UserDaoJPA(em);
+        userService = new DefaultUserService(userDaoJPA, new PermissionDaoJPA(em));
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em));
 
         user = userService.addUser(new User("username", "name", "lastname"), new Permission());
     }

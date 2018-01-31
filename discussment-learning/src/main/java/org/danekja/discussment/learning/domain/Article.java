@@ -22,7 +22,7 @@ import static org.danekja.discussment.learning.domain.Article.GET_ARTICLES;
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_ARTICLES,
-                query = "SELECT a FROM Article a WHERE id != 0")
+                query = "SELECT a FROM Article a")
 })
 public class Article extends BaseEntity implements Serializable{
 

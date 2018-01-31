@@ -17,7 +17,6 @@ import org.danekja.discussment.learning.form.LoginForm;
 import org.danekja.discussment.learning.form.RegistrationForm;
 import org.danekja.discussment.learning.page.article.ArticlePage;
 import org.danekja.discussment.learning.page.dashboard.DashboardPage;
-import org.danekja.discussment.learning.page.discussion.DiscussionPage;
 
 import javax.persistence.EntityManager;
 
@@ -42,7 +41,7 @@ public abstract class BasePage extends WebPage {
 
         add(new Label("title", new Model<String>(getTitle())));
 
-        add(new LoginForm("loginForm", new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em)), new Model<User>(new User())));
+        add(new LoginForm("loginForm", new Model<User>(new User()), new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em))));
         add(new RegistrationForm("registrationForm", new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em)), new Model<User>(new User())));
     }
 
@@ -142,14 +141,6 @@ public abstract class BasePage extends WebPage {
             }
         };
         add(articlePageLink);
-
-        Link discussionPageLink = new Link("discussionPage") {
-            @Override
-            public void onClick() {
-                setResponsePage(DiscussionPage.class);
-            }
-        };
-        add(discussionPageLink);
     }
 
     public abstract String getTitle();
