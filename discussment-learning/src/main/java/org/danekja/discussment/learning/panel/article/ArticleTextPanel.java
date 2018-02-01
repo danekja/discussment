@@ -5,7 +5,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.learning.domain.Article;
@@ -21,8 +20,6 @@ import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
 public class ArticleTextPanel extends Panel {
 
     private IModel<Article> articleModel;
-    private IModel<Discussion> discussionModel;
-
     private PostService postService;
 
 
@@ -37,8 +34,6 @@ public class ArticleTextPanel extends Panel {
         super(id);
 
         this.articleModel = article;
-        this.discussionModel = new Model<Discussion>();
-
         this.postService = postService;
     }
 
@@ -46,10 +41,12 @@ public class ArticleTextPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        Label articleName = new Label ("articleName", new PropertyModel<String>(articleModel, "name"));
+        add(articleName);
+
         Label articleText = new Label ("articleText", new PropertyModel<String>(articleModel, "articleText"));
         add(articleText);
 
-        discussionModel = new PropertyModel(articleModel, "discussion");
-        add(new DiscussionPanel("discussionPanel", discussionModel, postService, new Model<Post>()));
+        add(new DiscussionPanel("discussionPanel", new PropertyModel(articleModel, "discussion"), postService, new Model<Post>()));
     }
 }

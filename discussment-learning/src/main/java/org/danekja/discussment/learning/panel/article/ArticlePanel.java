@@ -1,12 +1,14 @@
 package org.danekja.discussment.learning.panel.article;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-import org.danekja.discussment.learning.domain.Article;
+import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.learning.list.article.ArticleListPanel;
+import org.danekja.discussment.learning.panel.modal.ModalPanel;
 import org.danekja.discussment.learning.service.ArticleService;
-import org.danekja.discussment.learning.form.ArticleForm;
-import org.danekja.discussment.learning.list.ArticleContent.ArticleContentListPanel;
 import org.danekja.discussment.learning.model.ArticleWicketModel;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 
 /**
  * The class creates the panel which contains the article list. Can be added to a separate page.
@@ -19,6 +21,8 @@ public class ArticlePanel extends Panel{
 
     private ArticleService articleService;
 
+    private ModalWindow modalWindow;
+
     /**
      * Constructor for creating the panel which contains the article page.
      *
@@ -27,18 +31,41 @@ public class ArticlePanel extends Panel{
      */
     public ArticlePanel (String id,  ArticleService articleService){
         super(id);
-
         this.articleService = articleService;
+
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        add(new ArticleForm("articleForm", new Model<Article>(new Article()), articleService));
-        add(new ArticleContentListPanel("content",
+        modalWindow = new ModalWindow("articleModal");
+        modalWindow.setContent(new ModalPanel(modalWindow.getContentId(), modalWindow, articleService));
+        modalWindow.setInitialHeight(285);
+        modalWindow.setCssClassName("style.css");
+        add(modalWindow);
+        add(createArticleAjaxLink());
+        add(new ArticleListPanel("content",
                 new ArticleWicketModel(articleService), articleService));
+
+    }
+
+    private AjaxLink createArticleAjaxLink() {
+        return new AjaxLink("createArticle") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                modalWindow.show(target);
+            }
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                User user = (User) getSession().getAttribute("user");
+                this.setVisible(user != null && user.getPermissions().isCreateCategory());
+            }
+        };
     }
 }
+
 
 

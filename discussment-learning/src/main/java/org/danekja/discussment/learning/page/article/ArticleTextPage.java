@@ -19,6 +19,7 @@ import org.danekja.discussment.learning.service.imp.DefaultArticleService;
 
 import javax.persistence.EntityManager;
 
+
 public class ArticleTextPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
@@ -53,7 +54,6 @@ public class ArticleTextPage extends BasePage {
         super.onInitialize();
         articleModel.setObject(articleService.getArticleById(Integer.parseInt(parameters.get("articleId").toString())));
         add(new ArticleTextPanel("content", articleModel, postService));
-
     }
 
     @Override
