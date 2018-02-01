@@ -43,7 +43,6 @@ public class ArticleForm extends Form {
     @Override
     protected void onInitialize(){
         super.onInitialize();
-
         add(new ArticleFormComponent("articleFormComponent", articleModel));
     }
 
@@ -52,9 +51,7 @@ public class ArticleForm extends Form {
     @Override
     protected void onSubmit(){
         if(articleService != null){
-
             articleModel.setObject(articleService.createArticle(articleModel.getObject()));
-            articleModel.setObject(new Article());
         }
     }
 }
