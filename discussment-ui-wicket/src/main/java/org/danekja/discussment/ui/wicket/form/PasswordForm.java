@@ -3,6 +3,10 @@ package org.danekja.discussment.ui.wicket.form;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.ui.wicket.form.password.PasswordFormComponent;
@@ -16,7 +20,11 @@ import org.danekja.discussment.ui.wicket.session.SessionUtil;
 public class PasswordForm extends Form {
 
     private IModel<Discussion> discussionModel;
+
+    private PermissionManagementService permissionService;
     private DiscussionService discussionService;
+    private DiscussionUserService userService;
+    private AccessControlService accessControlService;
 
     private IModel<Discussion> passwordModel;
 
@@ -27,8 +35,13 @@ public class PasswordForm extends Form {
      * @param discussionModel model contains the discussion to verification access to the discussion
      * @param passwordModel model contains the discussion for setting the form
      */
-    public PasswordForm(String id, IModel<Discussion> discussionModel, IModel<Discussion> passwordModel) {
-        this(id, null, discussionModel, passwordModel);
+    public PasswordForm(String id,
+                        IModel<Discussion> discussionModel,
+                        IModel<Discussion> passwordModel,
+                        DiscussionUserService userService,
+                        AccessControlService accessControlService,
+                        PermissionManagementService permissionService) {
+        this(id, discussionModel, passwordModel, userService, accessControlService, permissionService, null);
     }
 
     /**
@@ -39,13 +52,22 @@ public class PasswordForm extends Form {
      * @param discussionModel model contains the discussion to verification access to the discussion
      * @param passwordModel model contains the discussion for setting the form
      */
-    public PasswordForm(String id, DiscussionService discussionService, IModel<Discussion> discussionModel, IModel<Discussion> passwordModel) {
+    public PasswordForm(String id,
+                        IModel<Discussion> discussionModel,
+                        IModel<Discussion> passwordModel,
+                        DiscussionUserService userService,
+                        AccessControlService accessControlService,
+                        PermissionManagementService permissionService,
+                        DiscussionService discussionService) {
         super(id);
 
         this.discussionService = discussionService;
+        this.accessControlService = accessControlService;
+        this.userService = userService;
+        this.permissionService = permissionService;
+
         this.discussionModel = discussionModel;
         this.passwordModel = passwordModel;
-
     }
 
     @Override
@@ -73,8 +95,9 @@ public class PasswordForm extends Form {
                 SessionUtil.setDiscussionId(discussionModel.getObject().getId());
                 pageParameters.add("discussionId", discussionModel.getObject().getId());
             } else if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
-
-                discussionService.addCurrentUserToDiscussion(discussionModel.getObject());
+                if(accessControlService.canViewPosts(discussionModel.getObject()) == false) {
+                    permissionService.configurePostPermissions(userService.getCurrentlyLoggedUser(), discussionModel.getObject(), new PermissionData(false, false, false, true));
+                }
 
                 SessionUtil.setAccess(true);
                 SessionUtil.setDiscussionId(discussionModel.getObject().getId());

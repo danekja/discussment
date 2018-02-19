@@ -3,6 +3,7 @@ package org.danekja.discussment.ui.wicket.model;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
@@ -46,7 +47,13 @@ public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
         if (categoryModel.getObject() == null) {
             return topicService.getTopicsWithoutCategory();
         } else {
-            return topicService.getTopicsByCategory(categoryModel.getObject());
+            try {
+                return topicService.getTopicsByCategory(categoryModel.getObject());
+            } catch (AccessDeniedException e) {
+                return null;
+            } catch (NullPointerException e) {
+                return null;
+            }
         }
     }
 

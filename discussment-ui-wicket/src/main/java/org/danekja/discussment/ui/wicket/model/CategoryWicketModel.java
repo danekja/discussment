@@ -1,6 +1,7 @@
 package org.danekja.discussment.ui.wicket.model;
 
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
 
@@ -27,7 +28,13 @@ public class CategoryWicketModel extends LoadableDetachableModel<List<Category>>
     @Override
     protected List<Category> load() {
 
-        return categoryService.getCategories();
+        try {
+            return categoryService.getCategories();
+        } catch (AccessDeniedException e) {
+            return null;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
  */
 public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
 
-    public PostDaoJPA() {
-        super(Post.class);
+    public PostDaoJPA(EntityManager em) {
+        super(Post.class, em);
     }
 
     @Override

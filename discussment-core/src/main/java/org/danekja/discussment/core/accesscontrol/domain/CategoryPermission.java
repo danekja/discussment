@@ -1,9 +1,6 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 
 /**
  * Permission class for access management related to categories.
@@ -24,6 +21,7 @@ import javax.persistence.NamedQuery;
                         " AND cp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL")
 })
 @Entity
+@Table(name = "permission")
 @DiscriminatorValue("CATEGORY")
 public class CategoryPermission extends AbstractPermission {
 

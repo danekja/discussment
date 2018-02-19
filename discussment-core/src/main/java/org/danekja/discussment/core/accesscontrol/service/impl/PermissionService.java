@@ -116,7 +116,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
 
     public boolean canAddDiscussion(Topic topic) {
         List<DiscussionPermission> permissions = getDiscussionPermissions(userService.getCurrentlyLoggedUser(), topic);
-        return checkPermissions(Action.VIEW, permissions);
+        return checkPermissions(Action.CREATE, permissions);
     }
 
     public boolean canEditDiscussion(Discussion discussion) {
@@ -196,14 +196,26 @@ public class PermissionService implements PermissionManagementService, AccessCon
         return permissionDao.findForUser(user);
     }
 
+    /**
+     * Helper method which resolves permission for a particular action.
+     * Method will create a copy of provided permissions and sort them by level so that most detailed permission
+     * is the first one. This most detailed permission is then used to resolve whether action can or can't be performed.
+     *
+     * @param action Action to be performed.
+     * @param permissions List of permissions which may apply to item the action is to be performed on.
+     * @return True if the action can be performed, false otherwise.
+     */
+
     protected boolean checkPermissions(Action action, List<? extends AbstractPermission> permissions) {
         if (permissions.isEmpty()) {
             return false;
         }
 
-        // only the lowest level (POST<DISCUSSION<TOPIC<CATEGORY) permission matters
+        // only the lowest level (DISCUSSION < TOPIC < CATEGORY < GLOBAL) permission matters
+        // Levels in PermissionLevel are sorted in descending order (from GLOBAL to DISCUSSION)
+        // so Comparator.reverseOrder() is added so that permissions are sorted in ascending order
         List<? extends AbstractPermission> sortedPermissions = new ArrayList<>(permissions);
-        sortedPermissions.sort(Comparator.comparing(o -> o.getId().getPermissionType()));
+        sortedPermissions.sort(Comparator.comparing(o -> o.getId().getLevel(), Comparator.reverseOrder()));
         return sortedPermissions.get(0).getData().canDo(action);
     }
 

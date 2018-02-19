@@ -9,6 +9,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
@@ -45,11 +46,11 @@ public class TopicListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        if (topicListModel.getObject().size() == 0) {
+        /*if (topicListModel.getObject().size() == 0) {
             setVisible(false);
         } else {
             setVisible(true);
-        }
+        }*/
 
         add(new ListView<Topic>("topicList", topicListModel) {
             protected void populateItem(ListItem<Topic> listItem) {
@@ -88,8 +89,11 @@ public class TopicListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-
-                topicService.removeTopic(tm.getObject());
+                try{
+                    topicService.removeTopic(tm.getObject());
+                } catch (AccessDeniedException e) {
+                    //not yet implemented
+                }
                 setResponsePage(getWebPage().getClass());
             }
 

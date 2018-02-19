@@ -2,6 +2,7 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.ui.wicket.form.category.CategoryFormComponent;
@@ -56,7 +57,11 @@ public class CategoryForm extends Form {
     protected void onSubmit() {
 
         if (categoryService != null) {
-            categoryService.createCategory(categoryModel.getObject());
+            try {
+                categoryService.createCategory(categoryModel.getObject());
+            } catch (AccessDeniedException e) {
+                //todo: not yet implemented
+            }
 
             categoryModel.setObject(new Category());
         }

@@ -16,8 +16,8 @@
     <properties>
         <!-- TODO: use this also in persistence.xml file-->
         <jdbc.user>root</jdbc.user>
-        <jdbc.password>r00t</jdbc.password>
-        <jdbc.url>jdbc:mysql://127.0.0.1:3306/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
+        <jdbc.password>root</jdbc.password>
+        <jdbc.url>jdbc:mysql://localhost/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
         <skip.flyway>false</skip.flyway>
 
     </properties>

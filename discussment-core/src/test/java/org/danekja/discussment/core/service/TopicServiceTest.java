@@ -29,6 +29,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+
 public class TopicServiceTest {
 
     private static User testUser;

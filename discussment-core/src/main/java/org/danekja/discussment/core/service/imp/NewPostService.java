@@ -25,13 +25,13 @@ public class NewPostService implements PostService {
     private PostDao postDao;
 
     private AccessControlService accessControlService;
-
     private DiscussionUserService discussionUserService;
 
-    public NewPostService(DiscussionUserService discussionUserService, AccessControlService accessControlService, PostDao postDao) {
+    public NewPostService(PostDao postDao, DiscussionUserService discussionUserService, AccessControlService accessControlService) {
         this.postDao = postDao;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
+
     }
 
     public void removePost(Post post) throws AccessDeniedException {
@@ -59,15 +59,14 @@ public class NewPostService implements PostService {
 
     public Post sendReply(Post reply, Post post) throws AccessDeniedException {
         reply.setPost(post);
-        reply.setChainId(post.getChainId());
         reply.setLevel(post.getLevel()+1);
+        reply.setChainId(post.getChainId()+reply.getLevel());
         return sendPost(post.getDiscussion(), reply);
     }
 
     public Post sendPost(Discussion discussion, Post post) throws AccessDeniedException {
         if(accessControlService.canAddPost(discussion)) {
             post.setDiscussion(discussion);
-
             return postDao.save(post);
         } else {
             throw new AccessDeniedException(Action.CREATE, getCurrentUserId(),discussion.getId(), PermissionType.POST);

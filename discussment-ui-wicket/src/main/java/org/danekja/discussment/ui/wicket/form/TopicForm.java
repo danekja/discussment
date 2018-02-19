@@ -2,6 +2,7 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
@@ -60,9 +61,12 @@ public class TopicForm extends Form {
 
     @Override
     protected void onSubmit() {
-
         if (topicService != null) {
-            topicService.createTopic(topicModel.getObject(), categoryModel.getObject());
+            try {
+                topicService.createTopic(categoryModel.getObject(), topicModel.getObject());
+            } catch (AccessDeniedException e) {
+                // todo: not yet impemented
+            }
 
             topicModel.setObject(new Topic());
             setResponsePage(getWebPage().getClass());

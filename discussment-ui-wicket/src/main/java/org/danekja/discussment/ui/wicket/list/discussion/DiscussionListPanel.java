@@ -14,6 +14,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Discussion;
@@ -68,12 +69,15 @@ public class DiscussionListPanel extends Panel {
                 listItem.add(createPasswordDivWebMarkupContainer(listItem.getModel()));
 
                 listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
+
                 listItem.add(new Label("lastUsername", new LoadableDetachableModel<String>() {
                     protected String load() {
                         try {
                             return discussionService.getLastPostAuthor(listItem.getModelObject());
                         } catch (DiscussionUserNotFoundException e) {
                             return "Error: author of last post not found";
+                        } catch (AccessDeniedException e){
+                            return "Error: access denied";
                         }
                     }
                 }));
@@ -109,7 +113,7 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                if (discussionService.hasCurrentUserAccessToDiscussion(dm.getObject())) {
+                if (accessControlService.canViewPosts(dm.getObject())) {
                     add(new AttributeModifier("href", "#"));
                     add(new AttributeModifier("data-target", "#"));
 
@@ -153,7 +157,11 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                this.setVisible(accessControlService.canAddDiscussion(topicListModel.getObject()));
+                try {
+                    this.setVisible(accessControlService.canAddDiscussion(topicListModel.getObject()));
+                } catch (NullPointerException e) {
+                    this.setVisible(false);
+                }
             }
         };
     }
@@ -162,7 +170,12 @@ public class DiscussionListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-                discussionService.removeDiscussion(dm.getObject());
+                try {
+                    discussionService.removeDiscussion(dm.getObject());
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
+
                 setResponsePage(getWebPage().getClass(), getWebPage().getPageParameters());
             }
 

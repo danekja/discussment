@@ -6,6 +6,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.domain.UserDiscussion;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -16,10 +17,12 @@ public class DiscussionDaoJPA extends GenericDaoJPA<Long, Discussion> implements
 
     private GenericDao<Long, UserDiscussion> userDiscussionDao;
 
-    public DiscussionDaoJPA() {
-        super(Discussion.class);
-        userDiscussionDao = new GenericDaoJPA<Long, UserDiscussion>(UserDiscussion.class);
+
+    public DiscussionDaoJPA(EntityManager em) {
+        super(Discussion.class, em);
+        userDiscussionDao = new GenericDaoJPA<Long, UserDiscussion>(UserDiscussion.class, em);
     }
+
 
     public List<Discussion> getDiscussionsByTopic(Topic topic) {
         TypedQuery<Discussion> q = em.createNamedQuery(Discussion.GET_DISCUSSIONS_BY_TOPIC_ID, Discussion.class);

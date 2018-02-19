@@ -10,6 +10,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -21,10 +22,10 @@ public class DefaultTopicService implements TopicService {
     private DefaultCategoryService categoryService;
     private DiscussionDao discussionDao;
 
-    public DefaultTopicService(TopicDao topicDao, CategoryDao categoryDao) {
+    public DefaultTopicService(TopicDao topicDao, CategoryDao categoryDao, EntityManager em) {
         this.topicDao = topicDao;
         categoryService = new DefaultCategoryService(categoryDao);
-        this.discussionDao = new DiscussionDaoJPA();
+        this.discussionDao = new DiscussionDaoJPA(em);
     }
 
     @Override

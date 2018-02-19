@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -43,6 +45,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class TopicServiceTest {
 
+    private EntityManager em;
     private TopicService topicService;
     private CategoryService categoryService;
     private DiscussionService discussionService;
@@ -55,13 +58,13 @@ public class TopicServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.permissionDao = new OldPermissionDaoJPA();
+        this.permissionDao = new OldPermissionDaoJPA(em);
         DiscussionUserService userService = new DefaultUserService(new UserDaoMock(), permissionDao);
-        topicService = new DefaultTopicService(new TopicDaoJPA(), new CategoryDaoJPA());
-        categoryService = new DefaultCategoryService(new CategoryDaoJPA());
+        topicService = new DefaultTopicService(new TopicDaoJPA(em), new CategoryDaoJPA(em), em);
+        categoryService = new DefaultCategoryService(new CategoryDaoJPA(em));
         this.permissionService = new DefaultPermissionService(permissionDao, userService);
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(), permissionService, userService);
-        postService = new DefaultPostService(new PostDaoJPA(), userService);
+        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), permissionService, userService);
+        postService = new DefaultPostService(new PostDaoJPA(em), userService);
 
         category = categoryService.createCategory(new Category("text"));
     }

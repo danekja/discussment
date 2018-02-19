@@ -4,7 +4,6 @@ import org.danekja.discussment.core.dao.GenericDao;
 import org.danekja.discussment.core.domain.BaseEntity;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import java.io.Serializable;
 
 
@@ -17,12 +16,8 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
 
     private Class<T> clazz;
 
-    public GenericDaoJPA(Class<T> clazz) {
-
-        if (em == null) {
-            em = Persistence.createEntityManagerFactory("discussment-core").createEntityManager();
-        }
-
+    public GenericDaoJPA(Class<T> clazz, EntityManager em) {
+        this.em = em;
         this.clazz = clazz;
     }
 

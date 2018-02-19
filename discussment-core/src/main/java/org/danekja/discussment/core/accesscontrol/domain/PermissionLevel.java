@@ -3,6 +3,8 @@ package org.danekja.discussment.core.accesscontrol.domain;
 /**
  * Enumeration for distinguishing on which level certain permission applies.
  *
+ * Items should be sorted in descending order - from the most wide level (GLOBAL) to the most detailed level (DISCUSSION)
+ *
  * @author Jakub Danek
  */
 public enum PermissionLevel {

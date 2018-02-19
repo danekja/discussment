@@ -4,6 +4,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
@@ -11,6 +13,7 @@ import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
+import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import java.util.List;
 
@@ -22,19 +25,32 @@ import java.util.List;
  */
 public class ContentListPanel extends Panel {
 
+    private final long CATEGORY_ID = 1;
+
     private TopicService topicService;
     private CategoryService categoryService;
+    private AccessControlService accessControlService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>>  categoryListModel;
     private IModel<List<Topic>>  topicWicketModel;
-    private AccessControlService accessControlService;
 
+    /**
+     * Constructor for creating a instance of the panel contains the categories with the topics and the topics without the category.
+     *
+     * @param id id of the element into which the panel is inserted
+     * @param categoryListModel model for getting the categories
+     * @param topicWicketModel model for getting the topics
+     * @param categoryService instance of the category service
+     * @param topicService instance of the topic service
+     * @param categoryModel model for setting the selected category
+     */
     public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, AccessControlService accessControlService) {
         super(id);
+
         this.topicService = topicService;
+        this.categoryListModel = categoryListModel;
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
-        this.categoryListModel = categoryListModel;
         this.topicWicketModel = topicWicketModel;
         this.accessControlService = accessControlService;
     }
@@ -46,8 +62,16 @@ public class ContentListPanel extends Panel {
         add(createCategoryAjaxLink());
         add(createTopicAjaxLink());
 
-        add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, accessControlService));
-        add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, accessControlService));
+        try {
+            add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, accessControlService));
+        } catch (NullPointerException e) {
+            add(new NotLoggedInPanel("categoryPabel"));
+        }
+        try {
+            add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, accessControlService));
+        } catch (NullPointerException e) {
+            add(new NotLoggedInPanel("withoutTopicListPanel"));
+        }
     }
 
     private AjaxLink createCategoryAjaxLink() {
@@ -58,7 +82,8 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                this.setVisible(accessControlService.canAddCategory());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                this.setVisible(user != null && accessControlService.canAddCategory());
             }
         };
     }
@@ -66,14 +91,24 @@ public class ContentListPanel extends Panel {
     private AjaxLink createTopicAjaxLink() {
         return new AjaxLink("createTopic") {
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                categoryModel.setObject(categoryService.getCategoryById(Category.WITHOUT_CATEGORY));
+                try {
+                    categoryModel.setObject(categoryService.getCategoryById(Category.WITHOUT_CATEGORY));
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
             }
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
 
-                this.setVisible(accessControlService.canAddTopic(categoryModel.getObject()));
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                try {
+                    this.setVisible(user != null && accessControlService.canAddTopic(categoryService.getCategoryById(CATEGORY_ID)));
+                } catch (AccessDeniedException e) {
+                    e.printStackTrace();
+                    this.setVisible(false);
+                }
             }
         };
     }

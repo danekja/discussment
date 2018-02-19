@@ -2,10 +2,7 @@ package org.danekja.discussment.core.accesscontrol.domain;
 
 import org.danekja.discussment.core.domain.Category;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 
 /**
  * Permission class for access management related to topics.
@@ -29,6 +26,7 @@ import javax.persistence.NamedQuery;
                         " OR tp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL)")
 })
 @Entity
+@Table(name = "permission")
 @DiscriminatorValue("TOPIC")
 public class TopicPermission extends AbstractPermission {
 

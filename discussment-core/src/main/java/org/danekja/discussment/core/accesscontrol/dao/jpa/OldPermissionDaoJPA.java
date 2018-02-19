@@ -5,6 +5,7 @@ import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
 @Deprecated
 public class OldPermissionDaoJPA extends GenericDaoJPA<Long, Permission> implements PermissionDao {
 
-    public OldPermissionDaoJPA() {
-        super(Permission.class);
+    public OldPermissionDaoJPA(EntityManager em) {
+        super(Permission.class, em);
     }
 
     public Permission getUsersPermissions(IDiscussionUser user) {

@@ -32,6 +32,7 @@ public interface AccessControlService extends Serializable {
 
     boolean canRemoveDiscussion(Discussion discussion);
 
+    //typo?
     boolean canViewDiscussions(Topic discussion);
 
     /*

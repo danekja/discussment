@@ -18,7 +18,7 @@ public interface DiscussionUserService extends Serializable {
      * Returns the user by his id.
      * @param userId Id of the user.
      * @return
-     * @throws Exception is thrown whenever user with this id is nout found.
+     * @throws Exception is thrown whenever user with this id is not found.
      */
     IDiscussionUser getUserById(String userId) throws DiscussionUserNotFoundException;
 

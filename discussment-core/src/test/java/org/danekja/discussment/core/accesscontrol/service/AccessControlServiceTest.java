@@ -215,6 +215,7 @@ public class AccessControlServiceTest {
 
         // set permissions
         // has full access to every post in category except the ones in the limited discussion
+        // note that limitedDiscussion permission is added as the second one so that sorting in PermissionService.checkPermissions is tested also
         PermissionData categoryPostPerms = new PermissionData(true, true, true, true);
         PermissionData discussionPostPerms = new PermissionData(true, false, false, true);
         pms.configurePostPermissions(testUser, limitedDiscussion, discussionPostPerms);
@@ -226,7 +227,7 @@ public class AccessControlServiceTest {
             if(discusionId != null && discusionId == -11L) {
                 return testPermissions;
             } else {
-                return testPermissions.subList(1,2);
+                return testPermissions.subList(0,1);
             }
         });
 

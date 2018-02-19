@@ -81,29 +81,6 @@ CREATE TABLE `topic` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
---
--- Table structure for table `post`
---
-
-DROP TABLE IF EXISTS `post`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `post` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created` datetime DEFAULT NULL,
-  `is_disabled` bit(1) DEFAULT NULL,
-  `level` int(11) DEFAULT NULL,
-  `test` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `discussion_id` bigint(20) DEFAULT NULL,
-  `parent_post_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKp93c3g3huax07smp8aoo6t27q` (`discussion_id`),
-  KEY `FK1b999u8q8wilb08j46254nyr0` (`parent_post_id`),
-  CONSTRAINT `FK1b999u8q8wilb08j46254nyr0` FOREIGN KEY (`parent_post_id`) REFERENCES `post` (`id`),
-  CONSTRAINT `FKp93c3g3huax07smp8aoo6t27q` FOREIGN KEY (`discussion_id`) REFERENCES `discussion` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 
 --
@@ -120,6 +97,32 @@ CREATE TABLE `user` (
   `lastname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `permissions` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `post`
+--
+
+DROP TABLE IF EXISTS `post`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `post` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created` datetime DEFAULT NULL,
+  `is_disabled` bit(1) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `text` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `discussion_id` bigint(20) DEFAULT NULL,
+  `parent_post_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKp9e33g3hasd05sed8aoo6tasq` (`user_id`),
+  KEY `FKp93c3g3huax07smp8aoo6t27q` (`discussion_id`),
+  KEY `FK1b999u8q8wilb08j46254nyr0` (`parent_post_id`),
+  CONSTRAINT `FKp9e33g3hasd05sed8aoo6tasq` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK1b999u8q8wilb08j46254nyr0` FOREIGN KEY (`parent_post_id`) REFERENCES `post` (`id`),
+  CONSTRAINT `FKp93c3g3huax07smp8aoo6t27q` FOREIGN KEY (`discussion_id`) REFERENCES `discussion` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

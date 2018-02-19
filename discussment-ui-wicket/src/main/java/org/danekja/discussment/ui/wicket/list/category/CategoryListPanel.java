@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
@@ -111,7 +112,11 @@ public class CategoryListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-                categoryService.removeCategory(cm.getObject());
+                try{
+                    categoryService.removeCategory(cm.getObject());
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
                 setResponsePage(getWebPage().getClass());
             }
 

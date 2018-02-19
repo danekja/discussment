@@ -4,6 +4,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
@@ -26,6 +27,7 @@ public class DiscussionPanel extends Panel {
 
     private PostService postService;
     private AccessControlService accessControlService;
+    private DiscussionUserService userService;
 
     /**
      * Constructor for creating the panel which contains the discussion.
@@ -35,33 +37,44 @@ public class DiscussionPanel extends Panel {
      * @param postService instance of the post service
      * @param selectedPost instance contains the selected post in the discussion
      */
-    public DiscussionPanel(String id, IModel<Discussion> discussion, PostService postService, IModel<Post> selectedPost, AccessControlService accessControlService) {
+    public DiscussionPanel(String id,
+                           IModel<Discussion> discussion,
+                           IModel<Post> selectedPost,
+                           PostService postService,
+                           DiscussionUserService userService,
+                           AccessControlService accessControlService) {
         super(id);
 
         this.selectedPost = selectedPost;
         this.postService = postService;
         this.discussionModel = discussion;
+
         this.accessControlService = accessControlService;
+        this.userService = userService;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ReplyForm("replyForm", postService, selectedPost, new Model<Post>(new Post())));
-        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, accessControlService));
+        add(new ReplyForm("replyForm", selectedPost, new Model<Post>(new Post()), postService));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, accessControlService));
 
         add(createPostForm());
     }
 
     private PostForm createPostForm() {
-        return new PostForm("postForm", postService, discussionModel, new Model<Post>(new Post())) {
+        return new PostForm("postForm", discussionModel, new Model<Post>(new Post()), postService) {
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
 
-                this.setVisibilityAllowed(accessControlService.canAddPost(discussionModel.getObject()));
+                try {
+                    this.setVisibilityAllowed(accessControlService.canAddPost(discussionModel.getObject()));
+                } catch (NullPointerException e) {
+                    this.setVisibilityAllowed(false);
+                }
             }
         };
     }

@@ -28,6 +28,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+
 /**
  * This test case is using services with accesscontrol component.
  */
@@ -52,6 +53,7 @@ public class PostServiceTest {
     @BeforeClass
     public static void setUpGlobal() throws Exception {
         testUser = new User(-100L, "PMS Test User");
+
     }
 
     @Before
@@ -82,7 +84,7 @@ public class PostServiceTest {
            }
         });
 
-        postService = new NewPostService(discussionUserService, accessControlService, postDao);
+        postService = new NewPostService(postDao, discussionUserService, accessControlService);
     }
 
     /**
@@ -248,3 +250,4 @@ public class PostServiceTest {
         }
     }
 }
+

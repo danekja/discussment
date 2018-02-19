@@ -27,7 +27,7 @@ public class Category extends LongEntity implements Serializable {
     /**
      * The constant contains index which indicates a discussion in a article
      */
-    public static final int WITHOUT_CATEGORY = 0;
+    public static final int WITHOUT_CATEGORY = 1;
 
     /**
      * Name of the category

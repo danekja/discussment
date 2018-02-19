@@ -35,6 +35,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DiscussionServiceTest {
 
+
     private static User testUser;
 
     @Mock
@@ -42,6 +43,7 @@ public class DiscussionServiceTest {
 
     @Mock
     private PostDao postDao;
+
 
     @Mock
     private AccessControlService accessControlService;

@@ -42,6 +42,7 @@ public interface PostService {
      */
     Post sendReply(Post reply, Post post) throws AccessDeniedException;
 
+
     /**
      * Send a new post in the discussion
      *

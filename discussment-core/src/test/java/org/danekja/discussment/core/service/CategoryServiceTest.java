@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CategoryServiceTest {
 
+
     private static User testUser;
 
     @Mock

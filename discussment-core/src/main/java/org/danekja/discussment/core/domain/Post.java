@@ -19,7 +19,7 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_BY_DISCUSSION,
-                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId")
+                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0")
 })
 public class Post extends LongEntity implements Serializable {
 
@@ -147,6 +147,7 @@ public class Post extends LongEntity implements Serializable {
         this.discussion = discussion;
     }
 
+
     @Column(name = "user_id")
     public String getUserId() {
         return userId;
@@ -166,7 +167,7 @@ public class Post extends LongEntity implements Serializable {
         this.post = post;
     }
 
-    @Column(name = "test")
+    @Column(name = "text")
     public String getText() {
         return text;
     }
@@ -245,8 +246,10 @@ public class Post extends LongEntity implements Serializable {
     public void appendToChainId(String id) {
         if(getChainId() == null) {
             setChainId(id);
-        } else {
+        } else if(getChainId().length()<1){
             setChainId(getChainId() + Post.CHAIN_ID_SEPARATOR + id);
+        } else {
+            setChainId(getChainId().substring(0,getChainId().length()-1) + Post.CHAIN_ID_SEPARATOR + id);
         }
     }
 

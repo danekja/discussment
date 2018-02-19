@@ -4,6 +4,7 @@ import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.*;
 import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -12,8 +13,8 @@ import java.util.List;
 
 public class PermissionDaoJPA extends GenericDaoJPA<PermissionId, AbstractPermission> implements NewPermissionDao {
 
-    public PermissionDaoJPA() {
-        super(AbstractPermission.class);
+    public PermissionDaoJPA(EntityManager em) {
+        super(AbstractPermission.class, em);
     }
 
     public List<PostPermission> findForUser(IDiscussionUser user, Long discussionId, Long topicId, Long categoryId) {

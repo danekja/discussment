@@ -4,6 +4,7 @@ import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.*;
 import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,8 +14,8 @@ import java.util.List;
 
 public class NewPermissionDaoJPA extends GenericDaoJPA<PermissionId, AbstractPermission> implements NewPermissionDao {
 
-    public NewPermissionDaoJPA() {
-        super(AbstractPermission.class);
+    public NewPermissionDaoJPA(EntityManager em) {
+        super(AbstractPermission.class, em);
     }
 
     @Override
