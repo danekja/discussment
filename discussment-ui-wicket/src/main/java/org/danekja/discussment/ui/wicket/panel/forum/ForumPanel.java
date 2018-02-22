@@ -11,10 +11,7 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.CategoryService;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.core.service.TopicService;
+import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.ui.wicket.form.*;
 import org.danekja.discussment.ui.wicket.list.content.ContentListPanel;
 import org.danekja.discussment.ui.wicket.list.discussion.DiscussionListPanel;
@@ -42,6 +39,7 @@ public class ForumPanel extends Panel {
     private TopicService topicService;
     private DiscussionService discussionService;
     private DiscussionUserService userService;
+    private PostReputationService postReputationService;
     private AccessControlService accessControlService;
     private PermissionManagementService permissionService;
 
@@ -59,6 +57,10 @@ public class ForumPanel extends Panel {
      * @param topicService instance of the topic service
      * @param categoryService instance of the category service
      * @param postService instance of the post service
+     * @param userService instance of the user service
+     * @param postReputationService instance of the post reputation service
+     * @param accessControlService instance of the access control service
+     * @param permissionService instance of the permission service
      */
     public ForumPanel(String id,
                       IModel<HashMap<String, Integer>> parametersModel,
@@ -67,6 +69,7 @@ public class ForumPanel extends Panel {
                       CategoryService categoryService,
                       PostService postService,
                       DiscussionUserService userService,
+                      PostReputationService postReputationService,
                       AccessControlService accessControlService,
                       PermissionManagementService permissionService) {
         super(id);
@@ -77,8 +80,9 @@ public class ForumPanel extends Panel {
         this.postService = postService;
         this.topicService = topicService;
         this.discussionService = discussionService;
-        this.accessControlService = accessControlService;
+        this.postReputationService = postReputationService;
         this.userService = userService;
+        this.accessControlService = accessControlService;
         this.permissionService = permissionService;
 
         this.categoryModel = new Model<Category>();
@@ -92,7 +96,7 @@ public class ForumPanel extends Panel {
         super.onInitialize();
 
         add(new CategoryForm("categoryForm", categoryService, new Model<Category>(new Category())));
-        add(new ReplyForm("replyForm", postModel, new Model<Post>(new Post()), postService));
+        add(new ReplyForm("replyForm", postModel, new Model<Post>(new Post()), postReputationService, postService));
         add(new TopicForm("topicForm", topicService, categoryModel, new Model<Topic>(new Topic())));
         add(new DiscussionForm("discussionForm",
                 topicModel, new Model<Discussion>(new Discussion()),
@@ -107,7 +111,7 @@ public class ForumPanel extends Panel {
             if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
                 add(new ContentListPanel("content",
                         new CategoryWicketModel(categoryService),
-                        new TopicWicketModel(topicService),
+                        new TopicWicketModel(topicService, categoryService),
                         categoryModel, categoryService, topicService, accessControlService)
                 );
             } else if (parametersModel.getObject().get("topicId") != -1) {
@@ -125,7 +129,8 @@ public class ForumPanel extends Panel {
                     Boolean access = SessionUtil.getAccess();
                     if(accessControlService.canViewPosts(discussion) ||
                             access != null && access.booleanValue() && dId != null && dId.equals(discussion.getId())) {
-                        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel, postService, userService, accessControlService));
+                        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel,
+                                postService, userService, postReputationService, accessControlService));
                     } else {
                         setResponsePage(getPage().getClass());
                     }

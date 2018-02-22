@@ -7,6 +7,7 @@ import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostForm;
 import org.danekja.discussment.ui.wicket.form.ReplyForm;
@@ -28,6 +29,7 @@ public class DiscussionPanel extends Panel {
     private PostService postService;
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
+    private PostReputationService postReputationService;
 
     /**
      * Constructor for creating the panel which contains the discussion.
@@ -36,12 +38,15 @@ public class DiscussionPanel extends Panel {
      * @param discussion discussion in the panel
      * @param postService instance of the post service
      * @param selectedPost instance contains the selected post in the discussion
+     * @param postReputationService instance of the post reputation service
+     * @param accessControlService instance of the access control service
      */
     public DiscussionPanel(String id,
                            IModel<Discussion> discussion,
                            IModel<Post> selectedPost,
                            PostService postService,
                            DiscussionUserService userService,
+                           PostReputationService postReputationService,
                            AccessControlService accessControlService) {
         super(id);
 
@@ -51,20 +56,22 @@ public class DiscussionPanel extends Panel {
 
         this.accessControlService = accessControlService;
         this.userService = userService;
+        this.postReputationService = postReputationService;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ReplyForm("replyForm", selectedPost, new Model<Post>(new Post()), postService));
-        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, accessControlService));
+        add(new ReplyForm("replyForm", selectedPost, new Model<Post>(new Post()), postReputationService, postService));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel),
+                selectedPost, postService, userService, postReputationService, accessControlService));
 
         add(createPostForm());
     }
 
     private PostForm createPostForm() {
-        return new PostForm("postForm", discussionModel, new Model<Post>(new Post()), postService) {
+        return new PostForm("postForm", discussionModel, new Model<Post>(new Post()), postReputationService, postService) {
 
             @Override
             protected void onConfigure() {

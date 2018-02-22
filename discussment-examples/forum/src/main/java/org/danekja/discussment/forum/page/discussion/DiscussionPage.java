@@ -7,18 +7,9 @@ import org.danekja.discussment.core.accesscontrol.dao.jpa.NewPermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
-import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
-import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
-import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
-import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
-import org.danekja.discussment.core.service.CategoryService;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.core.service.imp.NewCategoryService;
-import org.danekja.discussment.core.service.imp.NewDiscussionService;
-import org.danekja.discussment.core.service.imp.NewPostService;
-import org.danekja.discussment.core.service.imp.NewTopicService;
+import org.danekja.discussment.core.dao.jpa.*;
+import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.core.service.imp.*;
 import org.danekja.discussment.forum.WicketApplication;
 import org.danekja.discussment.forum.core.dao.UserDao;
 import org.danekja.discussment.forum.core.dao.jpa.UserDaoJPA;
@@ -48,6 +39,7 @@ public class DiscussionPage extends BasePage {
     private UserService userService;
     private AccessControlService accessControlService;
     private PermissionManagementService permissionService;
+    private PostReputationService postReputationService;
 
     private IModel<HashMap<String, Integer>> parametersModel;
 
@@ -56,8 +48,7 @@ public class DiscussionPage extends BasePage {
     /**
 	 * Constructor that is invoked when page is invoked without a session.
 	 * 
-	 * @param parameters
-	 *            Page parameters
+	 * @param parameters Page parameters
 	 */
     public DiscussionPage(final PageParameters parameters) {
 
@@ -71,6 +62,8 @@ public class DiscussionPage extends BasePage {
         DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA(em);
         NewPermissionDaoJPA permissionJPA = new NewPermissionDaoJPA(em);
         PostDaoJPA postJPA = new PostDaoJPA(em);
+        PostReputationDaoJPA postReputationDaoJPA = new PostReputationDaoJPA(em);
+        UserPostReputationDaoJPA userPostReputationDaoJPA = new UserPostReputationDaoJPA(em);
 
         this.userService = new DefaultUserService(userDao);
         this.accessControlService = new PermissionService(permissionJPA, userService);
@@ -79,6 +72,7 @@ public class DiscussionPage extends BasePage {
         this.topicService = new NewTopicService(topicJPA, accessControlService, userService);
         this.postService = new NewPostService(postJPA, userService, accessControlService);
         this.permissionService = new PermissionService(permissionJPA, userService);
+        this.postReputationService = new DefaultPostReputationService(postReputationDaoJPA, userPostReputationDaoJPA, userService, accessControlService);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());
@@ -93,7 +87,7 @@ public class DiscussionPage extends BasePage {
         if(userService.getCurrentlyLoggedUser() == null) {
             add(new NotLoggedInPanel("content"));
         } else {
-            add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService, accessControlService, permissionService));
+            add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService, postReputationService, accessControlService, permissionService));
         }
     }
 

@@ -35,17 +35,22 @@ public class ArticleTextPanel extends Panel {
      * @param id id of the element into which the panel is inserted
      * @param article article in the panel
      * @param postService instance of the post service
+     * @param userService instance of the user service
+     * @param postReputationService instance of the post reputation service
+     * @param accessControlService instance of the access control service
      */
     public ArticleTextPanel(String id,
                             IModel<Article> article,
                             PostService postService,
                             UserService userService,
+                            PostReputationService postReputationService,
                             AccessControlService accessControlService){
         super(id);
 
         this.articleModel = article;
         this.postService = postService;
         this.userService = userService;
+        this.postReputationService = postReputationService;
         this.accessControlService = accessControlService;
     }
 
@@ -62,6 +67,6 @@ public class ArticleTextPanel extends Panel {
         add(new DiscussionPanel("discussionPanel",
                 new PropertyModel(articleModel, "discussion"),
                 new Model<Post>(),
-                postService, userService, accessControlService));
+                postService, userService, postReputationService, accessControlService));
     }
 }
