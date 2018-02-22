@@ -69,6 +69,11 @@ public class Post extends LongEntity implements Serializable {
     private Post post;
 
     /**
+     * The reputation of the post. If the post is removed, its reputation is removed too.
+     */
+    private PostReputation postReputation;
+
+    /**
      * Id of the reply chain. ChainId of each consists of chainId of parent post and id of this reply.
      * This way every chain will have it's own prefix and every chainId will be unique.
      */
@@ -196,6 +201,11 @@ public class Post extends LongEntity implements Serializable {
     public void setChainId(String chainId) {
         this.chainId = chainId;
     }
+
+    @OneToOne(mappedBy = "post", orphanRemoval = true)
+    public PostReputation getPostReputation(){ return  postReputation; }
+
+    public void setPostReputation(PostReputation postReputation) { this.postReputation = postReputation; }
 
     @Transient
     public int getNumberOfReplies() {
