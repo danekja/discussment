@@ -16,7 +16,7 @@ import org.danekja.discussment.ui.wicket.form.PostReputationForm;
 /**
  * The class creates the panel which contains likes and dislike for a post and calls a form for making a new vote.
  *
- * Date: 30.1.18
+ * Date: 19.2.18
  *
  * @author Jiri Kryda
  */
@@ -68,7 +68,7 @@ public class PostReputationPanel extends Panel  {
         Label liked = new Label("liked");
         liked.setVisible(false);
 
-        if(accessControlService.canViewPosts(postModel.getObject().getDiscussion()) == false){
+        if(!accessControlService.canViewPosts(postModel.getObject().getDiscussion())){
             prform.setVisible(false);
         } else if (userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(postModel.getObject().getUserId())){
             prform.setVisible(false);
@@ -84,6 +84,16 @@ public class PostReputationPanel extends Panel  {
         }
         add(liked);
         add(prform);
+    }
+
+    @Override
+    protected void onConfigure(){
+        super.onConfigure();
+
+        if(postModel.getObject().isDisabled()) {
+            this.setVisible(false);
+        }
+
     }
 
 }
