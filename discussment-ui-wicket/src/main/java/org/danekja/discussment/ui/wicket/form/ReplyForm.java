@@ -4,6 +4,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.PostReputation;
+import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
@@ -16,6 +18,7 @@ import org.danekja.discussment.ui.wicket.session.SessionUtil;
 public class ReplyForm extends Form {
 
     private PostService postService;
+    private PostReputationService postReputationService;
 
     private IModel<Post> postModel;
     private IModel<Post> replyModel;
@@ -26,9 +29,10 @@ public class ReplyForm extends Form {
      * @param id id of the element into which the panel is inserted
      * @param postModel model contains the post for adding a new post
      * @param replyModel model contains the reply for setting a form
+     * @param postReputationService instance of the post reputation service
      */
-    public ReplyForm(String id, IModel<Post> postModel, IModel<Post> replyModel) {
-        this(id, postModel, replyModel,  null);
+    public ReplyForm(String id, IModel<Post> postModel, IModel<Post> replyModel, PostReputationService postReputationService) {
+        this(id, postModel, replyModel, postReputationService, null);
     }
 
     /**
@@ -38,11 +42,13 @@ public class ReplyForm extends Form {
      * @param postService instance of the post service
      * @param postModel model contains the post for adding a new post
      * @param replyModel model contains the reply for setting the form
+     * @param postReputationService instance of the post reputation service
      */
-    public ReplyForm(String id, IModel<Post> postModel, IModel<Post> replyModel, PostService postService) {
+    public ReplyForm(String id, IModel<Post> postModel, IModel<Post> replyModel, PostReputationService postReputationService, PostService postService) {
         super(id);
 
         this.postService = postService;
+        this.postReputationService = postReputationService;
 
         this.postModel = postModel;
         this.replyModel = replyModel;
@@ -62,6 +68,7 @@ public class ReplyForm extends Form {
             try {
                 replyModel.getObject().setUserId(SessionUtil.getUser().getDiscussionUserId());
                 postService.sendReply(replyModel.getObject(), postModel.getObject());
+                postReputationService.createPostReputation(new PostReputation(replyModel.getObject()));
             } catch (AccessDeniedException e) {
                 //todo: not yet implemented
             }
