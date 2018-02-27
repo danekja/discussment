@@ -8,7 +8,7 @@ import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.mock.User;
-import org.danekja.discussment.core.service.imp.NewPostService;
+import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -84,7 +84,7 @@ public class PostServiceTest {
            }
         });
 
-        postService = new NewPostService(postDao, discussionUserService, accessControlService);
+        postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
     }
 
     /**

@@ -10,7 +10,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
-import org.danekja.discussment.core.service.imp.NewDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,7 +72,7 @@ public class DiscussionServiceTest {
         when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
 
 
-        discussionService = new NewDiscussionService(discussionDao, postDao, accessControlService, discussionUserService);
+        discussionService = new DefaultDiscussionService(discussionDao, postDao, accessControlService, discussionUserService);
     }
 
     @Test

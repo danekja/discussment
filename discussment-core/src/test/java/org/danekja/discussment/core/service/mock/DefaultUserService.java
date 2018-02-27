@@ -24,7 +24,7 @@ public class DefaultUserService implements UserService {
 
     public User addUser(User entity, Permission permission) {
 
-        permission = permissionDao.save(permission);
+
         permission.setUserId(entity.getDiscussionUserId());
 
         return userDao.save(entity);

@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.accesscontrol.service;
 
-import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.*;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.domain.Category;
@@ -28,7 +28,7 @@ public class PermissionManagementServiceTest {
     private final Long NULL_ITEM_ID = new Long(0);
 
     @Mock
-    private NewPermissionDao permissionDao;
+    private PermissionDao permissionDao;
     @Mock
     private DiscussionUserService userService;
 

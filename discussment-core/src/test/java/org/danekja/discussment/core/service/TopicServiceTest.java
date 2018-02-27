@@ -8,7 +8,7 @@ import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
-import org.danekja.discussment.core.service.imp.NewTopicService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class TopicServiceTest {
         when(discussionUserService.getUserById(any(String.class))).then(invocationOnMock -> testUser);
         when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
 
-        topicService = new NewTopicService(topicDao, accessControlService, discussionUserService);
+        topicService = new DefaultTopicService(topicDao, accessControlService, discussionUserService);
     }
 
     @Test
