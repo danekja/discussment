@@ -150,7 +150,7 @@ public class PostServiceTest {
 
         assertNotNull("Reply shouldn't be null!", postService.getPostById(reply.getId()));
         assertNotNull("Author of the reply shouldn't be null!", postService.getPostAuthor(reply));
-        assertEquals("Wrong name of the author of the reply!", testUser.getDisplayName(), postService.getPostAuthor(reply));
+        assertEquals("Wrong name of the author of the reply!", testUser.getDisplayName(), postService.getPostAuthor(reply).getDisplayName());
     }
 
     @Test
