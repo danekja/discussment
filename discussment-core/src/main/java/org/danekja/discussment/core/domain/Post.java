@@ -71,7 +71,7 @@ public class Post extends LongEntity implements Serializable {
     /**
      * The reputation of the post. If the post is removed, its reputation is removed too.
      */
-    private PostReputation postReputation;
+    private PostReputation postReputation = new PostReputation();
 
     /**
      * Id of the reply chain. ChainId of each consists of chainId of parent post and id of this reply.
@@ -83,6 +83,11 @@ public class Post extends LongEntity implements Serializable {
      * List contains all replies. If the post is removed, the replies are removed too.
      */
     private List<Post> replies = new ArrayList<Post>();
+
+    /**
+     * List contains users voting in this post reputation. It the post reputation is removed these are removed too.
+     */
+    private List<UserPostReputation> userPostReputations = new ArrayList<UserPostReputation>();
 
     @PrePersist
     protected void onCreate() {
@@ -202,10 +207,17 @@ public class Post extends LongEntity implements Serializable {
         this.chainId = chainId;
     }
 
-    @OneToOne(mappedBy = "post", orphanRemoval = true)
+    @Embedded
     public PostReputation getPostReputation(){ return  postReputation; }
 
     public void setPostReputation(PostReputation postReputation) { this.postReputation = postReputation; }
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    public List<UserPostReputation> getUserPostReputations() { return userPostReputations; }
+
+    public void setUserPostReputations(List<UserPostReputation> userPostReputations) {
+        this.userPostReputations = userPostReputations;
+    }
 
     @Transient
     public int getNumberOfReplies() {
