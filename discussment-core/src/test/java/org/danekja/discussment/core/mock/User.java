@@ -1,7 +1,6 @@
 package org.danekja.discussment.core.mock;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.LongEntity;
 

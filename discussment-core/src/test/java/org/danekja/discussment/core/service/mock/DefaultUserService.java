@@ -2,7 +2,6 @@ package org.danekja.discussment.core.service.mock;
 
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.mock.UserDao;
 import org.danekja.discussment.core.mock.UserService;
@@ -22,10 +21,7 @@ public class DefaultUserService implements UserService {
         this.permissionDao = permissionDao;
     }
 
-    public User addUser(User entity, Permission permission) {
-
-
-        permission.setUserId(entity.getDiscussionUserId());
+    public User addUser(User entity) {
 
         return userDao.save(entity);
     }
