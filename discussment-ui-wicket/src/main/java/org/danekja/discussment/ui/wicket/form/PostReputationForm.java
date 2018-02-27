@@ -21,25 +21,25 @@ import org.danekja.discussment.ui.wicket.form.postReputation.PostReputationFormC
 public class PostReputationForm extends Form {
 
     private PostReputationService postReputationService;
-    private IModel<PostReputation> postReputationModel;
+    private IModel<Post> postModel;
 
     /**
      * Constructor for creating a instance of the form for adding the post form
      *
      * @param id id of the element into which the panel is inserted
-     * @param postReputationModel model contains the post reputation to add a vote
+     * @param postModel model contains the post to add a vote
      * @param postReputationService instance of the post reputation service
      */
-    public PostReputationForm (String id, IModel<PostReputation> postReputationModel, PostReputationService postReputationService) {
+    public PostReputationForm (String id, IModel<Post> postModel, PostReputationService postReputationService) {
         super(id);
 
-        this.postReputationModel = postReputationModel;
+        this.postModel = postModel;
         this.postReputationService = postReputationService;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        add(new PostReputationFormComponent("postReputationFormComponent", postReputationModel, postReputationService));
+        add(new PostReputationFormComponent("postReputationFormComponent", postModel, postReputationService));
     }
 }

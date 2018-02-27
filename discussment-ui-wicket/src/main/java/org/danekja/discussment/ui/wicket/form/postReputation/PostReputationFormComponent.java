@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
 
@@ -21,16 +22,16 @@ import java.util.List;
  */
 public class PostReputationFormComponent extends Panel {
 
-    private IModel<PostReputation> postReputationModel;
+    private IModel<Post> postModel;
     private PostReputationService postReputationService;
     /**
      * Constructor for creating a instance of getting a name and text of the article.
      *
      * @param id id of the element into which the panel is inserted
      */
-    public PostReputationFormComponent (String id, IModel<PostReputation> postReputationModel, PostReputationService postReputationService) {
+    public PostReputationFormComponent (String id, IModel<Post> postModel, PostReputationService postReputationService) {
         super(id);
-        this.postReputationModel = postReputationModel;
+        this.postModel = postModel;
         this.postReputationService = postReputationService;
     }
 
@@ -42,7 +43,7 @@ public class PostReputationFormComponent extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                postReputationService.addLike(postReputationModel.getObject());
+                postReputationService.addLike(postModel.getObject());
                 setResponsePage(getPage());
             }
         };
@@ -51,7 +52,7 @@ public class PostReputationFormComponent extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                postReputationService.addDislike(postReputationModel.getObject());
+                postReputationService.addDislike(postModel.getObject());
                 setResponsePage(getPage());
             }
         };

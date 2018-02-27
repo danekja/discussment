@@ -55,7 +55,7 @@ public class PostReputationPanel extends Panel  {
     protected void onInitialize() {
         super.onInitialize();
 
-        postReputationModel.setObject(postReputationService.getPostReputationByPost(postModel.getObject()));
+        postReputationModel.setObject(postModel.getObject().getPostReputation());
 
         add(new Label("liketext", ("Likes: ")));
         add(new Label("likes", new PropertyModel(postReputationModel, "likes")));
@@ -63,7 +63,7 @@ public class PostReputationPanel extends Panel  {
         add(new Label("disliketext", ("Dislikes: ")));
         add(new Label("dislikes", new PropertyModel(postReputationModel, "dislikes")));
 
-        Form prform = new PostReputationForm("prform", postReputationModel, postReputationService);
+        Form prform = new PostReputationForm("prform", postModel, postReputationService);
 
         Label liked = new Label("liked");
         liked.setVisible(false);
@@ -72,15 +72,14 @@ public class PostReputationPanel extends Panel  {
             prform.setVisible(false);
         } else if (userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(postModel.getObject().getUserId())){
             prform.setVisible(false);
-        } else if (postReputationService.userVotedOn(postReputationModel.getObject())){
+        } else if (postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())){
             prform.setVisible(false);
-            if (postReputationService.userLiked(postReputationModel.getObject())){
+            if (postReputationService.userLiked(userService.getCurrentlyLoggedUser(), postModel.getObject())){
                 liked = new Label("liked", "You LIKED this post.");
-                liked.setVisible(true);
             } else {
                 liked = new Label("liked", "You DISLIKED this post.");
-                liked.setVisible(true);
             }
+            liked.setVisible(true);
         }
         add(liked);
         add(prform);

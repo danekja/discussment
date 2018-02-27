@@ -68,7 +68,6 @@ public class ReplyForm extends Form {
             try {
                 replyModel.getObject().setUserId(SessionUtil.getUser().getDiscussionUserId());
                 postService.sendReply(replyModel.getObject(), postModel.getObject());
-                postReputationService.createPostReputation(new PostReputation(replyModel.getObject()));
             } catch (AccessDeniedException e) {
                 //todo: not yet implemented
             }

@@ -73,7 +73,6 @@ public class PostForm extends Form {
             postModel.getObject().setUserId(SessionUtil.getUser().getDiscussionUserId());
             try {
                 postService.sendPost(discussionModel.getObject(), postModel.getObject());
-                postReputationService.createPostReputation(new PostReputation(postModel.getObject()));
             } catch (AccessDeniedException e) {
                 // todo: not yet implemented
             }
