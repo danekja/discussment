@@ -9,11 +9,9 @@
         <class>org.danekja.discussment.core.domain.LongEntity</class>
         <class>org.danekja.discussment.core.domain.Category</class>
         <class>org.danekja.discussment.core.domain.Discussion</class>
-        <class>org.danekja.discussment.core.domain.UserDiscussion</class>
         <class>org.danekja.discussment.core.domain.Post</class>
         <class>org.danekja.discussment.core.domain.Topic</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.AbstractPermission</class>
-        <class>org.danekja.discussment.core.accesscontrol.domain.Permission</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.CategoryPermission</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.DiscussionPermission</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.TopicPermission</class>
