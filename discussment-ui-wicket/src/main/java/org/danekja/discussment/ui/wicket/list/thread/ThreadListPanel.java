@@ -35,20 +35,25 @@ public class ThreadListPanel extends Panel {
      * @param threadListModel model for getting the threads
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
+     * @param postReputationService instance of the post reputation service
+     * @param accessControlService instance of the access control service
      */
     public ThreadListPanel(String id,
                            IModel<List<Post>> threadListModel,
                            IModel<Post> postModel,
                            PostService postService,
                            DiscussionUserService userService,
+                           PostReputationService postReputationService,
                            AccessControlService accessControlService) {
         super(id);
 
         this.threadListModel = threadListModel;
         this.postModel = postModel;
+
         this.postService = postService;
         this.accessControlService = accessControlService;
         this.userService = userService;
+        this.postReputationService = postReputationService;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class ThreadListPanel extends Panel {
 
         add(new ListView<Post>("threadListView", threadListModel) {
             protected void populateItem(ListItem<Post> listItem) {
-                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel(), postService), postModel, postService, userService, accessControlService));
+                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel(), postService), postModel, postService, userService,  postReputationService, accessControlService));
             }
         });
     }
