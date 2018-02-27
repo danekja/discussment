@@ -11,7 +11,7 @@ import org.danekja.discussment.article.core.service.imp.DefaultArticleService;
 import org.danekja.discussment.article.core.service.imp.DefaultUserService;
 import org.danekja.discussment.article.page.base.BasePage;
 import org.danekja.discussment.article.ui.wicket.panel.article.ArticlePanel;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.NewPermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
@@ -19,8 +19,8 @@ import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.core.service.imp.NewDiscussionService;
-import org.danekja.discussment.core.service.imp.NewTopicService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import javax.persistence.EntityManager;
@@ -57,7 +57,7 @@ public class ArticlePage extends BasePage {
         this.parameters = parameters;
 
         UserDaoJPA userDaoJPA = new UserDaoJPA(em);
-        NewPermissionDaoJPA permissionJPA = new NewPermissionDaoJPA(em);
+        PermissionDaoJPA permissionJPA = new PermissionDaoJPA(em);
         PostDaoJPA postJPA = new PostDaoJPA(em);
         TopicDaoJPA topicDaoJPA = new TopicDaoJPA(em);
         DiscussionDaoJPA discussionDaoJPA = new DiscussionDaoJPA(em);
@@ -65,8 +65,8 @@ public class ArticlePage extends BasePage {
 
         this.userService = new DefaultUserService(userDaoJPA);
         this.accessControlService = new PermissionService(permissionJPA, userService);
-        this.discussionService = new NewDiscussionService(discussionDaoJPA, postJPA, accessControlService, userService);
-        this.topicService = new NewTopicService(topicDaoJPA, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postJPA, accessControlService, userService);
+        this.topicService = new DefaultTopicService(topicDaoJPA, accessControlService, userService);
         this.articleService = new DefaultArticleService(articleDaoJPA, discussionService, topicService, accessControlService);
     }
 

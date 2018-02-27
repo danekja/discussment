@@ -2,7 +2,7 @@ package org.danekja.discussment.forum.page.article;
 
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.NewPermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
@@ -15,9 +15,9 @@ import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.core.service.imp.DefaultPostReputationService;
-import org.danekja.discussment.core.service.imp.NewDiscussionService;
-import org.danekja.discussment.core.service.imp.NewPostService;
-import org.danekja.discussment.core.service.imp.NewTopicService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultPostService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.forum.WicketApplication;
 import org.danekja.discussment.forum.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.forum.core.service.UserService;
@@ -59,11 +59,11 @@ public class ArticlePage extends BasePage {
         this.em = WicketApplication.factory.createEntityManager();
 
         this.userService = new DefaultUserService(new UserDaoJPA(em));
-        this.accessControlService = new PermissionService(new NewPermissionDaoJPA(em), userService);
+        this.accessControlService = new PermissionService(new PermissionDaoJPA(em), userService);
         this.postReputationService = new DefaultPostReputationService(new PostReputationDaoJPA(em), new UserPostReputationDaoJPA(em), userService, accessControlService);
-        this.discussionService = new NewDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), accessControlService, userService);
-        this.postService = new NewPostService(new PostDaoJPA(em), userService, accessControlService);
-        this.topicService = new NewTopicService(new TopicDaoJPA(em), accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), accessControlService, userService);
+        this.postService = new DefaultPostService(new PostDaoJPA(em), userService, accessControlService);
+        this.topicService = new DefaultTopicService(new TopicDaoJPA(em), accessControlService, userService);
 
     }
 
