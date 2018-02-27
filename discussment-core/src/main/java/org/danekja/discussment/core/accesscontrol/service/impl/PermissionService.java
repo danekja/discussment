@@ -1,7 +1,8 @@
 package org.danekja.discussment.core.accesscontrol.service.impl;
 
-import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.*;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlManagerService;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
@@ -15,12 +16,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class PermissionService implements PermissionManagementService, AccessControlService {
+public class PermissionService implements PermissionManagementService, AccessControlService, AccessControlManagerService {
 
-    private NewPermissionDao permissionDao;
+    private PermissionDao permissionDao;
     private DiscussionUserService userService;
 
-    public PermissionService(NewPermissionDao permissionDao, DiscussionUserService userService) {
+    public PermissionService(PermissionDao permissionDao, DiscussionUserService userService) {
         this.permissionDao = permissionDao;
         this.userService = userService;
     }
@@ -171,6 +172,110 @@ public class PermissionService implements PermissionManagementService, AccessCon
 
     public boolean canViewCategories() {
         List<CategoryPermission> permissions = getCategoryPermissions(userService.getCurrentlyLoggedUser());
+        return checkPermissions(Action.VIEW, permissions);
+    }
+
+    public boolean canAddPost(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
+        return checkPermissions(Action.CREATE, permissions);
+    }
+
+    public boolean canEditPost(IDiscussionUser user, Post post){
+        if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+            return true;
+        } else {
+            return canEditPosts(user, post.getDiscussion());
+        }
+    }
+
+    public boolean canEditPosts(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
+        return checkPermissions(Action.EDIT, permissions);
+    }
+
+    public boolean canRemovePost(IDiscussionUser user, Post post){
+        if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+            return true;
+        } else {
+            return canRemovePosts(user, post.getDiscussion());
+        }
+    }
+
+    public boolean canRemovePosts(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
+        return checkPermissions(Action.DELETE, permissions);
+    }
+
+    public boolean canViewPost(IDiscussionUser user, Post post) {
+        if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+            return true;
+        } else {
+            return canViewPosts(user, post.getDiscussion());
+        }
+    }
+
+    public boolean canViewPosts(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
+        return checkPermissions(Action.VIEW, permissions);
+    }
+
+    public boolean canAddDiscussion(IDiscussionUser user, Topic topic) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, topic);
+        return checkPermissions(Action.CREATE, permissions);
+    }
+
+    public boolean canEditDiscussion(IDiscussionUser user, Discussion discussion) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, discussion.getTopic());
+        return checkPermissions(Action.EDIT, permissions);
+    }
+
+    public boolean canRemoveDiscussion(IDiscussionUser user, Discussion discussion) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, discussion.getTopic());
+        return checkPermissions(Action.DELETE, permissions);
+    }
+
+    public boolean canViewDiscussions(IDiscussionUser user, Topic topic) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, topic);
+        return checkPermissions(Action.VIEW, permissions);
+    }
+
+    public boolean canAddTopic(IDiscussionUser user, Category category) {
+        List<TopicPermission> permissions = getTopicPermissions(user, category);
+        return checkPermissions(Action.CREATE, permissions);
+    }
+
+    public boolean canEditTopic(IDiscussionUser user, Topic topic) {
+        List<TopicPermission> permissions = getTopicPermissions(user, topic.getCategory());
+        return checkPermissions(Action.EDIT, permissions);
+    }
+
+    public boolean canRemoveTopic(IDiscussionUser user, Topic topic) {
+        List<TopicPermission> permissions = getTopicPermissions(user, topic.getCategory());
+        return checkPermissions(Action.DELETE, permissions);
+    }
+
+    public boolean canViewTopics(IDiscussionUser user, Category category) {
+        List<TopicPermission> permissions = getTopicPermissions(user, category);
+        return checkPermissions(Action.VIEW, permissions);
+    }
+
+    public boolean canAddCategory(IDiscussionUser user) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
+        return checkPermissions(Action.CREATE, permissions);
+    }
+
+    public boolean canEditCategory(IDiscussionUser user, Category category) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
+        return checkPermissions(Action.EDIT, permissions);
+    }
+
+    public boolean canRemoveCategory(IDiscussionUser user, Category category) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
+        return checkPermissions(Action.DELETE, permissions);
+    }
+
+    public boolean canViewCategories(IDiscussionUser user) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
         return checkPermissions(Action.VIEW, permissions);
     }
 
