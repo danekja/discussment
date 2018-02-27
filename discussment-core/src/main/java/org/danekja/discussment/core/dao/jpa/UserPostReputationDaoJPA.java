@@ -2,6 +2,7 @@ package org.danekja.discussment.core.dao.jpa;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.dao.UserPostReputationDao;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 
@@ -22,10 +23,10 @@ public class UserPostReputationDaoJPA extends GenericDaoJPA<Long, UserPostReputa
      */
     public UserPostReputationDaoJPA(EntityManager em){ super(UserPostReputation.class, em); }
 
-    public UserPostReputation getForUser(IDiscussionUser user, PostReputation postReputation){
+    public UserPostReputation getForUser(IDiscussionUser user, Post post){
         TypedQuery<UserPostReputation> q = em.createNamedQuery(UserPostReputation.GET_FOR_USER, UserPostReputation.class);
         q.setParameter("userId", user.getDiscussionUserId());
-        q.setParameter("postReputationId", postReputation.getId());
+        q.setParameter("postId", post.getId());
         try {
             return q.getSingleResult();
         } catch (NoResultException e) {

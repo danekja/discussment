@@ -1,14 +1,11 @@
 package org.danekja.discussment.core.domain;
 
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
 import static org.danekja.discussment.core.domain.UserPostReputation.GET_FOR_USER;
 
 /**
- * Join table for IDiscussionUser and PostReputation.
  * Tracks which post reputations the user voted in and if he liked the post or not.
  *
  * Date: 19.2.18
@@ -19,7 +16,7 @@ import static org.danekja.discussment.core.domain.UserPostReputation.GET_FOR_USE
 @Table(name = "user_post_reputation")
 @NamedQueries({
         @NamedQuery(name = GET_FOR_USER,
-                query = "SELECT upr FROM UserPostReputation upr WHERE upr.userId = :userId AND upr.postReputation.id = :postReputationId")
+                query = "SELECT upr FROM UserPostReputation upr WHERE upr.userId = :userId AND upr.post.id = :postId")
 })
 public class UserPostReputation extends LongEntity implements Serializable {
 
@@ -29,20 +26,14 @@ public class UserPostReputation extends LongEntity implements Serializable {
     public static final String GET_FOR_USER = "UserPostReputation.getForUser";
 
     /**
-     * After the object is load from database, actual user object can be added
-     * to this class. Note that this field is not persisted.
-     */
-    private IDiscussionUser user;
-
-    /**
      * Id of the user.
      */
     private String userId;
 
     /**
-     * Post reputation he voted in.
+     * Post he voted on.
      */
-    private PostReputation postReputation;
+    private Post post;
 
     /**
      * Constant to keep user's vote.
@@ -51,18 +42,10 @@ public class UserPostReputation extends LongEntity implements Serializable {
 
     public UserPostReputation(){}
 
-    public UserPostReputation(String userId, PostReputation postReputation, boolean liked){
+    public UserPostReputation(String userId, Post post, boolean liked){
         this.userId = userId;
-        this.postReputation = postReputation;
+        this.post = post;
         this.liked = liked;
-    }
-    @Transient
-    public IDiscussionUser getUser() {
-        return user;
-    }
-
-    public void setUser(IDiscussionUser user) {
-        this.user = user;
     }
 
     @Column(name = "user_id")
@@ -75,11 +58,11 @@ public class UserPostReputation extends LongEntity implements Serializable {
     }
 
     @ManyToOne
-    @JoinColumn(name = "postreputation_id")
-    public PostReputation getPostReputation(){ return postReputation; }
+    @JoinColumn(name = "post_id")
+    public Post getPost(){ return post; }
 
-    public void setPostReputation(PostReputation postReputation) {
-        this.postReputation = postReputation;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public boolean getLiked(){ return liked; }
@@ -88,12 +71,20 @@ public class UserPostReputation extends LongEntity implements Serializable {
         this.liked = liked;
     }
 
+    public void changeVote(){
+        if(this.liked){
+            this.liked = false;
+        } else {
+            this.liked= true;
+        }
+    }
+
     @Override
     public String toString() {
-        return "UserDiscussion{" +
-                "user=" + user +
-                ", userId=" + userId +
-                ", discussion=" + postReputation +
+        return "UserPostReputation{" +
+                "userId=" + userId +
+                ", post=" + post +
+                ", liked=" + liked +
                 '}';
     }
 
@@ -106,14 +97,14 @@ public class UserPostReputation extends LongEntity implements Serializable {
         UserPostReputation that = (UserPostReputation) o;
 
         if (!userId.equals(that.userId)) return false;
-        return postReputation.equals(that.postReputation);
+        return post.equals(that.post);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + userId.hashCode();
-        result = 31 * result + postReputation.hashCode();
+        result = 31 * result + post.hashCode();
         return result;
     }
 }

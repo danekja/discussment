@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.dao;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 
@@ -19,8 +20,8 @@ public interface UserPostReputationDao extends GenericDao<Long, UserPostReputati
      * Get User post reputation in a database based on its user nad post reputation
      *
      * @param user User to check for votes
-     * @param postReputation Post reputation that user voted on
+     * @param post Post that user voted on
      * @return User post reputation for user and post reputation
      */
-    UserPostReputation getForUser(IDiscussionUser user, PostReputation postReputation);
+    UserPostReputation getForUser(IDiscussionUser user, Post post);
 }
