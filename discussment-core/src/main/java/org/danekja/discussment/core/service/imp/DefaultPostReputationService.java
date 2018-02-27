@@ -1,16 +1,13 @@
 package org.danekja.discussment.core.service.imp;
 
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
-import org.danekja.discussment.core.dao.PostReputationDao;
+import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.dao.UserPostReputationDao;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implementation of the PostReputationService interface.
@@ -21,53 +18,73 @@ import java.util.List;
  */
 public class DefaultPostReputationService implements PostReputationService {
 
-    private PostReputationDao postReputationDao;
     private UserPostReputationDao userPostReputationDao;
+    private PostDao postDao;
 
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
 
-    public DefaultPostReputationService(PostReputationDao postReputationDao,
-                                        UserPostReputationDao userPostReputationDao,
+    public DefaultPostReputationService(UserPostReputationDao userPostReputationDao,
+                                        PostDao postDao,
                                         DiscussionUserService userService,
                                         AccessControlService accessControlService){
 
-        this.postReputationDao = postReputationDao;
         this.userPostReputationDao = userPostReputationDao;
+        this.postDao = postDao;
 
         this.userService = userService;
         this.accessControlService = accessControlService;
     }
 
-    public PostReputation createPostReputation (PostReputation entity){
-        return postReputationDao.save(entity);
+    public synchronized void addLike(Post post){
+        // todo: only one service must exist in the app
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        post.getPostReputation().addLike();
+        if (!userVotedOn(user, post)) {
+            userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
+        }
+        postDao.save(post);
     }
 
-    public PostReputation getPostReputationByPost (Post post){
-        return postReputationDao.getByPost(post);
+    public synchronized void addDislike(Post post){
+        // todo: only one service must exist in the app
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        post.getPostReputation().addDislike();
+        if (!userVotedOn(user, post)) {
+            userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
+        }
+        postDao.save(post);
     }
 
-    public void addLike(PostReputation postReputation){
-        postReputation.setLikes((postReputation.getLikes())+1);
-        userPostReputationDao.save(new UserPostReputation(userService.getCurrentlyLoggedUser().getDiscussionUserId(), postReputation, true));
+    public synchronized void changeVote(Post post){
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        UserPostReputation upr = getVote(user, post);
+        if(upr != null){
+            if(userLiked(user, post)){
+                post.getPostReputation().removeLike();
+                post.getPostReputation().addDislike();
+                upr.changeVote();
+            } else {
+                post.getPostReputation().addLike();
+                post.getPostReputation().removeDislike();
+                upr.changeVote();
+            }
+            userPostReputationDao.save(upr);
+            postDao.save(post);
+        }
     }
 
-    public void addDislike(PostReputation postReputation){
-        postReputation.setDislikes((postReputation.getDislikes())+1);
-        userPostReputationDao.save(new UserPostReputation(userService.getCurrentlyLoggedUser().getDiscussionUserId(), postReputation, false));
+    public UserPostReputation getVote(IDiscussionUser user, Post post){
+        return userPostReputationDao.getForUser(user, post);
     }
 
-    public boolean userVotedOn(PostReputation postReputation){
-        if(userPostReputationDao.getForUser(userService.getCurrentlyLoggedUser(), postReputation) != null){
+    public boolean userVotedOn(IDiscussionUser user, Post post){
+        if(getVote(user, post) != null){
             return true;
         } else return false;
     }
 
-    public boolean userLiked(PostReputation postReputation){
-        return userPostReputationDao.getForUser(userService.getCurrentlyLoggedUser(), postReputation).getLiked();
-    }
-
-    public void removePostReputation(PostReputation entity){
-        postReputationDao.remove(entity);
+    public boolean userLiked(IDiscussionUser user, Post post){
+        return getVote(user, post).getLiked();
     }
 }

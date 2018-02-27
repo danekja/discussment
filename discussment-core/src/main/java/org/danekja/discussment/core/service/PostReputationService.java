@@ -1,7 +1,8 @@
 package org.danekja.discussment.core.service;
 
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.PostReputation;
+import org.danekja.discussment.core.domain.UserPostReputation;
 
 /**
  * The interface contains the service methods for working with the post reputation.
@@ -13,55 +14,50 @@ import org.danekja.discussment.core.domain.PostReputation;
 public interface PostReputationService {
 
     /**
-     * Creates a new post reputation.
-     *
-     * @param entity new post reputation
-     * @return new post reputation
-     */
-    PostReputation createPostReputation (PostReputation entity);
-
-    /**
-     * Get a post reputation based on its post.
-     *
-     * @param post to get post reputation for
-     * @return post reputation for post
-     */
-    PostReputation getPostReputationByPost (Post post);
-
-    /**
      * Adds a like to post reputaion.
      *
-     * @param postReputation to add like
+     * @param post to add like
      */
-    void addLike (PostReputation postReputation);
+    void addLike (Post post);
 
     /**
      * Adds a dislike to post reputaion.
      *
-     * @param postReputation to add dislike
+     * @param post to add dislike
      */
-    void addDislike (PostReputation postReputation);
+    void addDislike (Post post);
 
     /**
      * Checks if user already voted in post reputation.
      *
-     * @param postReputation to check
+     * @param post to check
      * @return true, if user already voted
      */
-    boolean userVotedOn(PostReputation postReputation);
+    boolean userVotedOn(IDiscussionUser user, Post post);
 
     /**
-     * Gets user's vote.
+     * Checks if user liked the post
      *
-     * @param postReputation to get vote
-     * @return user's vote
+     * @param user user to get the vote for
+     * @param post to get vote
+     * @return true, if user liked the post
      */
-    boolean userLiked(PostReputation postReputation);
+    boolean userLiked(IDiscussionUser user, Post post);
 
     /**
-     * Remove a post reputation
+     * Gets user's vote on the post
      *
-     * @param entity article to remove
+     * @param user user to get the vote for
+     * @param post to get vote
+     * @return UserPostReputation
      */
-    void removePostReputation(PostReputation entity);
+    UserPostReputation getVote(IDiscussionUser user, Post post);
+
+    /**
+     * Checks if user has voted on the post before.
+     * If he did it then changes his vote.
+     *
+     * @param post to change vote
+     */
+    void changeVote(Post post);
 }
