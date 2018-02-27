@@ -99,9 +99,9 @@ public class DefaultPostService implements PostService {
         }
     }
 
-    public String getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException {
+    public IDiscussionUser getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException {
         if(accessControlService.canViewPost(post)) {
-            return discussionUserService.getUserById(post.getUserId()).getDisplayName();
+            return discussionUserService.getUserById(post.getUserId());
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),post.getId(), PermissionType.POST);
         }

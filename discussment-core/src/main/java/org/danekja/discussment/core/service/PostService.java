@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -81,11 +82,11 @@ public interface PostService {
     List<Post> listPostHierarchy(Discussion discussion) throws AccessDeniedException;
 
     /**
-     * Returns the username of posts's author.
+     * Returns the post's author.
      * @param post
-     * @return Name of the post's autor.
+     * @return Post's author.
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view the post.
      * @throws DiscussionUserNotFoundException Thrown if the user can be found by post.getUserId() id.
      */
-    String getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException;
+    IDiscussionUser getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException;
 }
