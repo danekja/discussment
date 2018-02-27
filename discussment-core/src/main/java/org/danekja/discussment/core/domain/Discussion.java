@@ -41,11 +41,6 @@ public class Discussion extends LongEntity implements Serializable {
     private List<Post> posts = new ArrayList<Post>();
 
     /**
-     * List of users which have access to this discussion.
-     */
-    private List<UserDiscussion> userAccessList = new ArrayList<UserDiscussion>();
-
-    /**
      * Topic in which the discussion is.
      */
     private Topic topic;
@@ -99,15 +94,6 @@ public class Discussion extends LongEntity implements Serializable {
 
     protected void setPosts(List<Post> posts) {
         this.posts = posts;
-    }
-
-    @OneToMany(mappedBy = "discussion", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    public List<UserDiscussion> getUserAccessList() {
-        return userAccessList;
-    }
-
-    public void setUserAccessList(List<UserDiscussion> accessList) {
-        this.userAccessList = accessList;
     }
 
     @Transient
