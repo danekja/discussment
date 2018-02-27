@@ -62,8 +62,7 @@ public class DiscussionPage extends BasePage {
         DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA(em);
         NewPermissionDaoJPA permissionJPA = new NewPermissionDaoJPA(em);
         PostDaoJPA postJPA = new PostDaoJPA(em);
-        PostReputationDaoJPA postReputationDaoJPA = new PostReputationDaoJPA(em);
-        UserPostReputationDaoJPA userPostReputationDaoJPA = new UserPostReputationDaoJPA(em);
+        UserPostReputationDaoJPA userPostReputationJPA = new UserPostReputationDaoJPA(em);
 
         this.userService = new DefaultUserService(userDao);
         this.accessControlService = new PermissionService(permissionJPA, userService);
@@ -72,7 +71,7 @@ public class DiscussionPage extends BasePage {
         this.topicService = new NewTopicService(topicJPA, accessControlService, userService);
         this.postService = new NewPostService(postJPA, userService, accessControlService);
         this.permissionService = new PermissionService(permissionJPA, userService);
-        this.postReputationService = new DefaultPostReputationService(postReputationDaoJPA, userPostReputationDaoJPA, userService, accessControlService);
+        this.postReputationService = new DefaultPostReputationService(userPostReputationJPA, postJPA, userService, accessControlService);
 
         parametersModel = new Model<HashMap<String, Integer>>();
         parametersModel.setObject(new HashMap<String, Integer>());

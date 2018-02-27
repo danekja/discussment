@@ -10,14 +10,8 @@ import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.PostReputationService;
-import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.core.service.imp.DefaultPostReputationService;
-import org.danekja.discussment.core.service.imp.NewDiscussionService;
-import org.danekja.discussment.core.service.imp.NewPostService;
-import org.danekja.discussment.core.service.imp.NewTopicService;
+import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.core.service.imp.*;
 import org.danekja.discussment.forum.WicketApplication;
 import org.danekja.discussment.forum.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.forum.core.service.UserService;
@@ -60,7 +54,7 @@ public class ArticlePage extends BasePage {
 
         this.userService = new DefaultUserService(new UserDaoJPA(em));
         this.accessControlService = new PermissionService(new NewPermissionDaoJPA(em), userService);
-        this.postReputationService = new DefaultPostReputationService(new PostReputationDaoJPA(em), new UserPostReputationDaoJPA(em), userService, accessControlService);
+        this.postReputationService = new DefaultPostReputationService(new UserPostReputationDaoJPA(em), new PostDaoJPA(em), userService, accessControlService);
         this.discussionService = new NewDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), accessControlService, userService);
         this.postService = new NewPostService(new PostDaoJPA(em), userService, accessControlService);
         this.topicService = new NewTopicService(new TopicDaoJPA(em), accessControlService, userService);
@@ -76,7 +70,7 @@ public class ArticlePage extends BasePage {
                 Topic topic = topicService.getTopicById(TOPIC_ID);
                 discussion = discussionService.createDiscussion(topic, new Discussion("article name"));
             }
-            add(new DiscussionPanel("content", new Model<Discussion>(discussion), new Model<Post>(), postService, userService, accessControlService));
+            add(new DiscussionPanel("content", new Model<Discussion>(discussion), new Model<Post>(), postService, userService, postReputationService, accessControlService));
         } catch (AccessDeniedException e) {
             add(new AccessDeniedPanel("content"));
         } catch (NullPointerException ex) {

@@ -56,7 +56,6 @@ public class ArticleTextPage extends BasePage {
         UserDaoJPA userDaoJPA = new UserDaoJPA(em);
         NewPermissionDaoJPA permissionDaoJPA = new NewPermissionDaoJPA(em);
         ArticleDaoJPA articleDaoJPA = new ArticleDaoJPA(em);
-        PostReputationDaoJPA postReputationDaoJPA = new PostReputationDaoJPA(em);
         UserPostReputationDaoJPA userPostReputationDaoJPA = new UserPostReputationDaoJPA(em);
 
         this.userService = new DefaultUserService(userDaoJPA);
@@ -65,7 +64,7 @@ public class ArticleTextPage extends BasePage {
         this.topicService = new NewTopicService(topicDaoJPA, accessControlService, userService);
         this.articleService = new DefaultArticleService(articleDaoJPA, discussionService, topicService, accessControlService);
         this.postService = new NewPostService(postDaoJPA, userService, accessControlService);
-        this.postReputationService = new DefaultPostReputationService(postReputationDaoJPA, userPostReputationDaoJPA, userService, accessControlService);
+        this.postReputationService = new DefaultPostReputationService(userPostReputationDaoJPA, postDaoJPA, userService, accessControlService);
 
         this.articleModel = new Model<Article>();
     }
