@@ -159,6 +159,6 @@ public class DiscussionServiceTest {
     public void testGetLastPostAuthor() throws DiscussionUserNotFoundException, AccessDeniedException {
         when(postDao.getPostsByDiscussion(any(Discussion.class))).then(invocationOnMock -> Arrays.asList(new Post[] {new Post(testUser, "Test post")}));
 
-        assertEquals("Wrong author!", testUser.getDisplayName(), discussionService.getLastPostAuthor(new Discussion()));
+        assertEquals("Wrong author!", testUser.getDisplayName(), discussionService.getLastPostAuthor(new Discussion()).getDisplayName());
     }
 }

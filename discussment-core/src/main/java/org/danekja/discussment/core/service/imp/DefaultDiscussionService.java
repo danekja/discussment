@@ -2,6 +2,7 @@ package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.Action;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
@@ -68,13 +69,13 @@ public class DefaultDiscussionService implements DiscussionService {
         }
     }
 
-    public String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException {
+    public IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException {
         if(accessControlService.canViewPosts(discussion)) {
             List<Post> posts = postDao.getPostsByDiscussion(discussion);
             if(posts.isEmpty()) {
                 return null;
             } else {
-                return discussionUserService.getUserById(posts.get(posts.size() -1 ).getUserId()).getDisplayName();
+                return discussionUserService.getUserById(posts.get(posts.size() -1 ).getUserId());
             }
         } else {
             throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.POST);

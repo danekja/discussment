@@ -73,7 +73,7 @@ public class DiscussionListPanel extends Panel {
                 listItem.add(new Label("lastUsername", new LoadableDetachableModel<String>() {
                     protected String load() {
                         try {
-                            return discussionService.getLastPostAuthor(listItem.getModelObject());
+                            return discussionService.getLastPostAuthor(listItem.getModelObject()).getDisplayName();
                         } catch (DiscussionUserNotFoundException e) {
                             return "Error: author of last post not found";
                         } catch (AccessDeniedException e){
