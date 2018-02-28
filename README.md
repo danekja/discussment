@@ -37,10 +37,14 @@ The __service__ package contains these interfaces:
 
 The services need an interface to access the database, which is located in the dao package. The default implementation of services is in the __dao.imp__ package. If you need your own access, you need to implement this interface.
 
+### access control
 The __accesscontrol__ package contains the new implementation of user's permissions. The default implementation of services is in the __service.impl__ package.
 
-Its __service__ package contains these interfaces:
-- __DiscussionUserService__ contains basic methods to obtain user object. Application will have to implement this!
+The __domain__ package contains this interface:
+- __IDiscussionUser__ represents the user entity in the context of this library. Any application using this library will have to implement this!
+
+The __service__ package contains these interfaces:
+- __DiscussionUserService__ contains basic methods to obtain user object from application. Any application using this library will have to implement this!
 
 - __PermissionManagementService__ contains methods for adding or changing user's permissions.
   - for example using this method will give user permissions for discussion in given __topic__. __PermissionData__ have values sorted _create_, _delete_, _edit_, _view_.
