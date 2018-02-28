@@ -11,6 +11,7 @@
         <class>org.danekja.discussment.core.domain.Discussion</class>
         <class>org.danekja.discussment.core.domain.Post</class>
         <class>org.danekja.discussment.core.domain.Topic</class>
+        <class>org.danekja.discussment.core.domain.UserPostReputation</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.AbstractPermission</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.CategoryPermission</class>
         <class>org.danekja.discussment.core.accesscontrol.domain.DiscussionPermission</class>

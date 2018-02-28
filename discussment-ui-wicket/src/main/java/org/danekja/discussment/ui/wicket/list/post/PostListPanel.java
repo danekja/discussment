@@ -18,7 +18,9 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPanel;
 
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class PostListPanel extends Panel {
     private IModel<List<Post>> postListModel;
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
+    private PostReputationService postReputationService;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -48,6 +51,7 @@ public class PostListPanel extends Panel {
                          IModel<Post> postModel,
                          PostService postService,
                          DiscussionUserService userService,
+                         PostReputationService postReputationService,
                          AccessControlService accessControlService) {
         super(id);
 
@@ -57,6 +61,7 @@ public class PostListPanel extends Panel {
 
         this.accessControlService = accessControlService;
         this.userService = userService;
+        this.postReputationService = postReputationService;
     }
 
     @Override
@@ -104,6 +109,8 @@ public class PostListPanel extends Panel {
                 listItem.add(createDisableLink(listItem.getModel()));
 
                 listItem.add(new AttributeModifier("style", "padding-left: " + listItem.getModelObject().getLevel() * 30 + "px"));
+
+                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), userService, accessControlService, postReputationService));
             }
         });
 

@@ -5,6 +5,8 @@ import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.PostReputation;
+import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
@@ -17,6 +19,7 @@ import org.danekja.discussment.ui.wicket.session.SessionUtil;
 public class PostForm extends Form {
 
     private PostService postService;
+    private PostReputationService postReputationService;
 
     private IModel<Discussion> discussionModel;
     private IModel<Post> postModel;
@@ -27,9 +30,10 @@ public class PostForm extends Form {
      * @param id id of the element into which the panel is inserted
      * @param discussionModel model contains the discussion for adding a new post
      * @param postModel model contains the post for setting a form
+     * @param postReputationService instance of the post reputation service
      */
-    public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel) {
-        this(id, discussionModel, postModel, null);
+    public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel, PostReputationService postReputationService) {
+        this(id, discussionModel, postModel, postReputationService, null);
     }
 
     /**
@@ -39,11 +43,14 @@ public class PostForm extends Form {
      * @param postService instance of the post service
      * @param discussionModel model contains the discussion for adding a new post
      * @param postModel model contains the post for setting the form
+     * @param postReputationService instance of the post reputation service
      */
-    public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel, PostService postService) {
+    public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel, PostReputationService postReputationService, PostService postService) {
         super(id);
 
         this.postService = postService;
+        this.postReputationService = postReputationService;
+
         this.discussionModel = discussionModel;
         this.postModel = postModel;
     }

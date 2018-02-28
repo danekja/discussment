@@ -16,15 +16,9 @@ import org.danekja.discussment.article.ui.wicket.panel.article.ArticleTextPanel;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
-import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
-import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
-import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
-import org.danekja.discussment.core.service.DiscussionService;
-import org.danekja.discussment.core.service.PostService;
-import org.danekja.discussment.core.service.TopicService;
-import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
-import org.danekja.discussment.core.service.imp.DefaultPostService;
-import org.danekja.discussment.core.service.imp.DefaultTopicService;
+import org.danekja.discussment.core.dao.jpa.*;
+import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.core.service.imp.*;
 import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import javax.persistence.EntityManager;
@@ -41,6 +35,7 @@ public class ArticleTextPage extends BasePage {
     private PostService postService;
     private UserService userService;
     private AccessControlService accessControlService;
+    private PostReputationService postReputationService;
 
     private IModel<Article> articleModel;
 
@@ -61,12 +56,14 @@ public class ArticleTextPage extends BasePage {
         UserDaoJPA userDaoJPA = new UserDaoJPA(em);
         PermissionDaoJPA permissionDaoJPA = new PermissionDaoJPA(em);
         ArticleDaoJPA articleDaoJPA = new ArticleDaoJPA(em);
+        UserPostReputationDaoJPA userPostReputationDaoJPA = new UserPostReputationDaoJPA(em);
 
         this.userService = new DefaultUserService(userDaoJPA);
         this.accessControlService = new PermissionService(permissionDaoJPA, userService);
         this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postDaoJPA, accessControlService, userService);
         this.topicService = new DefaultTopicService(topicDaoJPA, accessControlService, userService);
         this.articleService = new DefaultArticleService(articleDaoJPA, discussionService, topicService, accessControlService);
+        this.postReputationService = new DefaultPostReputationService(userPostReputationDaoJPA, postDaoJPA, userService, accessControlService);
         this.postService = new DefaultPostService(postDaoJPA, userService, accessControlService);
 
         this.articleModel = new Model<Article>();
@@ -79,7 +76,7 @@ public class ArticleTextPage extends BasePage {
             add(new NotLoggedInPanel("content"));
         } else {
             articleModel.setObject(articleService.getArticleById(Integer.parseInt(parameters.get("articleId").toString())));
-            add(new ArticleTextPanel("content", articleModel, postService, userService, accessControlService));
+            add(new ArticleTextPanel("content", articleModel, postService, userService, postReputationService, accessControlService));
         }
     }
 
