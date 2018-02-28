@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
@@ -48,9 +49,9 @@ public interface DiscussionService {
     void removeDiscussion(Discussion discussion) throws AccessDeniedException;
 
     /**
-     * Returns the username of the last post in the discussion.
+     * Returns the author of the last post in the discussion.
      * @param discussion
-     * @return Username. Empty string if discussion has no posts.
+     * @return Author of the last post. Empty string if discussion has no posts.
      */
-    String getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
+    IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
 }

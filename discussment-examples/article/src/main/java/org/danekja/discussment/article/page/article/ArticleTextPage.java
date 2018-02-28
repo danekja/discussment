@@ -13,7 +13,7 @@ import org.danekja.discussment.article.core.service.imp.DefaultArticleService;
 import org.danekja.discussment.article.core.service.imp.DefaultUserService;
 import org.danekja.discussment.article.page.base.BasePage;
 import org.danekja.discussment.article.ui.wicket.panel.article.ArticleTextPanel;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.NewPermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.dao.jpa.*;
@@ -54,17 +54,17 @@ public class ArticleTextPage extends BasePage {
         TopicDaoJPA topicDaoJPA = new TopicDaoJPA(em);
         PostDaoJPA postDaoJPA = new PostDaoJPA(em);
         UserDaoJPA userDaoJPA = new UserDaoJPA(em);
-        NewPermissionDaoJPA permissionDaoJPA = new NewPermissionDaoJPA(em);
+        PermissionDaoJPA permissionDaoJPA = new PermissionDaoJPA(em);
         ArticleDaoJPA articleDaoJPA = new ArticleDaoJPA(em);
         UserPostReputationDaoJPA userPostReputationDaoJPA = new UserPostReputationDaoJPA(em);
 
         this.userService = new DefaultUserService(userDaoJPA);
         this.accessControlService = new PermissionService(permissionDaoJPA, userService);
-        this.discussionService = new NewDiscussionService(discussionDaoJPA, postDaoJPA, accessControlService, userService);
-        this.topicService = new NewTopicService(topicDaoJPA, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postDaoJPA, accessControlService, userService);
+        this.topicService = new DefaultTopicService(topicDaoJPA, accessControlService, userService);
         this.articleService = new DefaultArticleService(articleDaoJPA, discussionService, topicService, accessControlService);
-        this.postService = new NewPostService(postDaoJPA, userService, accessControlService);
         this.postReputationService = new DefaultPostReputationService(userPostReputationDaoJPA, postDaoJPA, userService, accessControlService);
+        this.postService = new DefaultPostService(postDaoJPA, userService, accessControlService);
 
         this.articleModel = new Model<Article>();
     }

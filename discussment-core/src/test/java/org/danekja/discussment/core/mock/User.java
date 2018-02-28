@@ -1,7 +1,6 @@
 package org.danekja.discussment.core.mock;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.LongEntity;
 
@@ -49,14 +48,9 @@ public class User extends LongEntity implements IDiscussionUser {
     private String lastname;
 
     /**
-     * Permission of the user. If the user is removed, the permissions are removed too.
-     */
-    private Permission permissions;
-
-    /**
      * List contains the discussions which the user has access.
      */
-//    private List<UserDiscussion> accessListToDiscussion = new ArrayList<UserDiscussion>();
+
 
     public User() {}
 
@@ -109,7 +103,7 @@ public class User extends LongEntity implements IDiscussionUser {
 
     public boolean isAccessToDiscussion(Discussion discussion) {
 
-        return discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this);
+        return discussion.getPass() == null;
     }
 
 //    @OneToMany(mappedBy = "userAccessList", targetEntity = Discussion.class)
@@ -121,14 +115,6 @@ public class User extends LongEntity implements IDiscussionUser {
 //        this.accessListToDiscussion = accessListToDiscussion;
 //    }
 
-    @OneToOne(orphanRemoval = true, targetEntity = Permission.class)
-    public Permission getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Permission permissions) {
-        this.permissions = permissions;
-    }
 
     @Override
     public String toString() {
@@ -136,7 +122,6 @@ public class User extends LongEntity implements IDiscussionUser {
                 "username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", permissions=" + permissions +
                 '}';
     }
 }

@@ -8,7 +8,7 @@ import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.mock.User;
-import org.danekja.discussment.core.service.imp.NewPostService;
+import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -84,7 +84,7 @@ public class PostServiceTest {
            }
         });
 
-        postService = new NewPostService(postDao, discussionUserService, accessControlService);
+        postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
     }
 
     /**
@@ -137,7 +137,7 @@ public class PostServiceTest {
 
         assertNotNull("Post shouldn't be null!", postService.getPostById(post.getId()));
         assertNotNull("Author of the post shouldn't be null!", postService.getPostAuthor(post));
-        assertEquals("Wrong name of the author of the post!", testUser.getDisplayName(), postService.getPostAuthor(post));
+        assertEquals("Wrong name of the author of the post!", testUser.getDisplayName(), postService.getPostAuthor(post).getDisplayName());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class PostServiceTest {
 
         assertNotNull("Reply shouldn't be null!", postService.getPostById(reply.getId()));
         assertNotNull("Author of the reply shouldn't be null!", postService.getPostAuthor(reply));
-        assertEquals("Wrong name of the author of the reply!", testUser.getDisplayName(), postService.getPostAuthor(reply));
+        assertEquals("Wrong name of the author of the reply!", testUser.getDisplayName(), postService.getPostAuthor(reply).getDisplayName());
     }
 
     @Test

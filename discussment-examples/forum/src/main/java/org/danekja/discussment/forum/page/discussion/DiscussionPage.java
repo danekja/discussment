@@ -3,7 +3,7 @@ package org.danekja.discussment.forum.page.discussion;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.NewPermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
@@ -60,16 +60,16 @@ public class DiscussionPage extends BasePage {
         TopicDaoJPA topicJPA = new TopicDaoJPA(em);
         UserDao userDao = new UserDaoJPA(em);
         DiscussionDaoJPA discussionJPA = new DiscussionDaoJPA(em);
-        NewPermissionDaoJPA permissionJPA = new NewPermissionDaoJPA(em);
+        PermissionDaoJPA permissionJPA = new PermissionDaoJPA(em);
         PostDaoJPA postJPA = new PostDaoJPA(em);
         UserPostReputationDaoJPA userPostReputationJPA = new UserPostReputationDaoJPA(em);
 
         this.userService = new DefaultUserService(userDao);
         this.accessControlService = new PermissionService(permissionJPA, userService);
-        this.discussionService = new NewDiscussionService(discussionJPA, postJPA, accessControlService, userService);
-        this.categoryService = new NewCategoryService(categoryDaoJPA, accessControlService, userService);
-        this.topicService = new NewTopicService(topicJPA, accessControlService, userService);
-        this.postService = new NewPostService(postJPA, userService, accessControlService);
+        this.discussionService = new DefaultDiscussionService(discussionJPA, postJPA, accessControlService, userService);
+        this.categoryService = new DefaultCategoryService(categoryDaoJPA, accessControlService, userService);
+        this.topicService = new DefaultTopicService(topicJPA, accessControlService, userService);
+        this.postService = new DefaultPostService(postJPA, userService, accessControlService);
         this.permissionService = new PermissionService(permissionJPA, userService);
         this.postReputationService = new DefaultPostReputationService(userPostReputationJPA, postJPA, userService, accessControlService);
 

@@ -17,8 +17,7 @@ import org.danekja.discussment.article.page.article.ArticlePage;
 import org.danekja.discussment.article.page.dashboard.DashboardPage;
 import org.danekja.discussment.article.ui.wicket.form.LoginForm;
 import org.danekja.discussment.article.ui.wicket.form.RegistrationForm;
-import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 
 import javax.persistence.EntityManager;
@@ -44,7 +43,7 @@ public abstract class BasePage extends WebPage {
 
         add(new Label("title", new Model<String>(getTitle())));
 
-        NewPermissionDao permissionDao = new PermissionDaoJPA(em);
+        PermissionDao permissionDao = new PermissionDaoJPA(em);
         UserService userService = new DefaultUserService(new UserDaoJPA(em));
 
         add(new LoginForm("loginForm", userService, new Model<User>(new User())));

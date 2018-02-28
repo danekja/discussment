@@ -8,14 +8,14 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.NewPermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
 import org.danekja.discussment.core.service.CategoryService;
-import org.danekja.discussment.core.service.imp.NewCategoryService;
+import org.danekja.discussment.core.service.imp.DefaultCategoryService;
 import org.danekja.discussment.forum.WicketApplication;
 import org.danekja.discussment.forum.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.forum.core.domain.User;
@@ -52,11 +52,11 @@ public abstract class BasePage extends WebPage {
         add(new Label("title", new Model<String>(getTitle())));
 
 
-        NewPermissionDao permissionDao = new NewPermissionDaoJPA(em);
+        PermissionDao permissionDao = new PermissionDaoJPA(em);
         UserService userService = new DefaultUserService(new UserDaoJPA(em));
         AccessControlService accessControlService = new PermissionService(permissionDao, userService);
         PermissionManagementService permissionService = new PermissionService(permissionDao, userService);
-        CategoryService categoryService = new NewCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
+        CategoryService categoryService = new DefaultCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
 
         add(new LoginForm("loginForm", userService, new Model<User>(new User())));
         add(new RegistrationForm("registrationForm",

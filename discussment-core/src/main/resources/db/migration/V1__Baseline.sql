@@ -126,42 +126,6 @@ CREATE TABLE `post` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
--- create permission
-CREATE TABLE IF NOT EXISTS `old_permission` (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `createCategory` tinyint(1),
-    `removeCategory` tinyint(1),
-    `createTopic` tinyint(1),
-    `removeTopic` tinyint(1),
-    `createDiscussion` tinyint(1),
-    `removeDiscussion` tinyint(1),
-    `createPost` tinyint(1),
-    `removePost` tinyint(1),
-    `disablePost` tinyint(1),
-    `readPrivateDiscussion` tinyint(1),
-    `userId` varchar(255),
-    PRIMARY KEY(`id`)
-);
-
---
--- Table structure for table `user_discussion`
---
-
-DROP TABLE IF EXISTS `user_discussion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_discussion` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `discussion_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKobtyn6jyl9tb0xb7o33ftr5yn` (`discussion_id`),
-  CONSTRAINT `FKobtyn6jyl9tb0xb7o33ftr5yn` FOREIGN KEY (`discussion_id`) REFERENCES `discussion` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
 -- permission table for various types of permissions
 CREATE TABLE IF NOT EXISTS `permission` (
     `user_id` varchar(255) not null,

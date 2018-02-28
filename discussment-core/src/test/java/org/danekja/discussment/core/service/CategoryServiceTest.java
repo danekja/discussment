@@ -7,7 +7,7 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.mock.User;
-import org.danekja.discussment.core.service.imp.NewCategoryService;
+import org.danekja.discussment.core.service.imp.DefaultCategoryService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class CategoryServiceTest {
         when(accessControlService.canRemoveCategory(any(Category.class))).then(invocationOnMock -> true);
         when(accessControlService.canViewCategories()).then(invocationOnMock -> true);
 
-        categoryService = new NewCategoryService(categoryDao, accessControlService, discussionUserService);
+        categoryService = new DefaultCategoryService(categoryDao, accessControlService, discussionUserService);
     }
 
     @Test

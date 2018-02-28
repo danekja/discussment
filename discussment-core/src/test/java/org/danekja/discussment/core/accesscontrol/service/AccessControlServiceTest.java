@@ -1,6 +1,6 @@
 package org.danekja.discussment.core.accesscontrol.service;
 
-import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.AbstractPermission;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 public class AccessControlServiceTest {
 
     @Mock
-    private NewPermissionDao permissionDao;
+    private PermissionDao permissionDao;
     @Mock
     private DiscussionUserService userService;
 
@@ -227,7 +227,7 @@ public class AccessControlServiceTest {
             if(discusionId != null && discusionId == -11L) {
                 return testPermissions;
             } else {
-                return testPermissions.subList(0,1);
+                return testPermissions.subList(1,2);
             }
         });
 

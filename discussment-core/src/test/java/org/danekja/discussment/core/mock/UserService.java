@@ -1,6 +1,5 @@
 package org.danekja.discussment.core.mock;
 
-import org.danekja.discussment.core.accesscontrol.domain.Permission;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 
 import java.util.List;
@@ -16,10 +15,9 @@ public interface UserService extends DiscussionUserService{
      * Add a new user to the discussion
      *
      * @param entity new user
-     * @param permission permission of a new user
      * @return new user
      */
-    User addUser(User entity, Permission permission);
+    User addUser(User entity);
 
     /**
      * Get an user in the discussion based on his id.

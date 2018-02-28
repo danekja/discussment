@@ -1,7 +1,8 @@
 package org.danekja.discussment.core.accesscontrol.service.impl;
 
-import org.danekja.discussment.core.accesscontrol.dao.NewPermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.domain.*;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlManagerService;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
@@ -15,12 +16,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class PermissionService implements PermissionManagementService, AccessControlService {
+public class PermissionService implements PermissionManagementService, AccessControlService, AccessControlManagerService {
 
-    private NewPermissionDao permissionDao;
+    private PermissionDao permissionDao;
     private DiscussionUserService userService;
 
-    public PermissionService(NewPermissionDao permissionDao, DiscussionUserService userService) {
+    public PermissionService(PermissionDao permissionDao, DiscussionUserService userService) {
         this.permissionDao = permissionDao;
         this.userService = userService;
     }
@@ -66,111 +67,180 @@ public class PermissionService implements PermissionManagementService, AccessCon
     }
 
     public boolean canViewPost(Post post) {
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-
-        if (user == null) {
-            return false;
-        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
-            return true;
-        }
-
-        List<PostPermission> permissions = getPostPermissions(user, post.getDiscussion());
-        return checkPermissions(Action.VIEW, permissions);
+        return canViewPost(userService.getCurrentlyLoggedUser(), post);
     }
 
     public boolean canAddPost(Discussion discussion) {
-        List<PostPermission> permissions = getPostPermissions(userService.getCurrentlyLoggedUser(), discussion);
-        return checkPermissions(Action.CREATE, permissions);
+        return canAddPost(userService.getCurrentlyLoggedUser(), discussion);
     }
 
     public boolean canEditPost(Post post) {
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-
-        if (user == null) {
-            return false;
-        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
-            return true;
-        }
-
-        List<PostPermission> permissions = getPostPermissions(user, post.getDiscussion());
-        return checkPermissions(Action.EDIT, permissions);
+        return canEditPost(userService.getCurrentlyLoggedUser(), post);
     }
 
     public boolean canRemovePost(Post post) {
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        return canRemovePost(userService.getCurrentlyLoggedUser(), post);
+    }
 
+    public boolean canViewPosts(Discussion discussion) {
+        return canViewPosts(userService.getCurrentlyLoggedUser(), discussion);
+    }
+
+    public boolean canAddDiscussion(Topic topic) {
+        return canAddDiscussion(userService.getCurrentlyLoggedUser(), topic);
+    }
+
+    public boolean canEditDiscussion(Discussion discussion) {
+        return canEditDiscussion(userService.getCurrentlyLoggedUser(), discussion);
+    }
+
+    public boolean canRemoveDiscussion(Discussion discussion) {
+        return canRemoveDiscussion(userService.getCurrentlyLoggedUser(), discussion);
+    }
+
+    public boolean canViewDiscussions(Topic topic) {
+        return canViewDiscussions(userService.getCurrentlyLoggedUser(), topic);
+    }
+
+    public boolean canAddTopic(Category category) {
+        return canAddTopic(userService.getCurrentlyLoggedUser(), category);
+    }
+
+    public boolean canEditTopic(Topic topic) {
+        return canEditTopic(userService.getCurrentlyLoggedUser(), topic);
+    }
+
+    public boolean canRemoveTopic(Topic topic) {
+        return canRemoveTopic(userService.getCurrentlyLoggedUser(), topic);
+    }
+
+    public boolean canViewTopics(Category category) {
+        return canViewTopics(userService.getCurrentlyLoggedUser(), category);
+    }
+
+    public boolean canAddCategory() {
+        return canAddCategory(userService.getCurrentlyLoggedUser());
+    }
+
+    public boolean canEditCategory(Category category) {
+        return canEditCategory(userService.getCurrentlyLoggedUser(), category);
+    }
+
+    public boolean canRemoveCategory(Category category) {
+        return canRemoveCategory(userService.getCurrentlyLoggedUser(), category);
+    }
+
+    public boolean canViewCategories() {
+        return canViewCategories(userService.getCurrentlyLoggedUser());
+    }
+
+    public boolean canAddPost(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
+        return checkPermissions(Action.CREATE, permissions);
+    }
+
+    public boolean canEditPost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
         } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
             return true;
+        } else {
+            return canEditPosts(user, post.getDiscussion());
         }
-
-        List<PostPermission> permissions = getPostPermissions(user, post.getDiscussion());
-        return checkPermissions(Action.DELETE, permissions);
     }
 
-    public boolean canViewPosts(Discussion discussion) {
-        List<PostPermission> permissions = getPostPermissions(userService.getCurrentlyLoggedUser(), discussion);
-        return checkPermissions(Action.VIEW, permissions);
-    }
-
-    public boolean canAddDiscussion(Topic topic) {
-        List<DiscussionPermission> permissions = getDiscussionPermissions(userService.getCurrentlyLoggedUser(), topic);
-        return checkPermissions(Action.CREATE, permissions);
-    }
-
-    public boolean canEditDiscussion(Discussion discussion) {
-        List<DiscussionPermission> permissions = getDiscussionPermissions(userService.getCurrentlyLoggedUser(), discussion.getTopic());
+    public boolean canEditPosts(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.EDIT, permissions);
     }
 
-    public boolean canRemoveDiscussion(Discussion discussion) {
-        List<DiscussionPermission> permissions = getDiscussionPermissions(userService.getCurrentlyLoggedUser(), discussion.getTopic());
+    public boolean canRemovePost(IDiscussionUser user, Post post){
+        if (user == null) {
+            return false;
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+            return true;
+        } else {
+            return canRemovePosts(user, post.getDiscussion());
+        }
+    }
+
+    public boolean canRemovePosts(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.DELETE, permissions);
     }
 
-    public boolean canViewDiscussions(Topic topic) {
-        List<DiscussionPermission> permissions = getDiscussionPermissions(userService.getCurrentlyLoggedUser(), topic);
+    public boolean canViewPost(IDiscussionUser user, Post post) {
+        if (user == null) {
+            return false;
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+            return true;
+        } else {
+            return canViewPosts(user, post.getDiscussion());
+        }
+    }
+
+    public boolean canViewPosts(IDiscussionUser user, Discussion discussion) {
+        List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.VIEW, permissions);
     }
 
-    public boolean canAddTopic(Category category) {
-        List<TopicPermission> permissions = getTopicPermissions(userService.getCurrentlyLoggedUser(), category);
+    public boolean canAddDiscussion(IDiscussionUser user, Topic topic) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, topic);
         return checkPermissions(Action.CREATE, permissions);
     }
 
-    public boolean canEditTopic(Topic topic) {
-        List<TopicPermission> permissions = getTopicPermissions(userService.getCurrentlyLoggedUser(), topic.getCategory());
+    public boolean canEditDiscussion(IDiscussionUser user, Discussion discussion) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, discussion.getTopic());
         return checkPermissions(Action.EDIT, permissions);
     }
 
-    public boolean canRemoveTopic(Topic topic) {
-        List<TopicPermission> permissions = getTopicPermissions(userService.getCurrentlyLoggedUser(), topic.getCategory());
+    public boolean canRemoveDiscussion(IDiscussionUser user, Discussion discussion) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, discussion.getTopic());
         return checkPermissions(Action.DELETE, permissions);
     }
 
-    public boolean canViewTopics(Category category) {
-        List<TopicPermission> permissions = getTopicPermissions(userService.getCurrentlyLoggedUser(), category);
+    public boolean canViewDiscussions(IDiscussionUser user, Topic topic) {
+        List<DiscussionPermission> permissions = getDiscussionPermissions(user, topic);
         return checkPermissions(Action.VIEW, permissions);
     }
 
-    public boolean canAddCategory() {
-        List<CategoryPermission> permissions = getCategoryPermissions(userService.getCurrentlyLoggedUser());
+    public boolean canAddTopic(IDiscussionUser user, Category category) {
+        List<TopicPermission> permissions = getTopicPermissions(user, category);
         return checkPermissions(Action.CREATE, permissions);
     }
 
-    public boolean canEditCategory(Category category) {
-        List<CategoryPermission> permissions = getCategoryPermissions(userService.getCurrentlyLoggedUser());
+    public boolean canEditTopic(IDiscussionUser user, Topic topic) {
+        List<TopicPermission> permissions = getTopicPermissions(user, topic.getCategory());
         return checkPermissions(Action.EDIT, permissions);
     }
 
-    public boolean canRemoveCategory(Category category) {
-        List<CategoryPermission> permissions = getCategoryPermissions(userService.getCurrentlyLoggedUser());
+    public boolean canRemoveTopic(IDiscussionUser user, Topic topic) {
+        List<TopicPermission> permissions = getTopicPermissions(user, topic.getCategory());
         return checkPermissions(Action.DELETE, permissions);
     }
 
-    public boolean canViewCategories() {
-        List<CategoryPermission> permissions = getCategoryPermissions(userService.getCurrentlyLoggedUser());
+    public boolean canViewTopics(IDiscussionUser user, Category category) {
+        List<TopicPermission> permissions = getTopicPermissions(user, category);
+        return checkPermissions(Action.VIEW, permissions);
+    }
+
+    public boolean canAddCategory(IDiscussionUser user) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
+        return checkPermissions(Action.CREATE, permissions);
+    }
+
+    public boolean canEditCategory(IDiscussionUser user, Category category) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
+        return checkPermissions(Action.EDIT, permissions);
+    }
+
+    public boolean canRemoveCategory(IDiscussionUser user, Category category) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
+        return checkPermissions(Action.DELETE, permissions);
+    }
+
+    public boolean canViewCategories(IDiscussionUser user) {
+        List<CategoryPermission> permissions = getCategoryPermissions(user);
         return checkPermissions(Action.VIEW, permissions);
     }
 
