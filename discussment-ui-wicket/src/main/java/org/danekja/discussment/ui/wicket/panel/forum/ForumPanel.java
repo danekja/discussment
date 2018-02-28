@@ -3,14 +3,27 @@ package org.danekja.discussment.ui.wicket.panel.forum;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.domain.*;
-import org.danekja.discussment.core.service.*;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.form.*;
 import org.danekja.discussment.ui.wicket.list.content.ContentListPanel;
 import org.danekja.discussment.ui.wicket.list.discussion.DiscussionListPanel;
 import org.danekja.discussment.ui.wicket.model.CategoryWicketModel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
+import org.danekja.discussment.ui.wicket.panel.accessDenied.AccessDeniedPanel;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
+import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
+import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 import java.util.HashMap;
 
@@ -28,6 +41,9 @@ public class ForumPanel extends Panel {
     private PostService postService;
     private TopicService topicService;
     private DiscussionService discussionService;
+    private DiscussionUserService userService;
+    private AccessControlService accessControlService;
+    private PermissionManagementService permissionService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
@@ -43,9 +59,16 @@ public class ForumPanel extends Panel {
      * @param topicService instance of the topic service
      * @param categoryService instance of the category service
      * @param postService instance of the post service
-     * @param userService instance of the user service
      */
-    public ForumPanel(String id, IModel<HashMap<String, Integer>> parametersModel, DiscussionService discussionService, TopicService topicService, CategoryService categoryService, PostService postService, UserService userService) {
+    public ForumPanel(String id,
+                      IModel<HashMap<String, Integer>> parametersModel,
+                      DiscussionService discussionService,
+                      TopicService topicService,
+                      CategoryService categoryService,
+                      PostService postService,
+                      DiscussionUserService userService,
+                      AccessControlService accessControlService,
+                      PermissionManagementService permissionService) {
         super(id);
 
         this.parametersModel = parametersModel;
@@ -54,6 +77,9 @@ public class ForumPanel extends Panel {
         this.postService = postService;
         this.topicService = topicService;
         this.discussionService = discussionService;
+        this.accessControlService = accessControlService;
+        this.userService = userService;
+        this.permissionService = permissionService;
 
         this.categoryModel = new Model<Category>();
         this.discussionModel = new Model<Discussion>();
@@ -66,39 +92,47 @@ public class ForumPanel extends Panel {
         super.onInitialize();
 
         add(new CategoryForm("categoryForm", categoryService, new Model<Category>(new Category())));
-        add(new ReplyForm("replyForm", postService, postModel, new Model<Post>(new Post())));
+        add(new ReplyForm("replyForm", postModel, new Model<Post>(new Post()), postService));
         add(new TopicForm("topicForm", topicService, categoryModel, new Model<Topic>(new Topic())));
-        add(new DiscussionForm("discussionForm", discussionService, topicModel, new Model<Discussion>(new Discussion())));
-        add(new PasswordForm("passwordForm", discussionService, discussionModel, new Model<Discussion>(new Discussion())));
+        add(new DiscussionForm("discussionForm",
+                topicModel, new Model<Discussion>(new Discussion()),
+                userService, accessControlService, permissionService, discussionService));
+        add(new PasswordForm("passwordForm",
+                discussionModel, new Model<Discussion>(new Discussion()),
+                userService, accessControlService, permissionService, discussionService));
 
-
-        if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
-            add(new ContentListPanel("content",
-                new CategoryWicketModel(categoryService),
-                new TopicWicketModel(topicService), categoryService, topicService, categoryModel)
-            );
-
-        } else if (parametersModel.getObject().get("topicId") != -1) {
-            Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
-            topicModel.setObject(topic);
-
-            add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel));
+        if(userService.getCurrentlyLoggedUser() == null) {
+            add(new NotLoggedInPanel("content"));
         } else {
-
-            Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
-
-            User user = (User) getSession().getAttribute("user");
-
-            if ((user != null && user.isAccessToDiscussion(discussion)) ||
-               ((Boolean) getSession().getAttribute("access") && getSession().getAttribute("discussionId").equals(discussion.getId()))) {
-
-                add(new DiscussionPanel("content", new Model<Discussion>(discussion), postService, postModel));
+            if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
+                add(new ContentListPanel("content",
+                        new CategoryWicketModel(categoryService),
+                        new TopicWicketModel(topicService),
+                        categoryModel, categoryService, topicService, accessControlService)
+                );
+            } else if (parametersModel.getObject().get("topicId") != -1) {
+                try{
+                    Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
+                    topicModel.setObject(topic);
+                    add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, accessControlService));
+                } catch (AccessDeniedException e) {
+                    add(new AccessDeniedPanel("content"));
+                }
             } else {
-                setResponsePage(getPage().getClass());
+                try {
+                    Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
+                    Long dId = SessionUtil.getDiscussionId();
+                    Boolean access = SessionUtil.getAccess();
+                    if(accessControlService.canViewPosts(discussion) ||
+                            access != null && access.booleanValue() && dId != null && dId.equals(discussion.getId())) {
+                        add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel, postService, userService, accessControlService));
+                    } else {
+                        setResponsePage(getPage().getClass());
+                    }
+                } catch (AccessDeniedException e) {
+                    add(new AccessDeniedPanel("content"));
+                }
             }
         }
-
     }
-
-
 }

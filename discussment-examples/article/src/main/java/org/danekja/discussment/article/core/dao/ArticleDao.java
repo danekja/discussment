@@ -1,7 +1,7 @@
 package org.danekja.discussment.article.core.dao;
 
-import org.danekja.discussment.core.dao.GenericDao;
 import org.danekja.discussment.article.core.domain.Article;
+import org.danekja.discussment.core.dao.GenericDao;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Jiri Kryda
  */
-public interface ArticleDao extends GenericDao<Article> {
+public interface ArticleDao extends GenericDao<Long, Article> {
 
     /**
      * Get all articles in a database.

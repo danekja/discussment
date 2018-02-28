@@ -10,9 +10,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.PostService;
 
 import java.util.List;
@@ -27,6 +32,8 @@ public class PostListPanel extends Panel {
     private IModel<Post> postModel;
     private PostService postService;
     private IModel<List<Post>> postListModel;
+    private AccessControlService accessControlService;
+    private DiscussionUserService userService;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -36,12 +43,20 @@ public class PostListPanel extends Panel {
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
      */
-    public PostListPanel(String id, IModel<List<Post>> postListModel, IModel<Post> postModel, PostService postService) {
+    public PostListPanel(String id,
+                         IModel<List<Post>> postListModel,
+                         IModel<Post> postModel,
+                         PostService postService,
+                         DiscussionUserService userService,
+                         AccessControlService accessControlService) {
         super(id);
 
         this.postModel = postModel;
         this.postService = postService;
         this.postListModel = postListModel;
+
+        this.accessControlService = accessControlService;
+        this.userService = userService;
     }
 
     @Override
@@ -50,7 +65,6 @@ public class PostListPanel extends Panel {
 
         add(new ListView<Post>("postListView", postListModel) {
             protected void populateItem(final ListItem<Post> listItem) {
-
 
                 Label text = new Label("text", new PropertyModel<String>(listItem.getModel(), "text")) {
                     @Override
@@ -70,7 +84,18 @@ public class PostListPanel extends Panel {
                 };
                 listItem.add(dis);
 
-                listItem.add(new Label("username", new PropertyModel<String>(listItem.getModel(), "user.username")));
+                listItem.add(new Label("username", new LoadableDetachableModel<String>() {
+                    protected String load() {
+                        try {
+                            return postService.getPostAuthor(listItem.getModel().getObject()).getDisplayName();
+                        } catch (DiscussionUserNotFoundException e) {
+                            return "Error: author not found";
+                        } catch (AccessDeniedException e) {
+                            return "Error: access denied";
+                        }
+                    }
+                }));
+
                 listItem.add(new Label("created", new PropertyModel<String>(listItem.getModel(), "created")));
 
 
@@ -79,9 +104,9 @@ public class PostListPanel extends Panel {
                 listItem.add(createDisableLink(listItem.getModel()));
 
                 listItem.add(new AttributeModifier("style", "padding-left: " + listItem.getModelObject().getLevel() * 30 + "px"));
-
             }
         });
+
     }
 
     private AjaxLink createReplyAjaxLink(final IModel<Post> pm) {
@@ -95,8 +120,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreatePost() && !pm.getObject().isDisabled());
+                this.setVisible(accessControlService.canAddPost(pm.getObject().getDiscussion()));
             }
         };
     }
@@ -105,7 +129,11 @@ public class PostListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-                postService.removePost(pm.getObject());
+                try {
+                    postService.removePost(pm.getObject());
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
                 setResponsePage(getWebPage().getClass(), getWebPage().getPageParameters());
             }
 
@@ -113,8 +141,8 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isRemovePost());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                this.setVisible(user != null && accessControlService.canRemovePost(pm.getObject()));
             }
         };
     }
@@ -125,9 +153,17 @@ public class PostListPanel extends Panel {
             @Override
             public void onClick() {
                 if (pm.getObject().isDisabled()) {
-                    postService.enablePost(pm.getObject());
+                    try{
+                        postService.enablePost(pm.getObject());
+                    } catch (AccessDeniedException e) {
+                        // todo: not yet implemented
+                    }
                 } else {
-                    postService.disablePost(pm.getObject());
+                    try {
+                        postService.disablePost(pm.getObject());
+                    } catch (AccessDeniedException e) {
+                        // todo: not yet implemented
+                    }
                 }
             }
 
@@ -135,8 +171,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isDisablePost());
+                this.setVisible(accessControlService.canEditPost(pm.getObject()));
             }
         };
 

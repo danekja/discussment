@@ -1,6 +1,6 @@
-package org.danekja.discussment.core.dao;
+package org.danekja.discussment.core.mock;
 
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.dao.GenericDao;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  *
  * The interface extends GenericDao on methods for working with users in a database
  */
-public interface UserDao extends GenericDao<User> {
+public interface UserDao extends GenericDao<Long, User> {
 
     /**
      * Get an user in a database based on his username.

@@ -2,11 +2,12 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
+import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 /**
  * Created by Martin Bláha on 21.01.17.
@@ -28,7 +29,7 @@ public class PostForm extends Form {
      * @param postModel model contains the post for setting a form
      */
     public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel) {
-        this(id, null, discussionModel, postModel);
+        this(id, discussionModel, postModel, null);
     }
 
     /**
@@ -39,7 +40,7 @@ public class PostForm extends Form {
      * @param discussionModel model contains the discussion for adding a new post
      * @param postModel model contains the post for setting the form
      */
-    public PostForm(String id, PostService postService, IModel<Discussion> discussionModel, IModel<Post> postModel) {
+    public PostForm(String id, IModel<Discussion> discussionModel, IModel<Post> postModel, PostService postService) {
         super(id);
 
         this.postService = postService;
@@ -62,16 +63,13 @@ public class PostForm extends Form {
     protected void onSubmit() {
 
         if (postService != null) {
-            Post post = postModel.getObject();
-            post.setUser((User) getSession().getAttribute("user"));
-
-            postService.sendPost(
-                    discussionModel.getObject(),
-                    post
-            );
-
+            postModel.getObject().setUserId(SessionUtil.getUser().getDiscussionUserId());
+            try {
+                postService.sendPost(discussionModel.getObject(), postModel.getObject());
+            } catch (AccessDeniedException e) {
+                // todo: not yet implemented
+            }
             postModel.setObject(new Post());
-
             setResponsePage(getPage());
         }
     }

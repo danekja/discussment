@@ -4,7 +4,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.article.core.domain.User;
 
 /**
  * Created by Martin Bláha on 29.05.17.

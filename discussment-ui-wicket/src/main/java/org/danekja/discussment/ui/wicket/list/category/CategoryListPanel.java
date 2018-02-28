@@ -11,8 +11,9 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
@@ -33,6 +34,7 @@ public class CategoryListPanel extends Panel {
     private TopicService topicService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>> categoryListModel;
+    private AccessControlService accessControlService;
 
     /**
      * Constructor for creating a instance of the panel contains categories with the topics
@@ -43,13 +45,14 @@ public class CategoryListPanel extends Panel {
      * @param categoryService instance of the category service
      * @param topicService instance of the topic service
      */
-    public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService) {
+    public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
         this.categoryListModel = categoryListModel;
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class CategoryListPanel extends Panel {
     }
 
     private TopicListPanel createTopicListViewPanel(IModel<Category> cm) {
-        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService);
+        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService, accessControlService);
         topicListViewPanel.setOutputMarkupId(true);
         topicListViewPanel.setMarkupId("id" + generateId);
 
@@ -100,8 +103,7 @@ public class CategoryListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreateTopic());
+                this.setVisible(accessControlService.canAddTopic(cm.getObject()));
             }
         };
     }
@@ -110,7 +112,11 @@ public class CategoryListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-                categoryService.removeCategory(cm.getObject());
+                try{
+                    categoryService.removeCategory(cm.getObject());
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
                 setResponsePage(getWebPage().getClass());
             }
 
@@ -118,8 +124,7 @@ public class CategoryListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isRemoveCategory());
+                this.setVisible(accessControlService.canRemoveCategory(cm.getObject()));
             }
         };
     }

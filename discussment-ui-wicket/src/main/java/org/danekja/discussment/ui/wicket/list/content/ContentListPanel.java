@@ -4,13 +4,16 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
+import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import java.util.List;
 
@@ -22,8 +25,11 @@ import java.util.List;
  */
 public class ContentListPanel extends Panel {
 
+    private final long CATEGORY_ID = 1;
+
     private TopicService topicService;
     private CategoryService categoryService;
+    private AccessControlService accessControlService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>>  categoryListModel;
     private IModel<List<Topic>>  topicWicketModel;
@@ -38,7 +44,7 @@ public class ContentListPanel extends Panel {
      * @param topicService instance of the topic service
      * @param categoryModel model for setting the selected category
      */
-    public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, CategoryService categoryService, TopicService topicService, IModel<Category> categoryModel) {
+    public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
@@ -46,6 +52,7 @@ public class ContentListPanel extends Panel {
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
         this.topicWicketModel = topicWicketModel;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -55,8 +62,16 @@ public class ContentListPanel extends Panel {
         add(createCategoryAjaxLink());
         add(createTopicAjaxLink());
 
-        add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService));
-        add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService));
+        try {
+            add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, accessControlService));
+        } catch (NullPointerException e) {
+            add(new NotLoggedInPanel("categoryPabel"));
+        }
+        try {
+            add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, accessControlService));
+        } catch (NullPointerException e) {
+            add(new NotLoggedInPanel("withoutTopicListPanel"));
+        }
     }
 
     private AjaxLink createCategoryAjaxLink() {
@@ -67,8 +82,8 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreateCategory());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                this.setVisible(user != null && accessControlService.canAddCategory());
             }
         };
     }
@@ -76,15 +91,24 @@ public class ContentListPanel extends Panel {
     private AjaxLink createTopicAjaxLink() {
         return new AjaxLink("createTopic") {
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                categoryModel.setObject(categoryService.getCategoryById(Category.WITHOUT_CATEGORY));
+                try {
+                    categoryModel.setObject(categoryService.getCategoryById(Category.WITHOUT_CATEGORY));
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
             }
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isCreateTopic());
+                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                try {
+                    this.setVisible(user != null && accessControlService.canAddTopic(categoryService.getCategoryById(CATEGORY_ID)));
+                } catch (AccessDeniedException e) {
+                    e.printStackTrace();
+                    this.setVisible(false);
+                }
             }
         };
     }

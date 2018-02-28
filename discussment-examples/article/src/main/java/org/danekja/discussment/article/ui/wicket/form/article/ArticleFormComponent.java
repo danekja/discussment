@@ -1,11 +1,11 @@
 package org.danekja.discussment.article.ui.wicket.form.article;
 
-import org.danekja.discussment.article.core.domain.Article;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.article.core.domain.Article;
 
 /**
  * The class contains input fields for getting a name and text of the article.

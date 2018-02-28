@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 19.01.17.
  */
-public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements DiscussionDao {
+public class DiscussionDaoJPA extends GenericDaoJPA<Long, Discussion> implements DiscussionDao {
 
     public DiscussionDaoJPA(EntityManager em) {
         super(Discussion.class, em);
@@ -22,5 +22,7 @@ public class DiscussionDaoJPA extends GenericDaoJPA<Discussion> implements Discu
         q.setParameter("topicId", topic.getId());
         return q.getResultList();
     }
+
+
 }
 

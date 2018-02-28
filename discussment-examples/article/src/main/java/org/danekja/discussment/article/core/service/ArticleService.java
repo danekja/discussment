@@ -1,6 +1,8 @@
 package org.danekja.discussment.article.core.service;
 
 import org.danekja.discussment.article.core.domain.Article;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+
 import java.util.List;
 
 /**
@@ -41,5 +43,5 @@ public interface ArticleService {
      *
      * @param entity article to remove
      */
-    void removeArticle(Article entity);
+    void removeArticle(Article entity) throws AccessDeniedException;
 }

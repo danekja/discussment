@@ -1,8 +1,6 @@
 package org.danekja.discussment.core.domain;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -10,25 +8,30 @@ import java.io.Serializable;
  *
  * The class is a base entity for domain objects.
  */
-@MappedSuperclass
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity<PK extends Serializable> implements Serializable {
 
     /**
      * Id of a object.
      */
-    @Id
-    @GeneratedValue
-    private Long id;
+    private PK id;
 
+    protected BaseEntity(PK id) {
+        this.id = id;
+    }
+
+    protected BaseEntity() {
+    }
+
+    @Transient
     public boolean isNew() {
         return id == null;
     }
 
-    public Long getId() {
+    public PK getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(PK id) {
         this.id = id;
     }
 

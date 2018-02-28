@@ -1,8 +1,8 @@
 package org.danekja.discussment.article.core.dao.jpa;
 
-import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 import org.danekja.discussment.article.core.dao.ArticleDao;
 import org.danekja.discussment.article.core.domain.Article;
+import org.danekja.discussment.core.dao.jpa.GenericDaoJPA;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Jiri Kryda
  */
-public class ArticleDaoJPA extends GenericDaoJPA<Article> implements ArticleDao{
+public class ArticleDaoJPA extends GenericDaoJPA<Long, Article> implements ArticleDao{
 
     /**
      * @param em entity manager to be used by this dao

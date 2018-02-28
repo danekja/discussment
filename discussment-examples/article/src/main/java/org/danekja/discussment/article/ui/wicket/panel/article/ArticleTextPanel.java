@@ -5,9 +5,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.article.core.domain.Article;
+import org.danekja.discussment.article.core.service.UserService;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.service.PostReputationService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
 
 /**
@@ -21,6 +24,9 @@ public class ArticleTextPanel extends Panel {
 
     private IModel<Article> articleModel;
     private PostService postService;
+    private UserService userService;
+    private AccessControlService accessControlService;
+    private PostReputationService postReputationService;
 
 
     /**
@@ -30,11 +36,17 @@ public class ArticleTextPanel extends Panel {
      * @param article article in the panel
      * @param postService instance of the post service
      */
-    public ArticleTextPanel(String id, IModel<Article> article, PostService postService){
+    public ArticleTextPanel(String id,
+                            IModel<Article> article,
+                            PostService postService,
+                            UserService userService,
+                            AccessControlService accessControlService){
         super(id);
 
         this.articleModel = article;
         this.postService = postService;
+        this.userService = userService;
+        this.accessControlService = accessControlService;
     }
 
     @Override
@@ -47,6 +59,9 @@ public class ArticleTextPanel extends Panel {
         Label articleText = new Label ("articleText", new PropertyModel<String>(articleModel, "articleText"));
         add(articleText);
 
-        add(new DiscussionPanel("discussionPanel", new PropertyModel(articleModel, "discussion"), postService, new Model<Post>()));
+        add(new DiscussionPanel("discussionPanel",
+                new PropertyModel(articleModel, "discussion"),
+                new Model<Post>(),
+                postService, userService, accessControlService));
     }
 }

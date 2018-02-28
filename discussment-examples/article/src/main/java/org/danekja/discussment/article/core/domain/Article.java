@@ -1,12 +1,12 @@
 package org.danekja.discussment.article.core.domain;
 
-import org.danekja.discussment.core.domain.BaseEntity;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.LongEntity;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ import static org.danekja.discussment.article.core.domain.Article.GET_ARTICLES;
         @NamedQuery(name = GET_ARTICLES,
                 query = "SELECT a FROM Article a")
 })
-public class Article extends BaseEntity implements Serializable{
+public class Article extends LongEntity implements Serializable{
 
     /**
      * The constant contains name of query for getting articles
@@ -44,7 +44,6 @@ public class Article extends BaseEntity implements Serializable{
     /**
      * Discussion of the article. If the article is removed, the discussion is removed too.
      */
-    @OneToOne(orphanRemoval = true)
     private Discussion discussion;
 
     public Article() {}
@@ -62,6 +61,7 @@ public class Article extends BaseEntity implements Serializable{
 
     public void setArticleText(String articleText) { this.articleText = articleText; }
 
+    @OneToOne(orphanRemoval = true)
     public Discussion getDiscussion() {
         return discussion;
     }

@@ -1,5 +1,7 @@
 package org.danekja.discussment.core.domain;
 
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -17,9 +19,14 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_BY_DISCUSSION,
-                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId")
+                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0")
 })
-public class Post extends BaseEntity implements Serializable {
+public class Post extends LongEntity implements Serializable {
+
+    /**
+     * String which will separate particular ids in chainId.
+     */
+    public static final String CHAIN_ID_SEPARATOR = ":";
 
     /**
      * The constant contains name of query for getting posts by discussion
@@ -29,8 +36,7 @@ public class Post extends BaseEntity implements Serializable {
     /**
      * The user which the post created
      */
-    @ManyToOne
-    private User user;
+    private String userId;
 
     /**
      * Text of the post
@@ -50,25 +56,27 @@ public class Post extends BaseEntity implements Serializable {
     /**
      * The time when the post was created.
      */
-    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
     /**
      * The Discussion where the post is. If the post is removed, the discussion still exists
      */
-    @ManyToOne
     private Discussion discussion;
 
     /**
      * The parent post, if the parent post does not exist, is null
      */
-    @ManyToOne
     private Post post;
 
     /**
-     * List constant all replies. If the post is removed, tje replies are removed too.
+     * Id of the reply chain. ChainId of each consists of chainId of parent post and id of this reply.
+     * This way every chain will have it's own prefix and every chainId will be unique.
      */
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private String chainId;
+
+    /**
+     * List contains all replies. If the post is removed, the replies are removed too.
+     */
     private List<Post> replies = new ArrayList<Post>();
 
     @PrePersist
@@ -76,17 +84,22 @@ public class Post extends BaseEntity implements Serializable {
         created = new Date();
     }
 
-    public Post() {}
+    public Post() {
+        chainId = "";
+        level = 0;
+    }
 
     public Post(String text) {
+        super();
         this.text = text;
     }
 
-    public Post(User user, String text) {
-        this.user = user;
+    public Post(IDiscussionUser user, String text) {
+        this.userId = user.getDiscussionUserId();
         this.text = text;
     }
 
+    @Column(name = "level")
     public int getLevel() {
         return level;
     }
@@ -95,6 +108,8 @@ public class Post extends BaseEntity implements Serializable {
         this.level = level;
     }
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created")
     public Date getCreated() {
         return created;
     }
@@ -103,12 +118,14 @@ public class Post extends BaseEntity implements Serializable {
         this.created = created;
     }
 
+    @Transient
     public String getCreatedFormat() {
         SimpleDateFormat formatData = new SimpleDateFormat("d.M.yyyy H:mm:ss");
 
         return formatData.format(created);
     }
 
+    @Column(name = "is_disabled")
     public boolean isDisabled() {
         return disabled;
     }
@@ -121,6 +138,7 @@ public class Post extends BaseEntity implements Serializable {
         this.replies = replies;
     }
 
+    @ManyToOne
     public Discussion getDiscussion() {
         return discussion;
     }
@@ -129,10 +147,18 @@ public class Post extends BaseEntity implements Serializable {
         this.discussion = discussion;
     }
 
-    public User getUser() {
-        return user;
+
+    @Column(name = "user_id")
+    public String getUserId() {
+        return userId;
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "parent_post_id")
     public Post getPost() {
         return post;
     }
@@ -141,10 +167,7 @@ public class Post extends BaseEntity implements Serializable {
         this.post = post;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
+    @Column(name = "text")
     public String getText() {
         return text;
     }
@@ -153,6 +176,7 @@ public class Post extends BaseEntity implements Serializable {
         this.text = text;
     }
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     public List<Post> getReplies() {
         return replies;
     }
@@ -164,11 +188,22 @@ public class Post extends BaseEntity implements Serializable {
         }
     }
 
+    @Column(name = "chain_id", unique = true, nullable = false)
+    public String getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    @Transient
     public int getNumberOfReplies() {
 
         return getNumberOfReplies(this, 0);
     }
 
+    @Transient
     private int getNumberOfReplies(Post postModel, int count) {
 
         count++;
@@ -179,6 +214,7 @@ public class Post extends BaseEntity implements Serializable {
         return count;
     }
 
+    @Transient
     public Post getLastPost() {
         return getLastPost(this);
     }
@@ -200,6 +236,21 @@ public class Post extends BaseEntity implements Serializable {
             return lastPost;
         }
 
+    }
+
+    /**
+     * Apeends separator+provided id to the current chain id.
+     * If the current chain id is null, it will be set to id.
+     * @param id Id to be appended to chainId.
+     */
+    public void appendToChainId(String id) {
+        if(getChainId() == null) {
+            setChainId(id);
+        } else if(getChainId().length()<1){
+            setChainId(getChainId() + Post.CHAIN_ID_SEPARATOR + id);
+        } else {
+            setChainId(getChainId().substring(0,getChainId().length()-1) + Post.CHAIN_ID_SEPARATOR + id);
+        }
     }
 
 

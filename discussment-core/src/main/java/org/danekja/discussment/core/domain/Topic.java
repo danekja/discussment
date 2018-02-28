@@ -17,9 +17,9 @@ import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_WITHOUT_CATEG
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_TOPICS_BY_CATEGORY_ID, query = "SELECT t FROM Topic t WHERE t.category.id = :categoryId"),
-        @NamedQuery(name = GET_TOPICS_WITHOUT_CATEGORY, query = "SELECT t FROM Topic t WHERE t.category.id = 0")
+        @NamedQuery(name = GET_TOPICS_WITHOUT_CATEGORY, query = "SELECT t FROM Topic t WHERE t.category.id is null")
 })
-public class Topic extends BaseEntity implements Serializable {
+public class Topic extends LongEntity implements Serializable {
 
     /**
      * The constant contains name of query for getting topics by category id
@@ -44,20 +44,24 @@ public class Topic extends BaseEntity implements Serializable {
     /**
      * Category in which the topic is
      */
-    @ManyToOne(cascade = CascadeType.MERGE)
     private Category category;
 
 
     /**
      * List contains discussion in the topic. If the topic is removed, the discussions are removed too.
      */
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.REMOVE)
     private List<Discussion> discussions = new ArrayList<Discussion>();
 
     public Topic() {
     }
 
     public Topic(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Topic(Long id, String name, String description) {
+        super(id);
         this.name = name;
         this.description = description;
     }
@@ -78,6 +82,7 @@ public class Topic extends BaseEntity implements Serializable {
         this.description = description;
     }
 
+    @ManyToOne(cascade = CascadeType.MERGE)
     public Category getCategory() {
         return category;
     }
@@ -86,6 +91,7 @@ public class Topic extends BaseEntity implements Serializable {
         this.category = category;
     }
 
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.REMOVE)
     public List<Discussion> getDiscussions() {
         return discussions;
     }
@@ -94,10 +100,12 @@ public class Topic extends BaseEntity implements Serializable {
         this.discussions = discussions;
     }
 
+    @Transient
     public int getNumberOfDiscussions() {
         return discussions.size();
     }
 
+    @Transient
     public int getNumberOfPosts() {
         int numberOfPosts = 0;
 

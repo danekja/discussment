@@ -1,149 +1,140 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.dao.jpa.*;
-import org.danekja.discussment.core.domain.*;
-import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.dao.TopicDao;
+import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.mock.User;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
-/**
- * Created by Martin Bláha on 20.02.17.
- */
+@RunWith(MockitoJUnitRunner.class)
+
 public class TopicServiceTest {
-    private EntityManager em;
+
+    private static User testUser;
+
+    @Mock
+    private TopicDao topicDao;
+
+    @Mock
+    private DiscussionUserService discussionUserService;
+
+    @Mock
+    private AccessControlService accessControlService;
 
     private TopicService topicService;
-    private CategoryService categoryService;
-    private UserService userService;
-    private DiscussionService discussionService;
-    private PostService postService;
 
-    private UserDaoJPA userDao;
-
-    private Category category;
+    @BeforeClass
+    public static void setUpGlobal() {
+        testUser = new User(-100L, "PMS Test User");
+    }
 
     @Before
-    public void setUp() throws Exception {
-        topicService = new DefaultTopicService(new TopicDaoJPA(em), new CategoryDaoJPA(em));
-        categoryService = new DefaultCategoryService(new CategoryDaoJPA(em));
-        this.userDao = new UserDaoJPA(em);
-        userService = new DefaultUserService(userDao, new PermissionDaoJPA(em));
+    public void setUp() throws DiscussionUserNotFoundException {
+        MockitoAnnotations.initMocks(TopicServiceTest.class);
 
-        discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em));
-        postService = new DefaultPostService(new PostDaoJPA(em));
+        when(accessControlService.canAddTopic(any(Category.class))).then(invocationOnMock -> true);
+        when(accessControlService.canViewTopics(any(Category.class))).then(invocationOnMock -> true);
+        when(accessControlService.canRemoveTopic(any(Topic.class))).then(invocationOnMock -> true);
+        when(discussionUserService.getUserById(any(String.class))).then(invocationOnMock -> testUser);
+        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
 
-        category = categoryService.createCategory(new Category("text"));
+        topicService = new DefaultTopicService(topicDao, accessControlService, discussionUserService);
     }
 
     @Test
-    public void createTopicWithoutCategory() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("test");
-        topic.setDescription("test det");
+    public void testCreateTopic() throws AccessDeniedException {
+        when(topicDao.save(any(Topic.class))).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
-        topic = topicService.createTopic(topic);
+        Topic t = new Topic(98L, "Test topic", "Description");
+        t = topicService.createTopic(new Category(), t);
 
-        assertNotNull(topic);
+        assertNotNull("Null topic returned!", t);
+        assertNotNull("Topic has null category!", t.getCategory());
     }
 
     @Test
-    public void createTopic() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("test");
-        topic.setDescription("test det");
+    public void testGetTopicById() throws AccessDeniedException {
+        when(topicDao.getById(55L)).then(invocationOnMock -> new Topic(55L, "Mock topic", "Mock description"));
+        when(topicDao.getById(not(eq(55L)))).then(invocationOnMock -> null);
 
-        topic = topicService.createTopic(topic, category);
-
-        assertNotNull(topic);
+        assertNotNull("Null returned on existing topic!", topicService.getTopicById(55L));
+        assertNull("Topic shouldn't exist!", topicService.getTopicById(-5798L));
     }
 
     @Test
-    public void getTopicsByCategory() throws Exception {
-        Topic topic1 = new Topic();
-        topic1.setName("test1");
-        topic1.setDescription("test det");
-        topicService.createTopic(topic1, category);
+    public void testGetTopicsByCategory() throws AccessDeniedException {
+        final Category c1 = new Category(45L, "test cat 1");
+        final Category c2 = new Category(87L, "no topics cat");
+        when(topicDao.getTopicsByCategory(c1)).then(invocationOnMock -> Arrays.asList(new Topic(87L, "test topic", "desc")));
+        when(topicDao.getTopicsByCategory(c2)).then(invocationOnMock -> new ArrayList<>());
 
-        Topic topic2 = new Topic();
-        topic2.setName("test2");
-        topic2.setDescription("test det");
-        topicService.createTopic(topic2, category);
-
-        assertEquals(2, topicService.getTopicsByCategory(category).size());
+        assertEquals("Wrong number of topics returned for c1!", 1, topicService.getTopicsByCategory(c1).size());
+        assertEquals("Wrong number of topics returned for c2!", 0, topicService.getTopicsByCategory(c2).size());
     }
 
     @Test
-    public void getTopicsWithoutCategory() throws Exception {
-        Topic topic1 = new Topic();
-        topic1.setName("test1");
-        topic1.setDescription("test det");
-        topicService.createTopic(topic1);
+    public void testRemoveTopic() throws AccessDeniedException {
+        final List<Topic> topicRepository = new ArrayList<>();
 
-        Topic topic2 = new Topic();
-        topic2.setName("test2");
-        topic2.setDescription("test det");
-        topicService.createTopic(topic2, category);
+        // mock get, save and remove methods
+        when(topicDao.getById(any(Long.class))).then(invocationOnMock -> {
+            Long id = (Long) invocationOnMock.getArguments()[0];
+            for(Topic t : topicRepository) {
+                if(t.getId().equals(id)) {
+                    return t;
+                }
+            }
 
-        Topic topic3 = new Topic();
-        topic3.setName("test3");
-        topic3.setDescription("test det");
-        topicService.createTopic(topic3, category);
+            return null;
+        });
+        when(topicDao.save(any(Topic.class))).then(invocationOnMock -> {
+            Topic topic = (Topic) invocationOnMock.getArguments()[0];
+            topicRepository.add(topic);
+            return topic;
+        });
+        doAnswer(invocationOnMock -> {
+            Topic toBeRemoved = (Topic) invocationOnMock.getArguments()[0];
+            for(Topic t : topicRepository) {
+                if(t.getId().equals(toBeRemoved.getId())) {
+                    topicRepository.remove(t);
+                    break;
+                }
+            }
 
-        assertEquals(1, topicService.getTopicsWithoutCategory().size());
-    }
+            return invocationOnMock;
+        }).when(topicDao).remove(any(Topic.class));
 
-    @Test
-    public void removeTopic() throws Exception {
-        User user = userService.addUser(new User("test", "", ""), new Permission());
+        // create topic to be removed
+        Topic topic = new Topic(-87L, "Topic to be removed", "This will be removed too");
+        topicService.createTopic(new Category(), topic);
 
-        Topic topic = new Topic();
-        topic.setName("test");
-        topic.setDescription("test det");
-        topic = topicService.createTopic(topic, category);
-
-        Discussion IDiscussion = discussionService.createDiscussion(new Discussion("test"), topic);
-
-        Post post = new Post();
-        post.setText("text");
-        post.setUser(user);
-        post = postService.sendPost(IDiscussion, post);
-
-        Post reply = new Post();
-        reply.setText("reply1Text");
-        reply.setUser(user);
-        postService.sendReply(reply, post);
-
-        topicService.removeTopic(topic);
-
-        //clear
-        userDao.remove(user);
-    }
-
-    @Test
-    public void removeTopicWithUserAccess() throws Exception {
-        User user = userService.addUser(new User("test", "", ""), new Permission());
-
-        Topic topic = new Topic();
-        topic.setName("test");
-        topic.setDescription("test det");
-        topic = topicService.createTopic(topic, category);
-
-        Discussion discussion = discussionService.createDiscussion(new Discussion("test"), topic);
-
-
-        discussionService.addAccessToDiscussion(user, discussion);
-
-
-        topicService.removeTopic(topic);
-
-
-        //clear
-        userDao.remove(user);
+        // test discussion removing
+        Topic toBeRemoved = topicService.getTopicById(topic.getId());
+        assertNotNull("Topic to be removed not found!", toBeRemoved);
+        topicService.removeTopic(toBeRemoved);
+        assertNull("Topic not removed!", topicService.getTopicById(toBeRemoved.getId()));
     }
 
 }

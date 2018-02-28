@@ -9,8 +9,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.TopicService;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 public class TopicListPanel extends Panel {
 
     private TopicService topicService;
+    private AccessControlService accessControlService;
     private IModel<List<Topic>>  topicListModel;
 
     /**
@@ -32,10 +34,11 @@ public class TopicListPanel extends Panel {
      * @param topicListModel model for getting the topics
      * @param topicService instance of the topic service
      */
-    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService) {
+    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService, AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
+        this.accessControlService = accessControlService;
         this.topicListModel = topicListModel;
     }
 
@@ -43,11 +46,11 @@ public class TopicListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        if (topicListModel.getObject().size() == 0) {
+        /*if (topicListModel.getObject().size() == 0) {
             setVisible(false);
         } else {
             setVisible(true);
-        }
+        }*/
 
         add(new ListView<Topic>("topicList", topicListModel) {
             protected void populateItem(ListItem<Topic> listItem) {
@@ -86,8 +89,11 @@ public class TopicListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-
-                topicService.removeTopic(tm.getObject());
+                try{
+                    topicService.removeTopic(tm.getObject());
+                } catch (AccessDeniedException e) {
+                    //not yet implemented
+                }
                 setResponsePage(getWebPage().getClass());
             }
 
@@ -95,8 +101,7 @@ public class TopicListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isRemoveTopic());
+                setVisible(accessControlService.canRemoveTopic(tm.getObject()));
             }
         };
     }

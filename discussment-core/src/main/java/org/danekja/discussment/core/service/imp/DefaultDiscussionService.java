@@ -1,62 +1,84 @@
 package org.danekja.discussment.core.service.imp;
 
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.Action;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
+import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.DiscussionDao;
+import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.domain.User;
 import org.danekja.discussment.core.service.DiscussionService;
 
 import java.util.List;
 
 /**
- * Created by Martin Bláha on 20.01.17.
+ * Discussion service which uses the new permission system. Will replace DefaultDiscussionService.
+ * Methods without user parameter will use currently logged user.
+ *
  */
 public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;
+    private PostDao postDao;
+    private AccessControlService accessControlService;
+    private DiscussionUserService discussionUserService;
 
-    public DefaultDiscussionService(DiscussionDao discussionDao) {
+    public DefaultDiscussionService(DiscussionDao discussionDao, PostDao postDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.discussionDao = discussionDao;
+        this.postDao = postDao;
+        this.accessControlService = accessControlService;
+        this.discussionUserService = discussionUserService;
     }
 
-    public Discussion createDiscussion(Discussion discussion) {
-
-        return discussionDao.save(discussion);
-    }
-
-    public Discussion createDiscussion(Discussion discussion, Topic topic) {
-
-        topic.getDiscussions().add(discussion);
-        discussion.setTopic(topic);
-
-        return discussionDao.save(discussion);
-    }
-
-    public List<Discussion> getDiscussionsByTopic(Topic topic) {
-
-        return discussionDao.getDiscussionsByTopic(topic);
-    }
-
-    public Discussion getDiscussionById(long discussionId) {
-
-        return discussionDao.getById(discussionId);
-    }
-
-    public void removeDiscussion(Discussion discussion) {
-
-        if (discussion.getTopic() != null) {
-            discussion.getTopic().getDiscussions().remove(discussion);
+    public Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException {
+        if(accessControlService.canAddDiscussion(topic)) {
+            discussion.setTopic(topic);
+            return discussionDao.save(discussion);
+        } else {
+            throw new AccessDeniedException(Action.CREATE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
         }
-
-        discussionDao.remove(discussion);
     }
 
-    public void addAccessToDiscussion(User entity, Discussion en) {
-
-        en.getUserAccessList().add(entity);
-
-        discussionDao.save(en);
+    public List<Discussion> getDiscussionsByTopic(Topic topic) throws AccessDeniedException {
+        if(accessControlService.canViewDiscussions(topic)) {
+            return discussionDao.getDiscussionsByTopic(topic);
+        } else {
+            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
+        }
     }
 
+    public Discussion getDiscussionById(long discussionId) throws AccessDeniedException {
+        Discussion d = discussionDao.getById(discussionId);
+        if(d == null || accessControlService.canViewDiscussions(d.getTopic())) {
+            return d;
+        } else {
+            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), d.getTopic().getId(), PermissionType.DISCUSSION);
+        }
+    }
+
+    public void removeDiscussion(Discussion discussion) throws AccessDeniedException {
+        if(accessControlService.canRemoveDiscussion(discussion)) {
+            discussionDao.remove(discussion);
+        } else {
+            throw new AccessDeniedException(Action.DELETE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.DISCUSSION);
+        }
+    }
+
+    public IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException {
+        if(accessControlService.canViewPosts(discussion)) {
+            List<Post> posts = postDao.getPostsByDiscussion(discussion);
+            if(posts.isEmpty()) {
+                return null;
+            } else {
+                return discussionUserService.getUserById(posts.get(posts.size() -1 ).getUserId());
+            }
+        } else {
+            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.POST);
+        }
+    }
 }
-

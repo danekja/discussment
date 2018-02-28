@@ -8,9 +8,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.article.core.domain.Article;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.article.page.article.ArticleTextPage;
 import org.danekja.discussment.article.core.service.ArticleService;
+import org.danekja.discussment.article.page.article.ArticleTextPage;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import java.util.List;
 public class ArticleListPanel extends Panel {
 
     private ArticleService articleService;
+    private AccessControlService accessControlService;
     private IModel<List<Article>> articleListModel;
 
     /**
@@ -33,10 +35,12 @@ public class ArticleListPanel extends Panel {
      * @param articleListModel model for getting the articles
      * @param articleService instance of the article service
      */
-    public ArticleListPanel (String id, IModel<List<Article>> articleListModel, ArticleService articleService){
+    public ArticleListPanel (String id, IModel<List<Article>> articleListModel, ArticleService articleService, AccessControlService accessControlService){
         super(id);
 
         this.articleListModel = articleListModel;
+
+        this.accessControlService = accessControlService;
         this.articleService = articleService;
     }
 
@@ -75,7 +79,11 @@ public class ArticleListPanel extends Panel {
         return new Link("remove") {
             @Override
             public void onClick() {
-                articleService.removeArticle(am.getObject());
+                try{
+                    articleService.removeArticle(am.getObject());
+                } catch (AccessDeniedException e) {
+                    // todo: not yet implemented
+                }
                 setResponsePage(getWebPage().getClass());
             }
 
@@ -83,8 +91,7 @@ public class ArticleListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
-                this.setVisible(user != null && user.getPermissions().isRemoveCategory());
+                //this.setVisible(accessControlService.canRemoveCategory(am.getObject()));
             }
         };
     }

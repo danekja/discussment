@@ -2,9 +2,14 @@ package org.danekja.discussment.article.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.UserService;
+import org.apache.wicket.model.Model;
+import org.danekja.discussment.article.core.domain.User;
+import org.danekja.discussment.article.core.service.UserService;
 import org.danekja.discussment.article.ui.wicket.form.registration.RegistrationFormComponent;
+import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
+
+
 
 /**
  * Created by Martin Bláha on 21.01.17.
@@ -12,27 +17,53 @@ import org.danekja.discussment.article.ui.wicket.form.registration.RegistrationF
 public class RegistrationForm extends Form {
 
     private UserService userService;
+    private PermissionManagementService permissionService;
 
     private IModel<User> userModel;
 
-    public RegistrationForm(String id, UserService userService, IModel<User> userModel) {
+    private IModel<PermissionData> categoryPermissions;
+    private IModel<PermissionData> topicPermissions;
+    private IModel<PermissionData> discussionPermissions;
+    private IModel<PermissionData> postPermissions;
+
+
+    private RegistrationFormComponent registrationFormComponent;
+
+    public RegistrationForm(String id,
+                            UserService userService,
+                            IModel<User> userModel,
+                            PermissionManagementService permissionService) {
         super(id);
 
         this.userService = userService;
         this.userModel = userModel;
+        this.permissionService = permissionService;
+
+        this.categoryPermissions = new Model<PermissionData>(new PermissionData());
+        this.discussionPermissions = new Model<PermissionData>(new PermissionData(true, false, false, true));
+        this.topicPermissions = new Model<PermissionData>(new PermissionData(false, false, false, true));
+        this.postPermissions = new Model<PermissionData>(new PermissionData());
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new RegistrationFormComponent("registrationFormComponent", userModel));
+        registrationFormComponent = new RegistrationFormComponent("registrationFormComponent", userModel, categoryPermissions, topicPermissions, discussionPermissions, postPermissions);
+        add(registrationFormComponent);
     }
 
     @Override
     protected void onSubmit() {
 
-        getSession().setAttribute("user", userService.addUser(userModel.getObject(), userModel.getObject().getPermissions()));
+        User u = userService.addUser(userModel.getObject());
+
+        permissionService.configureCategoryPermissions(u, categoryPermissions.getObject());
+        permissionService.configureTopicPermissions(u, topicPermissions.getObject());
+        permissionService.configureDiscussionPermissions(u, discussionPermissions.getObject());
+        permissionService.configurePostPermissions(u, postPermissions.getObject());
+
+        getSession().setAttribute("user", u);
 
         setResponsePage(getWebPage().getClass());
     }

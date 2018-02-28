@@ -2,6 +2,7 @@ package org.danekja.discussment.ui.wicket.model;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 
@@ -33,7 +34,13 @@ public class PostWicketModel extends LoadableDetachableModel<List<Post>> {
     @Override
     protected List<Post> load() {
 
-        return createList(postService.getPostById(post.getObject().getId()), new ArrayList<Post>());
+        try {
+            return createList(postService.getPostById(post.getObject().getId()), new ArrayList<Post>());
+        } catch (AccessDeniedException e) {
+            return null;
+        } catch (NullPointerException e) {
+            return null;
+        }
 
     }
 

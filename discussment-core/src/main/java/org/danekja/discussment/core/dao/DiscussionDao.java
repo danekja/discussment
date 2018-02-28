@@ -10,7 +10,7 @@ import java.util.List;
  *
  * The interface extends GenericDao on methods for working with discussions in a database
  */
-public interface DiscussionDao extends GenericDao<Discussion> {
+public interface DiscussionDao extends GenericDao<Long, Discussion> {
 
 
     /**
@@ -20,4 +20,11 @@ public interface DiscussionDao extends GenericDao<Discussion> {
      * @return list of Discussion
      */
     List<Discussion> getDiscussionsByTopic(Topic topic);
+
+    /**
+     * Saves the userDiscussion entity.
+     * @param userDiscussion Connection between user and discussion to be saved.
+     * @return Saved object.
+     */
+
 }

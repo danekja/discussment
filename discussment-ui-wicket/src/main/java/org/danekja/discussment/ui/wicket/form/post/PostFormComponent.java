@@ -26,7 +26,6 @@ public class PostFormComponent extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
         TextArea<String> text = new TextArea<String>("text", new PropertyModel<String>(getDefaultModel(), "text"));
         text.setRequired(true);
         add(text);

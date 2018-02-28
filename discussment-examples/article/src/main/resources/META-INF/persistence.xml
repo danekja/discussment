@@ -6,13 +6,17 @@
 
     <persistence-unit name="discussment-article" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.danekja.discussment.core.domain.BaseEntity</class>
+        <class>org.danekja.discussment.core.domain.LongEntity</class>
         <class>org.danekja.discussment.core.domain.Category</class>
         <class>org.danekja.discussment.core.domain.Discussion</class>
-        <class>org.danekja.discussment.core.domain.Permission</class>
         <class>org.danekja.discussment.core.domain.Post</class>
         <class>org.danekja.discussment.core.domain.Topic</class>
-        <class>org.danekja.discussment.core.domain.User</class>
+        <class>org.danekja.discussment.core.accesscontrol.domain.AbstractPermission</class>
+        <class>org.danekja.discussment.core.accesscontrol.domain.CategoryPermission</class>
+        <class>org.danekja.discussment.core.accesscontrol.domain.DiscussionPermission</class>
+        <class>org.danekja.discussment.core.accesscontrol.domain.TopicPermission</class>
+        <class>org.danekja.discussment.core.accesscontrol.domain.PostPermission</class>
+        <class>org.danekja.discussment.core.accesscontrol.domain.PermissionId</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/discussment?serverTimezone=UTC" />

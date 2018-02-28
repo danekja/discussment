@@ -10,7 +10,7 @@ import java.util.List;
  *
  * The interface extends GenericDao on methods for working with posts in a database
  */
-public interface PostDao extends GenericDao<Post> {
+public interface PostDao extends GenericDao<Long, Post> {
 
     /**
      * Get posts in a database based on its discussion

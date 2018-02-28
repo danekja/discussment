@@ -1,15 +1,12 @@
-package org.danekja.discussment.core.domain;
+package org.danekja.discussment.forum.core.domain;
+
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.danekja.discussment.core.domain.LongEntity;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.danekja.discussment.core.domain.User.GET_BY_USERNAME;
-import static org.danekja.discussment.core.domain.User.GET_USERS;
+import static org.danekja.discussment.forum.core.domain.User.GET_BY_USERNAME;
+import static org.danekja.discussment.forum.core.domain.User.GET_USERS;
 
 /**
  * Created by Martin Bláha on 04.01.17.
@@ -22,7 +19,8 @@ import static org.danekja.discussment.core.domain.User.GET_USERS;
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
 })
-public class User extends BaseEntity implements Serializable {
+// todo: replace with interface
+public class User extends LongEntity implements IDiscussionUser {
 
     /**
      * The constant contains name of query for getting an user by username
@@ -50,17 +48,7 @@ public class User extends BaseEntity implements Serializable {
      */
     private String lastname;
 
-    /**
-     * Permission of the user. If the user is removed, the permissions are removed too.
-     */
-    @OneToOne(orphanRemoval = true)
-    private Permission permissions;
-
-    /**
-     * List contains the discussions which the user has access.
-     */
-    @ManyToMany(mappedBy = "userAccessList")
-    private List<Discussion> accessListToDiscussion = new ArrayList<Discussion>();
+    //private List<PostReputation> PRVotes = new ArrayList<PostReputation>();
 
     public User() {}
 
@@ -70,7 +58,18 @@ public class User extends BaseEntity implements Serializable {
         this.lastname = lastname;
     }
 
+    @Transient
+    public String getDiscussionUserId() {
+        return getId() != null ? getId().toString() : null;
+    }
+
+    @Column(unique=true)
     public String getUsername() {
+        return username;
+    }
+
+    @Transient
+    public String getDisplayName() {
         return username;
     }
 
@@ -81,6 +80,7 @@ public class User extends BaseEntity implements Serializable {
     public String getLastname() {
         return lastname;
     }
+
 
     public void setUsername(String username) {
         this.username = username;
@@ -94,27 +94,12 @@ public class User extends BaseEntity implements Serializable {
         this.lastname = lastname;
     }
 
-    public boolean isAccessToDiscussion(Discussion discussion) {
-
-        if (discussion.getPass() == null || getPermissions().isReadPrivateDiscussion() || discussion.getUserAccessList().contains(this)) {
-            return true;
-        }
-        return false;
-    }
-
-    public List<Discussion> getAccessListToDiscussion() {
-        return accessListToDiscussion;
-    }
-
-    public void setAccessListToDiscussion(List<Discussion> accessListToDiscussion) {
-        this.accessListToDiscussion = accessListToDiscussion;
-    }
-
-    public Permission getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Permission permissions) {
-        this.permissions = permissions;
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                '}';
     }
 }

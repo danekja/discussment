@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 28.01.17.
  */
-public class TopicDaoJPA extends GenericDaoJPA<Topic> implements TopicDao {
+public class TopicDaoJPA extends GenericDaoJPA<Long, Topic> implements TopicDao {
 
     public TopicDaoJPA(EntityManager em) {
         super(Topic.class, em);
@@ -27,9 +27,4 @@ public class TopicDaoJPA extends GenericDaoJPA<Topic> implements TopicDao {
         TypedQuery<Topic> q = em.createNamedQuery(Topic.GET_TOPICS_WITHOUT_CATEGORY, Topic.class);
         return q.getResultList();
     }
-
-    public void helloWorld(){
-        String hw = "Hello world";
-    }
-
 }

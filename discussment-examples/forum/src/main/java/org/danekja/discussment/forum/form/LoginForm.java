@@ -2,9 +2,11 @@ package org.danekja.discussment.forum.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.UserService;
+import org.danekja.discussment.forum.core.domain.User;
+import org.danekja.discussment.forum.core.service.UserService;
 import org.danekja.discussment.forum.form.login.LoginFormComponent;
+import org.danekja.discussment.ui.wicket.session.SessionUtil;
+
 
 /**
  * Created by Martin Bláha on 21.01.17.
@@ -32,12 +34,12 @@ public class LoginForm extends Form {
     @Override
     protected void onSubmit() {
 
-        User user = userService.getUserByUsername(userModel.getObject().getUsername());
+        User user = userService.getUserByUsername(userModel.getObject().getDisplayName());
 
         if (user != null) {
-            getSession().setAttribute("user", user);
+            SessionUtil.setUser(user);
         } else {
-            getSession().setAttribute("error", "username");
+            SessionUtil.setError("username");
         }
 
         userModel.setObject(new User());

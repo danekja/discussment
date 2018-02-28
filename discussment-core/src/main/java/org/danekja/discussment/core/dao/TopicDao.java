@@ -10,7 +10,7 @@ import java.util.List;
  *
  * The interface extends GenericDao on methods for working with topics in a database
  */
-public interface TopicDao extends GenericDao<Topic> {
+public interface TopicDao extends GenericDao<Long, Topic> {
 
     /**
      * Get topics in a database based on its category

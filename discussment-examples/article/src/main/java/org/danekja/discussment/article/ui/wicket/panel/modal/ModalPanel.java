@@ -7,8 +7,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.article.core.domain.Article;
-import org.danekja.discussment.article.ui.wicket.form.ArticleForm;
 import org.danekja.discussment.article.core.service.ArticleService;
+import org.danekja.discussment.article.ui.wicket.form.ArticleForm;
 
 /**
  * The class fills modal window with form for creating a new article.

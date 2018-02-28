@@ -11,10 +11,19 @@ import java.util.List;
 /**
  * Created by Martin Bláha on 19.01.17.
  */
-public class PostDaoJPA extends GenericDaoJPA<Post> implements PostDao {
+public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
 
     public PostDaoJPA(EntityManager em) {
         super(Post.class, em);
+    }
+
+    @Override
+    public Post save(Post obj) {
+        if(obj.isNew()) {
+            obj = super.save(obj);
+            obj.appendToChainId(obj.getId().toString());
+        }
+        return super.save(obj);
     }
 
     public List<Post> getPostsByDiscussion(Discussion discussion) {

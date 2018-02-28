@@ -8,15 +8,17 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.discussment.core.dao.jpa.PermissionDaoJPA;
-import org.danekja.discussment.core.dao.jpa.UserDaoJPA;
-import org.danekja.discussment.core.domain.User;
-import org.danekja.discussment.core.service.imp.DefaultUserService;
 import org.danekja.discussment.article.WicketApplication;
-import org.danekja.discussment.article.ui.wicket.form.LoginForm;
-import org.danekja.discussment.article.ui.wicket.form.RegistrationForm;
+import org.danekja.discussment.article.core.dao.jpa.UserDaoJPA;
+import org.danekja.discussment.article.core.domain.User;
+import org.danekja.discussment.article.core.service.UserService;
+import org.danekja.discussment.article.core.service.imp.DefaultUserService;
 import org.danekja.discussment.article.page.article.ArticlePage;
 import org.danekja.discussment.article.page.dashboard.DashboardPage;
+import org.danekja.discussment.article.ui.wicket.form.LoginForm;
+import org.danekja.discussment.article.ui.wicket.form.RegistrationForm;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 
 import javax.persistence.EntityManager;
 
@@ -41,8 +43,14 @@ public abstract class BasePage extends WebPage {
 
         add(new Label("title", new Model<String>(getTitle())));
 
-        add(new LoginForm("loginForm", new Model<User>(new User()), new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em))));
-        add(new RegistrationForm("registrationForm", new DefaultUserService(new UserDaoJPA(em), new PermissionDaoJPA(em)), new Model<User>(new User())));
+        PermissionDao permissionDao = new PermissionDaoJPA(em);
+        UserService userService = new DefaultUserService(new UserDaoJPA(em));
+
+        add(new LoginForm("loginForm", userService, new Model<User>(new User())));
+        add(new RegistrationForm("registrationForm",
+                new DefaultUserService(new UserDaoJPA(em)),
+                new Model<User>(new User()),
+                new PermissionService(permissionDao, userService)));
     }
 
     private Label createUsernameLabel() {
@@ -54,7 +62,7 @@ public abstract class BasePage extends WebPage {
                 if (user == null) {
                     return "";
                 } else {
-                    return user.getUsername();
+                    return user.getDisplayName();
                 }
             }
         };

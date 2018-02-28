@@ -1,10 +1,6 @@
 package org.danekja.discussment.core.domain;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +18,7 @@ import static org.danekja.discussment.core.domain.Discussion.GET_DISCUSSIONS_BY_
         @NamedQuery(name = GET_DISCUSSIONS_BY_TOPIC_ID,
                 query = "SELECT d FROM Discussion d WHERE d.topic.id = :topicId")
 })
-public class Discussion extends BaseEntity implements Serializable {
+public class Discussion extends LongEntity implements Serializable {
 
     /**
      * The constant contains name of query for getting discussions by topic id
@@ -42,33 +38,11 @@ public class Discussion extends BaseEntity implements Serializable {
     /**
      * List contains posts in the discussion. If the discussion is removed, the posts are removed too.
      */
-    @OneToMany(mappedBy = "discussion", orphanRemoval = true)
     private List<Post> posts = new ArrayList<Post>();
-
-    /**
-     * List contains users which have access to a discussion. If the discussion is removed, the users still exist.
-     */
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_discussion",
-            inverseJoinColumns = {
-                    @JoinColumn(
-                            name = "user_id",
-                            referencedColumnName = "id"
-                    )
-            },
-            joinColumns = {
-                    @JoinColumn(
-                            name = "discussion_id",
-                            referencedColumnName = "id"
-                    )
-            }
-    )
-    private List<User> userAccessList = new ArrayList<User>();
 
     /**
      * Topic in which the discussion is.
      */
-    @ManyToOne
     private Topic topic;
 
     public Discussion() {}
@@ -83,6 +57,12 @@ public class Discussion extends BaseEntity implements Serializable {
         this.pass = pass;
     }
 
+    public Discussion(Long id, String name) {
+        super(id);
+        this.name = name;
+    }
+
+    @ManyToOne
     public Topic getTopic() {
         return topic;
     }
@@ -107,18 +87,16 @@ public class Discussion extends BaseEntity implements Serializable {
         this.pass = pass;
     }
 
+    @OneToMany(mappedBy = "discussion", orphanRemoval = true)
     public List<Post> getPosts() {
         return posts;
     }
 
-    public List<User> getUserAccessList() {
-        return userAccessList;
+    protected void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
-    public void setUserAccessList(List<User> accessList) {
-        this.userAccessList = accessList;
-    }
-
+    @Transient
     public int getNumberOfPosts() {
         int numberOfPosts = 0;
 
@@ -129,6 +107,7 @@ public class Discussion extends BaseEntity implements Serializable {
         return numberOfPosts;
     }
 
+    @Transient
     public Post getLastPost() {
         Post lastPost = null;
 
@@ -151,4 +130,12 @@ public class Discussion extends BaseEntity implements Serializable {
         return lastPost;
     }
 
+    @Override
+    public String toString() {
+        return "Discussion{" +
+                "name='" + name + '\'' +
+                ", pass='" + pass + '\'' +
+                ", topic=" + topic +
+                '}';
+    }
 }

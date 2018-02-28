@@ -1,7 +1,7 @@
 package org.danekja.discussment.forum;
 
-import org.danekja.discussment.forum.page.dashboard.DashboardPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.danekja.discussment.forum.page.dashboard.DashboardPage;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

@@ -1,32 +1,23 @@
-package org.danekja.discussment.core.service;
+package org.danekja.discussment.core.mock;
 
-import org.danekja.discussment.core.domain.Permission;
-import org.danekja.discussment.core.domain.User;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 13.05.17.
  *
- * The interface contains service methods for working with the users
+ * The interface contains service methods for working with the users.
  */
-public interface UserService {
+public interface UserService extends DiscussionUserService{
 
     /**
      * Add a new user to the discussion
      *
      * @param entity new user
-     * @param permission permission of a new user
      * @return new user
      */
-    User addUser(User entity, Permission permission);
-
-    /**
-     * Get all users in the discussion
-     *
-     * @return list of user
-     */
-    List<User> getUsers();
+    User addUser(User entity);
 
     /**
      * Get an user in the discussion based on his id.
@@ -35,6 +26,8 @@ public interface UserService {
      * @return user by id
      */
     User getUserById(long userId);
+
+    List<User> getUsers();
 
     /**
      * Get an user in the discussion based on his username.
