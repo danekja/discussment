@@ -37,14 +37,20 @@ The __service__ package contains these interfaces:
 
 The services need an interface to access the database, which is located in the dao package. The default implementation of services is in the __dao.imp__ package. If you need your own access, you need to implement this interface.
 
-### access control
+#### access control
 The __accesscontrol__ package contains the new implementation of user's permissions. The default implementation of services is in the __service.impl__ package.
 
+The authentication mechanism works in similar fashion as general Spring Security user authentication with **UserDetails** and **UserDetailsService** interfaces. The library receives user information from the application via defined interfaces (see below) and 
+assignes own permission model for them.
+
+Library methods for permission management contain granular configuration of access to each action (add, remove, view) and item (category, topic, discussion, post). Can be used as-is or the application which uses this library may implement own management on top of the provided 
+functions e.g. to make permissions compliant with the application's roles.
+
 The __domain__ package contains this interface:
-- __IDiscussionUser__ represents the user entity in the context of this library. Any application using this library will have to implement this!
+- __IDiscussionUser__ represents the user entity in the context of this library. Any application using this library will have to implement this! Usually the interface should be implemented by the application's User entity and its methods delegated to User's properties.
 
 The __service__ package contains these interfaces:
-- __DiscussionUserService__ contains basic methods to obtain user object from application. Any application using this library will have to implement this!
+- __DiscussionUserService__ contains basic methods to obtain user object from application. Any application using this library will have to implement this! The library presumes the application has own authentication mechanism. This interface should take advantage of that mechanism and provide currently logged-in user.
 
 - __PermissionManagementService__ contains methods for adding or changing user's permissions.
   - for example using this method will give user permissions for discussion in given __topic__. __PermissionData__ have values sorted _create_, _delete_, _edit_, _view_.
