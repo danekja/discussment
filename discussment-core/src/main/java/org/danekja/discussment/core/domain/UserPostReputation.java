@@ -71,7 +71,7 @@ public class UserPostReputation extends LongEntity implements Serializable {
         this.liked = liked;
     }
 
-    public void changeVote(){
+    public void changeLiked(){
         if(this.liked){
             this.liked = false;
         } else {

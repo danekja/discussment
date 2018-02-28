@@ -7,7 +7,7 @@ import org.danekja.discussment.core.domain.UserPostReputation;
 /**
  * The interface contains the service methods for working with the post reputation.
  *
- * Date: 30.1.18
+ * Date: 19.2.18
  *
  * @author Jiri Kryda
  */
@@ -16,21 +16,21 @@ public interface PostReputationService {
     /**
      * Adds a like to post reputaion.
      *
-     * @param post to add like
+     * @param post post to add like
      */
     void addLike (Post post);
 
     /**
      * Adds a dislike to post reputaion.
      *
-     * @param post to add dislike
+     * @param post post to add dislike
      */
     void addDislike (Post post);
 
     /**
      * Checks if user already voted in post reputation.
      *
-     * @param post to check
+     * @param post post to check
      * @return true, if user already voted
      */
     boolean userVotedOn(IDiscussionUser user, Post post);
@@ -39,7 +39,7 @@ public interface PostReputationService {
      * Checks if user liked the post
      *
      * @param user user to get the vote for
-     * @param post to get vote
+     * @param post post to get vote
      * @return true, if user liked the post
      */
     boolean userLiked(IDiscussionUser user, Post post);
@@ -48,7 +48,7 @@ public interface PostReputationService {
      * Gets user's vote on the post
      *
      * @param user user to get the vote for
-     * @param post to get vote
+     * @param post post to get vote
      * @return UserPostReputation
      */
     UserPostReputation getVote(IDiscussionUser user, Post post);
@@ -57,7 +57,8 @@ public interface PostReputationService {
      * Checks if user has voted on the post before.
      * If he did it then changes his vote.
      *
-     * @param post to change vote
+     * @param user user to change the vote for
+     * @param post post to change vote
      */
-    void changeVote(Post post);
+    void changeVote(IDiscussionUser user, Post post);
 }

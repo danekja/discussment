@@ -6,6 +6,7 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.dao.UserPostReputationDao;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
 
@@ -17,6 +18,8 @@ import org.danekja.discussment.core.service.PostReputationService;
  * @author Jiri Kryda
  */
 public class DefaultPostReputationService implements PostReputationService {
+
+    private static final Object monitor = new Object();
 
     private UserPostReputationDao userPostReputationDao;
     private PostDao postDao;
@@ -36,41 +39,48 @@ public class DefaultPostReputationService implements PostReputationService {
         this.accessControlService = accessControlService;
     }
 
-    public synchronized void addLike(Post post){
-        // todo: only one service must exist in the app
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-        post.getPostReputation().addLike();
-        if (!userVotedOn(user, post)) {
-            userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
-        }
-        postDao.save(post);
-    }
-
-    public synchronized void addDislike(Post post){
-        // todo: only one service must exist in the app
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-        post.getPostReputation().addDislike();
-        if (!userVotedOn(user, post)) {
-            userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
-        }
-        postDao.save(post);
-    }
-
-    public synchronized void changeVote(Post post){
-        IDiscussionUser user = userService.getCurrentlyLoggedUser();
-        UserPostReputation upr = getVote(user, post);
-        if(upr != null){
-            if(userLiked(user, post)){
-                post.getPostReputation().removeLike();
-                post.getPostReputation().addDislike();
-                upr.changeVote();
-            } else {
+    public void addLike(Post post){
+        synchronized(monitor){
+            IDiscussionUser user = userService.getCurrentlyLoggedUser();
+            if (!userVotedOn(user, post)) {
                 post.getPostReputation().addLike();
-                post.getPostReputation().removeDislike();
-                upr.changeVote();
+                userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
+                postDao.save(post);
+            } else if (!userLiked(user, post)){
+                changeVote(user, post);
             }
-            userPostReputationDao.save(upr);
-            postDao.save(post);
+        }
+    }
+
+    public void addDislike(Post post){
+        synchronized(monitor) {
+            IDiscussionUser user = userService.getCurrentlyLoggedUser();
+            if (!userVotedOn(user, post)) {
+                post.getPostReputation().addDislike();
+                userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
+                postDao.save(post);
+            } else if(userLiked(user, post)){
+                changeVote(user, post);
+            }
+        }
+    }
+
+    public void changeVote(IDiscussionUser user, Post post){
+        synchronized (monitor) {
+            UserPostReputation upr = getVote(user, post);
+            if (upr != null) {
+                if (userLiked(user, post)) {
+                    post.getPostReputation().removeLike();
+                    post.getPostReputation().addDislike();
+                    upr.changeLiked();
+                } else {
+                    post.getPostReputation().addLike();
+                    post.getPostReputation().removeDislike();
+                    upr.changeLiked();
+                }
+                userPostReputationDao.save(upr);
+                postDao.save(post);
+            }
         }
     }
 
@@ -81,7 +91,9 @@ public class DefaultPostReputationService implements PostReputationService {
     public boolean userVotedOn(IDiscussionUser user, Post post){
         if(getVote(user, post) != null){
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     public boolean userLiked(IDiscussionUser user, Post post){
