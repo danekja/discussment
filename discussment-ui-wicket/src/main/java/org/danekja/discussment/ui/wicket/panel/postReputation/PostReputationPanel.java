@@ -63,17 +63,12 @@ public class PostReputationPanel extends Panel  {
         add(new Label("disliketext", ("Dislikes: ")));
         add(new Label("dislikes", new PropertyModel(postReputationModel, "dislikes")));
 
-        Form prform = new PostReputationForm("prform", postModel, postReputationService);
+        Form prform = new PostReputationForm("prform", postModel, userService, postReputationService, accessControlService);
 
         Label liked = new Label("liked");
         liked.setVisible(false);
 
-        if(!accessControlService.canViewPosts(postModel.getObject().getDiscussion())){
-            prform.setVisible(false);
-        } else if (userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(postModel.getObject().getUserId())){
-            prform.setVisible(false);
-        } else if (postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())){
-            prform.setVisible(false);
+        if (postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())){
             if (postReputationService.userLiked(userService.getCurrentlyLoggedUser(), postModel.getObject())){
                 liked = new Label("liked", "You LIKED this post.");
             } else {
