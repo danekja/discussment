@@ -42,11 +42,12 @@ public class DefaultPostReputationService implements PostReputationService {
     public void addLike(Post post){
         synchronized(monitor){
             IDiscussionUser user = userService.getCurrentlyLoggedUser();
-            if (!userVotedOn(user, post)) {
+            UserPostReputation upr = getVote(user, post);
+            if (upr == null) {
                 post.getPostReputation().addLike();
                 userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
                 postDao.save(post);
-            } else if (!userLiked(user, post)){
+            } else if (upr.getLiked()){
                 changeVote(user, post);
             }
         }
@@ -55,11 +56,12 @@ public class DefaultPostReputationService implements PostReputationService {
     public void addDislike(Post post){
         synchronized(monitor) {
             IDiscussionUser user = userService.getCurrentlyLoggedUser();
-            if (!userVotedOn(user, post)) {
+            UserPostReputation upr = getVote(user, post);
+            if (upr == null) {
                 post.getPostReputation().addDislike();
                 userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
                 postDao.save(post);
-            } else if(userLiked(user, post)){
+            } else if(!upr.getLiked()){
                 changeVote(user, post);
             }
         }
