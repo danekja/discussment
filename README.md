@@ -37,6 +37,56 @@ The __service__ package contains these interfaces:
 
 The services need an interface to access the database, which is located in the dao package. The default implementation of services is in the __dao.imp__ package. If you need your own access, you need to implement this interface.
 
+The __accesscontrol__ package contains the new implementation of user's permissions. The default implementation of services is in the __service.impl__ package.
+
+Its __service__ package contains these interfaces:
+- __DiscussionUserService__ contains basic methods to obtain user object. Application will have to implement this!
+
+- __PermissionManagementService__ contains methods for adding or changing user's permissions.
+  - for example using this method will give user permissions for discussion in given __topic__. __PermissionData__ have values sorted _create_, _delete_, _edit_, _view_.
+    ```
+    configureDiscussionPermissions(IDiscussionUser user, Topic topic, PermissionData permissions);
+    ```
+  - example usage in application.
+    ```
+    permissionService.configureDiscussionPermissions(user, topicService.getTopicById(3), new PermissionData(true, false, false, true);
+    ```
+    - will give user permissions to _create_ and _view_ __discussions__ in __topic__ of id __3__.
+
+- __AccessControlService__ contains methods for checking currently logged user's permissions. Has two main usages.
+  - guards the __core services__ so user without sufficient permissions can't use requested method. The method then throws __AccessDeniedException__. 
+    ```
+     @Override
+        public Topic getTopicById(long topicId) throws AccessDeniedException {
+            Topic t = topicDao.getById(topicId);
+            if (accessControlService.canViewTopics(t.getCategory())) {
+                return t;
+            } else {
+                throw new AccessDeniedException(Action.VIEW, getCurrentUserId(), topicId, PermissionType.TOPIC);
+            }
+        }
+    ```
+  - checks if user has sufficient permissions for viewing certain ui components(for example deleting a topic)
+    ```
+    private Link createRemoveLink(final IModel<Topic> tm) {
+    ...
+       @Override
+       protected void onConfigure() {
+          super.onConfigure();
+          setVisible(accessControlService.canRemoveTopic(tm.getObject()));
+       }
+    }
+    ```
+    
+- __AccessControlManagerService__ contains methods for checking another user's permissions.
+  - example usage in application 
+    ```
+    accessControlManagerService.canRemoveDiscussion(userService.getUserById(5), discussionService.getDiscussionById(2))
+    ```
+    - will check if __user__ of id __5__ has permissions to remove __discussion__ of id __2__.
+
+The services need an interface to access the database, which is located in the dao package. The default implementation of services is in the __dao.imp__ package.
+
 ## Readme: discussment-ui-wicket 
 The library creates UI for the discussion. The discussion may be under the article or as a separate forum.
 
