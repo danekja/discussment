@@ -3,6 +3,7 @@ package org.danekja.discussment.core.service;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.UserPostReputation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The interface contains the service methods for working with the post reputation.
@@ -18,6 +19,7 @@ public interface PostReputationService {
      *
      * @param post post to add like
      */
+    @Transactional
     void addLike (Post post);
 
     /**
@@ -25,6 +27,7 @@ public interface PostReputationService {
      *
      * @param post post to add dislike
      */
+    @Transactional
     void addDislike (Post post);
 
     /**
@@ -33,6 +36,7 @@ public interface PostReputationService {
      * @param post post to check
      * @return true, if user already voted
      */
+    @Transactional
     boolean userVotedOn(IDiscussionUser user, Post post);
 
     /**
@@ -42,6 +46,7 @@ public interface PostReputationService {
      * @param post post to get vote
      * @return true, if user liked the post
      */
+    @Transactional
     boolean userLiked(IDiscussionUser user, Post post);
 
     /**
@@ -51,6 +56,7 @@ public interface PostReputationService {
      * @param post post to get vote
      * @return UserPostReputation
      */
+    @Transactional
     UserPostReputation getVote(IDiscussionUser user, Post post);
 
     /**
@@ -60,5 +66,6 @@ public interface PostReputationService {
      * @param user user to change the vote for
      * @param post post to change vote
      */
+    @Transactional
     void changeVote(IDiscussionUser user, Post post);
 }

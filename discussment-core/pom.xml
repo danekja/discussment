@@ -14,6 +14,7 @@
 
 
     <properties>
+        <spring.version>5.0.4.RELEASE</spring.version>
         <!-- TODO: use this also in persistence.xml file-->
         <jdbc.user>root</jdbc.user>
         <jdbc.password>root</jdbc.password>
@@ -56,6 +57,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
 
 

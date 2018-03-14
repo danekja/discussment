@@ -2,6 +2,7 @@ package org.danekja.discussment.core.accesscontrol.service;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
@@ -20,6 +21,7 @@ public interface DiscussionUserService extends Serializable {
      * @return
      * @throws Exception is thrown whenever user with this id is not found.
      */
+    @Transactional
     IDiscussionUser getUserById(String userId) throws DiscussionUserNotFoundException;
 
     /**
@@ -27,6 +29,7 @@ public interface DiscussionUserService extends Serializable {
      *
      * @return Currently logged user and null if no user is logged in.
      */
+    @Transactional
     IDiscussionUser getCurrentlyLoggedUser();
 
 }

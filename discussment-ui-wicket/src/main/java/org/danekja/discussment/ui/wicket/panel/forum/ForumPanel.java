@@ -111,7 +111,7 @@ public class ForumPanel extends Panel {
             if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
                 add(new ContentListPanel("content",
                         new CategoryWicketModel(categoryService),
-                        new TopicWicketModel(topicService, categoryService),
+                        new TopicWicketModel(topicService),
                         categoryModel, categoryService, topicService, accessControlService)
                 );
             } else if (parametersModel.getObject().get("topicId") != -1) {

@@ -2,6 +2,7 @@ package org.danekja.discussment.core.service;
 
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public interface CategoryService {
      * @param entity new category
      * @return new category
      */
+    @Transactional
     Category createCategory(Category entity) throws AccessDeniedException;
 
     /**
@@ -26,6 +28,7 @@ public interface CategoryService {
      * @param categoryId category id
      * @return category by id
      */
+    @Transactional
     Category getCategoryById(long categoryId) throws AccessDeniedException;
 
     /**
@@ -33,6 +36,7 @@ public interface CategoryService {
      *
      * @return list of Category
      */
+    @Transactional
     List<Category> getCategories() throws AccessDeniedException;
 
     /**
@@ -40,5 +44,6 @@ public interface CategoryService {
      *
      * @param entity category to remove
      */
+    @Transactional
     void removeCategory(Category entity) throws AccessDeniedException;
 }

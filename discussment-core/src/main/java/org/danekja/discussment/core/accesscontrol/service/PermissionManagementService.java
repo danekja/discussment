@@ -5,6 +5,7 @@ import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
@@ -21,6 +22,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configurePostPermissions(IDiscussionUser user, Discussion discussion, PermissionData permissions);
 
     /**
@@ -30,6 +32,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configurePostPermissions(IDiscussionUser user, Topic topic, PermissionData permissions);
 
     /**
@@ -39,6 +42,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configurePostPermissions(IDiscussionUser user, Category category, PermissionData permissions);
 
     /**
@@ -47,6 +51,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configurePostPermissions(IDiscussionUser user, PermissionData permissions);
 
     /**
@@ -56,6 +61,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configureDiscussionPermissions(IDiscussionUser user, Topic topic, PermissionData permissions);
 
     /**
@@ -65,6 +71,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configureDiscussionPermissions(IDiscussionUser user, Category category, PermissionData permissions);
 
     /**
@@ -73,6 +80,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configureDiscussionPermissions(IDiscussionUser user, PermissionData permissions);
 
     /**
@@ -82,6 +90,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configureTopicPermissions(IDiscussionUser user, Category category, PermissionData permissions);
 
     /**
@@ -90,6 +99,7 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configureTopicPermissions(IDiscussionUser user, PermissionData permissions);
 
     /**
@@ -98,6 +108,6 @@ public interface PermissionManagementService extends Serializable {
      * @param user        user for which permissions are set
      * @param permissions the actual permission values
      */
+    @Transactional
     void configureCategoryPermissions(IDiscussionUser user, PermissionData permissions);
-
 }

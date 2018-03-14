@@ -5,6 +5,7 @@ import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface PostService {
      * @param post post to remove
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to remove the post.
      */
+    @Transactional
     void removePost(Post post) throws AccessDeniedException;
 
     /**
@@ -31,6 +33,7 @@ public interface PostService {
      * @return post by id
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view the post.
      */
+    @Transactional
     Post getPostById(long postId) throws AccessDeniedException;
 
     /**
@@ -41,6 +44,7 @@ public interface PostService {
      * @return reply
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to parent discussion.
      */
+    @Transactional
     Post sendReply(Post reply, Post post) throws AccessDeniedException;
 
 
@@ -52,6 +56,7 @@ public interface PostService {
      * @return new post
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to discussion.
      */
+    @Transactional
     Post sendPost(Discussion discussion, Post post) throws AccessDeniedException;
 
     /**
@@ -61,6 +66,7 @@ public interface PostService {
      * @return disabled post
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to edit the post.
      */
+    @Transactional
     Post disablePost(Post post) throws AccessDeniedException;
 
     /**
@@ -70,6 +76,7 @@ public interface PostService {
      * @return enabled post
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to edit the post.
      */
+    @Transactional
     Post enablePost(Post post) throws AccessDeniedException;
 
     /**
@@ -79,6 +86,7 @@ public interface PostService {
      *          and empty list if there are no posts or the discussion doesn't exist/is null.
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view posts in the discussion.
      */
+    @Transactional
     List<Post> listPostHierarchy(Discussion discussion) throws AccessDeniedException;
 
     /**
@@ -88,5 +96,6 @@ public interface PostService {
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view the post.
      * @throws DiscussionUserNotFoundException Thrown if the user can be found by post.getUserId() id.
      */
+    @Transactional
     IDiscussionUser getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException;
 }
