@@ -19,4 +19,12 @@ public interface PostDao extends GenericDao<Long, Post> {
      * @return list of Post
      */
     List<Post> getPostsByDiscussion(Discussion discussion);
+
+    /**
+     * Gets replies for post
+     *
+     * @param post Post containing replies
+     * @return list of replies
+     */
+    List<Post> getRepliesForPost(Post post);
 }

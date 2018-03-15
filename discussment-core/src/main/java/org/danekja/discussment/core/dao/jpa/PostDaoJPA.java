@@ -31,4 +31,10 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
         q.setParameter("discussionId", discussion.getId());
         return q.getResultList();
     }
+
+    public List<Post> getRepliesForPost(Post post){
+        TypedQuery<Post> q = em.createNamedQuery(Post.GET_REPLIES_FOR_POST, Post.class);
+        q.setParameter("postId", post.getId());
+        return q.getResultList();
+    }
 }
