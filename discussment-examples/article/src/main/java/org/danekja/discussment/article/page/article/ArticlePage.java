@@ -14,11 +14,14 @@ import org.danekja.discussment.article.ui.wicket.panel.article.ArticlePanel;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
+import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
 import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
 import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
 import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
+import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.TopicService;
+import org.danekja.discussment.core.service.imp.DefaultCategoryService;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
@@ -41,6 +44,7 @@ public class ArticlePage extends BasePage {
 
     private UserService userService;
 	private ArticleService articleService;
+	private CategoryService categoryService;
 	private DiscussionService discussionService;
 	private TopicService topicService;
 	private AccessControlService accessControlService;
@@ -58,6 +62,7 @@ public class ArticlePage extends BasePage {
 
         UserDaoJPA userDaoJPA = new UserDaoJPA(em);
         PermissionDaoJPA permissionJPA = new PermissionDaoJPA(em);
+        CategoryDaoJPA categoryJPA = new CategoryDaoJPA(em);
         PostDaoJPA postJPA = new PostDaoJPA(em);
         TopicDaoJPA topicDaoJPA = new TopicDaoJPA(em);
         DiscussionDaoJPA discussionDaoJPA = new DiscussionDaoJPA(em);
@@ -65,8 +70,9 @@ public class ArticlePage extends BasePage {
 
         this.userService = new DefaultUserService(userDaoJPA);
         this.accessControlService = new PermissionService(permissionJPA, userService);
-        this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postJPA, accessControlService, userService);
-        this.topicService = new DefaultTopicService(topicDaoJPA, accessControlService, userService);
+        this.categoryService = new DefaultCategoryService(categoryJPA, accessControlService, userService);
+        this.topicService = new DefaultTopicService(topicDaoJPA, categoryService, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postJPA, topicService, accessControlService, userService);
         this.articleService = new DefaultArticleService(articleDaoJPA, discussionService, topicService, accessControlService);
     }
 

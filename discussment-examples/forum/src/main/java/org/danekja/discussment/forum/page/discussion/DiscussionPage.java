@@ -66,9 +66,9 @@ public class DiscussionPage extends BasePage {
 
         this.userService = new DefaultUserService(userDao);
         this.accessControlService = new PermissionService(permissionJPA, userService);
-        this.discussionService = new DefaultDiscussionService(discussionJPA, postJPA, accessControlService, userService);
         this.categoryService = new DefaultCategoryService(categoryDaoJPA, accessControlService, userService);
-        this.topicService = new DefaultTopicService(topicJPA, accessControlService, userService);
+        this.topicService = new DefaultTopicService(topicJPA, categoryService, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(discussionJPA, postJPA, topicService, accessControlService, userService);
         this.postService = new DefaultPostService(postJPA, userService, accessControlService);
         this.permissionService = new PermissionService(permissionJPA, userService);
         this.postReputationService = new DefaultPostReputationService(userPostReputationJPA, postJPA, userService, accessControlService);

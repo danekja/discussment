@@ -43,6 +43,7 @@ public class LoginForm extends Form {
         }
 
         userModel.setObject(new User());
+        setResponsePage(getPage().getClass());
     }
 
 }

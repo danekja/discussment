@@ -11,6 +11,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.spring.core.domain.User;
 import org.danekja.discussment.spring.core.service.UserService;
 import org.danekja.discussment.spring.form.LoginForm;
@@ -34,6 +36,12 @@ public abstract class BasePage extends WebPage {
     @SpringBean
     private CategoryService categoryService;
 
+    @SpringBean
+    private TopicService topicService;
+
+    @SpringBean
+    private DiscussionService discussionService;
+
 
     public BasePage() {
 
@@ -52,7 +60,9 @@ public abstract class BasePage extends WebPage {
                 userService,
                 new Model<User>(new User()),
                 permissionService,
-                categoryService));
+                categoryService,
+                topicService,
+                discussionService));
 
     }
 
@@ -78,6 +88,7 @@ public abstract class BasePage extends WebPage {
             @Override
             public void onClick() {
                 getSession().removeAttribute("user");
+                setResponsePage(getPage().getClass());
             }
 
             @Override

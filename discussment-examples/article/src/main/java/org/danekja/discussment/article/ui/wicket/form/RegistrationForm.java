@@ -8,7 +8,9 @@ import org.danekja.discussment.article.core.service.UserService;
 import org.danekja.discussment.article.ui.wicket.form.registration.RegistrationFormComponent;
 import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
-
+import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.TopicService;
 
 
 /**
@@ -18,6 +20,9 @@ public class RegistrationForm extends Form {
 
     private UserService userService;
     private PermissionManagementService permissionService;
+    private CategoryService categoryService;
+    private TopicService topicService;
+    private DiscussionService discussionService;
 
     private IModel<User> userModel;
 
@@ -32,12 +37,18 @@ public class RegistrationForm extends Form {
     public RegistrationForm(String id,
                             UserService userService,
                             IModel<User> userModel,
-                            PermissionManagementService permissionService) {
+                            PermissionManagementService permissionService,
+                            CategoryService categoryService,
+                            TopicService topicService,
+                            DiscussionService discussionService) {
         super(id);
 
         this.userService = userService;
         this.userModel = userModel;
         this.permissionService = permissionService;
+        this.categoryService = categoryService;
+        this.topicService = topicService;
+        this.discussionService = discussionService;
 
         this.categoryPermissions = new Model<PermissionData>(new PermissionData());
         this.discussionPermissions = new Model<PermissionData>(new PermissionData(true, false, false, true));
@@ -59,9 +70,9 @@ public class RegistrationForm extends Form {
         User u = userService.addUser(userModel.getObject());
 
         permissionService.configureCategoryPermissions(u, categoryPermissions.getObject());
-        permissionService.configureTopicPermissions(u, topicPermissions.getObject());
-        permissionService.configureDiscussionPermissions(u, discussionPermissions.getObject());
-        permissionService.configurePostPermissions(u, postPermissions.getObject());
+        permissionService.configureTopicPermissions(u, categoryService.getDefaultCategory(), topicPermissions.getObject());
+        permissionService.configureDiscussionPermissions(u, topicService.getDefaultTopic(), discussionPermissions.getObject());
+        permissionService.configurePostPermissions(u, topicService.getDefaultTopic(), postPermissions.getObject());
 
         getSession().setAttribute("user", u);
 
