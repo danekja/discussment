@@ -26,6 +26,11 @@ public class Discussion extends LongEntity implements Serializable {
     public static final String GET_DISCUSSIONS_BY_TOPIC_ID = "Discussion.getBytopicId";
 
     /**
+     * The constant contains index reserved for default discussion
+     */
+    public static final long DEFAULT_DISCUSSION_ID = 1;
+
+    /**
      * Name of the discussion
      */
     private String name;

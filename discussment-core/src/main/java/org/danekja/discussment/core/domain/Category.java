@@ -15,7 +15,7 @@ import static org.danekja.discussment.core.domain.Category.GET_CATEGORIES;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = GET_CATEGORIES, query = "SELECT c FROM Category c WHERE id != 0"),
+        @NamedQuery(name = GET_CATEGORIES, query = "SELECT c FROM Category c WHERE id != 1"),
 })
 public class Category extends LongEntity implements Serializable {
 
@@ -25,9 +25,9 @@ public class Category extends LongEntity implements Serializable {
     public static final String GET_CATEGORIES = "FileEntity.getCategories";
 
     /**
-     * The constant contains index which indicates a discussion in a article
+     * The constant contains index reserved for default category
      */
-    public static final int WITHOUT_CATEGORY = 1;
+    public static final long DEFAULT_CATEGORY_ID = 1;
 
     /**
      * Name of the category

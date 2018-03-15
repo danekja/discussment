@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_BY_CATEGORY_ID;
-import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_WITHOUT_CATEGORY;
 
 /**
  * Created by Martin Bláha on 19.01.17.
@@ -16,8 +15,7 @@ import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_WITHOUT_CATEG
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = GET_TOPICS_BY_CATEGORY_ID, query = "SELECT t FROM Topic t WHERE t.category.id = :categoryId"),
-        @NamedQuery(name = GET_TOPICS_WITHOUT_CATEGORY, query = "SELECT t FROM Topic t WHERE t.category.id is null")
+        @NamedQuery(name = GET_TOPICS_BY_CATEGORY_ID, query = "SELECT t FROM Topic t WHERE t.category.id = :categoryId AND t.id != 1")
 })
 public class Topic extends LongEntity implements Serializable {
 
@@ -27,9 +25,9 @@ public class Topic extends LongEntity implements Serializable {
     public static final String GET_TOPICS_BY_CATEGORY_ID = "Topic.getTopicsByCategoryId";
 
     /**
-     * The constant contains name of query for getting topics without a category
+     * The constant contains index reserved for default topic
      */
-    public static final String GET_TOPICS_WITHOUT_CATEGORY = "FileEntity.getTopicsWithoutCategory";
+    public static final long DEFAULT_TOPIC_ID = 1;
 
     /**
      * Name of the topic
