@@ -11,15 +11,17 @@ import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
- * Post service which uses new permission system. Should replace DefaultPostService.
+ * Post service which uses new permission system.
  * Methods without user parameter will use currently logged user.
  *
  * Created by Zdenek Vales on 27.11.2017.
  */
+@Transactional
 public class DefaultPostService implements PostService {
 
     private PostDao postDao;
@@ -37,9 +39,9 @@ public class DefaultPostService implements PostService {
     public void removePost(Post post) throws AccessDeniedException {
         if( accessControlService.canRemovePost(post)) {
             if (post.getPost() != null) {
-                post.getPost().getReplies().remove(post);
+                postDao.getRepliesForPost(post.getPost()).remove(post);
             } else {
-                post.getDiscussion().getPosts().remove(post);
+                postDao.getPostsByDiscussion(post.getDiscussion()).remove(post);
             }
             postDao.remove(post);
         } else {
@@ -105,6 +107,65 @@ public class DefaultPostService implements PostService {
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
+    }
+
+    public Post getLastPost(Discussion discussion) throws AccessDeniedException{
+        if(accessControlService.canViewPosts(discussion)) {
+            Post lastPost = null;
+
+            for (Post post : postDao.getPostsByDiscussion(discussion)) {
+                if (lastPost == null) {
+                    lastPost = post;
+                }
+
+                Post a = lastPost.getLastPost();
+                Post b = post.getLastPost();
+
+                if (b.getCreated().compareTo(a.getCreated()) > 0) {
+                    lastPost = b;
+                } else {
+                    lastPost = a;
+                }
+            }
+            return lastPost;
+        } else {
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
+        }
+    }
+
+    public List<Post> getReplies(Post post) throws AccessDeniedException{
+        if(accessControlService.canViewPost(post)){
+            return postDao.getRepliesForPost(post);
+        } else {
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),post.getId(), PermissionType.POST);
+        }
+    }
+
+    public int getNumberOfPosts(Discussion discussion) throws AccessDeniedException{
+        if(accessControlService.canViewPosts(discussion)) {
+            int numberOfPosts = 0;
+            for (Post post : postDao.getPostsByDiscussion(discussion)) {
+                numberOfPosts += getNumberOfReplies(post);
+            }
+            return numberOfPosts;
+        } else {
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
+        }
+    }
+
+    private int getNumberOfReplies(Post post) {
+
+        return getNumberOfReplies(post, 0);
+    }
+
+    private int getNumberOfReplies(Post postModel, int count) {
+
+        count++;
+
+        for (Post post: postDao.getRepliesForPost(postModel)) {
+            count = getNumberOfReplies(post, count);
+        }
+        return count;
     }
 
     /**

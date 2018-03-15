@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
+import static org.danekja.discussment.core.domain.Post.GET_REPLIES_FOR_POST;
 
 /**
  * Created by Martin Bláha on 19.01.17.
@@ -19,7 +20,9 @@ import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_BY_DISCUSSION,
-                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0")
+                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0"),
+        @NamedQuery(name = GET_REPLIES_FOR_POST,
+                query = "SELECT p FROM Post p WHERE p.post.id = :postId")
 })
 public class Post extends LongEntity implements Serializable {
 
@@ -32,6 +35,8 @@ public class Post extends LongEntity implements Serializable {
      * The constant contains name of query for getting posts by discussion
      */
     public static final String GET_BY_DISCUSSION = "Post.getByDiscussion";
+
+    public static final String GET_REPLIES_FOR_POST = "Post.getRepliesForPost";
 
     /**
      * The user which the post created
@@ -217,23 +222,6 @@ public class Post extends LongEntity implements Serializable {
 
     public void setUserPostReputations(List<UserPostReputation> userPostReputations) {
         this.userPostReputations = userPostReputations;
-    }
-
-    @Transient
-    public int getNumberOfReplies() {
-
-        return getNumberOfReplies(this, 0);
-    }
-
-    @Transient
-    private int getNumberOfReplies(Post postModel, int count) {
-
-        count++;
-
-        for (Post post: postModel.getReplies()) {
-            count = getNumberOfReplies(post, count);
-        }
-        return count;
     }
 
     @Transient
