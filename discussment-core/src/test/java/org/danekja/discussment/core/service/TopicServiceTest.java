@@ -43,6 +43,9 @@ public class TopicServiceTest {
     @Mock
     private AccessControlService accessControlService;
 
+    @Mock
+    private CategoryService categoryService;
+
     private TopicService topicService;
 
     @BeforeClass
@@ -60,7 +63,7 @@ public class TopicServiceTest {
         when(discussionUserService.getUserById(any(String.class))).then(invocationOnMock -> testUser);
         when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
 
-        topicService = new DefaultTopicService(topicDao, accessControlService, discussionUserService);
+        topicService = new DefaultTopicService(topicDao, categoryService, accessControlService, discussionUserService);
     }
 
     @Test
