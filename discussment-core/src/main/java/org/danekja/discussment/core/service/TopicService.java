@@ -42,12 +42,11 @@ public interface TopicService {
     List<Topic> getTopicsByCategory(Category category) throws AccessDeniedException;
 
     /**
-     * Get all topics in a discussion without a category.
+     * Gets default topic or creates one if there isn't any.
      *
-     * @return list of Topic
-     * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view topics in the default category.
+     * @return default topic
      */
-    List<Topic> getTopicsWithoutCategory();
+    Topic getDefaultTopic();
 
     /**
      * Remove the topic in the discussion

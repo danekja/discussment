@@ -29,6 +29,13 @@ public interface CategoryService {
     Category getCategoryById(long categoryId) throws AccessDeniedException;
 
     /**
+     * Gets default category or creates one if there isn't any.
+     *
+     * @return default category
+     */
+    Category getDefaultCategory();
+
+    /**
      * Get all categories in the forum
      *
      * @return list of Category
