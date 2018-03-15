@@ -18,7 +18,20 @@ import org.danekja.discussment.article.page.dashboard.DashboardPage;
 import org.danekja.discussment.article.ui.wicket.form.LoginForm;
 import org.danekja.discussment.article.ui.wicket.form.RegistrationForm;
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
+import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
+import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
+import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
+import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.TopicService;
+import org.danekja.discussment.core.service.imp.DefaultCategoryService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
 
 import javax.persistence.EntityManager;
 
@@ -45,12 +58,20 @@ public abstract class BasePage extends WebPage {
 
         PermissionDao permissionDao = new PermissionDaoJPA(em);
         UserService userService = new DefaultUserService(new UserDaoJPA(em));
+        AccessControlService accessControlService = new PermissionService(permissionDao, userService);
+        PermissionManagementService permissionService = new PermissionService(permissionDao, userService);
+        CategoryService categoryService = new DefaultCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
+        TopicService topicService = new DefaultTopicService(new TopicDaoJPA(em), categoryService, accessControlService, userService);
+        DiscussionService discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), topicService, accessControlService, userService);
 
         add(new LoginForm("loginForm", userService, new Model<User>(new User())));
         add(new RegistrationForm("registrationForm",
                 new DefaultUserService(new UserDaoJPA(em)),
                 new Model<User>(new User()),
-                new PermissionService(permissionDao, userService)));
+                permissionService,
+                categoryService,
+                topicService,
+                discussionService));
     }
 
     private Label createUsernameLabel() {
@@ -75,6 +96,7 @@ public abstract class BasePage extends WebPage {
             @Override
             public void onClick() {
                 getSession().removeAttribute("user");
+                setResponsePage(getPage().getClass());
             }
 
             @Override

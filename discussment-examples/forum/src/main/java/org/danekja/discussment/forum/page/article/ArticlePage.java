@@ -33,11 +33,9 @@ public class ArticlePage extends BasePage {
 
     private EntityManager em;
 
-	private static final long DISCUSSION_ID = 1;
-    private static final long TOPIC_ID = 1;
-
-	private DiscussionService discussionService;
+	private CategoryService categoryService;
 	private TopicService topicService;
+    private DiscussionService discussionService;
 	private PostService postService;
 	private AccessControlService accessControlService;
 	private UserService userService;
@@ -55,18 +53,20 @@ public class ArticlePage extends BasePage {
         this.userService = new DefaultUserService(new UserDaoJPA(em));
         this.accessControlService = new PermissionService(new PermissionDaoJPA(em), userService);
         this.postReputationService = new DefaultPostReputationService(new UserPostReputationDaoJPA(em), new PostDaoJPA(em), userService, accessControlService);
-        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), accessControlService, userService);
+        this.categoryService = new DefaultCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
+        this.topicService = new DefaultTopicService(new TopicDaoJPA(em), categoryService, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), topicService, accessControlService, userService);
         this.postService = new DefaultPostService(new PostDaoJPA(em), userService, accessControlService);
-        this.topicService = new DefaultTopicService(new TopicDaoJPA(em), accessControlService, userService);
+
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
         try {
-            Discussion discussion = discussionService.getDiscussionById(DISCUSSION_ID);
+            Discussion discussion = discussionService.getDefaultDiscussion();
             if (discussion == null) {
-                Topic topic = topicService.getTopicById(TOPIC_ID);
+                Topic topic = topicService.getDefaultTopic();
                 discussion = discussionService.createDiscussion(topic, new Discussion("article name"));
             }
             add(new DiscussionPanel("content", new Model<Discussion>(discussion), new Model<Post>(), postService, userService, postReputationService, accessControlService));

@@ -30,6 +30,7 @@ public class ArticleTextPage extends BasePage {
     private EntityManager em;
 
     private ArticleService articleService;
+    private CategoryService categoryService;
     private DiscussionService discussionService;
     private TopicService topicService;
     private PostService postService;
@@ -50,6 +51,7 @@ public class ArticleTextPage extends BasePage {
         this.em = WicketApplication.factory.createEntityManager();
         this.parameters = parameters;
 
+        CategoryDaoJPA categoryDaoJPA = new CategoryDaoJPA(em);
         DiscussionDaoJPA discussionDaoJPA = new DiscussionDaoJPA(em);
         TopicDaoJPA topicDaoJPA = new TopicDaoJPA(em);
         PostDaoJPA postDaoJPA = new PostDaoJPA(em);
@@ -60,8 +62,9 @@ public class ArticleTextPage extends BasePage {
 
         this.userService = new DefaultUserService(userDaoJPA);
         this.accessControlService = new PermissionService(permissionDaoJPA, userService);
-        this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postDaoJPA, accessControlService, userService);
-        this.topicService = new DefaultTopicService(topicDaoJPA, accessControlService, userService);
+        this.categoryService = new DefaultCategoryService(categoryDaoJPA, accessControlService, userService);
+        this.topicService = new DefaultTopicService(topicDaoJPA, categoryService, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(discussionDaoJPA, postDaoJPA, topicService, accessControlService, userService);
         this.articleService = new DefaultArticleService(articleDaoJPA, discussionService, topicService, accessControlService);
         this.postReputationService = new DefaultPostReputationService(userPostReputationDaoJPA, postDaoJPA, userService, accessControlService);
         this.postService = new DefaultPostService(postDaoJPA, userService, accessControlService);
@@ -75,8 +78,12 @@ public class ArticleTextPage extends BasePage {
         if(userService.getCurrentlyLoggedUser() == null) {
             add(new NotLoggedInPanel("content"));
         } else {
-            articleModel.setObject(articleService.getArticleById(Integer.parseInt(parameters.get("articleId").toString())));
-            add(new ArticleTextPanel("content", articleModel, postService, userService, postReputationService, accessControlService));
+            try {
+                articleModel.setObject(articleService.getArticleById(Integer.parseInt(parameters.get("articleId").toString())));
+                add(new ArticleTextPanel("content", articleModel, postService, userService, postReputationService, accessControlService));
+            } catch (NumberFormatException e) {
+                setResponsePage(ArticlePage.class);
+            }
         }
     }
 

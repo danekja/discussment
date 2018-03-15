@@ -20,7 +20,6 @@ import java.util.List;
  * @author Jiri Kryda
  */
 public class DefaultArticleService implements ArticleService {
-    private final long TOPIC_ID = 1;
 
     private ArticleDao articleDao;
     private DiscussionService discussionService;
@@ -37,7 +36,7 @@ public class DefaultArticleService implements ArticleService {
     public Article createArticle(Article entity) {
 
         try {
-            Topic topic = topicService.getTopicById(TOPIC_ID);
+            Topic topic = topicService.getDefaultTopic();
             Discussion discussion = discussionService.createDiscussion(topic, new Discussion(entity.getName(), (null)));
             entity.setDiscussion(discussion);
         } catch (AccessDeniedException e) {

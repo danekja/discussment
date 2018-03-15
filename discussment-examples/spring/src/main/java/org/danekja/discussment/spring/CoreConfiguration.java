@@ -87,12 +87,12 @@ public class CoreConfiguration {
 
     @Bean
     public TopicService topicService(){
-        return new DefaultTopicService(topicDao(), accessControlService(), userService());
+        return new DefaultTopicService(topicDao(), categoryService(), accessControlService(), userService());
     }
 
     @Bean
     public DiscussionService discussionService(){
-        return new DefaultDiscussionService(discussionDao(), postDao(), accessControlService(), userService());
+        return new DefaultDiscussionService(discussionDao(), postDao(), topicService(), accessControlService(), userService());
     }
 
     @Bean

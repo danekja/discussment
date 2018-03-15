@@ -14,8 +14,15 @@ import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.dao.jpa.CategoryDaoJPA;
+import org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA;
+import org.danekja.discussment.core.dao.jpa.PostDaoJPA;
+import org.danekja.discussment.core.dao.jpa.TopicDaoJPA;
 import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.core.service.imp.DefaultCategoryService;
+import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
+import org.danekja.discussment.core.service.imp.DefaultTopicService;
 import org.danekja.discussment.forum.WicketApplication;
 import org.danekja.discussment.forum.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.forum.core.domain.User;
@@ -57,13 +64,17 @@ public abstract class BasePage extends WebPage {
         AccessControlService accessControlService = new PermissionService(permissionDao, userService);
         PermissionManagementService permissionService = new PermissionService(permissionDao, userService);
         CategoryService categoryService = new DefaultCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
+        TopicService topicService = new DefaultTopicService(new TopicDaoJPA(em), categoryService, accessControlService, userService);
+        DiscussionService discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), topicService, accessControlService, userService);
 
         add(new LoginForm("loginForm", userService, new Model<User>(new User())));
         add(new RegistrationForm("registrationForm",
                 userService,
                 new Model<User>(new User()),
                 permissionService,
-                categoryService));
+                categoryService,
+                topicService,
+                discussionService));
 
     }
 
@@ -89,6 +100,7 @@ public abstract class BasePage extends WebPage {
             @Override
             public void onClick() {
                 getSession().removeAttribute("user");
+                setResponsePage(getPage().getClass());
             }
 
             @Override
