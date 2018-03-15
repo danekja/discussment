@@ -19,12 +19,4 @@ public interface TopicDao extends GenericDao<Long, Topic> {
      * @return list of Topic
      */
     List<Topic> getTopicsByCategory(Category category);
-
-
-    /**
-     * Get topics without category in a database.
-     *
-     * @return list of Topic
-     */
-    List<Topic> getTopicsWithoutCategory();
 }
