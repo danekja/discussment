@@ -99,20 +99,4 @@ public class Topic extends LongEntity implements Serializable {
     public void setDiscussions(List<Discussion> discussions) {
         this.discussions = discussions;
     }
-
-    @Transient
-    public int getNumberOfDiscussions() {
-        return discussions.size();
-    }
-
-    @Transient
-    public int getNumberOfPosts() {
-        int numberOfPosts = 0;
-
-        for (Discussion discussion: discussions) {
-            numberOfPosts += discussion.getNumberOfPosts();
-        }
-
-        return numberOfPosts;
-    }
 }

@@ -96,40 +96,6 @@ public class Discussion extends LongEntity implements Serializable {
         this.posts = posts;
     }
 
-    @Transient
-    public int getNumberOfPosts() {
-        int numberOfPosts = 0;
-
-        for (Post post: posts) {
-            numberOfPosts += post.getNumberOfReplies();
-        }
-
-        return numberOfPosts;
-    }
-
-    @Transient
-    public Post getLastPost() {
-        Post lastPost = null;
-
-        for (Post post: posts) {
-            if (lastPost == null) {
-                lastPost = post;
-            }
-
-            Post a = lastPost.getLastPost();
-            Post b = post.getLastPost();
-
-            if (b.getCreated().compareTo(a.getCreated()) > 0) {
-                lastPost = b;
-            } else {
-                lastPost = a;
-            }
-
-        }
-
-        return lastPost;
-    }
-
     @Override
     public String toString() {
         return "Discussion{" +
