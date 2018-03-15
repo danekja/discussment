@@ -22,9 +22,4 @@ public class TopicDaoJPA extends GenericDaoJPA<Long, Topic> implements TopicDao 
         q.setParameter("categoryId", category.getId());
         return q.getResultList();
     }
-
-    public List<Topic> getTopicsWithoutCategory() {
-        TypedQuery<Topic> q = em.createNamedQuery(Topic.GET_TOPICS_WITHOUT_CATEGORY, Topic.class);
-        return q.getResultList();
-    }
 }
