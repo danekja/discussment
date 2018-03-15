@@ -13,6 +13,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.TopicService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,12 +28,14 @@ public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;
     private PostDao postDao;
+    private TopicService topicService;
     private AccessControlService accessControlService;
     private DiscussionUserService discussionUserService;
 
-    public DefaultDiscussionService(DiscussionDao discussionDao, PostDao postDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
+    public DefaultDiscussionService(DiscussionDao discussionDao, PostDao postDao, TopicService topicService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.discussionDao = discussionDao;
         this.postDao = postDao;
+        this.topicService = topicService;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
     }
@@ -61,6 +64,16 @@ public class DefaultDiscussionService implements DiscussionService {
         } else {
             throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), d.getTopic().getId(), PermissionType.DISCUSSION);
         }
+    }
+
+    public Discussion getDefaultDiscussion() {
+        Discussion d = discussionDao.getById(Discussion.DEFAULT_DISCUSSION_ID);
+        if(d == null){
+            d =  new Discussion("default discussion", null);
+            d.setTopic(topicService.getDefaultTopic());
+            discussionDao.save(d);
+        }
+        return d;
     }
 
     public void removeDiscussion(Discussion discussion) throws AccessDeniedException {

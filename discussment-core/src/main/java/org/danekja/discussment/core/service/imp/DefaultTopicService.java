@@ -9,6 +9,7 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,13 @@ import java.util.List;
 public class DefaultTopicService implements TopicService {
 
     private TopicDao topicDao;
+    private CategoryService categoryService;
     private AccessControlService accessControlService;
     private DiscussionUserService discussionUserService;
 
-    public DefaultTopicService(TopicDao topicDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
+    public DefaultTopicService(TopicDao topicDao, CategoryService categoryService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.topicDao = topicDao;
+        this.categoryService = categoryService;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
     }
@@ -62,9 +65,14 @@ public class DefaultTopicService implements TopicService {
     }
 
     @Override
-    public List<Topic> getTopicsWithoutCategory() {
-        // todo: [#24] default no-category
-        return null;
+    public Topic getDefaultTopic() {
+        Topic topic = topicDao.getById(Topic.DEFAULT_TOPIC_ID);
+        if (topic == null) {
+            topic = new Topic("default topic", null);
+            topic.setCategory(categoryService.getDefaultCategory());
+            topicDao.save(topic);
+        }
+        return topic;
     }
 
     @Override

@@ -62,6 +62,15 @@ public class DefaultCategoryService implements CategoryService {
         }
     }
 
+    public Category getDefaultCategory(){
+        Category category = categoryDao.getById(Category.DEFAULT_CATEGORY_ID);
+        if(category == null) {
+            category = new Category("default category");
+            categoryDao.save(category);
+        }
+        return category;
+    }
+
     /**
      * Returns the id of the currently logged user. Used when throwing access denied exception.
      * @return Id of the currently logged user or null if no user is logged.

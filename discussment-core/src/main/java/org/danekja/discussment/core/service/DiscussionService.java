@@ -42,6 +42,13 @@ public interface DiscussionService {
     Discussion getDiscussionById(long discussionId) throws AccessDeniedException;
 
     /**
+     * Gets default discussion or creates one if there isn't any.
+     *
+     * @return default discussion
+     */
+    Discussion getDefaultDiscussion();
+
+    /**
      * Remove a discussion
      *
      * @param discussion discussion to remove
