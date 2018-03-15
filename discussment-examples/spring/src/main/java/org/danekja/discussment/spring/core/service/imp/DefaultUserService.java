@@ -6,12 +6,14 @@ import org.danekja.discussment.spring.core.dao.UserDao;
 import org.danekja.discussment.spring.core.domain.User;
 import org.danekja.discussment.spring.core.service.UserService;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * Created by Martin Bláha on 20.01.17.
  */
+@Transactional
 public class DefaultUserService implements UserService {
 
     private UserDao userDao;

@@ -10,12 +10,14 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+@Transactional
 public class PermissionService implements PermissionManagementService, AccessControlService, AccessControlManagerService {
 
     private PermissionDao permissionDao;

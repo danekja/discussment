@@ -5,7 +5,6 @@ import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +23,6 @@ public interface DiscussionService {
      * @param discussion new discussion
      * @return new discussion
      */
-    @Transactional
     Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException;
 
     /**
@@ -33,7 +31,6 @@ public interface DiscussionService {
      * @param topic topic of the discussions
      * @return list of Discussion
      */
-    @Transactional
     List<Discussion> getDiscussionsByTopic(Topic topic) throws AccessDeniedException;
 
     /**
@@ -42,7 +39,6 @@ public interface DiscussionService {
      * @param discussionId discussion id
      * @return discussion by id
      */
-    @Transactional
     Discussion getDiscussionById(long discussionId) throws AccessDeniedException;
 
     /**
@@ -50,7 +46,6 @@ public interface DiscussionService {
      *
      * @param discussion discussion to remove
      */
-    @Transactional
     void removeDiscussion(Discussion discussion) throws AccessDeniedException;
 
     /**
@@ -58,6 +53,5 @@ public interface DiscussionService {
      * @param discussion
      * @return Author of the last post. Empty string if discussion has no posts.
      */
-    @Transactional
     IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
 }

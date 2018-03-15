@@ -9,6 +9,7 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of the PostReputationService interface.
@@ -17,6 +18,7 @@ import org.danekja.discussment.core.service.PostReputationService;
  *
  * @author Jiri Kryda
  */
+@Transactional
 public class DefaultPostReputationService implements PostReputationService {
 
     private static final Object monitor = new Object();

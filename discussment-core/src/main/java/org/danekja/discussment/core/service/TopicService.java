@@ -3,7 +3,6 @@ package org.danekja.discussment.core.service;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ public interface TopicService {
      * @return New topic
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to post to category.
      */
-    @Transactional
     Topic createTopic(Category category, Topic topic) throws AccessDeniedException;
 
     /**
@@ -32,7 +30,6 @@ public interface TopicService {
      * @return topic by id
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view topics in parent category.
      */
-    @Transactional
     Topic getTopicById(long topicId) throws AccessDeniedException;
 
     /**
@@ -42,7 +39,6 @@ public interface TopicService {
      * @return list of Topic
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view topics in parent category.
      */
-    @Transactional
     List<Topic> getTopicsByCategory(Category category) throws AccessDeniedException;
 
     /**
@@ -51,7 +47,6 @@ public interface TopicService {
      * @return list of Topic
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view topics in the default category.
      */
-    @Transactional
     List<Topic> getTopicsWithoutCategory();
 
     /**
@@ -60,6 +55,5 @@ public interface TopicService {
      * @param topic topic to remove
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to remove the topic.
      */
-    @Transactional
     void removeTopic(Topic topic) throws AccessDeniedException;
 }

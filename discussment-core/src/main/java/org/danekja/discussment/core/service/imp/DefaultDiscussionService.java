@@ -13,6 +13,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * Methods without user parameter will use currently logged user.
  *
  */
+@Transactional
 public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;

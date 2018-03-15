@@ -10,9 +10,11 @@ import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public class DefaultTopicService implements TopicService {
 
     private TopicDao topicDao;

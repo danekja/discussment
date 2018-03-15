@@ -2,8 +2,6 @@ package org.danekja.discussment.spring.core.service;
 
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.spring.core.domain.User;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,15 +13,18 @@ import java.util.List;
 public interface UserService extends DiscussionUserService{
 
     /**
-     * Add a new user to the discussion
+     * Add a new user to the discussion.
      *
      * @param entity new user
      * @return new user
      */
-    @Transactional
     User addUser(User entity);
 
-    @Transactional
+    /**
+     * Gets all users in the database.
+     *
+     * @return list of all users
+     */
     List<User> getUsers();
 
     /**
@@ -32,6 +33,5 @@ public interface UserService extends DiscussionUserService{
      * @param username username of a user
      * @return user by username
      */
-    @Transactional
     User getUserByUsername(String username);
 }
