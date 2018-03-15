@@ -59,11 +59,11 @@ public class TopicListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        /*if (topicListModel.getObject().size() == 0) {
+        if (topicListModel.getObject().size() == 0) {
             setVisible(false);
         } else {
             setVisible(true);
-        }*/
+        }
 
         add(new ListView<Topic>("topicList", topicListModel) {
             protected void populateItem(ListItem<Topic> listItem) {

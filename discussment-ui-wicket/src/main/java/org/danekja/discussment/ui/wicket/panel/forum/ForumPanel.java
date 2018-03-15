@@ -109,9 +109,10 @@ public class ForumPanel extends Panel {
             add(new NotLoggedInPanel("content"));
         } else {
             if (parametersModel.getObject().get("topicId") == -1 && parametersModel.getObject().get("discussionId") == -1) {
+                categoryModel.setObject(categoryService.getDefaultCategory());
                 add(new ContentListPanel("content",
                         new CategoryWicketModel(categoryService),
-                        new TopicWicketModel(topicService),
+                        new TopicWicketModel(categoryModel, topicService),
                         categoryModel, categoryService, topicService, discussionService, postService, accessControlService)
                 );
             } else if (parametersModel.getObject().get("topicId") != -1) {

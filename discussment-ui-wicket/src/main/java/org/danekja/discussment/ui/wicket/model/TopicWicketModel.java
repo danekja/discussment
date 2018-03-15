@@ -21,16 +21,6 @@ public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
     private IModel<Category> categoryModel;
 
     /**
-     * Constructor for creating a instance of getting the topic in the discussion.
-     *
-     * @param topicService instance of topic service
-     */
-    public TopicWicketModel(TopicService topicService) {
-
-        this(new Model<Category>(), topicService);
-    }
-
-    /**
      * Constructor for creating a instance of getting topic in the forum.
      *
      * @param categoryModel variable contains the discussion for getting the posts in the forum
@@ -44,17 +34,12 @@ public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
 
     protected List<Topic> load() {
 
-        if (categoryModel.getObject() == null) {
-            return topicService.getTopicsWithoutCategory();
-        } else {
-            try {
-                return topicService.getTopicsByCategory(categoryModel.getObject());
-            } catch (AccessDeniedException e) {
-                return null;
-            } catch (NullPointerException e) {
-                return null;
-            }
+        try {
+            return topicService.getTopicsByCategory(categoryModel.getObject());
+        } catch (AccessDeniedException e) {
+            return null;
+        } catch (NullPointerException e) {
+            return null;
         }
     }
-
 }

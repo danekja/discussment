@@ -15,6 +15,7 @@ import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
+import org.danekja.discussment.ui.wicket.panel.accessDenied.AccessDeniedPanel;
 import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import java.util.List;
@@ -79,10 +80,16 @@ public class ContentListPanel extends Panel {
         try {
             add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, discussionService, postService, accessControlService));
         } catch (NullPointerException e) {
-            add(new NotLoggedInPanel("categoryPabel"));
+            add(new NotLoggedInPanel("categoryPanel"));
         }
         try {
-            add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, discussionService, postService, accessControlService));
+            if(accessControlService.canViewTopics(categoryService.getDefaultCategory())){
+                add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, discussionService, postService, accessControlService));
+            } else {
+                Panel adp = new AccessDeniedPanel("withoutTopicListPanel");
+                adp.setVisible(false);
+                add(adp);
+            }
         } catch (NullPointerException e) {
             add(new NotLoggedInPanel("withoutTopicListPanel"));
         }
@@ -105,11 +112,7 @@ public class ContentListPanel extends Panel {
     private AjaxLink createTopicAjaxLink() {
         return new AjaxLink("createTopic") {
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                try {
-                    categoryModel.setObject(categoryService.getCategoryById(Category.WITHOUT_CATEGORY));
-                } catch (AccessDeniedException e) {
-                    // todo: not yet implemented
-                }
+                categoryModel.setObject(categoryService.getDefaultCategory());
             }
 
             @Override
