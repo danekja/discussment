@@ -112,13 +112,13 @@ public class ForumPanel extends Panel {
                 add(new ContentListPanel("content",
                         new CategoryWicketModel(categoryService),
                         new TopicWicketModel(topicService),
-                        categoryModel, categoryService, topicService, accessControlService)
+                        categoryModel, categoryService, topicService, discussionService, postService, accessControlService)
                 );
             } else if (parametersModel.getObject().get("topicId") != -1) {
                 try{
                     Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
                     topicModel.setObject(topic);
-                    add(new DiscussionListPanel("content", topicModel, discussionService,discussionModel, accessControlService));
+                    add(new DiscussionListPanel("content", topicModel,discussionModel, discussionService, postService, accessControlService));
                 } catch (AccessDeniedException e) {
                     add(new AccessDeniedPanel("content"));
                 }

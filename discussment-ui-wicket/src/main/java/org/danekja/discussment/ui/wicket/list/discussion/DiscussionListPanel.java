@@ -18,9 +18,13 @@ import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
+
+import java.util.List;
 
 
 /**
@@ -31,6 +35,7 @@ import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
 public class DiscussionListPanel extends Panel {
 
     private DiscussionService discussionService;
+    private PostService postService;
     private IModel<Discussion> discussionModel;
     private IModel<Topic> topicListModel;
     private AccessControlService accessControlService;
@@ -44,10 +49,11 @@ public class DiscussionListPanel extends Panel {
      * @param discussionService instance of the discussion service
      * @param discussionModel model for setting the selected discussion
      */
-    public DiscussionListPanel(String id, IModel<Topic> topicListModel, DiscussionService discussionService, IModel<Discussion> discussionModel, AccessControlService accessControlService) {
+    public DiscussionListPanel(String id, IModel<Topic> topicListModel, IModel<Discussion> discussionModel, DiscussionService discussionService, PostService postService, AccessControlService accessControlService) {
         super(id);
 
         this.discussionService = discussionService;
+        this.postService = postService;
         this.discussionModel = discussionModel;
         this.topicListModel = topicListModel;
         this.accessControlService = accessControlService;
@@ -68,7 +74,11 @@ public class DiscussionListPanel extends Panel {
 
                 listItem.add(createPasswordDivWebMarkupContainer(listItem.getModel()));
 
-                listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
+                try {
+                    listItem.add(new Label("numberOfPosts", postService.getNumberOfPosts(listItem.getModelObject())));
+                } catch (AccessDeniedException e){
+                    listItem.add(new Label("numberOfPosts"));
+                }
 
                 listItem.add(new Label("lastUsername", new LoadableDetachableModel<String>() {
                     protected String load() {
@@ -78,15 +88,24 @@ public class DiscussionListPanel extends Panel {
                             return "Error: author of last post not found";
                         } catch (AccessDeniedException e){
                             return "Error: access denied";
+                        } catch (NullPointerException e){
+                            return "";
                         }
                     }
                 }));
-                listItem.add(new Label("lastCreated", new PropertyModel<String>(listItem.getModel(), "lastPost.getCreatedFormat")));
+                try {
+                    listItem.add(new Label("lastCreated", postService.getLastPost(listItem.getModelObject()).getCreated()));
+                } catch (NullPointerException e){
+                    listItem.add(new Label("lastCreated"));
+                } catch (AccessDeniedException e){
+                    listItem.add(new Label("lastCreated"));
+                }
 
                 listItem.add(createRemoveDiscussionLink(listItem.getModel()));
             }
         });
     }
+
 
     private WebMarkupContainer createPasswordAlert() {
         return new WebMarkupContainer("alertPassword") {

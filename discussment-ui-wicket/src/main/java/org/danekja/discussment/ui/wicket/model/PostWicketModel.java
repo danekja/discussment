@@ -52,12 +52,12 @@ public class PostWicketModel extends LoadableDetachableModel<List<Post>> {
 
         posts.add(post);
 
-        for (Post p : post.getReplies()) {
-            createList(p, posts);
-        }
+        try {
+            for (Post p : postService.getReplies(post)) {
+                createList(p, posts);
+            }
+        } catch (AccessDeniedException e){}
 
         return posts;
     }
-
-
 }

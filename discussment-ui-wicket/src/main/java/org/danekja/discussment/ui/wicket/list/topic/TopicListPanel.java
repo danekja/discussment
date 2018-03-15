@@ -11,7 +11,11 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.domain.Discussion;
+import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.TopicService;
 
 import java.util.List;
@@ -24,6 +28,8 @@ import java.util.List;
 public class TopicListPanel extends Panel {
 
     private TopicService topicService;
+    private DiscussionService discussionService;
+    private PostService postService;
     private AccessControlService accessControlService;
     private IModel<List<Topic>>  topicListModel;
 
@@ -34,10 +40,17 @@ public class TopicListPanel extends Panel {
      * @param topicListModel model for getting the topics
      * @param topicService instance of the topic service
      */
-    public TopicListPanel(String id, IModel<List<Topic>> topicListModel, TopicService topicService, AccessControlService accessControlService) {
+    public TopicListPanel(String id,
+                          IModel<List<Topic>> topicListModel,
+                          TopicService topicService,
+                          DiscussionService discussionService,
+                          PostService postService,
+                          AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
+        this.discussionService = discussionService;
+        this.postService = postService;
         this.accessControlService = accessControlService;
         this.topicListModel = topicListModel;
     }
@@ -59,8 +72,16 @@ public class TopicListPanel extends Panel {
                 listItem.add(createRemoveLink(listItem.getModel()));
 
                 listItem.add(new Label("description", new PropertyModel<String>(listItem.getModel(), "description")));
-                listItem.add(new Label("numberOfDiscussions", new PropertyModel<String>(listItem.getModel(), "numberOfDiscussions")));
-                listItem.add(new Label("numberOfPosts", new PropertyModel<String>(listItem.getModel(), "numberOfPosts")));
+                try {
+                    List<Discussion> discussions = discussionService.getDiscussionsByTopic(listItem.getModelObject());
+                    listItem.add(new Label("numberOfDiscussions", discussions.size()));
+                    listItem.add(new Label("numberOfPosts", getNumberOfPosts(discussions)));
+                } catch (AccessDeniedException e) {
+                    listItem.add(new Label("numberOfDiscussions"));
+                    listItem.add(new Label("numberOfPosts"));
+                    e.printStackTrace();
+                }
+
 
             }
         });
@@ -104,6 +125,16 @@ public class TopicListPanel extends Panel {
                 setVisible(accessControlService.canRemoveTopic(tm.getObject()));
             }
         };
+    }
+
+    private int getNumberOfPosts(List<Discussion> discussions) {
+        int numberOfPosts = 0;
+        try {
+            for (Discussion discussion: discussions) {
+                numberOfPosts += postService.getNumberOfPosts(discussion);
+            }
+        } catch (AccessDeniedException e){}
+        return numberOfPosts;
     }
 
 }

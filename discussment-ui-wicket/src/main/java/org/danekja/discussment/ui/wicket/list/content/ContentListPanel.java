@@ -10,6 +10,8 @@ import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
@@ -27,8 +29,10 @@ public class ContentListPanel extends Panel {
 
     private final long CATEGORY_ID = 1;
 
-    private TopicService topicService;
     private CategoryService categoryService;
+    private TopicService topicService;
+    private DiscussionService discussionService;
+    private PostService postService;
     private AccessControlService accessControlService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>>  categoryListModel;
@@ -44,7 +48,15 @@ public class ContentListPanel extends Panel {
      * @param topicService instance of the topic service
      * @param categoryModel model for setting the selected category
      */
-    public ContentListPanel(String id, IModel<List<Category>> categoryListModel, IModel<List<Topic>> topicWicketModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, AccessControlService accessControlService) {
+    public ContentListPanel(String id,
+                            IModel<List<Category>> categoryListModel,
+                            IModel<List<Topic>> topicWicketModel,
+                            IModel<Category> categoryModel,
+                            CategoryService categoryService,
+                            TopicService topicService,
+                            DiscussionService discussionService,
+                            PostService postService,
+                            AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
@@ -53,6 +65,8 @@ public class ContentListPanel extends Panel {
         this.categoryModel = categoryModel;
         this.topicWicketModel = topicWicketModel;
         this.accessControlService = accessControlService;
+        this.discussionService = discussionService;
+        this.postService = postService;
     }
 
     @Override
@@ -63,12 +77,12 @@ public class ContentListPanel extends Panel {
         add(createTopicAjaxLink());
 
         try {
-            add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, accessControlService));
+            add(new CategoryListPanel("categoryPanel", categoryListModel, categoryModel, categoryService, topicService, discussionService, postService, accessControlService));
         } catch (NullPointerException e) {
             add(new NotLoggedInPanel("categoryPabel"));
         }
         try {
-            add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, accessControlService));
+            add(new TopicListPanel("withoutTopicListPanel", topicWicketModel, topicService, discussionService, postService, accessControlService));
         } catch (NullPointerException e) {
             add(new NotLoggedInPanel("withoutTopicListPanel"));
         }

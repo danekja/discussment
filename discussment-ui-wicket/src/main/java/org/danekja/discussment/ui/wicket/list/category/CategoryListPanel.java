@@ -15,6 +15,8 @@ import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
 import org.danekja.discussment.ui.wicket.model.TopicWicketModel;
@@ -32,6 +34,8 @@ public class CategoryListPanel extends Panel {
 
     private CategoryService categoryService;
     private TopicService topicService;
+    private DiscussionService discussionService;
+    private PostService postService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>> categoryListModel;
     private AccessControlService accessControlService;
@@ -45,14 +49,23 @@ public class CategoryListPanel extends Panel {
      * @param categoryService instance of the category service
      * @param topicService instance of the topic service
      */
-    public CategoryListPanel(String id, IModel<List<Category>> categoryListModel, IModel<Category> categoryModel, CategoryService categoryService, TopicService topicService, AccessControlService accessControlService) {
+    public CategoryListPanel(String id,
+                             IModel<List<Category>> categoryListModel,
+                             IModel<Category> categoryModel,
+                             CategoryService categoryService,
+                             TopicService topicService,
+                             DiscussionService discussionService,
+                             PostService postService,
+                             AccessControlService accessControlService) {
         super(id);
 
         this.topicService = topicService;
+        this.discussionService = discussionService;
         this.categoryListModel = categoryListModel;
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
         this.accessControlService = accessControlService;
+        this.postService = postService;
     }
 
     @Override
@@ -71,7 +84,7 @@ public class CategoryListPanel extends Panel {
     }
 
     private TopicListPanel createTopicListViewPanel(IModel<Category> cm) {
-        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService, accessControlService);
+        TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService, discussionService, postService, accessControlService);
         topicListViewPanel.setOutputMarkupId(true);
         topicListViewPanel.setMarkupId("id" + generateId);
 
