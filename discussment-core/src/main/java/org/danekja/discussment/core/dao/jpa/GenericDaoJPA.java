@@ -22,7 +22,8 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     }
 
     public T save(T obj) {
-        if(!em.getTransaction().isActive()) {
+        boolean isSpringActive = em.isJoinedToTransaction();
+        if(!isSpringActive) {
             em.getTransaction().begin();
         }
         if (obj.isNew()) {
@@ -30,8 +31,10 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         } else {
             em.merge(obj);
         }
-        em.getTransaction().commit();
-        em.clear();
+        if(!isSpringActive) {
+            em.getTransaction().commit();
+        }
+
         return obj;
     }
 
@@ -40,12 +43,15 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     }
 
     public void remove(T obj) {
-        if(!em.getTransaction().isActive()) {
+        boolean isSpringActive = em.isJoinedToTransaction();
+        if(!isSpringActive) {
             em.getTransaction().begin();
         }
         if (!obj.isNew()) {
             em.remove(em.contains(obj) ? obj : em.merge(obj));
         }
-        em.getTransaction().commit();
+        if(!isSpringActive){
+            em.getTransaction().commit();
+        }
     }
 }
