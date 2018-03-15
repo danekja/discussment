@@ -51,6 +51,9 @@ public class DiscussionServiceTest {
     @Mock
     private DiscussionUserService discussionUserService;
 
+    @Mock
+    private TopicService topicService;
+
     private DiscussionService discussionService;
 
 
@@ -72,7 +75,7 @@ public class DiscussionServiceTest {
         when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
 
 
-        discussionService = new DefaultDiscussionService(discussionDao, postDao, accessControlService, discussionUserService);
+        discussionService = new DefaultDiscussionService(discussionDao, postDao, topicService, accessControlService, discussionUserService);
     }
 
     @Test
