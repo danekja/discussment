@@ -25,42 +25,39 @@ import javax.persistence.PersistenceContext;
 @EnableTransactionManagement
 public class CoreConfiguration {
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Bean
     public CategoryDao categoryDao(){
-        return new CategoryDaoJPA(em);
+        return new CategoryDaoJPA();
     }
 
     @Bean
     public TopicDao topicDao(){
-        return new TopicDaoJPA(em);
+        return new TopicDaoJPA();
     }
 
     @Bean
     public DiscussionDao discussionDao(){
-        return new DiscussionDaoJPA(em);
+        return new DiscussionDaoJPA();
     }
 
     @Bean
     public PostDao postDao(){
-        return new PostDaoJPA(em);
+        return new PostDaoJPA();
     }
 
     @Bean
     public UserPostReputationDao userPostReputationDao(){
-        return new UserPostReputationDaoJPA(em);
+        return new UserPostReputationDaoJPA();
     }
 
     @Bean
     public PermissionDao permissionDao(){
-        return new PermissionDaoJPA(em);
+        return new PermissionDaoJPA();
     }
 
     @Bean
     public UserDao userDao(){
-        return new UserDaoJPA(em);
+        return new UserDaoJPA();
     }
 
     @Bean
