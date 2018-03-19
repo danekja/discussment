@@ -49,14 +49,14 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     }
 
     public void remove(T obj) {
-        boolean isSpringActive = em.isJoinedToTransaction();
-        if(!isSpringActive) {
+        boolean hasOuterTransaction = em.isJoinedToTransaction();
+        if(!hasOuterTransaction) {
             em.getTransaction().begin();
         }
         if (!obj.isNew()) {
             em.remove(em.contains(obj) ? obj : em.merge(obj));
         }
-        if(!isSpringActive){
+        if(!hasOuterTransaction){
             em.getTransaction().commit();
         }
     }
