@@ -59,12 +59,6 @@ public class TopicListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        if (topicListModel.getObject().size() == 0) {
-            setVisible(false);
-        } else {
-            setVisible(true);
-        }
-
         add(new ListView<Topic>("topicList", topicListModel) {
             protected void populateItem(ListItem<Topic> listItem) {
 
@@ -83,6 +77,17 @@ public class TopicListPanel extends Panel {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+
+        if (topicListModel.getObject().size() == 0) {
+            setVisible(false);
+        } else {
+            setVisible(true);
+        }
     }
 
     private Link createOpenTopicLink(final IModel<Topic> tm) {
