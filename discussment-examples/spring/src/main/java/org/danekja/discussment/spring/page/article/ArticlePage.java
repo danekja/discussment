@@ -32,8 +32,6 @@ public class ArticlePage extends BasePage {
 
 	private static final long serialVersionUID = 1L;
 
-    private EntityManager em;
-
 	private static final long DISCUSSION_ID = 1;
     private static final long TOPIC_ID = 1;
 

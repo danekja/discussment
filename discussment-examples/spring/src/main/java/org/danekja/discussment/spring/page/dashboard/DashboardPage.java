@@ -42,7 +42,7 @@ public class DashboardPage extends BasePage {
     @SpringBean
     private DiscussionService discussionService;
 
-    public DashboardPage(final PageParameters parameters) {
+    public DashboardPage(PageParameters parameters) {
 
         add(new ListView<User>("usersListView", userService.getUsers()) {
 

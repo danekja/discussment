@@ -21,11 +21,6 @@ import javax.persistence.PersistenceContext;
  */
 public class WicketApplication extends WebApplication {
 
-	private static final String PERSISTENCE_UNIT = "discussment-spring";
-
-	@PersistenceContext
-	public EntityManager entityManager;
-
 	/**
 	 * Constructor
 	 */
@@ -40,10 +35,6 @@ public class WicketApplication extends WebApplication {
 		super.init();
 
 		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-		/*AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		ctx.scan("org.danekja.discussment.spring.**");
-		ctx.refresh();*/
-
 
 		getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
 		mountPages();
@@ -59,6 +50,4 @@ public class WicketApplication extends WebApplication {
 		mountPage("/article", ArticlePage.class);
 		mountPage("/forum", DiscussionPage.class);
 	}
-
-
 }
