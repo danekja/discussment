@@ -4,6 +4,7 @@ import org.danekja.discussment.core.dao.GenericDao;
 import org.danekja.discussment.core.domain.BaseEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 
 
@@ -12,9 +13,14 @@ import java.io.Serializable;
  */
 public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> implements GenericDao<PK, T> {
 
-    protected static EntityManager em;
+    @PersistenceContext
+    protected EntityManager em;
 
     private Class<T> clazz;
+
+    public GenericDaoJPA(Class<T> clazz){
+        this.clazz = clazz;
+    }
 
     public GenericDaoJPA(Class<T> clazz, EntityManager em) {
         this.em = em;
@@ -22,8 +28,8 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     }
 
     public T save(T obj) {
-        boolean isSpringActive = em.isJoinedToTransaction();
-        if(!isSpringActive) {
+        boolean hasOuterTransaction = em.isJoinedToTransaction();
+        if(!hasOuterTransaction) {
             em.getTransaction().begin();
         }
         if (obj.isNew()) {
@@ -31,7 +37,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         } else {
             em.merge(obj);
         }
-        if(!isSpringActive) {
+        if(!hasOuterTransaction) {
             em.getTransaction().commit();
         }
 

@@ -13,6 +13,10 @@ import java.util.List;
  */
 public class DiscussionDaoJPA extends GenericDaoJPA<Long, Discussion> implements DiscussionDao {
 
+    public DiscussionDaoJPA() {
+        super(Discussion.class);
+    }
+
     public DiscussionDaoJPA(EntityManager em) {
         super(Discussion.class, em);
     }

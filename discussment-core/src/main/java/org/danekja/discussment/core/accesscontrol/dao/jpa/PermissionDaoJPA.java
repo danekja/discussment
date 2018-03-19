@@ -14,6 +14,10 @@ import java.util.List;
 
 public class PermissionDaoJPA extends GenericDaoJPA<PermissionId, AbstractPermission> implements PermissionDao {
 
+    public PermissionDaoJPA() {
+        super(AbstractPermission.class);
+    }
+
     public PermissionDaoJPA(EntityManager em) {
         super(AbstractPermission.class, em);
     }

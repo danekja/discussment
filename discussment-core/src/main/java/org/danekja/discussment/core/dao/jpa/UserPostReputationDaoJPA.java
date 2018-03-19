@@ -18,6 +18,8 @@ import javax.persistence.TypedQuery;
  */
 public class UserPostReputationDaoJPA extends GenericDaoJPA<Long, UserPostReputation> implements UserPostReputationDao {
 
+    public UserPostReputationDaoJPA(){ super(UserPostReputation.class); }
+
     /**
      * @param em entity manager to be used by this dao
      */

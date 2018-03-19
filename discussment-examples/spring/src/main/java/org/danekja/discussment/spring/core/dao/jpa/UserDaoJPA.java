@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class UserDaoJPA extends GenericDaoJPA<Long, User> implements UserDao {
 
-    public UserDaoJPA(EntityManager em) {
-        super(User.class, em);
+    public UserDaoJPA() {
+        super(User.class);
     }
 
     public User getUserByUsername(String username) {

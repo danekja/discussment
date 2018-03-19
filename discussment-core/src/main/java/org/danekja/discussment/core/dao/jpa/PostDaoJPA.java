@@ -13,6 +13,10 @@ import java.util.List;
  */
 public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
 
+    public PostDaoJPA() {
+        super(Post.class);
+    }
+
     public PostDaoJPA(EntityManager em) {
         super(Post.class, em);
     }
