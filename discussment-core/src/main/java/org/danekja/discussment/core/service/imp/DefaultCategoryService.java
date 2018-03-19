@@ -66,6 +66,7 @@ public class DefaultCategoryService implements CategoryService {
         Category category = categoryDao.getById(Category.DEFAULT_CATEGORY_ID);
         if(category == null) {
             category = new Category("default category");
+            category.setId(Category.DEFAULT_CATEGORY_ID);
             categoryDao.save(category);
         }
         return category;
