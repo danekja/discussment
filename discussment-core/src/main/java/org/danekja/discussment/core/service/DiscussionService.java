@@ -43,6 +43,7 @@ public interface DiscussionService {
 
     /**
      * Gets default discussion or creates one if there isn't any.
+     * Its id can be found in Discussion.java variable DEFAULT_DISCUSSION_ID.
      *
      * @return default discussion
      */
@@ -58,7 +59,7 @@ public interface DiscussionService {
     /**
      * Returns the author of the last post in the discussion.
      * @param discussion
-     * @return Author of the last post. Empty string if discussion has no posts.
+     * @return Author of the last post. Null if discussion has no posts.
      */
     IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
 }
