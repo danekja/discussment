@@ -43,6 +43,7 @@ public interface TopicService {
 
     /**
      * Gets default topic or creates one if there isn't any.
+     * Its id can be found in Topic.java variable DEFAULT_TOPIC_ID.
      *
      * @return default topic
      */

@@ -30,6 +30,7 @@ public interface CategoryService {
 
     /**
      * Gets default category or creates one if there isn't any.
+     * Its id can be found in Category.java variable DEFAULT_CATEGORY_ID.
      *
      * @return default category
      */
