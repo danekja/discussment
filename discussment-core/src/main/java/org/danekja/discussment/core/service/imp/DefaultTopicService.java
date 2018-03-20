@@ -68,9 +68,8 @@ public class DefaultTopicService implements TopicService {
     public Topic getDefaultTopic() {
         Topic topic = topicDao.getById(Topic.DEFAULT_TOPIC_ID);
         if (topic == null) {
-            topic = new Topic("default topic", null);
+            topic = new Topic(Topic.DEFAULT_TOPIC_ID, "default topic", null);
             topic.setCategory(categoryService.getDefaultCategory());
-            topic.setId(Topic.DEFAULT_TOPIC_ID);
             topicDao.save(topic);
         }
         return topic;

@@ -69,9 +69,8 @@ public class DefaultDiscussionService implements DiscussionService {
     public Discussion getDefaultDiscussion() {
         Discussion d = discussionDao.getById(Discussion.DEFAULT_DISCUSSION_ID);
         if(d == null){
-            d =  new Discussion("default discussion", null);
+            d =  new Discussion(Discussion.DEFAULT_DISCUSSION_ID, "default discussion");
             d.setTopic(topicService.getDefaultTopic());
-            d.setId(Discussion.DEFAULT_DISCUSSION_ID);
             discussionDao.save(d);
         }
         return d;
