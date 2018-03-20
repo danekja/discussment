@@ -111,5 +111,5 @@ public interface PostService {
      * @return number of posts in the discussion
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view posts in the discussion.
      */
-    int getNumberOfPosts(Discussion discussion) throws AccessDeniedException;
+    long getNumberOfPosts(Discussion discussion) throws AccessDeniedException;
 }

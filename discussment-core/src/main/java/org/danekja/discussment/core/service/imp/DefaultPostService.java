@@ -41,7 +41,7 @@ public class DefaultPostService implements PostService {
             if (post.getPost() != null) {
                 postDao.getRepliesForPost(post.getPost()).remove(post);
             } else {
-                postDao.getPostsByDiscussion(post.getDiscussion()).remove(post);
+                postDao.getBasePostsByDiscussion(post.getDiscussion()).remove(post);
             }
             postDao.remove(post);
         } else {
@@ -95,7 +95,7 @@ public class DefaultPostService implements PostService {
 
     public List<Post> listPostHierarchy(Discussion discussion) throws AccessDeniedException {
         if (accessControlService.canViewPosts(discussion)) {
-            return postDao.getPostsByDiscussion(discussion);
+            return postDao.getBasePostsByDiscussion(discussion);
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
@@ -111,23 +111,7 @@ public class DefaultPostService implements PostService {
 
     public Post getLastPost(Discussion discussion) throws AccessDeniedException{
         if(accessControlService.canViewPosts(discussion)) {
-            Post lastPost = null;
-
-            for (Post post : postDao.getPostsByDiscussion(discussion)) {
-                if (lastPost == null) {
-                    lastPost = post;
-                }
-
-                Post a = lastPost.getLastPost();
-                Post b = post.getLastPost();
-
-                if (b.getCreated().compareTo(a.getCreated()) > 0) {
-                    lastPost = b;
-                } else {
-                    lastPost = a;
-                }
-            }
-            return lastPost;
+            return postDao.getLastPost(discussion);
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
@@ -141,31 +125,12 @@ public class DefaultPostService implements PostService {
         }
     }
 
-    public int getNumberOfPosts(Discussion discussion) throws AccessDeniedException{
+    public long getNumberOfPosts(Discussion discussion) throws AccessDeniedException{
         if(accessControlService.canViewPosts(discussion)) {
-            int numberOfPosts = 0;
-            for (Post post : postDao.getPostsByDiscussion(discussion)) {
-                numberOfPosts += getNumberOfReplies(post);
-            }
-            return numberOfPosts;
+            return postDao.getNumberOfPosts(discussion);
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
-    }
-
-    private int getNumberOfReplies(Post post) {
-
-        return getNumberOfReplies(post, 0);
-    }
-
-    private int getNumberOfReplies(Post postModel, int count) {
-
-        count++;
-
-        for (Post post: postDao.getRepliesForPost(postModel)) {
-            count = getNumberOfReplies(post, count);
-        }
-        return count;
     }
 
     /**
