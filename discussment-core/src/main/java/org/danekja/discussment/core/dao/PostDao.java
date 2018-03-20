@@ -21,10 +21,34 @@ public interface PostDao extends GenericDao<Long, Post> {
     List<Post> getPostsByDiscussion(Discussion discussion);
 
     /**
+     * Gets base posts in discussion
+     *
+     * @param discussion Discussion containing posts
+     * @return list of Post
+     */
+    List<Post> getBasePostsByDiscussion(Discussion discussion);
+
+    /**
      * Gets replies for post
      *
      * @param post Post containing replies
      * @return list of replies
      */
     List<Post> getRepliesForPost(Post post);
+
+    /**
+     * Get last post in the discussion
+     *
+     * @param discussion Discussion containing posts
+     * @return last post in the discussion or null if discussion has no posts
+     */
+    Post getLastPost(Discussion discussion);
+
+    /**
+     * Gets number of posts in the discussion
+     *
+     * @param discussion Discussion containing posts
+     * @return number of posts in the discussion
+     */
+    long getNumberOfPosts(Discussion discussion);
 }
