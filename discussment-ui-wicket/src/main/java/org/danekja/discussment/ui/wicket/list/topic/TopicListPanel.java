@@ -81,8 +81,6 @@ public class TopicListPanel extends Panel {
                     listItem.add(new Label("numberOfPosts"));
                     e.printStackTrace();
                 }
-
-
             }
         });
     }
@@ -127,14 +125,15 @@ public class TopicListPanel extends Panel {
         };
     }
 
-    private int getNumberOfPosts(List<Discussion> discussions) {
-        int numberOfPosts = 0;
+    private long getNumberOfPosts(List<Discussion> discussions) {
+        long numberOfPosts = 0;
         try {
             for (Discussion discussion: discussions) {
                 numberOfPosts += postService.getNumberOfPosts(discussion);
             }
-        } catch (AccessDeniedException e){}
+        } catch (AccessDeniedException e){
+            return numberOfPosts;
+        }
         return numberOfPosts;
     }
-
 }
