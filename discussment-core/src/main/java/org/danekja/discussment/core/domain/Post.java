@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.danekja.discussment.core.domain.Post.GET_BASE_POSTS_BY_DISCUSSION;
 import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
 import static org.danekja.discussment.core.domain.Post.GET_REPLIES_FOR_POST;
 
@@ -20,6 +21,8 @@ import static org.danekja.discussment.core.domain.Post.GET_REPLIES_FOR_POST;
 @Entity
 @NamedQueries({
         @NamedQuery(name = GET_BY_DISCUSSION,
+                query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId"),
+        @NamedQuery(name = GET_BASE_POSTS_BY_DISCUSSION,
                 query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0"),
         @NamedQuery(name = GET_REPLIES_FOR_POST,
                 query = "SELECT p FROM Post p WHERE p.post.id = :postId")
@@ -36,6 +39,14 @@ public class Post extends LongEntity implements Serializable {
      */
     public static final String GET_BY_DISCUSSION = "Post.getByDiscussion";
 
+    /**
+     * The constant contains name of query for getting base posts in discussion
+     */
+    public static final String GET_BASE_POSTS_BY_DISCUSSION = "Post.getBasePostsByDiscussion";
+
+    /**
+     * The constant contains name of query for getting replies of the post
+     */
     public static final String GET_REPLIES_FOR_POST = "Post.getRepliesForPost";
 
     /**
@@ -222,30 +233,6 @@ public class Post extends LongEntity implements Serializable {
 
     public void setUserPostReputations(List<UserPostReputation> userPostReputations) {
         this.userPostReputations = userPostReputations;
-    }
-
-    @Transient
-    public Post getLastPost() {
-        return getLastPost(this);
-    }
-
-    private Post getLastPost(Post postModel) {
-        Post lastPost = null;
-
-        for (Post post: postModel.getReplies()) {
-            lastPost = getLastPost(post);
-
-            if (post.getCreated().compareTo(lastPost.getCreated()) > 0) {
-                lastPost = post;
-            }
-        }
-
-        if (lastPost == null) {
-            return this;
-        } else {
-            return lastPost;
-        }
-
     }
 
     /**
