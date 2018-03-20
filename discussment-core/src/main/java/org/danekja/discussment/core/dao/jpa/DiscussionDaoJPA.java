@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class DiscussionDaoJPA extends GenericDaoJPA<Long, Discussion> implements DiscussionDao {
 
+    /**
+     * Constructor used with container managed entity manager
+     */
     public DiscussionDaoJPA() {
         super(Discussion.class);
     }

@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class CategoryDaoJPA extends GenericDaoJPA<Long, Category> implements CategoryDao {
 
+    /**
+     * Constructor used with container managed entity manager
+     */
     public CategoryDaoJPA() {
         super(Category.class);
     }

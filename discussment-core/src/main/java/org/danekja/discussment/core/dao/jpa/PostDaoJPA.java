@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
 
+    /**
+     * Constructor used with container managed entity manager
+     */
     public PostDaoJPA() {
         super(Post.class);
     }

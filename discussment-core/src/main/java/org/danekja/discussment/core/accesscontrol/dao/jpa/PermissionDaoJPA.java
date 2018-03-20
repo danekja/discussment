@@ -14,6 +14,9 @@ import java.util.List;
 
 public class PermissionDaoJPA extends GenericDaoJPA<PermissionId, AbstractPermission> implements PermissionDao {
 
+    /**
+     * Constructor used with container managed entity manager
+     */
     public PermissionDaoJPA() {
         super(AbstractPermission.class);
     }
