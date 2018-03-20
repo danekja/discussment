@@ -79,7 +79,7 @@ public class DiscussionServiceTest {
     public void testCreateDiscussion() throws AccessDeniedException, DiscussionUserNotFoundException {
         Discussion discussion = new Discussion(55L,"Some discussion");
         when(discussionDao.save(any(Discussion.class))).then(invocationOnMock -> (Discussion)invocationOnMock.getArguments()[0]);
-        when(postDao.getPostsByDiscussion(any(Discussion.class))).then(invocationOnMock -> new ArrayList<>());
+        when(postDao.getBasePostsByDiscussion(any(Discussion.class))).then(invocationOnMock -> new ArrayList<>());
         discussion = discussionService.createDiscussion(new Topic(), discussion);
 
         assertNotNull("Discussion is null!", discussion);
@@ -157,7 +157,7 @@ public class DiscussionServiceTest {
 
     @Test
     public void testGetLastPostAuthor() throws DiscussionUserNotFoundException, AccessDeniedException {
-        when(postDao.getPostsByDiscussion(any(Discussion.class))).then(invocationOnMock -> Arrays.asList(new Post[] {new Post(testUser, "Test post")}));
+        when(postDao.getLastPost(any(Discussion.class))).then(invocationOnMock -> new Post(testUser, "Test post"));
 
         assertEquals("Wrong author!", testUser.getDisplayName(), discussionService.getLastPostAuthor(new Discussion()).getDisplayName());
     }
