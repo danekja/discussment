@@ -22,8 +22,6 @@
 
     <modules>
         <module>discussment-core</module>
-        <module>discussment-examples/article</module>
-        <module>discussment-examples/forum</module>
         <module>discussment-ui-wicket</module>
     </modules>
 
