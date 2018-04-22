@@ -22,6 +22,7 @@ public interface DiscussionService {
      * @param topic topic of the discussion
      * @param discussion new discussion
      * @return new discussion
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException;
 
@@ -30,6 +31,7 @@ public interface DiscussionService {
      *
      * @param topic topic of the discussions
      * @return list of Discussion
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     List<Discussion> getDiscussionsByTopic(Topic topic) throws AccessDeniedException;
 
@@ -38,6 +40,7 @@ public interface DiscussionService {
      *
      * @param discussionId discussion id
      * @return discussion by id
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     Discussion getDiscussionById(long discussionId) throws AccessDeniedException;
 
@@ -53,13 +56,16 @@ public interface DiscussionService {
      * Remove a discussion
      *
      * @param discussion discussion to remove
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     void removeDiscussion(Discussion discussion) throws AccessDeniedException;
 
     /**
      * Returns the author of the last post in the discussion.
-     * @param discussion
+     * @param discussion  the discussion for which the author is returned
      * @return Author of the last post. Null if discussion has no posts.
+     * @throws AccessDeniedException when user is not allowed to commit the action
+     * @throws DiscussionUserNotFoundException when the post author does not exist, for some reason
      */
     IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
 }

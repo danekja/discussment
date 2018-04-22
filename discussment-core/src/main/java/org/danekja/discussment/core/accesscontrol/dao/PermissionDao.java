@@ -55,6 +55,7 @@ public interface PermissionDao extends GenericDao<PermissionId, AbstractPermissi
      * @param type Type of component to get permissions for
      * @param level Level on which certain permission applies
      * @param itemId Id of the component
+     * @param <Z> concrete Permission class
      * @return list of Discussion permissions
      */
     <Z extends AbstractPermission> List<Z> findByType(IDiscussionUser user, Class<Z> type, PermissionLevel level, Long itemId);

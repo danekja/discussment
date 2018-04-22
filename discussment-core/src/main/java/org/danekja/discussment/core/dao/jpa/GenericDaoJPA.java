@@ -20,6 +20,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
 
     /**
      * Constructor used with container managed entity manager
+     * @param clazz Entity class this dao instance manages
      */
     public GenericDaoJPA(Class<T> clazz){
         this.clazz = clazz;

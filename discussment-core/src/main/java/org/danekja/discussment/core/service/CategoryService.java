@@ -17,6 +17,7 @@ public interface CategoryService {
      *
      * @param entity new category
      * @return new category
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     Category createCategory(Category entity) throws AccessDeniedException;
 
@@ -25,6 +26,7 @@ public interface CategoryService {
      *
      * @param categoryId category id
      * @return category by id
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     Category getCategoryById(long categoryId) throws AccessDeniedException;
 
@@ -40,6 +42,7 @@ public interface CategoryService {
      * Get all categories in the forum
      *
      * @return list of Category
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     List<Category> getCategories() throws AccessDeniedException;
 
@@ -47,6 +50,7 @@ public interface CategoryService {
      * Remove a category in the forum
      *
      * @param entity category to remove
+     * @throws AccessDeniedException when user is not allowed to commit the action
      */
     void removeCategory(Category entity) throws AccessDeniedException;
 }

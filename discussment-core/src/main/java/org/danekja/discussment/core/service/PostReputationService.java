@@ -30,6 +30,7 @@ public interface PostReputationService {
     /**
      * Checks if user already voted in post reputation.
      *
+     * @param user user for which the check is made
      * @param post post to check
      * @return true, if user already voted
      */

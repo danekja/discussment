@@ -37,7 +37,7 @@ public interface PostService {
      * Send reply on the post.
      *
      * @param reply new reply
-     * @param post
+     * @param post post to which the reply is added
      * @return reply
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to parent discussion.
      */
@@ -46,7 +46,7 @@ public interface PostService {
     /**
      * Send a new post in the discussion
      *
-     * @param discussion
+     * @param discussion discussion to which post is added
      * @param post new post
      * @return new post
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to discussion.
@@ -82,7 +82,7 @@ public interface PostService {
 
     /**
      * Returns the post's author.
-     * @param post
+     * @param post post for which author is returned
      * @return Post's author.
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view the post.
      * @throws DiscussionUserNotFoundException Thrown if the user can be found by post.getUserId() id.

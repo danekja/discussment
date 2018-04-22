@@ -60,7 +60,7 @@ public class Category extends LongEntity implements Serializable {
 
 
     /**
-     * List contains topics in the category. If the category is removed, the topics are removed too.
+     * @return List contains topics in the category. If the category is removed, the topics are removed too.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     public List<Topic> getTopics() {

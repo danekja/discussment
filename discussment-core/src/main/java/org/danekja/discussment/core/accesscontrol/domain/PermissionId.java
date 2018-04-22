@@ -45,7 +45,8 @@ public class PermissionId implements Serializable {
 
     /**
      * Item to which this permission applies. Actual entity depends on the value of
-     * {#link itemId}.
+     * {#link permissionType}.
+     * @return id of the item (topic, category, post)
      */
     @Column(name = "item_id", nullable = true, updatable = false)
     public Long getItemId() {
@@ -57,7 +58,7 @@ public class PermissionId implements Serializable {
     }
 
     /**
-     * PK of the user which has this permission.
+     * @return PK of the user which has this permission.
      */
     @Column(name = "user_id", nullable = false, updatable = false)
     public String getUserId() {
@@ -69,7 +70,7 @@ public class PermissionId implements Serializable {
     }
 
     /**
-     * Level for which the permission applies (single discussion, topic, category or global)
+     * @return Level for which the permission applies (single discussion, topic, category or global)
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, updatable = false)

@@ -70,6 +70,7 @@ public class PermissionData implements Serializable {
 
     /**
      * User is allowed to create new items.
+     * @return true if user can create items with which this permission is associated
      */
     @Column(name = "can_create", nullable = false)
     protected boolean isCreate() {
@@ -82,6 +83,7 @@ public class PermissionData implements Serializable {
 
     /**
      * User is allowed to remove items of other users
+     * @return true if user can remove items with which this permission is associated
      */
     @Column(name = "can_delete", nullable = false)
     protected boolean isDelete() {
@@ -94,6 +96,7 @@ public class PermissionData implements Serializable {
 
     /**
      * User is allowed to edit items of other users.
+     * @return true if user can edit items with which this permission is associated
      */
     @Column(name = "can_edit", nullable = false)
     protected boolean isEdit() {
@@ -106,6 +109,7 @@ public class PermissionData implements Serializable {
 
     /**
      * User is allowed to read respective items.
+     * @return true if user view create items with which this permission is associated
      */
     @Column(name = "can_view", nullable = false)
     protected boolean isView() {

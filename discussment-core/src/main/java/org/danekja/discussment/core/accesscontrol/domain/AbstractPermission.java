@@ -49,6 +49,7 @@ public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 
     /**
      * Information on allowed/prohibited actions.
+     * @return PermissionData object associated with this permission
      */
     @Embedded
     public PermissionData getData() {
