@@ -52,6 +52,13 @@
 		</contributor>
 	</contributors>
 
+	<scm>
+		<connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
+		<url>https://github.com/danekja/discussment/tree/master</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<dependencies>
 
 		<dependency>
