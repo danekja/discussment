@@ -12,6 +12,47 @@
     <artifactId>discussment-core</artifactId>
     <packaging>jar</packaging>
 
+    <name>${project.groupId}.${project.artifactId}</name>
+    <description>
+        Library providing domain, daos and services for embedding commenting or discussions to an application. No UI
+        elements included.
+    </description>
+    <url>https://github.com/danekja/discussment</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jakub Daněk</name>
+            <email>danek.ja@gmail.com</email>
+            <organization>Jakub Daněk</organization>
+            <organizationUrl>http://www.danekja.org/</organizationUrl>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Pavel Fidranský</name>
+            <email>pavel.fidransky@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+        <contributor>
+            <name>Jiří Krýda</name>
+            <email>jiri.kryda@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+        <contributor>
+            <name>Zdeněk Valeš</name>
+            <email>zdenek.vales@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+    </contributors>
+
 
     <properties>
         <spring.version>5.0.4.RELEASE</spring.version>

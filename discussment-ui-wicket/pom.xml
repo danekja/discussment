@@ -12,6 +12,12 @@
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
 
+	<name>${project.groupId}.${project.artifactId}</name>
+	<description>
+		Library providing Wicket components for embedding commenting or discussions into existing applications.
+	</description>
+	<url>https://github.com/danekja/discussment</url>
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -19,6 +25,32 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<developers>
+		<developer>
+			<name>Jakub Daněk</name>
+			<email>danek.ja@gmail.com</email>
+			<organization>Jakub Daněk</organization>
+			<organizationUrl>http://www.danekja.org/</organizationUrl>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Pavel Fidranský</name>
+			<email>pavel.fidransky@yoso.fi</email>
+			<organization>Yoso Czech s.r.o.</organization>
+		</contributor>
+		<contributor>
+			<name>Jiří Krýda</name>
+			<email>jiri.kryda@yoso.fi</email>
+			<organization>Yoso Czech s.r.o.</organization>
+		</contributor>
+		<contributor>
+			<name>Zdeněk Valeš</name>
+			<email>zdenek.vales@yoso.fi</email>
+			<organization>Yoso Czech s.r.o.</organization>
+		</contributor>
+	</contributors>
 
 	<dependencies>
 
