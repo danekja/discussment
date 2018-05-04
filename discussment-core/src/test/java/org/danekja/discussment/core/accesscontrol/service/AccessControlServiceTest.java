@@ -16,9 +16,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,15 +67,38 @@ public class AccessControlServiceTest {
 
         // mock
         when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
-        when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
-            AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
-            testPermissions.add(newPerm);
-            return newPerm;
+        when(permissionDao.save(any(AbstractPermission.class))).then(new Answer<AbstractPermission>() {
+            @Override
+            public AbstractPermission answer(InvocationOnMock invocationOnMock) throws Throwable {
+                AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
+                testPermissions.add(newPerm);
+                return newPerm;
+            }
         });
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> testPermissions);
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong())).then(invocationOnMock -> testPermissions);
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong())).then(invocationOnMock -> testPermissions);
-        when(permissionDao.findForUser(any(IDiscussionUser.class))).then(invocationOnMock -> testPermissions);
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(new Answer<List<AbstractPermission>>() {
+            @Override
+            public List<AbstractPermission> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testPermissions;
+            }
+        });
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong())).then(new Answer<List<AbstractPermission>>() {
+            @Override
+            public List<AbstractPermission> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testPermissions;
+            }
+        });
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong())).then(new Answer<List<AbstractPermission>>() {
+            @Override
+            public List<AbstractPermission> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testPermissions;
+            }
+        });
+        when(permissionDao.findForUser(any(IDiscussionUser.class))).then(new Answer<List<AbstractPermission>>() {
+            @Override
+            public List<AbstractPermission> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testPermissions;
+            }
+        });
 
         // initialize data
         category = new Category(-10L, "test category");
@@ -179,12 +205,15 @@ public class AccessControlServiceTest {
         pms.configurePostPermissions(testUser, category, categoryPostPerms);
 
         // override mock so that correct permissions are returned
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> {
-            Long discusionId = (Long) invocationOnMock.getArguments()[1];
-            if(discusionId != null && discusionId == -11L) {
-                return testPermissions;
-            } else {
-                return testPermissions.subList(1,2);
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(new Answer<List<AbstractPermission>>() {
+            @Override
+            public List<AbstractPermission> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Long discusionId = (Long) invocationOnMock.getArguments()[1];
+                if(discusionId != null && discusionId == -11L) {
+                    return testPermissions;
+                } else {
+                    return testPermissions.subList(1,2);
+                }
             }
         });
 
@@ -222,12 +251,15 @@ public class AccessControlServiceTest {
         pms.configurePostPermissions(testUser, category, categoryPostPerms);
 
         // override mock so that correct permissions are returned
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> {
-            Long discusionId = (Long) invocationOnMock.getArguments()[1];
-            if(discusionId != null && discusionId == -11L) {
-                return testPermissions;
-            } else {
-                return testPermissions.subList(1,2);
+        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(new Answer<List<AbstractPermission>>() {
+            @Override
+            public List<AbstractPermission> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Long discusionId = (Long) invocationOnMock.getArguments()[1];
+                if(discusionId != null && discusionId == -11L) {
+                    return testPermissions;
+                } else {
+                    return testPermissions.subList(1,2);
+                }
             }
         });
 

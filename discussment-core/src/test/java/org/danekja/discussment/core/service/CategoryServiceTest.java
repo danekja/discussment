@@ -14,7 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,12 +54,42 @@ public class CategoryServiceTest {
     public void setUp() throws DiscussionUserNotFoundException {
         MockitoAnnotations.initMocks(CategoryServiceTest.class);
 
-        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
-        when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
-        when(accessControlService.canAddCategory()).then(invocationOnMock -> true);
-        when(accessControlService.canEditCategory(any(Category.class))).then(invocationOnMock -> true);
-        when(accessControlService.canRemoveCategory(any(Category.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewCategories()).then(invocationOnMock -> true);
+        when(discussionUserService.getCurrentlyLoggedUser()).then(new Answer<User>() {
+            @Override
+            public User answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testUser;
+            }
+        });
+        when(discussionUserService.getUserById(anyString())).then(new Answer<User>() {
+            @Override
+            public User answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testUser;
+            }
+        });
+        when(accessControlService.canAddCategory()).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canEditCategory(any(Category.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canRemoveCategory(any(Category.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canViewCategories()).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
 
         categoryService = new DefaultCategoryService(categoryDao, accessControlService, discussionUserService);
     }
@@ -66,7 +98,12 @@ public class CategoryServiceTest {
     public void testCreateCategory() throws AccessDeniedException {
         // prepare data
         Category category = new Category(-87L, "Test category");
-        when(categoryDao.save(any(Category.class))).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(categoryDao.save(any(Category.class))).then(new Answer<Category>() {
+            @Override
+            public Category answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return (Category) invocationOnMock.getArguments()[0];
+            }
+        });
 
         Category c = categoryService.createCategory(category);
         assertNotNull("Category is null!", c);
@@ -76,7 +113,12 @@ public class CategoryServiceTest {
     @Test
     public void testGetCategoryById() throws AccessDeniedException {
         final Category category = new Category(-87L, "Test category");
-        when(categoryDao.getById(any(Long.class))).then(invocationOnMock -> category);
+        when(categoryDao.getById(any(Long.class))).then(new Answer<Category>() {
+            @Override
+            public Category answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return category;
+            }
+        });
 
         Category c = categoryService.getCategoryById(-87L);
         assertNotNull("Null category returned!" , c);
@@ -86,7 +128,12 @@ public class CategoryServiceTest {
     @Test
     public void testGetCategories() throws AccessDeniedException {
         final Category category = new Category(-87L, "Test category");
-        when(categoryDao.getCategories()).then(invocationOnMock -> Arrays.asList(category));
+        when(categoryDao.getCategories()).then(new Answer<List<Category>>() {
+            @Override
+            public List<Category> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return Arrays.asList(category);
+            }
+        });
 
         List<Category> categories = categoryService.getCategories();
         assertNotNull("Null returned!", categories);
@@ -99,31 +146,40 @@ public class CategoryServiceTest {
         final List<Category> categoryRepository = new ArrayList<>();
 
         // mock get, save and remove methods
-        when(categoryDao.getById(any(Long.class))).then(invocationOnMock -> {
-            Long id = (Long) invocationOnMock.getArguments()[0];
-            for(Category c : categoryRepository) {
-                if(c.getId().equals(id)) {
-                    return c;
+        when(categoryDao.getById(any(Long.class))).then(new Answer<Category>() {
+            @Override
+            public Category answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Long id = (Long) invocationOnMock.getArguments()[0];
+                for (Category c : categoryRepository) {
+                    if (c.getId().equals(id)) {
+                        return c;
+                    }
                 }
-            }
 
-            return null;
+                return null;
+            }
         });
-        when(categoryDao.save(any(Category.class))).then(invocationOnMock -> {
-            Category category = (Category) invocationOnMock.getArguments()[0];
-            categoryRepository.add(category);
-            return category;
+        when(categoryDao.save(any(Category.class))).then(new Answer<Category>() {
+            @Override
+            public Category answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Category category = (Category) invocationOnMock.getArguments()[0];
+                categoryRepository.add(category);
+                return category;
+            }
         });
-        doAnswer(invocationOnMock -> {
-            Category toBeRemoved = (Category) invocationOnMock.getArguments()[0];
-            for(Category c : categoryRepository) {
-                if(c.getId().equals(toBeRemoved.getId())) {
-                    categoryRepository.remove(c);
-                    break;
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Category toBeRemoved = (Category) invocationOnMock.getArguments()[0];
+                for (Category c : categoryRepository) {
+                    if (c.getId().equals(toBeRemoved.getId())) {
+                        categoryRepository.remove(c);
+                        break;
+                    }
                 }
-            }
 
-            return invocationOnMock;
+                return invocationOnMock;
+            }
         }).when(categoryDao).remove(any(Category.class));
 
         // create category to be removed

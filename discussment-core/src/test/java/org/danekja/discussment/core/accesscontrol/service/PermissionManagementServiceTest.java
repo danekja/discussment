@@ -13,7 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +51,13 @@ public class PermissionManagementServiceTest {
         testPermissions.clear();
 
         when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
-        when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
-            AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
-            testPermissions.add(newPerm);
-            return newPerm;
+        when(permissionDao.save(any(AbstractPermission.class))).then(new Answer<AbstractPermission>() {
+            @Override
+            public AbstractPermission answer(InvocationOnMock invocationOnMock) throws Throwable {
+                AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
+                testPermissions.add(newPerm);
+                return newPerm;
+            }
         });
     }
 
