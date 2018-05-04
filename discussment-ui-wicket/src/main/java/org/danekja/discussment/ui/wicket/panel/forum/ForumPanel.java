@@ -96,7 +96,7 @@ public class ForumPanel extends Panel {
         super.onInitialize();
 
         add(new CategoryForm("categoryForm", categoryService, new Model<Category>(new Category())));
-        add(new ReplyForm("replyForm", postModel, new Model<Post>(new Post()), postReputationService, postService));
+        add(new ReplyForm("replyForm", postModel, new Model<Post>(new Post()), userService, postReputationService, postService));
         add(new TopicForm("topicForm", topicService, categoryModel, new Model<Topic>(new Topic())));
         add(new DiscussionForm("discussionForm",
                 topicModel, new Model<Discussion>(new Discussion()),

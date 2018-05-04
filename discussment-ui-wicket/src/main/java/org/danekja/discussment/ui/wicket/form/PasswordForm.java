@@ -84,7 +84,7 @@ public class PasswordForm extends Form {
     @Override
     protected void onSubmit() {
 
-        PageParameters pageParameters = new PageParameters();
+        PageParameters pageParameters = getPage().getPageParameters();
 
         if (discussionService != null) {
 
@@ -112,7 +112,8 @@ public class PasswordForm extends Form {
             }
 
             passwordModel.setObject(new Discussion());
-            setResponsePage(getPage().getClass(), pageParameters);
+
+            setResponsePage(getPage().getPageClass(), pageParameters);
         }
     }
 }
