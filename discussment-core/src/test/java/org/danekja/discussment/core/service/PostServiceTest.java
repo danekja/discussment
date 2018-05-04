@@ -69,51 +69,97 @@ public class PostServiceTest {
 
         postRepository = new ArrayList<>();
 
-        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
-        when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
-        when(accessControlService.canAddDiscussion(any(Topic.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
-        when(accessControlService.canRemovePost(any(Post.class))).then(invocationOnMock -> true);
-        when(accessControlService.canAddPost(any(Discussion.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewPost(any(Post.class))).then(invocationOnMock -> true);
-        when(accessControlService.canEditPost(any(Post.class))).then(invocationOnMock -> true);
+        when(discussionUserService.getCurrentlyLoggedUser()).then(new Answer<User>() {
+            @Override
+            public User answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testUser;
+            }
+        });
+        when(discussionUserService.getUserById(anyString())).then(new Answer<User>() {
+            @Override
+            public User answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return testUser;
+            }
+        });
+        when(accessControlService.canAddDiscussion(any(Topic.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canViewPosts(any(Discussion.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canRemovePost(any(Post.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canAddPost(any(Discussion.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canViewPost(any(Post.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
+        when(accessControlService.canEditPost(any(Post.class))).then(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return true;
+            }
+        });
         when(postDao.save(any(Post.class))).then(new SavePostMock());
         doAnswer(new RemovePostMock()).when(postDao).remove(any(Post.class));
-        when(postDao.getById(anyLong())).then((invocationOnMock) -> {
-            Long id = (Long) invocationOnMock.getArguments()[0];
-            if(id == null) {
-               return null;
-           } else {
-               for(Post p : postRepository) {
-                   if (p.getId().equals(id)) {
-                       return p;
-                   }
-               }
-               return null;
-           }
-        });
-        when(postDao.getNumbersOfPosts(anyListOf(Long.class))).then((invocationOnMock -> {
-            List<Long> discussionIds = (List<Long>) invocationOnMock.getArguments()[0];
-
-            Map<Long, Long> numbersOfPosts = new HashMap<>();
-            for (Post p : postRepository) {
-                if (numbersOfPosts.containsKey(p.getDiscussion().getId())) {
-                    Long number = numbersOfPosts.get(p.getDiscussion().getId());
-                    numbersOfPosts.replace(p.getDiscussion().getId(), number + 1L);
+        when(postDao.getById(anyLong())).then(new Answer<Post>() {
+            @Override
+            public Post answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Long id = (Long) invocationOnMock.getArguments()[0];
+                if(id == null) {
+                    return null;
                 } else {
-                    numbersOfPosts.put(p.getDiscussion().getId(), 1L);
+                    for(Post p : postRepository) {
+                        if (p.getId().equals(id)) {
+                            return p;
+                        }
+                    }
+                    return null;
                 }
             }
+        });
+        when(postDao.getNumbersOfPosts(anyListOf(Long.class))).then(new Answer<List<Object[]>>() {
+            @Override
+            public List<Object[]> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                List<Long> discussionIds = (List<Long>) invocationOnMock.getArguments()[0];
 
-            List<Object[]> result = new ArrayList<>();
-            for (Long discussionId : discussionIds) {
-                if (numbersOfPosts.containsKey(discussionId)) {
-                    result.add(new Object[] { discussionId, numbersOfPosts.get(discussionId) });
+                Map<Long, Long> numbersOfPosts = new HashMap<>();
+                for (Post p : postRepository) {
+                    if (numbersOfPosts.containsKey(p.getDiscussion().getId())) {
+                        Long number = numbersOfPosts.get(p.getDiscussion().getId());
+                        numbersOfPosts.put(p.getDiscussion().getId(), number + 1L);
+                    } else {
+                        numbersOfPosts.put(p.getDiscussion().getId(), 1L);
+                    }
                 }
-            }
 
-            return result;
-        }));
+                List<Object[]> result = new ArrayList<>();
+                for (Long discussionId : discussionIds) {
+                    if (numbersOfPosts.containsKey(discussionId)) {
+                        result.add(new Object[] { discussionId, numbersOfPosts.get(discussionId) });
+                    }
+                }
+
+                return result;
+            }
+        });
 
         postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
     }
@@ -210,7 +256,12 @@ public class PostServiceTest {
 
     @Test
     public void testGetNumbersOfPosts() throws AccessDeniedException {
-        when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(invocationOnMock -> (Discussion)invocationOnMock.getArguments()[1]);
+        when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(new Answer<Discussion>() {
+            @Override
+            public Discussion answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return (Discussion) invocationOnMock.getArguments()[1];
+            }
+        });
 
         Discussion discussion1 = new Discussion(55L,"Some discussion");
         discussion1 = discussionService.createDiscussion(new Topic(), discussion1);
