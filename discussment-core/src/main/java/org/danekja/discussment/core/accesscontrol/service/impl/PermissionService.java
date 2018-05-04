@@ -13,6 +13,7 @@ import org.danekja.discussment.core.domain.Topic;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -285,9 +286,16 @@ public class PermissionService implements PermissionManagementService, AccessCon
 
         // only the lowest level (DISCUSSION < TOPIC < CATEGORY < GLOBAL) permission matters
         // Levels in PermissionLevel are sorted in descending order (from GLOBAL to DISCUSSION)
-        // so Comparator.reverseOrder() is added so that permissions are sorted in ascending order
+        // so o2 is compared with o1 (not the other way around) so that permissions are sorted
+        // in ascending order
         List<? extends AbstractPermission> sortedPermissions = new ArrayList<>(permissions);
-        sortedPermissions.sort(Comparator.comparing(o -> o.getId().getLevel(), Comparator.reverseOrder()));
+        Collections.sort(sortedPermissions, new Comparator<AbstractPermission>() {
+            @Override
+            public int compare(AbstractPermission o1, AbstractPermission o2) {
+                return Integer.compare(o2.getId().getLevel().ordinal(), o1.getId().getLevel().ordinal());
+            }
+        });
+
         return sortedPermissions.get(0).getData().canDo(action);
     }
 
