@@ -30,7 +30,6 @@ import javax.persistence.*;
                         " OR pp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL)")
 })
 @Entity
-@Table(name = "permission")
 @DiscriminatorValue("POST")
 public class PostPermission extends AbstractPermission {
 

@@ -14,6 +14,7 @@ import static org.danekja.discussment.core.domain.Discussion.GET_DISCUSSIONS_BY_
  */
 
 @Entity
+@Table(name = "discussment_discussion")
 @NamedQueries({
         @NamedQuery(name = GET_DISCUSSIONS_BY_TOPIC_ID,
                 query = "SELECT d FROM Discussion d WHERE d.topic.id = :topicId")

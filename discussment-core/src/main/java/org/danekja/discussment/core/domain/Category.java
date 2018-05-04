@@ -14,6 +14,7 @@ import static org.danekja.discussment.core.domain.Category.GET_CATEGORIES;
  */
 
 @Entity
+@Table(name = "discussment_category")
 @NamedQueries({
         @NamedQuery(name = GET_CATEGORIES, query = "SELECT c FROM Category c WHERE id != 1"),
 })
