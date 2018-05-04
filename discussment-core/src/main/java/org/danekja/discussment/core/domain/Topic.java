@@ -14,6 +14,7 @@ import static org.danekja.discussment.core.domain.Topic.GET_TOPICS_BY_CATEGORY_I
  */
 
 @Entity
+@Table(name = "discussment_topic")
 @NamedQueries({
         @NamedQuery(name = GET_TOPICS_BY_CATEGORY_ID, query = "SELECT t FROM Topic t WHERE t.category.id = :categoryId AND t.id != 1")
 })

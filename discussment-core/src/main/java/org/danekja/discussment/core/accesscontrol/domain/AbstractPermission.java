@@ -9,10 +9,10 @@ import javax.persistence.*;
  *
  * @author Jakub Danek
  */
-@MappedSuperclass
+@Entity
+@Table(name = "discussment_permission")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "permission_type", discriminatorType = DiscriminatorType.STRING)
-@Table(name = "permission")
 public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 
     public static final String PARAM_USER_ID = "userId";

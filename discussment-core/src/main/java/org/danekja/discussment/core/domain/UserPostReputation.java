@@ -13,7 +13,7 @@ import static org.danekja.discussment.core.domain.UserPostReputation.GET_FOR_USE
  * @author Jiri Kryda
  */
 @Entity
-@Table(name = "user_post_reputation")
+@Table(name = "discussment_user_post_reputation")
 @NamedQueries({
         @NamedQuery(name = GET_FOR_USER,
                 query = "SELECT upr FROM UserPostReputation upr WHERE upr.userId = :userId AND upr.post.id = :postId")

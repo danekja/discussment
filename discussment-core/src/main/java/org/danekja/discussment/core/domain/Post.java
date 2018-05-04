@@ -19,6 +19,7 @@ import static org.danekja.discussment.core.domain.Post.GET_REPLIES_FOR_POST;
  * The class represents a post in the discussion.
  */
 @Entity
+@Table(name = "discussment_post")
 @NamedQueries({
         @NamedQuery(name = GET_BY_DISCUSSION,
                 query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId"),

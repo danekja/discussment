@@ -21,7 +21,6 @@ import javax.persistence.*;
                         " AND cp.id.level = org.danekja.discussment.core.accesscontrol.domain.PermissionLevel.GLOBAL")
 })
 @Entity
-@Table(name = "permission")
 @DiscriminatorValue("CATEGORY")
 public class CategoryPermission extends AbstractPermission {
 
