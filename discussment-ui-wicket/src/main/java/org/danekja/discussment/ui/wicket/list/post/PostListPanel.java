@@ -94,9 +94,9 @@ public class PostListPanel extends Panel {
                         try {
                             return postService.getPostAuthor(listItem.getModel().getObject()).getDisplayName();
                         } catch (DiscussionUserNotFoundException e) {
-                            return "Error: author not found";
+                            return getString("error.userNotFound");
                         } catch (AccessDeniedException e) {
-                            return "Error: access denied";
+                            return getString("error.accessDenied");
                         }
                     }
                 }));
