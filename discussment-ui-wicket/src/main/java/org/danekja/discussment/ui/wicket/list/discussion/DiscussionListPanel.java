@@ -85,9 +85,9 @@ public class DiscussionListPanel extends Panel {
                         try {
                             return discussionService.getLastPostAuthor(listItem.getModelObject()).getDisplayName();
                         } catch (DiscussionUserNotFoundException e) {
-                            return "Error: author of last post not found";
+                            return getString("error.userNotFound");
                         } catch (AccessDeniedException e){
-                            return "Error: access denied";
+                            return getString("error.accessDenied");
                         } catch (NullPointerException e){
                             return "";
                         }

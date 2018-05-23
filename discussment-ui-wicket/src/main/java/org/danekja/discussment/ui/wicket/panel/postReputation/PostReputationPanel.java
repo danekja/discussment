@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
@@ -57,10 +58,8 @@ public class PostReputationPanel extends Panel  {
 
         postReputationModel.setObject(postModel.getObject().getPostReputation());
 
-        add(new Label("liketext", ("Likes: ")));
         add(new Label("likes", new PropertyModel(postReputationModel, "likes")));
 
-        add(new Label("disliketext", ("Dislikes: ")));
         add(new Label("dislikes", new PropertyModel(postReputationModel, "dislikes")));
 
         Form prform = new PostReputationForm("prform", postModel, userService, postReputationService, accessControlService);
@@ -70,9 +69,9 @@ public class PostReputationPanel extends Panel  {
 
         if (postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())){
             if (postReputationService.userLiked(userService.getCurrentlyLoggedUser(), postModel.getObject())){
-                liked = new Label("liked", "You LIKED this post.");
+                liked = new Label("liked", new ResourceModel("postReputation.liked"));
             } else {
-                liked = new Label("liked", "You DISLIKED this post.");
+                liked = new Label("liked", new ResourceModel("postReputation.disliked"));
             }
             liked.setVisible(true);
         }
