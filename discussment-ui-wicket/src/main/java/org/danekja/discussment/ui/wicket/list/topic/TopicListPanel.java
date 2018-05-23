@@ -94,10 +94,10 @@ public class TopicListPanel extends Panel {
         return new Link("openTopic") {
             @Override
             public void onClick() {
-                PageParameters pageParameters = new PageParameters();
+                PageParameters pageParameters = getPage().getPageParameters();
                 pageParameters.add("topicId", tm.getObject().getId());
 
-                setResponsePage(getWebPage().getClass(), pageParameters);
+                setResponsePage(getPage().getPageClass(), pageParameters);
             }
 
             @Override
@@ -118,7 +118,7 @@ public class TopicListPanel extends Panel {
                 } catch (AccessDeniedException e) {
                     //not yet implemented
                 }
-                setResponsePage(getWebPage().getClass());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override

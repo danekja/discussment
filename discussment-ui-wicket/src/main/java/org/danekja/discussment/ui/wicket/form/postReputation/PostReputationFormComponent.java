@@ -51,7 +51,7 @@ public class PostReputationFormComponent extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
                 postReputationService.addLike(postModel.getObject());
-                setResponsePage(getPage());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
@@ -65,7 +65,7 @@ public class PostReputationFormComponent extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
                 postReputationService.addDislike(postModel.getObject());
-                setResponsePage(getPage());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
@@ -79,7 +79,7 @@ public class PostReputationFormComponent extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
                 postReputationService.changeVote(userService.getCurrentlyLoggedUser(), postModel.getObject());
-                setResponsePage(getPage());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
