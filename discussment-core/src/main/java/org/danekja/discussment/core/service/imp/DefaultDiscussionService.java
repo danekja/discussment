@@ -46,7 +46,7 @@ public class DefaultDiscussionService implements DiscussionService {
             discussion.setTopic(topic);
             return discussionDao.save(discussion);
         } else {
-            throw new AccessDeniedException(Action.CREATE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
+            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), topic.getId(), PermissionType.DISCUSSION);
         }
     }
 
@@ -54,7 +54,7 @@ public class DefaultDiscussionService implements DiscussionService {
         if(accessControlService.canViewDiscussions(topic)) {
             return discussionDao.getDiscussionsByTopic(topic);
         } else {
-            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), topic.getId(), PermissionType.DISCUSSION);
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(), topic.getId(), PermissionType.DISCUSSION);
         }
     }
 
@@ -63,7 +63,7 @@ public class DefaultDiscussionService implements DiscussionService {
         if(d == null || accessControlService.canViewDiscussions(d.getTopic())) {
             return d;
         } else {
-            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), d.getTopic().getId(), PermissionType.DISCUSSION);
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(), d.getTopic().getId(), PermissionType.DISCUSSION);
         }
     }
 
@@ -81,7 +81,7 @@ public class DefaultDiscussionService implements DiscussionService {
         if(accessControlService.canRemoveDiscussion(discussion)) {
             discussionDao.remove(discussion);
         } else {
-            throw new AccessDeniedException(Action.DELETE, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.DISCUSSION);
+            throw new AccessDeniedException(Action.DELETE, getCurrentUserId(), discussion.getId(), PermissionType.DISCUSSION);
         }
     }
 
@@ -94,7 +94,16 @@ public class DefaultDiscussionService implements DiscussionService {
                 return discussionUserService.getUserById(post.getUserId());
             }
         } else {
-            throw new AccessDeniedException(Action.VIEW, discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId(), discussion.getId(), PermissionType.POST);
+            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(), discussion.getId(), PermissionType.POST);
         }
+    }
+
+    /**
+     * Returns the id of the currently logged user. Used when throwing access denied exception.
+     * @return Id of the currently logged user or null if no user is logged.
+     */
+    private String getCurrentUserId() {
+        IDiscussionUser user = discussionUserService.getCurrentlyLoggedUser();
+        return user == null ? null : user.getDiscussionUserId();
     }
 }
