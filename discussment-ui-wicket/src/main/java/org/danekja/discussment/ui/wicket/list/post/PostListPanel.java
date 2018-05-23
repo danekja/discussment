@@ -3,6 +3,7 @@ package org.danekja.discussment.ui.wicket.list.post;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -22,6 +23,7 @@ import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPanel;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -101,7 +103,7 @@ public class PostListPanel extends Panel {
                     }
                 }));
 
-                listItem.add(new Label("created", new PropertyModel<String>(listItem.getModel(), "created")));
+                listItem.add(DateLabel.forDateStyle("created", new PropertyModel<Date>(listItem.getModel(), "created"), "MS"));
 
 
                 listItem.add(createReplyAjaxLink(listItem.getModel()));
