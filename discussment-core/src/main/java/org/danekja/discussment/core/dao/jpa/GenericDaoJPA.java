@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.dao.jpa;
 
 import org.danekja.discussment.core.dao.GenericDao;
+import org.danekja.discussment.core.dao.ITransactionHelper;
 import org.danekja.discussment.core.domain.BaseEntity;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,8 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     @PersistenceContext
     protected EntityManager em;
 
+    private ITransactionHelper transactionHelper;
+
     private Class<T> clazz;
 
     /**
@@ -28,11 +31,16 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
 
     public GenericDaoJPA(Class<T> clazz, EntityManager em) {
         this.em = em;
+        this.transactionHelper = new DefaultTransactionHelper(em);
         this.clazz = clazz;
     }
 
+    public void setTransactionHelper(ITransactionHelper transactionHelper) {
+        this.transactionHelper = transactionHelper;
+    }
+
     public T save(T obj) {
-        boolean hasOuterTransaction = em.isJoinedToTransaction();
+        boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();
         if(!hasOuterTransaction) {
             em.getTransaction().begin();
         }
@@ -53,7 +61,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     }
 
     public void remove(T obj) {
-        boolean hasOuterTransaction = em.isJoinedToTransaction();
+        boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();
         if(!hasOuterTransaction) {
             em.getTransaction().begin();
         }
