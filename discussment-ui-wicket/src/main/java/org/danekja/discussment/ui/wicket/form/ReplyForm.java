@@ -66,6 +66,7 @@ public class ReplyForm extends Form {
         } catch (AccessDeniedException e) {
             //todo: not yet implemented
         }
+
         replyModel.setObject(new Post());
 
         setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
