@@ -77,7 +77,7 @@ public class PostForm extends Form {
                 // todo: not yet implemented
             }
             postModel.setObject(new Post());
-            setResponsePage(getPage());
+            setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
         }
     }
 }

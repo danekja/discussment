@@ -73,6 +73,6 @@ public class ReplyForm extends Form {
             }
             replyModel.setObject(new Post());
         }
-        setResponsePage(getPage());
+        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }

@@ -130,7 +130,7 @@ public class CategoryListPanel extends Panel {
                 } catch (AccessDeniedException e) {
                     // todo: not yet implemented
                 }
-                setResponsePage(getWebPage().getClass());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override

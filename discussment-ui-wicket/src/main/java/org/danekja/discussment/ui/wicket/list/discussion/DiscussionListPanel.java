@@ -154,10 +154,10 @@ public class DiscussionListPanel extends Panel {
                 discussionModel.setObject(dm.getObject());
 
                 if (access) {
-                    PageParameters pageParameters = new PageParameters();
+                    PageParameters pageParameters = getPage().getPageParameters();
                     pageParameters.add("discussionId", dm.getObject().getId());
 
-                    setResponsePage(getWebPage().getClass(), pageParameters);
+                    setResponsePage(getPage().getPageClass(), pageParameters);
                 }
             }
         };
@@ -195,7 +195,7 @@ public class DiscussionListPanel extends Panel {
                     // todo: not yet implemented
                 }
 
-                setResponsePage(getWebPage().getClass(), getWebPage().getPageParameters());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
