@@ -11,8 +11,8 @@
                     <span wicket:id="topicName"></span>
                 </div>
                 <div class="col-md-1 text-right">
-                    <a data-toggle="modal" data-target="#discussionModal">
-                        <span wicket:id="createDiscussion" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <a wicket:id="createDiscussion">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </a>
                 </div>
             </div>
@@ -21,16 +21,8 @@
             <!--vypisuje diskuze v topicu-->
             <div wicket:id="discussionList" class="topic_row row">
                 <div class="col-md-6">
-                    <div class="row">
-                        <div class="glyphicon glyphicon-list-alt col-md-1" aria-hidden="true"></div>
-                        <div class="col-md-11">
-                            <div class="row">
-                                <a wicket:id="passwordDiv" class="col-md-12" data-toggle="modal" data-target="#passwordModal">
-                                    <div wicket:id="openDiscussion"></div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                    <a wicket:id="openDiscussion"></a>
                 </div>
                 <div class="col-md-2">
                     <div>
@@ -43,7 +35,9 @@
                     <span wicket:id="lastCreated"></span>
                 </div>
                 <div class="col-md-1 text-right">
-                    <a wicket:id="remove"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                    <a wicket:id="remove">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
                 </div>
             </div>
         </div>

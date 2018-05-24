@@ -108,21 +108,30 @@ public class CategoryListPanel extends Panel {
     private AjaxLink createNewTopicAjaxLink(final IModel<Category> cm) {
         return new AjaxLink("newTopic") {
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                categoryModel.setObject(cm.getObject());
-            }
-
-            @Override
             protected void onConfigure() {
                 super.onConfigure();
 
                 this.setVisible(accessControlService.canAddTopic(cm.getObject()));
+            }
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                categoryModel.setObject(cm.getObject());
+
+                target.appendJavaScript("$('#topicModal').modal('show');");
             }
         };
     }
 
     private Link createRemoveCategoryLink(final IModel<Category> cm) {
         return new Link("remove") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                this.setVisible(accessControlService.canRemoveCategory(cm.getObject()));
+            }
+
             @Override
             public void onClick() {
                 try{
@@ -131,13 +140,6 @@ public class CategoryListPanel extends Panel {
                     // todo: not yet implemented
                 }
                 setResponsePage(getWebPage().getClass());
-            }
-
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-
-                this.setVisible(accessControlService.canRemoveCategory(cm.getObject()));
             }
         };
     }

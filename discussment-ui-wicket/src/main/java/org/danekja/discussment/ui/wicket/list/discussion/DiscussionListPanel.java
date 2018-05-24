@@ -72,7 +72,7 @@ public class DiscussionListPanel extends Panel {
         add(new ListView<Discussion>("discussionList", new DiscussionWicketModel(topicListModel, discussionService)) {
             protected void populateItem(final ListItem<Discussion> listItem) {
 
-                listItem.add(createPasswordDivWebMarkupContainer(listItem.getModel()));
+                listItem.add(createOpenDiscussionAjaxLink(listItem.getModel()));
 
                 try {
                     listItem.add(new Label("numberOfPosts", postService.getNumberOfPosts(listItem.getModelObject())));
@@ -125,39 +125,20 @@ public class DiscussionListPanel extends Panel {
         };
     }
 
-    private WebMarkupContainer createPasswordDivWebMarkupContainer(final IModel<Discussion> dm) {
-
-        WebMarkupContainer div = new WebMarkupContainer("passwordDiv") {
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-
-                if (accessControlService.canViewPosts(dm.getObject())) {
-                    add(new AttributeModifier("href", "#"));
-                    add(new AttributeModifier("data-target", "#"));
-
-                    add(createOpenDiscussionAjaxLink(dm, true));
-                } else {
-                    add(createOpenDiscussionAjaxLink(dm, false));
-                }
-            }
-        };
-
-        return div;
-    }
-
-    private AjaxLink createOpenDiscussionAjaxLink(final IModel<Discussion> dm, final boolean access) {
+    private AjaxLink createOpenDiscussionAjaxLink(final IModel<Discussion> dm) {
         AjaxLink discussionNameLink = new AjaxLink("openDiscussion") {
 
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+            public void onClick(AjaxRequestTarget target) {
 
                 discussionModel.setObject(dm.getObject());
 
-                if (access) {
-                    PageParameters pageParameters = new PageParameters();
+                if (accessControlService.canViewPosts(dm.getObject())) {
+                    PageParameters pageParameters = getPage().getPageParameters();
                     pageParameters.add("discussionId", dm.getObject().getId());
 
-                    setResponsePage(getWebPage().getClass(), pageParameters);
+                    setResponsePage(getPage().getPageClass(), pageParameters);
+                } else {
+                    target.appendJavaScript("$('#passwordModal').modal('show');");
                 }
             }
         };
@@ -170,9 +151,6 @@ public class DiscussionListPanel extends Panel {
     private AjaxLink createDiscussionAjaxLink() {
         return new AjaxLink("createDiscussion") {
             @Override
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {}
-
-            @Override
             protected void onConfigure() {
                 super.onConfigure();
 
@@ -181,6 +159,11 @@ public class DiscussionListPanel extends Panel {
                 } catch (NullPointerException e) {
                     this.setVisible(false);
                 }
+            }
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                target.appendJavaScript("$('#discussionModal').modal('show');");
             }
         };
     }
