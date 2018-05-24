@@ -148,7 +148,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user != null && accessControlService.canRemovePost(pm.getObject()));
             }
         };
