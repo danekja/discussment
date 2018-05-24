@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.CategoryService;
@@ -35,6 +36,7 @@ public class ContentListPanel extends Panel {
     private DiscussionService discussionService;
     private PostService postService;
     private AccessControlService accessControlService;
+    private DiscussionUserService userService;
     private IModel<Category> categoryModel;
     private IModel<List<Category>>  categoryListModel;
     private IModel<List<Topic>>  topicWicketModel;
@@ -57,6 +59,7 @@ public class ContentListPanel extends Panel {
                             TopicService topicService,
                             DiscussionService discussionService,
                             PostService postService,
+                            DiscussionUserService userService,
                             AccessControlService accessControlService) {
         super(id);
 
@@ -65,6 +68,7 @@ public class ContentListPanel extends Panel {
         this.categoryService = categoryService;
         this.categoryModel = categoryModel;
         this.topicWicketModel = topicWicketModel;
+        this.userService = userService;
         this.accessControlService = accessControlService;
         this.discussionService = discussionService;
         this.postService = postService;
@@ -103,7 +107,7 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user != null && accessControlService.canAddCategory());
             }
         };
@@ -119,7 +123,7 @@ public class ContentListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 try {
                     this.setVisible(user != null && accessControlService.canAddTopic(categoryService.getCategoryById(CATEGORY_ID)));
                 } catch (AccessDeniedException e) {

@@ -113,7 +113,7 @@ public class ForumPanel extends Panel {
                 add(new ContentListPanel("content",
                         new CategoryWicketModel(categoryService),
                         new TopicWicketModel(categoryModel, topicService),
-                        categoryModel, categoryService, topicService, discussionService, postService, accessControlService)
+                        categoryModel, categoryService, topicService, discussionService, postService, userService, accessControlService)
                 );
             } else if (parametersModel.getObject().get("topicId") != -1) {
                 try{
