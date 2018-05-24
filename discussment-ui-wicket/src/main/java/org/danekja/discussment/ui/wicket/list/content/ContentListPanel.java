@@ -101,8 +101,6 @@ public class ContentListPanel extends Panel {
 
     private AjaxLink createCategoryAjaxLink() {
         return new AjaxLink("createCategory") {
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {}
-
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -110,15 +108,16 @@ public class ContentListPanel extends Panel {
                 IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user != null && accessControlService.canAddCategory());
             }
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                target.appendJavaScript("$('#categoryModal').modal('show');");
+            }
         };
     }
 
     private AjaxLink createTopicAjaxLink() {
         return new AjaxLink("createTopic") {
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                categoryModel.setObject(categoryService.getDefaultCategory());
-            }
-
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -130,6 +129,13 @@ public class ContentListPanel extends Panel {
                     e.printStackTrace();
                     this.setVisible(false);
                 }
+            }
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                categoryModel.setObject(categoryService.getDefaultCategory());
+
+                target.appendJavaScript("$('#topicModal').modal('show');");
             }
         };
     }

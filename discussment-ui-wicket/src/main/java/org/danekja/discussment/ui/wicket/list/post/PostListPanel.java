@@ -123,6 +123,8 @@ public class PostListPanel extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 postModel.setObject(pm.getObject());
+
+                target.appendJavaScript("$('#replyModal').modal('show');");
             }
 
             @Override
