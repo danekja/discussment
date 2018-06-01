@@ -12,12 +12,12 @@ import org.danekja.discussment.core.dao.ITransactionHelper;
  *
  * @author Pavel Fidransky [jsem@pavelfidransky.cz]
  */
-public class DefaultTransactionHelper implements ITransactionHelper {
+public class JPA21TransactionHelper implements ITransactionHelper {
 
     @PersistenceContext
     protected EntityManager em;
 
-    public DefaultTransactionHelper(EntityManager em) {
+    public JPA21TransactionHelper(EntityManager em) {
         this.em = em;
     }
 
