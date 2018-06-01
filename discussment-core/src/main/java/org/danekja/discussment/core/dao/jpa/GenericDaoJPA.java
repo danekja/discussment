@@ -31,7 +31,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
 
     public GenericDaoJPA(Class<T> clazz, EntityManager em) {
         this.em = em;
-        this.transactionHelper = new DefaultTransactionHelper(em);
+        this.transactionHelper = new JPA21TransactionHelper(em);
         this.clazz = clazz;
     }
 
