@@ -7,6 +7,7 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.junit.Before;
@@ -20,8 +21,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -46,6 +50,9 @@ public class PostServiceTest {
     @Mock
     private DiscussionUserService discussionUserService;
 
+    @Mock
+    private DiscussionService discussionService;
+
     private PostService postService;
 
     private List<Post> postRepository;
@@ -64,6 +71,8 @@ public class PostServiceTest {
 
         when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
         when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
+        when(accessControlService.canAddDiscussion(any(Topic.class))).then(invocationOnMock -> true);
+        when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
         when(accessControlService.canRemovePost(any(Post.class))).then(invocationOnMock -> true);
         when(accessControlService.canAddPost(any(Discussion.class))).then(invocationOnMock -> true);
         when(accessControlService.canViewPost(any(Post.class))).then(invocationOnMock -> true);
@@ -83,6 +92,28 @@ public class PostServiceTest {
                return null;
            }
         });
+        when(postDao.getNumbersOfPosts(anyListOf(Long.class))).then((invocationOnMock -> {
+            List<Long> discussionIds = (List<Long>) invocationOnMock.getArguments()[0];
+
+            Map<Long, Long> numbersOfPosts = new HashMap<>();
+            for (Post p : postRepository) {
+                if (numbersOfPosts.containsKey(p.getDiscussion().getId())) {
+                    Long number = numbersOfPosts.get(p.getDiscussion().getId());
+                    numbersOfPosts.replace(p.getDiscussion().getId(), number + 1L);
+                } else {
+                    numbersOfPosts.put(p.getDiscussion().getId(), 1L);
+                }
+            }
+
+            List<Object[]> result = new ArrayList<>();
+            for (Long discussionId : discussionIds) {
+                if (numbersOfPosts.containsKey(discussionId)) {
+                    result.add(new Object[] { discussionId, numbersOfPosts.get(discussionId) });
+                }
+            }
+
+            return result;
+        }));
 
         postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
     }
@@ -175,6 +206,31 @@ public class PostServiceTest {
         Post enabledPost = postService.getPostById(post.getId());
         assertNotNull("Post is null after enabling!", enabledPost);
         assertTrue("Post is not enabled!", !enabledPost.isDisabled());
+    }
+
+    @Test
+    public void testGetNumbersOfPosts() throws AccessDeniedException {
+        when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(invocationOnMock -> (Discussion)invocationOnMock.getArguments()[1]);
+
+        Discussion discussion1 = new Discussion(55L,"Some discussion");
+        discussion1 = discussionService.createDiscussion(new Topic(), discussion1);
+        Post post1 = new Post(testUser, "bar");
+        postService.sendPost(discussion1, post1);
+
+        Discussion discussion2 = new Discussion(56L,"Other discussion");
+        discussion2 = discussionService.createDiscussion(new Topic(), discussion2);
+        Post post2 = new Post(testUser, "bar");
+        postService.sendPost(discussion2, post2);
+        Post post3 = new Post(testUser, "baz");
+        postService.sendPost(discussion2, post3);
+
+        Discussion discussion3 = new Discussion(57L,"Yet another discussion");
+        discussion3 = discussionService.createDiscussion(new Topic(), discussion3);
+
+        Map<Long, Long> numbersOfPosts = postService.getNumbersOfPosts(Arrays.asList(discussion1.getId(), discussion2.getId(), discussion3.getId()));
+        assertEquals(1L, numbersOfPosts.get(discussion1.getId()).longValue());
+        assertEquals(2L, numbersOfPosts.get(discussion2.getId()).longValue());
+        assertFalse(numbersOfPosts.containsKey(discussion3.getId()));
     }
 
     /**

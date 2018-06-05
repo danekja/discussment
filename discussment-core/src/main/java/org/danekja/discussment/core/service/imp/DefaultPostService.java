@@ -13,7 +13,11 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Post service which uses new permission system.
@@ -131,6 +135,21 @@ public class DefaultPostService implements PostService {
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
+    }
+
+    public Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds) {
+        if (discussionIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Object[]> numbersOfPosts = postDao.getNumbersOfPosts(discussionIds);
+        Map<Long, Long> resultMap = new HashMap<>();
+
+        for (Object[] numbers : numbersOfPosts) {
+            resultMap.put(((Number) numbers[0]).longValue(), ((Number) numbers[1]).longValue());
+        }
+
+        return resultMap;
     }
 
     /**

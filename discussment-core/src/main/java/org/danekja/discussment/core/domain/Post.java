@@ -1,5 +1,7 @@
 package org.danekja.discussment.core.domain;
 
+import static org.danekja.discussment.core.domain.Post.*;
+
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 
 import javax.persistence.*;
@@ -8,10 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.danekja.discussment.core.domain.Post.GET_BASE_POSTS_BY_DISCUSSION;
-import static org.danekja.discussment.core.domain.Post.GET_BY_DISCUSSION;
-import static org.danekja.discussment.core.domain.Post.GET_REPLIES_FOR_POST;
 
 /**
  * Created by Martin Bláha on 19.01.17.
@@ -23,6 +21,10 @@ import static org.danekja.discussment.core.domain.Post.GET_REPLIES_FOR_POST;
 @NamedQueries({
         @NamedQuery(name = GET_BY_DISCUSSION,
                 query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId"),
+        @NamedQuery(name = COUNT_BY_DISCUSSION,
+                query = "SELECT COUNT(p) FROM Post p WHERE p.discussion.id = :discussionId"),
+        @NamedQuery(name = COUNT_BY_DISCUSSIONS,
+                query = "SELECT p.discussion.id, COUNT(p) FROM Post p WHERE p.discussion.id IN :discussionIds GROUP BY p.discussion.id"),
         @NamedQuery(name = GET_BASE_POSTS_BY_DISCUSSION,
                 query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0"),
         @NamedQuery(name = GET_REPLIES_FOR_POST,
@@ -39,6 +41,16 @@ public class Post extends LongEntity implements Serializable {
      * The constant contains name of query for getting posts by discussion
      */
     public static final String GET_BY_DISCUSSION = "Post.getByDiscussion";
+
+    /**
+     * The constant contains name of query for getting number of posts by discussion
+     */
+    public static final String COUNT_BY_DISCUSSION = "Post.countByDiscussion";
+
+    /**
+     * The constant contains name of query for getting numbers of posts by discussions
+     */
+    public static final String COUNT_BY_DISCUSSIONS = "Post.countByDiscussions";
 
     /**
      * The constant contains name of query for getting base posts in discussion
