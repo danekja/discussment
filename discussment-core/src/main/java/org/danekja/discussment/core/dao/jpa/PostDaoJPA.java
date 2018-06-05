@@ -5,6 +5,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Comparator;
 import java.util.List;
@@ -62,6 +63,14 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
     }
 
     public long getNumberOfPosts(Discussion discussion){
-        return getPostsByDiscussion(discussion).size();
+        Query q = em.createNamedQuery(Post.COUNT_BY_DISCUSSION);
+        q.setParameter("discussionId", discussion.getId());
+        return (Long) q.getSingleResult();
+    }
+
+    public List<Object[]> getNumbersOfPosts(List<Long> discussionIds) {
+        Query q = em.createNamedQuery(Post.COUNT_BY_DISCUSSIONS);
+        q.setParameter("discussionIds", discussionIds);
+        return q.getResultList();
     }
 }
