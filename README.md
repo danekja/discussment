@@ -37,6 +37,22 @@ The __service__ package contains these interfaces:
 
 The services need an interface to access the database, which is located in the dao package. The default implementation of services is in the __dao.imp__ package. If you need your own access, you need to implement this interface.
 
+#### using JPA 2.0
+
+The default implementation of DAOs uses JPA 2.1 and its `EntityManager`. To use it with JPA 2.0, active transaction check using EntityManager's `isJoinedToTransaction` method needs to be bypassed. For that purpose, there are two classes implementing `ITransactionHelper` interface.
+
+All the DAOs have `GenericDaoJPA` class as their common parent. The `EntityManager` is injected to `GenericDaoJPA` using its constructor. In the constructor, a new instance of a transaction helper is created as well using the `EntityManager` - `JPA21TransactionHelper` is used by default. However, the helper in use can be reset later using a setter.
+
+Below, a sample configuration of a Spring application using JPA 2.0 is outlined:
+
+```xml
+<bean id="discussmentTransactionHelper" class="org.danekja.discussment.core.dao.jpa.JPA20TransactionHelper"/>
+<bean id="discussmentGenericDao" class="org.danekja.discussment.core.dao.jpa.GenericDaoJPA">
+  <constructor-arg name="em" ref="entityManager"/>
+  <property name="transactionHelper" ref="discussmentTransactionHelper"/>
+</bean>
+```
+
 #### access control
 The __accesscontrol__ package contains the new implementation of user's permissions. The default implementation of services is in the __service.impl__ package.
 
