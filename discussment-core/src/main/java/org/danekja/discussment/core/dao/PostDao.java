@@ -51,4 +51,11 @@ public interface PostDao extends GenericDao<Long, Post> {
      * @return number of posts in the discussion
      */
     long getNumberOfPosts(Discussion discussion);
+
+    /**
+     * Gets numbers of posts in discussions.
+     *
+     * @param discussionIds Identifiers of discussions.
+     */
+    List<Object[]> getNumbersOfPosts(List<Long> discussionIds);
 }

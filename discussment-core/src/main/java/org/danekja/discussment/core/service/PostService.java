@@ -7,6 +7,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Martin Bláha on 13.05.17.
@@ -112,4 +113,11 @@ public interface PostService {
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view posts in the discussion.
      */
     long getNumberOfPosts(Discussion discussion) throws AccessDeniedException;
+
+    /**
+     * Counts how many posts are in discussions
+     * @param discussionIds identifiers of discussions to count posts for
+     * @return number of posts in the discussion
+     */
+    Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds);
 }
