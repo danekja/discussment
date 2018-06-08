@@ -1,4 +1,4 @@
-package org.danekja.discussment.core.dao;
+package org.danekja.discussment.core.dao.transaction;
 
 /**
  * Helper class used to check whether there is an active transaction.
@@ -7,7 +7,7 @@ package org.danekja.discussment.core.dao;
  *
  * @author Pavel Fidransky [jsem@pavelfidransky.cz]
  */
-public interface ITransactionHelper {
+public interface TransactionHelper {
     /**
      * @return true when there is an active transaction, otherwise false
      */

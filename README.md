@@ -46,7 +46,7 @@ All the DAOs have `GenericDaoJPA` class as their common parent. The `EntityManag
 Below, a sample configuration of a Spring application using JPA 2.0 is outlined:
 
 ```xml
-<bean id="discussmentTransactionHelper" class="org.danekja.discussment.core.dao.jpa.JPA20TransactionHelper"/>
+<bean id="discussmentTransactionHelper" class="org.danekja.discussment.core.dao.jpa.transaction.JPA20TransactionHelper"/>
 <bean id="discussmentGenericDao" class="org.danekja.discussment.core.dao.jpa.GenericDaoJPA">
   <constructor-arg name="em" ref="entityManager"/>
   <property name="transactionHelper" ref="discussmentTransactionHelper"/>

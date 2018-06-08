@@ -1,9 +1,9 @@
-package org.danekja.discussment.core.dao.jpa;
+package org.danekja.discussment.core.dao.jpa.transaction;
+
+import org.danekja.discussment.core.dao.transaction.TransactionHelper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.danekja.discussment.core.dao.ITransactionHelper;
 
 /**
  * Helper using JPA 2.1 to check whether there is an active transaction.
@@ -12,7 +12,7 @@ import org.danekja.discussment.core.dao.ITransactionHelper;
  *
  * @author Pavel Fidransky [jsem@pavelfidransky.cz]
  */
-public class JPA21TransactionHelper implements ITransactionHelper {
+public class JPA21TransactionHelper implements TransactionHelper {
 
     @PersistenceContext
     protected EntityManager em;

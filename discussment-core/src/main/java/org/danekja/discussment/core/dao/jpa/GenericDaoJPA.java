@@ -1,7 +1,8 @@
 package org.danekja.discussment.core.dao.jpa;
 
 import org.danekja.discussment.core.dao.GenericDao;
-import org.danekja.discussment.core.dao.ITransactionHelper;
+import org.danekja.discussment.core.dao.jpa.transaction.JPA21TransactionHelper;
+import org.danekja.discussment.core.dao.transaction.TransactionHelper;
 import org.danekja.discussment.core.domain.BaseEntity;
 
 import javax.persistence.EntityManager;
@@ -17,7 +18,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     @PersistenceContext
     protected EntityManager em;
 
-    private ITransactionHelper transactionHelper;
+    private TransactionHelper transactionHelper;
 
     private Class<T> clazz;
 
@@ -35,7 +36,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         this.clazz = clazz;
     }
 
-    public void setTransactionHelper(ITransactionHelper transactionHelper) {
+    public void setTransactionHelper(TransactionHelper transactionHelper) {
         this.transactionHelper = transactionHelper;
     }
 
@@ -47,7 +48,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         if (obj.isNew()) {
             em.persist(obj);
         } else {
-            em.merge(obj);
+            return em.merge(obj);
         }
         if(!hasOuterTransaction) {
             em.getTransaction().commit();
