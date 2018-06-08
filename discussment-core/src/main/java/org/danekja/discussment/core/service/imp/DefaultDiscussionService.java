@@ -14,17 +14,18 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.TopicService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Discussion service which uses the new permission system. Will replace DefaultDiscussionService.
+ * Discussion service which uses the new permission system.
  * Methods without user parameter will use currently logged user.
  *
  */
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class DefaultDiscussionService implements DiscussionService {
 
     private DiscussionDao discussionDao;

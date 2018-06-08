@@ -9,11 +9,12 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class DefaultCategoryService implements CategoryService {
 
     private CategoryDao categoryDao;

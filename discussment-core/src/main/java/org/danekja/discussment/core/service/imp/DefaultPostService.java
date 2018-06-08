@@ -11,6 +11,7 @@ import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.Map;
  *
  * Created by Zdenek Vales on 27.11.2017.
  */
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class DefaultPostService implements PostService {
 
     private PostDao postDao;

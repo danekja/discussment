@@ -11,11 +11,12 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class DefaultTopicService implements TopicService {
 
     private TopicDao topicDao;

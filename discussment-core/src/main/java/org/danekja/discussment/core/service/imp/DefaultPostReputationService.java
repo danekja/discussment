@@ -9,6 +9,7 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Jiri Kryda
  */
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class DefaultPostReputationService implements PostReputationService {
 
     private static final Object monitor = new Object();
