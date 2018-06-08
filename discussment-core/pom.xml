@@ -71,7 +71,6 @@
     </distributionManagement>
 
     <properties>
-        <spring.version>5.0.4.RELEASE</spring.version>
         <!-- TODO: use this also in persistence.xml file-->
         <jdbc.user>root</jdbc.user>
         <jdbc.password>root</jdbc.password>
@@ -107,7 +106,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
             <scope>provided</scope>
         </dependency>
 

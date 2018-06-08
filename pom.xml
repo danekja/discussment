@@ -66,14 +66,15 @@
     </distributionManagement>
 
     <properties>
+        <flyway.version>4.2.0</flyway.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
         <junit.version>4.12</junit.version>
         <mockito.version>1.10.8</mockito.version>
         <mysql.connector.version>6.0.5</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>5.0.4.RELEASE</spring.version>
         <wicket.version>7.6.0</wicket.version>
-        <flyway.version>4.2.0</flyway.version>
     </properties>
 
     <modules>
@@ -83,6 +84,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
             <!-- JPA -->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
