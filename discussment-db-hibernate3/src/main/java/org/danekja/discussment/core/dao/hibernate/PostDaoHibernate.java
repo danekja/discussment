@@ -69,7 +69,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
     public List<Object[]> getNumbersOfPosts(List<Long> discussionIds) {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery(Post.COUNT_BY_DISCUSSIONS);
-        q.setParameter("discussionIds", discussionIds);
+        q.setParameterList("discussionIds", discussionIds);
         return q.list();
     }
 }
