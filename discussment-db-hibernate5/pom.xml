@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>discussment</artifactId>
+        <groupId>org.danekja.discussment</groupId>
+        <version>0.9.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.danekja.discussment.db</groupId>
+    <artifactId>discussment-db-hibernate5</artifactId>
+    <version>0.9.0SNAPSHOT</version>
+
+    <name>${project.groupId}.${project.artifactId}</name>
+    <description>
+        Implementation of discussment's DAO layer in Hibernate 5.x.
+    </description>
+    <url>https://github.com/danekja/discussment</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jakub Daněk</name>
+            <email>danek.ja@gmail.com</email>
+            <organization>Jakub Daněk</organization>
+            <organizationUrl>http://www.danekja.org/</organizationUrl>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Pavel Fidranský</name>
+            <email>pavel.fidransky@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+        <contributor>
+            <name>Jiří Krýda</name>
+            <email>jiri.kryda@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+        <contributor>
+            <name>Zdeněk Valeš</name>
+            <email>zdenek.vales@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+    </contributors>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
+        <url>https://github.com/danekja/discussment/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <core.version>0.9.1-SNAPSHOT</core.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.danekja.discussment</groupId>
+            <artifactId>discussment-core</artifactId>
+            <version>${core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate5.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+
+</project>

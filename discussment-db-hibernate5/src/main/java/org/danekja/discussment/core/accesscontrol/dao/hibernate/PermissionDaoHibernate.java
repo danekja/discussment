@@ -1,18 +1,17 @@
 package org.danekja.discussment.core.accesscontrol.dao.hibernate;
 
-import java.util.List;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.domain.*;
+import org.danekja.discussment.core.dao.hibernate.GenericDaoHibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-
-import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
-import org.danekja.discussment.core.accesscontrol.domain.*;
-import org.danekja.discussment.core.dao.hibernate.GenericDaoHibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import java.util.List;
 
 /**
  * Hibernate-based implementation of PermissionDao.
