@@ -70,9 +70,9 @@ public class PermissionDaoHibernate extends GenericDaoHibernate<PermissionId, Ab
     public <Z extends AbstractPermission> List<Z> findByType(IDiscussionUser user, Class<Z> type, PermissionLevel level, Long itemId) {
         Session session = sessionFactory.getCurrentSession();
         Criteria cq = session.createCriteria(type);
-        cq.add(Restrictions.eq("userId", user.getDiscussionUserId()));
-        cq.add(Restrictions.eq("level", level));
-        cq.add(Restrictions.eq("itemId", itemId));
+        cq.add(Restrictions.eq("id.userId", user.getDiscussionUserId()));
+        cq.add(Restrictions.eq("id.level", level));
+        cq.add(Restrictions.eq("id.itemId", itemId));
 
         return cq.list();
     }

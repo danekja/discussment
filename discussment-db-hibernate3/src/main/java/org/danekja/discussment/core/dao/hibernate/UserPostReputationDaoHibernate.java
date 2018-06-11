@@ -29,11 +29,7 @@ public class UserPostReputationDaoHibernate extends GenericDaoHibernate<Long, Us
         Query q = session.getNamedQuery(UserPostReputation.GET_FOR_USER);
         q.setParameter("userId", user.getDiscussionUserId());
         q.setParameter("postId", post.getId());
-        try {
-            return (UserPostReputation) q.uniqueResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return (UserPostReputation) q.uniqueResult();
     }
 }
 
