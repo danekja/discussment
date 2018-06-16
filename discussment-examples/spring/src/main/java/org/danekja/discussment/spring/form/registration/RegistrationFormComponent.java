@@ -13,22 +13,31 @@ import org.danekja.discussment.spring.core.domain.User;
  */
 public class RegistrationFormComponent extends Panel {
 
-    private IModel<PermissionData> categoryPermissionModel;
-    private IModel<PermissionData> topicPermissionModel;
-    private IModel<PermissionData> discussionPermissionModel;
-    private IModel<PermissionData> postPermissionModel;
+    private IModel<PermissionData> categoryPermission;
+    private IModel<PermissionData> defaultTopicPermission;
+    private IModel<PermissionData> globalTopicPermission;
+    private IModel<PermissionData> defaultDiscussionPermission;
+    private IModel<PermissionData> globalDiscussionPermission;
+    private IModel<PermissionData> defaultPostPermission;
+    private IModel<PermissionData> globalPostPermission;
 
     public RegistrationFormComponent(String id,
                                      IModel<User> userModel,
-                                     IModel<PermissionData> categoryPermissionModel,
-                                     IModel<PermissionData> topicPermissionModel,
-                                     IModel<PermissionData> discussionPermissionModel,
-                                     IModel<PermissionData> postPermissionModel) {
+                                     IModel<PermissionData> categoryPermission,
+                                     IModel<PermissionData> defaultTopicPermission,
+                                     IModel<PermissionData> globalTopicPermission,
+                                     IModel<PermissionData> defaultDiscussionPermission,
+                                     IModel<PermissionData> globalDiscussionPermission,
+                                     IModel<PermissionData> defaultPostPermission,
+                                     IModel<PermissionData> globalPostPermission) {
         super(id, userModel);
-        this.categoryPermissionModel = categoryPermissionModel;
-        this.topicPermissionModel = topicPermissionModel;
-        this.discussionPermissionModel = discussionPermissionModel;
-        this.postPermissionModel = postPermissionModel;
+        this.categoryPermission = categoryPermission;
+        this.defaultTopicPermission = defaultTopicPermission;
+        this.globalTopicPermission = globalTopicPermission;
+        this.defaultDiscussionPermission = defaultDiscussionPermission;
+        this.globalDiscussionPermission = globalDiscussionPermission;
+        this.defaultPostPermission = defaultPostPermission;
+        this.globalPostPermission = globalPostPermission;
 
     }
 
@@ -40,31 +49,39 @@ public class RegistrationFormComponent extends Panel {
         username.setRequired(true);
         add(username);
 
-        add(new CheckBox("createCategoryRegistration", new PropertyModel<Boolean>(categoryPermissionModel, "create")));
-        add(new CheckBox("removeCategoryRegistration", new PropertyModel<Boolean>(categoryPermissionModel, "delete")));
-        add(new CheckBox("editCategoryRegistration", new PropertyModel<Boolean>(categoryPermissionModel, "edit")));
-        add(new CheckBox("viewCategoryRegistration", new PropertyModel<Boolean>(categoryPermissionModel, "view")));
+        add(new CheckBox("createCategoryRegistration", new PropertyModel<Boolean>(categoryPermission, "create")));
+        add(new CheckBox("removeCategoryRegistration", new PropertyModel<Boolean>(categoryPermission, "delete")));
+        add(new CheckBox("editCategoryRegistration", new PropertyModel<Boolean>(categoryPermission, "edit")));
+        add(new CheckBox("viewCategoryRegistration", new PropertyModel<Boolean>(categoryPermission, "view")));
 
-        add(new CheckBox("createTopicRegistration", new PropertyModel<Boolean>(topicPermissionModel, "create")));
-        add(new CheckBox("removeTopicRegistration", new PropertyModel<Boolean>(topicPermissionModel, "delete")));
-        add(new CheckBox("editTopicRegistration", new PropertyModel<Boolean>(topicPermissionModel, "edit")));
-        add(new CheckBox("viewTopicRegistration", new PropertyModel<Boolean>(topicPermissionModel, "view")));
+        add(new CheckBox("createDefaultTopicRegistration", new PropertyModel<Boolean>(defaultTopicPermission, "create")));
+        add(new CheckBox("removeDefaultTopicRegistration", new PropertyModel<Boolean>(defaultTopicPermission, "delete")));
+        add(new CheckBox("editDefaultTopicRegistration", new PropertyModel<Boolean>(defaultTopicPermission, "edit")));
+        add(new CheckBox("viewDefaultTopicRegistration", new PropertyModel<Boolean>(defaultTopicPermission, "view")));
 
-        add(new CheckBox("createDiscussionRegistration", new PropertyModel<Boolean>(discussionPermissionModel, "create")));
-        add(new CheckBox("removeDiscussionRegistration", new PropertyModel<Boolean>(discussionPermissionModel, "delete")));
-        add(new CheckBox("editDiscussionRegistration", new PropertyModel<Boolean>(discussionPermissionModel, "edit")));
-        add(new CheckBox("viewDiscussionRegistration", new PropertyModel<Boolean>(discussionPermissionModel, "view")));
+        add(new CheckBox("createGlobalTopicRegistration", new PropertyModel<Boolean>(globalTopicPermission, "create")));
+        add(new CheckBox("removeGlobalTopicRegistration", new PropertyModel<Boolean>(globalTopicPermission, "delete")));
+        add(new CheckBox("editGlobalTopicRegistration", new PropertyModel<Boolean>(globalTopicPermission, "edit")));
+        add(new CheckBox("viewGlobalTopicRegistration", new PropertyModel<Boolean>(globalTopicPermission, "view")));
 
-        add(new CheckBox("createPostRegistration", new PropertyModel<Boolean>(postPermissionModel, "create")));
-        add(new CheckBox("removePostRegistration", new PropertyModel<Boolean>(postPermissionModel, "delete")));
-        add(new CheckBox("editPostRegistration", new PropertyModel<Boolean>(postPermissionModel, "edit")));
-        add(new CheckBox("viewPostRegistration", new PropertyModel<Boolean>(postPermissionModel, "view")));
+        add(new CheckBox("createDefaultDiscussionRegistration", new PropertyModel<Boolean>(defaultDiscussionPermission, "create")));
+        add(new CheckBox("removeDefaultDiscussionRegistration", new PropertyModel<Boolean>(defaultDiscussionPermission, "delete")));
+        add(new CheckBox("editDefaultDiscussionRegistration", new PropertyModel<Boolean>(defaultDiscussionPermission, "edit")));
+        add(new CheckBox("viewDefaultDiscussionRegistration", new PropertyModel<Boolean>(defaultDiscussionPermission, "view")));
 
-        //add(new CheckBox("readPrivateDiscussionRegistration", new PropertyModel<Boolean>(permissionModel, "readPrivateDiscussion")));
+        add(new CheckBox("createGlobalDiscussionRegistration", new PropertyModel<Boolean>(globalDiscussionPermission, "create")));
+        add(new CheckBox("removeGlobalDiscussionRegistration", new PropertyModel<Boolean>(globalDiscussionPermission, "delete")));
+        add(new CheckBox("editGlobalDiscussionRegistration", new PropertyModel<Boolean>(globalDiscussionPermission, "edit")));
+        add(new CheckBox("viewGlobalDiscussionRegistration", new PropertyModel<Boolean>(globalDiscussionPermission, "view")));
 
+        add(new CheckBox("createDefaultPostRegistration", new PropertyModel<Boolean>(defaultPostPermission, "create")));
+        add(new CheckBox("removeDefaultPostRegistration", new PropertyModel<Boolean>(defaultPostPermission, "delete")));
+        add(new CheckBox("editDefaultPostRegistration", new PropertyModel<Boolean>(defaultPostPermission, "edit")));
+        add(new CheckBox("viewDefaultPostRegistration", new PropertyModel<Boolean>(defaultPostPermission, "view")));
+
+        add(new CheckBox("createGlobalPostRegistration", new PropertyModel<Boolean>(globalPostPermission, "create")));
+        add(new CheckBox("removeGlobalPostRegistration", new PropertyModel<Boolean>(globalPostPermission, "delete")));
+        add(new CheckBox("editGlobalPostRegistration", new PropertyModel<Boolean>(globalPostPermission, "edit")));
+        add(new CheckBox("viewGlobalPostRegistration", new PropertyModel<Boolean>(globalPostPermission, "view")));
     }
-
-    /*public IModel<Permission> getPermissionModel() {
-        return permissionModel;
-    }*/
 }
