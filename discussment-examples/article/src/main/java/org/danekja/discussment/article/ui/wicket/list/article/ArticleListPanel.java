@@ -12,6 +12,7 @@ import org.danekja.discussment.article.core.service.ArticleService;
 import org.danekja.discussment.article.page.article.ArticleTextPage;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.service.CategoryService;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
 public class ArticleListPanel extends Panel {
 
     private ArticleService articleService;
+    private CategoryService categoryService;
     private AccessControlService accessControlService;
     private IModel<List<Article>> articleListModel;
 
@@ -35,13 +37,14 @@ public class ArticleListPanel extends Panel {
      * @param articleListModel model for getting the articles
      * @param articleService instance of the article service
      */
-    public ArticleListPanel (String id, IModel<List<Article>> articleListModel, ArticleService articleService, AccessControlService accessControlService){
+    public ArticleListPanel (String id, IModel<List<Article>> articleListModel, ArticleService articleService, CategoryService categoryService, AccessControlService accessControlService){
         super(id);
 
         this.articleListModel = articleListModel;
 
         this.accessControlService = accessControlService;
         this.articleService = articleService;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -56,6 +59,14 @@ public class ArticleListPanel extends Panel {
             }
         });
     }
+
+    @Override
+    protected void onConfigure(){
+        super.onConfigure();
+
+        this.setVisible(articleListModel.getObject().size() > 0 && accessControlService.canViewCategories());
+    }
+
     private Link createOpenArticleLink(final IModel<Article> am) {
         return new Link("openArticle") {
             @Override
@@ -82,16 +93,16 @@ public class ArticleListPanel extends Panel {
                 try{
                     articleService.removeArticle(am.getObject());
                 } catch (AccessDeniedException e) {
-                    // todo: not yet implemented
+
                 }
-                setResponsePage(getWebPage().getClass());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
 
-                //this.setVisible(accessControlService.canRemoveCategory(am.getObject()));
+                this.setVisible(accessControlService.canRemoveCategory(categoryService.getDefaultCategory()));
             }
         };
     }
