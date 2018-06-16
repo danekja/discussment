@@ -1,4 +1,4 @@
-package org.danekja.discussment.forum.session;
+package org.danekja.discussment.article.session;
 
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
