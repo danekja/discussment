@@ -3,10 +3,7 @@ package org.danekja.discussment.article.core.domain;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.LongEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -20,6 +17,7 @@ import static org.danekja.discussment.article.core.domain.Article.GET_ARTICLES;
  * @author Jiri Kryda
  */
 @Entity
+@Table(name = "discussment_article")
 @NamedQueries({
         @NamedQuery(name = GET_ARTICLES,
                 query = "SELECT a FROM Article a")

@@ -15,6 +15,7 @@ import static org.danekja.discussment.spring.core.domain.User.GET_USERS;
  */
 
 @Entity
+@Table(name = "discussment_user")
 @NamedQueries({
     @NamedQuery(name = GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = GET_USERS, query = "SELECT u FROM User u")
