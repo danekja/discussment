@@ -21,8 +21,14 @@
             <!--vypisuje diskuze v topicu-->
             <div wicket:id="discussionList" class="topic_row row">
                 <div class="col-md-6">
-                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-                    <a wicket:id="openDiscussion"></a>
+                    <div class="row">
+                        <span class="glyphicon glyphicon-list-alt col-md-1" aria-hidden="true"></span>
+                        <div class="col-md-11">
+                            <div class="row">
+                                <a wicket:id="openDiscussion" class="col-md-12"></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <div>
