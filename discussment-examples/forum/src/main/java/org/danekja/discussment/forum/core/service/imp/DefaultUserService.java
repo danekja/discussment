@@ -5,9 +5,12 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.forum.core.dao.UserDao;
 import org.danekja.discussment.forum.core.domain.User;
 import org.danekja.discussment.forum.core.service.UserService;
+import org.danekja.discussment.forum.session.UserSession;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 import java.util.List;
+
+import static org.apache.wicket.ThreadContext.getSession;
 
 /**
  * Created by Martin Bláha on 20.01.17.
@@ -44,6 +47,7 @@ public class DefaultUserService implements UserService {
     }
 
     public IDiscussionUser getCurrentlyLoggedUser() {
-        return SessionUtil.getUser();
+        UserSession userSession = (UserSession) getSession();
+        return getUserByUsername(userSession.getUser());
     }
 }
