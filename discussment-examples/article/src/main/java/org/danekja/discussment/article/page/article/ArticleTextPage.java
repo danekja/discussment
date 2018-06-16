@@ -19,6 +19,7 @@ import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.core.service.imp.*;
+import org.danekja.discussment.ui.wicket.panel.accessDenied.AccessDeniedPanel;
 import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import javax.persistence.EntityManager;
@@ -77,12 +78,14 @@ public class ArticleTextPage extends BasePage {
         super.onInitialize();
         if(userService.getCurrentlyLoggedUser() == null) {
             add(new NotLoggedInPanel("content"));
+        } else if(!accessControlService.canViewCategories()){
+            add(new AccessDeniedPanel("content"));
         } else {
             try {
                 articleModel.setObject(articleService.getArticleById(Integer.parseInt(parameters.get("articleId").toString())));
                 add(new ArticleTextPanel("content", articleModel, postService, userService, postReputationService, accessControlService));
             } catch (NumberFormatException e) {
-                setResponsePage(ArticlePage.class);
+
             }
         }
     }
