@@ -1,9 +1,14 @@
 package org.danekja.discussment.forum;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.danekja.discussment.forum.page.article.ArticlePage;
 import org.danekja.discussment.forum.page.dashboard.DashboardPage;
 import org.danekja.discussment.forum.page.discussion.DiscussionPage;
+import org.danekja.discussment.forum.session.UserSession;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -30,6 +35,16 @@ public class WicketApplication extends WebApplication {
 		super.init();
 
 		mountPages();
+
+		PackageStringResourceLoader l = new PackageStringResourceLoader();
+		l.setFilename("Messages.utf8");
+		getResourceSettings().getStringResourceLoaders().add(l);
+	}
+
+	@Override
+	public Session newSession(Request request, Response response)
+	{
+		return new UserSession(request);
 	}
 
 	public Class getHomePage() {
