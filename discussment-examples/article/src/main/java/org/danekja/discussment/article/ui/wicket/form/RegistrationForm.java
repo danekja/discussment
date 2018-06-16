@@ -5,6 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.article.core.domain.User;
 import org.danekja.discussment.article.core.service.UserService;
+import org.danekja.discussment.article.session.UserSession;
 import org.danekja.discussment.article.ui.wicket.form.registration.RegistrationFormComponent;
 import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
@@ -74,8 +75,9 @@ public class RegistrationForm extends Form {
         permissionService.configureDiscussionPermissions(u, topicService.getDefaultTopic(), discussionPermissions.getObject());
         permissionService.configurePostPermissions(u, topicService.getDefaultTopic(), postPermissions.getObject());
 
-        getSession().setAttribute("user", u);
+        UserSession userSession = (UserSession) getSession();
+        userSession.signIn(u.getUsername(), null);
 
-        setResponsePage(getWebPage().getClass());
+        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }
