@@ -19,6 +19,7 @@ import org.danekja.discussment.article.ui.wicket.form.LoginForm;
 import org.danekja.discussment.article.ui.wicket.form.RegistrationForm;
 import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
 import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
@@ -43,6 +44,13 @@ public abstract class BasePage extends WebPage {
 
     private EntityManager em;
 
+    private UserService userService;
+    private AccessControlService accessControlService;
+    private PermissionManagementService permissionService;
+    private CategoryService categoryService;
+    private TopicService topicService;
+    private DiscussionService discussionService;
+
     public BasePage() {
 
         em = WicketApplication.factory.createEntityManager();
@@ -57,12 +65,13 @@ public abstract class BasePage extends WebPage {
         add(new Label("title", new Model<String>(getTitle())));
 
         PermissionDao permissionDao = new PermissionDaoJPA(em);
-        UserService userService = new DefaultUserService(new UserDaoJPA(em));
-        AccessControlService accessControlService = new PermissionService(permissionDao, userService);
-        PermissionManagementService permissionService = new PermissionService(permissionDao, userService);
-        CategoryService categoryService = new DefaultCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
-        TopicService topicService = new DefaultTopicService(new TopicDaoJPA(em), categoryService, accessControlService, userService);
-        DiscussionService discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), topicService, accessControlService, userService);
+
+        this.userService = new DefaultUserService(new UserDaoJPA(em));
+        this.accessControlService = new PermissionService(permissionDao, userService);
+        this.permissionService = new PermissionService(permissionDao, userService);
+        this.categoryService = new DefaultCategoryService(new CategoryDaoJPA(em), accessControlService, userService);
+        this.topicService = new DefaultTopicService(new TopicDaoJPA(em), categoryService, accessControlService, userService);
+        this.discussionService = new DefaultDiscussionService(new DiscussionDaoJPA(em), new PostDaoJPA(em), topicService, accessControlService, userService);
 
         add(new LoginForm("loginForm", userService, new Model<User>(new User())));
         add(new RegistrationForm("registrationForm",
@@ -78,7 +87,7 @@ public abstract class BasePage extends WebPage {
         IModel<String> model = new Model() {
             @Override
             public String getObject() {
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
 
                 if (user == null) {
                     return "";
@@ -95,15 +104,15 @@ public abstract class BasePage extends WebPage {
         return new Link("logout") {
             @Override
             public void onClick() {
-                getSession().removeAttribute("user");
-                setResponsePage(getPage().getClass());
+                getSession().invalidate();
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user != null);
             }
         };
@@ -118,7 +127,7 @@ public abstract class BasePage extends WebPage {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user == null);
             }
         };
@@ -133,7 +142,7 @@ public abstract class BasePage extends WebPage {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user == null);
             }
         };
