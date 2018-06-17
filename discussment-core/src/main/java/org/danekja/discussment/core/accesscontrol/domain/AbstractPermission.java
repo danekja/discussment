@@ -1,6 +1,7 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
 import org.danekja.discussment.core.domain.BaseEntity;
+import org.hibernate.annotations.DiscriminatorOptions;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Table(name = "discussment_permission")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "permission_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorOptions(insert = false)
 public abstract class AbstractPermission extends BaseEntity<PermissionId> {
 
     public static final String PARAM_USER_ID = "userId";
