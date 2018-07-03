@@ -87,6 +87,14 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
         </dependency>
+        <!--Used only to get access to Hibernate specific annotations. Thus the provided scope.-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate3.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
