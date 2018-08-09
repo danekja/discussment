@@ -84,6 +84,25 @@
         </bean>
     </beans>
 
+    <beans profile="hibernate5">
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+              depends-on="flyway">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="packagesToScan" value="org.danekja.discussment.core.**.domain"/>
+
+            <property name="hibernateProperties">
+                <value>
+                    hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+                    hibernate.query.substitutions=true 'Y', false 'N'
+                </value>
+            </property>
+        </bean>
+
+        <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+            <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+        </bean>
+    </beans>
+
     <beans profile="hibernate3">
         <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
               depends-on="flyway">

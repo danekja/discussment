@@ -200,11 +200,20 @@
 
         <profile>
             <id>hibernate5</id>
+            <properties>
+                <spring.profile>hibernate5</spring.profile>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.danekja.discussment.db</groupId>
                     <artifactId>discussment-db-hibernate5</artifactId>
                     <version>${dao.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                    <version>${hibernate5.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
