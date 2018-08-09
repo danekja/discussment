@@ -71,6 +71,7 @@ public class PostForm extends Form {
         } catch (AccessDeniedException e) {
             // todo: not yet implemented
         }
+
         postModel.setObject(new Post());
 
         setResponsePage(getPage().getPageClass(), getPage().getPageParameters());

@@ -13,7 +13,6 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -65,8 +64,6 @@ public class DefaultPostService implements PostService {
 
     public Post sendReply(Post reply, Post post) throws AccessDeniedException {
         reply.setPost(post);
-        reply.setLevel(post.getLevel()+1);
-        reply.setChainId(post.getChainId()+reply.getLevel());
         return sendPost(post.getDiscussion(), reply);
     }
 

@@ -71,12 +71,11 @@
     </distributionManagement>
 
     <properties>
-        <spring.version>5.0.4.RELEASE</spring.version>
         <!-- TODO: use this also in persistence.xml file-->
         <jdbc.user>root</jdbc.user>
         <jdbc.password>root</jdbc.password>
         <jdbc.url>jdbc:mysql://localhost/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
-        <skip.flyway>false</skip.flyway>
+        <skip.flyway>${skipTests}</skip.flyway>
 
     </properties>
 
@@ -87,11 +86,27 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
         </dependency>
+        <!--Used only to get access to Hibernate specific annotations. Thus the provided scope.-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate3.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -107,7 +122,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
 

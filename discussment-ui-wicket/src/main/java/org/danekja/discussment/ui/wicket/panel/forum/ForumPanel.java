@@ -133,7 +133,7 @@ public class ForumPanel extends Panel {
                         add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel,
                                 postService, userService, postReputationService, accessControlService));
                     } else {
-                        setResponsePage(getPage().getClass());
+                        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
                     }
                 } catch (AccessDeniedException e) {
                     add(new AccessDeniedPanel("content"));

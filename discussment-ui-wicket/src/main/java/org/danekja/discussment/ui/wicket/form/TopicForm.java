@@ -69,7 +69,7 @@ public class TopicForm extends Form {
             }
 
             topicModel.setObject(new Topic());
-            setResponsePage(getWebPage().getClass());
+            setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
         }
 
     }

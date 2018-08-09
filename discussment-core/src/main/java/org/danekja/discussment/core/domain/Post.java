@@ -3,6 +3,7 @@ package org.danekja.discussment.core.domain;
 import static org.danekja.discussment.core.domain.Post.*;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -63,7 +64,7 @@ public class Post extends LongEntity implements Serializable {
     public static final String GET_REPLIES_FOR_POST = "Post.getRepliesForPost";
 
     /**
-     * The user which the post created
+     * The user who created the post
      */
     private String userId;
 
@@ -126,6 +127,10 @@ public class Post extends LongEntity implements Serializable {
     public Post() {
         chainId = "";
         level = 0;
+    }
+
+    public Post(Long id) {
+        super(id);
     }
 
     public Post(String text) {
@@ -204,6 +209,7 @@ public class Post extends LongEntity implements Serializable {
 
     public void setPost(Post post) {
         this.post = post;
+        this.setLevel(this.getLevel() + 1);
     }
 
     @Column(name = "text")
@@ -227,8 +233,21 @@ public class Post extends LongEntity implements Serializable {
         }
     }
 
-    @Column(name = "chain_id", unique = true, nullable = false)
+    @Column(name = "chain_id")
     public String getChainId() {
+        if (this.chainId == null) {
+            //initialize chainId from parent object if it exists
+            if (this.post != null) {
+                if (StringUtils.isEmpty(this.post.chainId)) {
+                    this.chainId = this.post.getId().toString();
+                } else {
+                    this.chainId = new StringBuilder(this.post.chainId)
+                            .append(CHAIN_ID_SEPARATOR)
+                            .append(this.post.getId()).toString();
+                }
+            }
+
+        }
         return chainId;
     }
 
@@ -247,21 +266,5 @@ public class Post extends LongEntity implements Serializable {
     public void setUserPostReputations(List<UserPostReputation> userPostReputations) {
         this.userPostReputations = userPostReputations;
     }
-
-    /**
-     * Apeends separator+provided id to the current chain id.
-     * If the current chain id is null, it will be set to id.
-     * @param id Id to be appended to chainId.
-     */
-    public void appendToChainId(String id) {
-        if(getChainId() == null) {
-            setChainId(id);
-        } else if(getChainId().length()<1){
-            setChainId(getChainId() + Post.CHAIN_ID_SEPARATOR + id);
-        } else {
-            setChainId(getChainId().substring(0,getChainId().length()-1) + Post.CHAIN_ID_SEPARATOR + id);
-        }
-    }
-
 
 }

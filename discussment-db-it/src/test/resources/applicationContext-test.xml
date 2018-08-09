@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <util:properties id="properties" location="classpath:application.properties"/>
+
+    <context:property-placeholder properties-ref="properties"/>
+
+    <bean id="flyway" class="org.flywaydb.core.Flyway">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="daoOps" expression="execution(* org.danekja.discussment.*..dao.*Dao.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="daoOps"/>
+    </aop:config>
+
+
+    <beans profile="jpa">
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="jpaVendorAdapter" ref="hibernateVendorAdapter"/>
+            <property name="packagesToScan" value="org.danekja.discussment.core.**"/>
+        </bean>
+        <bean id="hibernateVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+
+        <bean class="org.danekja.discussment.core.dao.jpa.CategoryDaoJPA"/>
+        <bean class="org.danekja.discussment.core.dao.jpa.DiscussionDaoJPA"/>
+        <bean class="org.danekja.discussment.core.dao.jpa.PostDaoJPA"/>
+        <bean class="org.danekja.discussment.core.dao.jpa.TopicDaoJPA"/>
+        <bean class="org.danekja.discussment.core.dao.jpa.UserPostReputationDaoJPA"/>
+        <bean class="org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA"/>
+    </beans>
+
+    <beans profile="hibernate3 hibernate5">
+        <bean class="org.danekja.discussment.core.dao.hibernate.CategoryDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.DiscussionDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.PostDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.TopicDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.UserPostReputationDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.accesscontrol.dao.hibernate.PermissionDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+    </beans>
+
+    <beans profile="hibernate5">
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+              depends-on="flyway">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="packagesToScan" value="org.danekja.discussment.core.**.domain"/>
+
+            <property name="hibernateProperties">
+                <value>
+                    hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+                    hibernate.query.substitutions=true 'Y', false 'N'
+                </value>
+            </property>
+        </bean>
+
+        <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+            <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+        </bean>
+    </beans>
+
+    <beans profile="hibernate3">
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
+              depends-on="flyway">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="packagesToScan" value="org.danekja.discussment.core.**.domain"/>
+
+            <property name="hibernateProperties">
+                <value>
+                    hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+                    hibernate.query.substitutions=true 'Y', false 'N'
+                </value>
+            </property>
+        </bean>
+
+        <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory"/>
+        </bean>
+    </beans>
+
+</beans>

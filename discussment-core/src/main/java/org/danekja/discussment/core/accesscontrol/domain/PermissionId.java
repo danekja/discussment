@@ -1,6 +1,9 @@
 package org.danekja.discussment.core.accesscontrol.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 
 /**
@@ -34,7 +37,7 @@ public class PermissionId implements Serializable {
     }
 
     @Enumerated(value = EnumType.STRING)
-    @AttributeOverride(name = "permissionType", column = @Column(name = "permission_type", nullable = false, updatable = false))
+    @Column(name = "permission_type", insertable = false, nullable = false, updatable = false)
     public PermissionType getPermissionType() {
         return permissionType;
     }

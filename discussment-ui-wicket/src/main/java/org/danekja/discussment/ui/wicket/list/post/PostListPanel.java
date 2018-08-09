@@ -145,7 +145,7 @@ public class PostListPanel extends Panel {
                 } catch (AccessDeniedException e) {
                     // todo: not yet implemented
                 }
-                setResponsePage(getWebPage().getClass(), getWebPage().getPageParameters());
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
