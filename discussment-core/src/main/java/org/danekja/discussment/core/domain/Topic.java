@@ -54,6 +54,10 @@ public class Topic extends LongEntity implements Serializable {
     public Topic() {
     }
 
+    public Topic(Long id) {
+        super(id);
+    }
+
     public Topic(String name, String description) {
         this.name = name;
         this.description = description;

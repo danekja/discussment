@@ -26,15 +26,6 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
         super(Post.class, em);
     }
 
-    @Override
-    public Post save(Post obj) {
-        if(obj.isNew()) {
-            obj = super.save(obj);
-            obj.appendToChainId(obj.getId().toString());
-        }
-        return super.save(obj);
-    }
-
     public List<Post> getPostsByDiscussion(Discussion discussion) {
         TypedQuery<Post> q = em.createNamedQuery(Post.GET_BY_DISCUSSION, Post.class);
         q.setParameter("discussionId", discussion.getId());

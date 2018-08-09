@@ -20,15 +20,6 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         super(Post.class, sessionFactory);
     }
 
-    @Override
-    public Post save(Post obj) {
-        if (obj.isNew()) {
-            obj = super.save(obj);
-            obj.appendToChainId(obj.getId().toString());
-        }
-        return super.save(obj);
-    }
-
     public List<Post> getPostsByDiscussion(Discussion discussion) {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery(Post.GET_BY_DISCUSSION);

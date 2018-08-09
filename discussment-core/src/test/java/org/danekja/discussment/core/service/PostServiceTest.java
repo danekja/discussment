@@ -20,12 +20,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -58,7 +53,7 @@ public class PostServiceTest {
     private List<Post> postRepository;
 
     @BeforeClass
-    public static void setUpGlobal() throws Exception {
+    public static void setUpGlobal() {
         testUser = new User(-100L, "PMS Test User");
 
     }
@@ -210,7 +205,7 @@ public class PostServiceTest {
 
     @Test
     public void testGetNumbersOfPosts() throws AccessDeniedException {
-        when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(invocationOnMock -> (Discussion)invocationOnMock.getArguments()[1]);
+        when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(invocationOnMock -> invocationOnMock.getArguments()[1]);
 
         Discussion discussion1 = new Discussion(55L,"Some discussion");
         discussion1 = discussionService.createDiscussion(new Topic(), discussion1);
@@ -238,7 +233,7 @@ public class PostServiceTest {
      */
     private class RemovePostMock implements Answer<Void> {
         @Override
-        public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+        public Void answer(InvocationOnMock invocationOnMock) {
             Post post = (Post) invocationOnMock.getArguments()[0];
             Iterator<Post> pIterator = postRepository.iterator();
             while(pIterator.hasNext()) {
@@ -257,7 +252,7 @@ public class PostServiceTest {
      */
     private class SavePostMock implements Answer<Post> {
         @Override
-        public Post answer(InvocationOnMock invocationOnMock) throws Throwable {
+        public Post answer(InvocationOnMock invocationOnMock) {
             Post post = (Post) invocationOnMock.getArguments()[0];
 
             if (post.getId() != null) {
@@ -299,7 +294,6 @@ public class PostServiceTest {
                 }
             }
             post.setId(max+1);
-            post.appendToChainId(post.getId().toString());
 
             postRepository.add(post);
             return post;

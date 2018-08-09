@@ -42,6 +42,10 @@ public class Category extends LongEntity implements Serializable {
 
     public Category() {}
 
+    public Category(Long id) {
+        super(id);
+    }
+
     public Category(String name) {
         this.name = name;
     }

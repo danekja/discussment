@@ -5,6 +5,7 @@ import org.danekja.discussment.core.dao.jpa.transaction.JPA21TransactionHelper;
 import org.danekja.discussment.core.dao.transaction.TransactionHelper;
 import org.danekja.discussment.core.domain.BaseEntity;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
@@ -31,13 +32,20 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
     }
 
     public GenericDaoJPA(Class<T> clazz, EntityManager em) {
+        this(clazz);
         this.em = em;
         this.transactionHelper = new JPA21TransactionHelper(em);
-        this.clazz = clazz;
     }
 
     public void setTransactionHelper(TransactionHelper transactionHelper) {
         this.transactionHelper = transactionHelper;
+    }
+
+    @PostConstruct
+    protected void init() {
+        if (this.transactionHelper == null) {
+            this.transactionHelper = new JPA21TransactionHelper(em);
+        }
     }
 
     public T save(T obj) {

@@ -75,6 +75,9 @@
         <hibernate5.version>5.2.6.Final</hibernate5.version>
         <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
         <junit.version>4.12</junit.version>
+        <junit.jupiter.version>5.1.1</junit.jupiter.version>
+        <junit.vintage.version>5.1.1</junit.vintage.version>
+        <junit.platform.version>1.1.1</junit.platform.version>
         <mockito.version>1.10.8</mockito.version>
         <mysql.connector.version>6.0.5</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,10 +90,17 @@
         <module>discussment-ui-wicket</module>
         <module>discussment-db-hibernate5</module>
         <module>discussment-db-hibernate3</module>
+        <module>discussment-db-it</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.6.6</version>
+            </dependency>
+
             <!-- Spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -113,9 +123,28 @@
 
             <!--  JUNIT DEPENDENCY FOR TESTING -->
             <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- To run tests on IDE such as Eclipse, Intellij -->
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-runner</artifactId>
+                <version>${junit.platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit.vintage.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -154,6 +183,35 @@
                             <arg>-Xlint:all,-options,-path</arg>
                         </compilerArgs>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-surefire-provider</artifactId>
+                            <version>${junit.platform.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-surefire-provider</artifactId>
+                            <version>${junit.platform.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.3.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
