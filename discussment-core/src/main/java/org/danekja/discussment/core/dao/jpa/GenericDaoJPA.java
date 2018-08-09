@@ -48,10 +48,6 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         }
     }
 
-    public void setTransactionHelper(ITransactionHelper transactionHelper) {
-        this.transactionHelper = transactionHelper;
-    }
-
     public T save(T obj) {
         boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();
         if(!hasOuterTransaction) {

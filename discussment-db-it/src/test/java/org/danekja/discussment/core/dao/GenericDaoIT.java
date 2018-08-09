@@ -117,9 +117,15 @@ abstract class GenericDaoIT<PK extends Serializable, T extends BaseEntity<PK>> {
         for (String name : expected) {
             checker.put(name, Boolean.FALSE);
         }
-        found.forEach(item -> checker.put(getSearchResultTestValue(item), Boolean.TRUE));
+
+        for (T item : found) {
+            checker.put(getSearchResultTestValue(item), Boolean.TRUE);
+        }
 
         assertEquals(expected.length, checker.size());
-        checker.forEach((name, isPresent) -> assertTrue(isPresent));
+
+        for (Map.Entry<String, Boolean> entry : checker.entrySet()) {
+            assertTrue(entry.getValue());
+        }
     }
 }

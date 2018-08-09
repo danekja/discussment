@@ -155,28 +155,33 @@ public class PostServiceTest {
                 return result;
             }
         });
-        when(postDao.getNumbersOfPosts(anyListOf(Long.class))).then((invocationOnMock -> {
-            List<Long> discussionIds = (List<Long>) invocationOnMock.getArguments()[0];
+        when(postDao.getNumbersOfPosts(anyListOf(Long.class))).then(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
 
-            Map<Long, Long> numbersOfPosts = new HashMap<>();
-            for (Post p : postRepository) {
-                if (numbersOfPosts.containsKey(p.getDiscussion().getId())) {
-                    Long number = numbersOfPosts.get(p.getDiscussion().getId());
-                    numbersOfPosts.replace(p.getDiscussion().getId(), number + 1L);
-                } else {
-                    numbersOfPosts.put(p.getDiscussion().getId(), 1L);
+                List<Long> discussionIds = (List<Long>) invocationOnMock.getArguments()[0];
+
+                Map<Long, Long> numbersOfPosts = new HashMap<>();
+                for (Post p : postRepository) {
+                    if (numbersOfPosts.containsKey(p.getDiscussion().getId())) {
+                        Long number = numbersOfPosts.get(p.getDiscussion().getId());
+                        numbersOfPosts.put(p.getDiscussion().getId(), number + 1L);
+                    } else {
+                        numbersOfPosts.put(p.getDiscussion().getId(), 1L);
+                    }
                 }
-            }
 
-            List<Object[]> result = new ArrayList<>();
-            for (Long discussionId : discussionIds) {
-                if (numbersOfPosts.containsKey(discussionId)) {
-                    result.add(new Object[] { discussionId, numbersOfPosts.get(discussionId) });
+                List<Object[]> result = new ArrayList<>();
+                for (Long discussionId : discussionIds) {
+                    if (numbersOfPosts.containsKey(discussionId)) {
+                        result.add(new Object[] { discussionId, numbersOfPosts.get(discussionId) });
+                    }
                 }
-            }
 
-            return result;
-        }));
+                return result;
+
+            }
+        });
 
         postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
     }
