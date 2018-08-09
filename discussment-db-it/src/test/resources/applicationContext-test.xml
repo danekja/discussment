@@ -64,7 +64,43 @@
     </beans>
 
     <beans profile="hibernate3 hibernate5">
+        <bean class="org.danekja.discussment.core.dao.hibernate.CategoryDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.DiscussionDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.PostDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.TopicDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.dao.hibernate.UserPostReputationDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean class="org.danekja.discussment.core.accesscontrol.dao.hibernate.PermissionDaoHibernate">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+    </beans>
 
+    <beans profile="hibernate3">
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
+              depends-on="flyway">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="packagesToScan" value="org.danekja.discussment.core.**.domain"/>
+
+            <property name="hibernateProperties">
+                <value>
+                    hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+                    hibernate.query.substitutions=true 'Y', false 'N'
+                </value>
+            </property>
+        </bean>
+
+        <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory"/>
+        </bean>
     </beans>
 
 </beans>
