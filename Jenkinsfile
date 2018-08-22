@@ -12,7 +12,7 @@ pipeline {
         stage('checkout') {
             steps {
                 checkout scm
-                git branch: '${BRANCH}', changelog: false, credentialsId: 'jenkins-ssh', poll: false, url: 'git@github.com:danekja/discussment.git'
+                //git branch: '${BRANCH}', changelog: false, credentialsId: 'jenkins-ssh', poll: false, url: 'git@github.com:danekja/discussment.git'
             }
         }
 
