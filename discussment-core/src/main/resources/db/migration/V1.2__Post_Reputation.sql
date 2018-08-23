@@ -2,10 +2,10 @@ SET FOREIGN_KEY_CHECKS=0;
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-alter table `post` add column `likes` bigint(20) DEFAULT NULL;
-alter table `post` add column `dislikes` bigint(20) DEFAULT NULL;
+alter table `discussment_post` add column `likes` bigint(20) DEFAULT NULL;
+alter table `discussment_post` add column `dislikes` bigint(20) DEFAULT NULL;
 
-CREATE TABLE IF NOT EXISTS `user_post_reputation` (
+CREATE TABLE IF NOT EXISTS `discussment_user_post_reputation` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `user_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `liked` tinyint(1),

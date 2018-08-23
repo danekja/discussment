@@ -1,6 +1,7 @@
 package org.danekja.discussment.ui.wicket.list.discussion;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -65,7 +66,12 @@ public class DiscussionListPanel extends Panel {
 
         add(createPasswordAlert());
 
-        add(new Label("topicName", topicListModel.getObject().getName()));
+        try {
+            add(new Label("topicName", topicListModel.getObject().getName()));
+        } catch (NullPointerException e){
+            PageParameters pageParameters = getPage().getPageParameters();
+            add(new Label("topicName", "Topic with id " + pageParameters.get("topicId")+ " not found"));
+        }
         add(createDiscussionAjaxLink());
 
 
@@ -135,7 +141,6 @@ public class DiscussionListPanel extends Panel {
                 if (accessControlService.canViewPosts(dm.getObject())) {
                     PageParameters pageParameters = getPage().getPageParameters();
                     pageParameters.add("discussionId", dm.getObject().getId());
-
                     setResponsePage(getPage().getPageClass(), pageParameters);
                 } else {
                     target.appendJavaScript("$('#passwordModal').modal('show');");

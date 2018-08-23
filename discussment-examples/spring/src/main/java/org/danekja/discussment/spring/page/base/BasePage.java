@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.DiscussionService;
@@ -20,6 +21,7 @@ import org.danekja.discussment.spring.form.RegistrationForm;
 import org.danekja.discussment.spring.page.article.ArticlePage;
 import org.danekja.discussment.spring.page.dashboard.DashboardPage;
 import org.danekja.discussment.spring.page.discussion.DiscussionPage;
+import org.danekja.discussment.spring.session.UserSession;
 
 
 /**
@@ -70,7 +72,7 @@ public abstract class BasePage extends WebPage {
         IModel<String> model = new Model() {
             @Override
             public String getObject() {
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
 
                 if (user == null) {
                     return "";
@@ -87,15 +89,15 @@ public abstract class BasePage extends WebPage {
         return new Link("logout") {
             @Override
             public void onClick() {
-                getSession().removeAttribute("user");
-                setResponsePage(getPage().getClass());
+                getSession().invalidate();
+                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user != null);
             }
         };
@@ -110,7 +112,7 @@ public abstract class BasePage extends WebPage {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user == null);
             }
         };
@@ -125,7 +127,7 @@ public abstract class BasePage extends WebPage {
             protected void onConfigure() {
                 super.onConfigure();
 
-                User user = (User) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user == null);
             }
         };

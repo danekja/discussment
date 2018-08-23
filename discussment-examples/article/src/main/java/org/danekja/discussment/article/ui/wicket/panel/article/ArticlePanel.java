@@ -5,11 +5,13 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.danekja.discussment.article.core.service.ArticleService;
+import org.danekja.discussment.article.core.service.UserService;
 import org.danekja.discussment.article.ui.wicket.list.article.ArticleListPanel;
 import org.danekja.discussment.article.ui.wicket.model.ArticleWicketModel;
 import org.danekja.discussment.article.ui.wicket.panel.modal.ModalPanel;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.service.CategoryService;
 
 /**
  * The class creates the panel which contains the article list. Can be added to a separate page.
@@ -22,6 +24,9 @@ public class ArticlePanel extends Panel{
 
     private AccessControlService accessControlService;
     private ArticleService articleService;
+    private CategoryService categoryService;
+    private UserService userService;
+
     private ModalWindow modalWindow;
 
     /**
@@ -30,11 +35,13 @@ public class ArticlePanel extends Panel{
      * @param id id of the element into which the panel is inserted
      * @param articleService instance of the article service
      */
-    public ArticlePanel (String id, AccessControlService accessControlService,  ArticleService articleService){
+    public ArticlePanel (String id, AccessControlService accessControlService, ArticleService articleService, CategoryService categoryService, UserService userService){
         super(id);
 
         this.accessControlService = accessControlService;
         this.articleService = articleService;
+        this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @Override
@@ -50,7 +57,7 @@ public class ArticlePanel extends Panel{
 
         add(createArticleAjaxLink());
         add(new ArticleListPanel("content",
-                new ArticleWicketModel(articleService), articleService, accessControlService));
+                new ArticleWicketModel(articleService), articleService, categoryService, accessControlService));
 
     }
 
@@ -65,7 +72,7 @@ public class ArticlePanel extends Panel{
             protected void onConfigure() {
                 super.onConfigure();
 
-                IDiscussionUser user = (IDiscussionUser) getSession().getAttribute("user");
+                IDiscussionUser user = userService.getCurrentlyLoggedUser();
                 this.setVisible(user != null && accessControlService.canAddCategory());
             }
         };

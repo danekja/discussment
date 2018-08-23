@@ -4,78 +4,140 @@
         <input id="usernameRegistration" type="text" wicket:id="usernameRegistration" class="form-control" required="required">
     </div>
 
+
     <div class="form-group">
-        <label><b>Category</b></label>
-        <div class="checkbox">
-            <label>
-                <input wicket:id="createCategoryRegistration" type="checkbox"> Create
-            </label>
-            <label>
-                <input wicket:id="removeCategoryRegistration" type="checkbox"> Remove
-            </label>
-            <label>
-                <input wicket:id="editCategoryRegistration" type="checkbox"> Edit
-            </label>
-            <label>
-                <input wicket:id="viewCategoryRegistration" type="checkbox"> View
-            </label>
-        </div>
-        <label><b>Topic</b></label>
-        <div class="checkbox">
-            <label>
-                <input wicket:id="createTopicRegistration" type="checkbox"> Create
-            </label>
-            <label>
-                <input wicket:id="removeTopicRegistration" type="checkbox"> Remove
-            </label>
-            <label>
-                <input wicket:id="editTopicRegistration" type="checkbox"> Edit
-            </label>
-            <label>
-                <input wicket:id="viewTopicRegistration" type="checkbox"> View
-            </label>
-        </div>
-        <label><b>Discussion</b></label>
-        <div class="checkbox">
-            <label>
-                <input wicket:id="createDiscussionRegistration" type="checkbox"> Create
-            </label>
-            <label>
-                <input wicket:id="removeDiscussionRegistration" type="checkbox"> Remove
-            </label>
-            <label>
-                <input wicket:id="editDiscussionRegistration" type="checkbox"> Edit
-            </label>
-            <label>
-                <input wicket:id="viewDiscussionRegistration" type="checkbox"> View
-            </label>
-        </div>
-        <label><b>Post</b></label>
-        <div class="checkbox">
-            <label>
-                <input wicket:id="createPostRegistration" type="checkbox"> Create
-            </label>
-            <label>
-                <input wicket:id="removePostRegistration" type="checkbox"> Remove
-            </label>
-            <label>
-                <input wicket:id="editPostRegistration" type="checkbox"> Edit
-            </label>
-            <label>
-                <input wicket:id="viewPostRegistration" type="checkbox"> View
-            </label>
-        </div>
-        <!--div class="checkbox">
-            <label>
-                <input wicket:id="disablePostRegistration" type="checkbox"> Disable post
-            </label>
-        </div>
-        <br />
-        <div class="checkbox">
-            <label>
-                <input wicket:id="readPrivateDiscussionRegistration" type="checkbox"> Read private discussion
-            </label>
-        </div-->
+        <table>
+            <tr>
+                <td>
+                    <label><b>Global Category</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createCategoryRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeCategoryRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editCategoryRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewCategoryRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><b>Global Topic</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createGlobalTopicRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeGlobalTopicRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editGlobalTopicRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewGlobalTopicRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+                <td>&nbsp&nbsp&nbsp</td>
+                <td>
+                    <label><b>Default Topic</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createDefaultTopicRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeDefaultTopicRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editDefaultTopicRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewDefaultTopicRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><b>Global Discussion</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createGlobalDiscussionRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeGlobalDiscussionRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editGlobalDiscussionRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewGlobalDiscussionRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+                <td></td>
+                <td>
+                    <label><b>Default Discussion</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createDefaultDiscussionRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeDefaultDiscussionRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editDefaultDiscussionRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewDefaultDiscussionRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><b>Global Post</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createGlobalPostRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeGlobalPostRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editGlobalPostRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewGlobalPostRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+                <td></td>
+                <td>
+                    <label><b>Default Post</b></label>
+                    <div class="checkbox">
+                        <label>
+                            <input wicket:id="createDefaultPostRegistration" type="checkbox"> Create
+                        </label>
+                        <label>
+                            <input wicket:id="removeDefaultPostRegistration" type="checkbox"> Remove
+                        </label>
+                        <label>
+                            <input wicket:id="editDefaultPostRegistration" type="checkbox"> Edit
+                        </label>
+                        <label>
+                            <input wicket:id="viewDefaultPostRegistration" type="checkbox"> View
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </wicket:panel>
 

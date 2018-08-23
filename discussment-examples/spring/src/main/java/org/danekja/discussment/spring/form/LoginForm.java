@@ -5,6 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.danekja.discussment.spring.core.domain.User;
 import org.danekja.discussment.spring.core.service.UserService;
 import org.danekja.discussment.spring.form.login.LoginFormComponent;
+import org.danekja.discussment.spring.session.UserSession;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 
@@ -37,13 +38,14 @@ public class LoginForm extends Form {
         User user = userService.getUserByUsername(userModel.getObject().getDisplayName());
 
         if (user != null) {
-            SessionUtil.setUser(user);
+            UserSession userSession = (UserSession) getSession();
+            userSession.signIn(user.getUsername(), null);
         } else {
             SessionUtil.setError("username");
         }
 
         userModel.setObject(new User());
-        setResponsePage(getPage().getClass());
+        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 
 }

@@ -11,6 +11,7 @@ import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.forum.core.domain.User;
 import org.danekja.discussment.forum.core.service.UserService;
 import org.danekja.discussment.forum.form.registration.RegistrationFormComponent;
+import org.danekja.discussment.forum.session.UserSession;
 
 
 /**
@@ -27,10 +28,15 @@ public class RegistrationForm extends Form {
     private IModel<User> userModel;
 
     private IModel<PermissionData> categoryPermissions;
-    private IModel<PermissionData> topicPermissions;
-    private IModel<PermissionData> discussionPermissions;
-    private IModel<PermissionData> postPermissions;
 
+    private IModel<PermissionData> defaultTopicPermissions;
+    private IModel<PermissionData> globalTopicPermissions;
+
+    private IModel<PermissionData> defaultDiscussionPermissions;
+    private IModel<PermissionData> globalDiscussionPermissions;
+
+    private IModel<PermissionData> defaultPostPermissions;
+    private IModel<PermissionData> globalPostPermissions;
 
     private RegistrationFormComponent registrationFormComponent;
 
@@ -51,16 +57,31 @@ public class RegistrationForm extends Form {
         this.discussionService = discussionService;
 
         this.categoryPermissions = new Model<PermissionData>(new PermissionData());
-        this.discussionPermissions = new Model<PermissionData>(new PermissionData());
-        this.topicPermissions = new Model<PermissionData>(new PermissionData());
-        this.postPermissions = new Model<PermissionData>(new PermissionData());
+
+        this.defaultDiscussionPermissions = new Model<PermissionData>(new PermissionData());
+        this.globalTopicPermissions = new Model<PermissionData>(new PermissionData());
+
+        this.defaultTopicPermissions = new Model<PermissionData>(new PermissionData());
+        this.globalDiscussionPermissions = new Model<PermissionData>(new PermissionData());
+
+        this.defaultPostPermissions = new Model<PermissionData>(new PermissionData());
+        this.globalPostPermissions = new Model<PermissionData>(new PermissionData());
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        registrationFormComponent = new RegistrationFormComponent("registrationFormComponent", userModel, categoryPermissions, topicPermissions, discussionPermissions, postPermissions);
+        registrationFormComponent = new RegistrationFormComponent("registrationFormComponent",
+                userModel,
+                categoryPermissions,
+                defaultTopicPermissions,
+                globalTopicPermissions,
+                defaultDiscussionPermissions,
+                globalDiscussionPermissions,
+                defaultPostPermissions,
+                globalPostPermissions
+        );
         add(registrationFormComponent);
     }
 
@@ -70,12 +91,16 @@ public class RegistrationForm extends Form {
         User u = userService.addUser(userModel.getObject());
 
         permissionService.configureCategoryPermissions(u, categoryPermissions.getObject());
-        permissionService.configureTopicPermissions(u, categoryService.getDefaultCategory(), topicPermissions.getObject());
-        permissionService.configureDiscussionPermissions(u, topicService.getDefaultTopic(), discussionPermissions.getObject());
-        permissionService.configurePostPermissions(u, discussionService.getDefaultDiscussion(), postPermissions.getObject());
+        permissionService.configureTopicPermissions(u, globalTopicPermissions.getObject());
+        permissionService.configureDiscussionPermissions(u, globalDiscussionPermissions.getObject());
+        permissionService.configurePostPermissions(u, globalPostPermissions.getObject());
+        permissionService.configureTopicPermissions(u, categoryService.getDefaultCategory(), defaultTopicPermissions.getObject());
+        permissionService.configureDiscussionPermissions(u, topicService.getDefaultTopic(), defaultDiscussionPermissions.getObject());
+        permissionService.configurePostPermissions(u, discussionService.getDefaultDiscussion(), defaultPostPermissions.getObject());
 
-        getSession().setAttribute("user", u);
+        UserSession userSession = (UserSession) getSession();
+        userSession.signIn(u.getUsername(), null);
 
-        setResponsePage(getWebPage().getClass());
+        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }

@@ -82,7 +82,7 @@ public class ArticlePage extends BasePage {
         if(userService.getCurrentlyLoggedUser() == null){
             add(new NotLoggedInPanel("content"));
         }else {
-            add(new ArticlePanel("content", accessControlService, articleService));
+            add(new ArticlePanel("content", accessControlService, articleService, categoryService, userService));
         }
     }
 

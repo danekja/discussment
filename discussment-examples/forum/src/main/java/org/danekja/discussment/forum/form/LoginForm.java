@@ -5,6 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.danekja.discussment.forum.core.domain.User;
 import org.danekja.discussment.forum.core.service.UserService;
 import org.danekja.discussment.forum.form.login.LoginFormComponent;
+import org.danekja.discussment.forum.session.UserSession;
 import org.danekja.discussment.ui.wicket.session.SessionUtil;
 
 
@@ -37,7 +38,8 @@ public class LoginForm extends Form {
         User user = userService.getUserByUsername(userModel.getObject().getDisplayName());
 
         if (user != null) {
-            SessionUtil.setUser(user);
+            UserSession userSession = (UserSession) getSession();
+            userSession.signIn(user.getUsername(), null);
         } else {
             SessionUtil.setError("username");
         }

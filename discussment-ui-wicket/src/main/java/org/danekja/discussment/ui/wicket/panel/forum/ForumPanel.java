@@ -1,5 +1,6 @@
 package org.danekja.discussment.ui.wicket.panel.forum;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -115,20 +116,23 @@ public class ForumPanel extends Panel {
                         new TopicWicketModel(categoryModel, topicService),
                         categoryModel, categoryService, topicService, discussionService, postService, userService, accessControlService)
                 );
-            } else if (parametersModel.getObject().get("topicId") != -1) {
+            } else if (parametersModel.getObject().get("topicId") != -1 && parametersModel.getObject().get("discussionId") == -1) {
                 try{
                     Topic topic = topicService.getTopicById(parametersModel.getObject().get("topicId"));
                     topicModel.setObject(topic);
                     add(new DiscussionListPanel("content", topicModel,discussionModel, discussionService, postService, accessControlService));
                 } catch (AccessDeniedException e) {
                     add(new AccessDeniedPanel("content"));
+                } catch (NullPointerException e){
                 }
             } else {
                 try {
                     Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
                     Long dId = SessionUtil.getDiscussionId();
                     Boolean access = SessionUtil.getAccess();
-                    if(accessControlService.canViewPosts(discussion) ||
+                    if(discussion == null){
+                        add(new Label("content", "Discussion with id " + parametersModel.getObject().get("discussionId") + " not found!"));
+                    } else if(accessControlService.canViewPosts(discussion) ||
                             access != null && access.booleanValue() && dId != null && dId.equals(discussion.getId())) {
                         add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel,
                                 postService, userService, postReputationService, accessControlService));
@@ -137,6 +141,7 @@ public class ForumPanel extends Panel {
                     }
                 } catch (AccessDeniedException e) {
                     add(new AccessDeniedPanel("content"));
+                } catch (NullPointerException e){
                 }
             }
         }
