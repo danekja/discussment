@@ -14,14 +14,28 @@ SET FOREIGN_KEY_CHECKS=0;
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+-- create user
+CREATE TABLE IF NOT EXISTS `user` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `username` varchar(255),
+    `name` varchar(255),
+    `lastname` varchar(255),
+    `permissions` bigint(20),
+    PRIMARY KEY(`id`)
+);
+
+
+
+
+
 --
 -- Table structure for table `category`
 --
 
-DROP TABLE IF EXISTS `discussment_category`;
+DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `discussment_category` (
+CREATE TABLE `category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -33,10 +47,10 @@ CREATE TABLE `discussment_category` (
 -- Dumping data for table `discussion`
 --
 
-DROP TABLE IF EXISTS `discussment_discussion`;
+DROP TABLE IF EXISTS `discussion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `discussment_discussion` (
+CREATE TABLE `discussion` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `pass` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -52,10 +66,10 @@ CREATE TABLE `discussment_discussion` (
 -- Table structure for table `topic`
 --
 
-DROP TABLE IF EXISTS `discussment_topic`;
+DROP TABLE IF EXISTS `topic`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `discussment_topic` (
+CREATE TABLE `topic` (
   `id` bigint(20) NOT NULL auto_increment,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -73,10 +87,10 @@ CREATE TABLE `discussment_topic` (
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `discussment_user`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `discussment_user` (
+CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -90,16 +104,16 @@ CREATE TABLE `discussment_user` (
 -- Table structure for table `post`
 --
 
-DROP TABLE IF EXISTS `discussment_post`;
+DROP TABLE IF EXISTS `post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `discussment_post` (
+CREATE TABLE `post` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created` datetime DEFAULT NULL,
   `is_disabled` bit(1) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
   `text` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   `discussion_id` bigint(20) DEFAULT NULL,
   `parent_post_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -113,7 +127,7 @@ CREATE TABLE `discussment_post` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 -- permission table for various types of permissions
-CREATE TABLE IF NOT EXISTS `discussment_permission` (
+CREATE TABLE IF NOT EXISTS `permission` (
     `user_id` varchar(255) not null,
     `type` varchar(255) not null,
     `item_id` bigint(20),
