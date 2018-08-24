@@ -72,9 +72,9 @@
 
     <properties>
         <!-- TODO: use this also in persistence.xml file-->
-        <jdbc.user>root</jdbc.user>
-        <jdbc.password>root</jdbc.password>
-        <jdbc.url>jdbc:mysql://localhost/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
+        <jdbc.user>userSKK</jdbc.user>
+        <jdbc.password>CXAI5KegsAOnM5dM</jdbc.password>
+        <jdbc.url>jdbc:mysql://mariadb.discussment/sampledb?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
         <skip.flyway>${skipTests}</skip.flyway>
 
     </properties>
