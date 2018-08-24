@@ -18,7 +18,7 @@ pipeline {
 
         stage('build') {
             steps {
-                sh '/bin/bash -c "mvn clean install -Dskip.flyway=true -DskipTests=true -Dmaven.wagon.http.ssl.insecure=true"'
+                sh '/bin/bash -c "mvn clean install -P jpa -Dmaven.wagon.http.ssl.insecure=true"'
                 sh '/bin/bash -c "mvn clean install -f ./discussment-examples/article/pom.xml -Dskip.flyway=true -DskipTests=true -Dmaven.wagon.http.ssl.insecure=true"'
                 sh '/bin/bash -c "mvn clean install -f ./discussment-examples/forum/pom.xml -Dskip.flyway=true -DskipTests=true -Dmaven.wagon.http.ssl.insecure=true"'
                 sh '/bin/bash -c "mvn clean install -f ./discussment-examples/spring/pom.xml -Dskip.flyway=true -DskipTests=true -Dmaven.wagon.http.ssl.insecure=true"'
