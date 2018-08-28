@@ -141,6 +141,19 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <environmentVariables>
+                        <jdbc.driver>${env.JDBC_DRIVER}</jdbc.driver>
+                        <jdbc.url>${env.JDBC_URL}</jdbc.url>
+                        <jdbc.user>${env.JDBC_USER}</jdbc.user>
+                        <jdbc.password>${env.JDBC_PASSWORD}</jdbc.password>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

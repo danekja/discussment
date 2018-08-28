@@ -7,7 +7,8 @@ pipeline {
     }
     environment {
         MAVEN_OPTS='-Dfile.encoding=UTF-8'
-        JDBC_URL='jdbc:mysql://mariadb.discussment'
+        JDBC_DRIVER='org.mariadb.jdbc.Driver'
+        JDBC_URL='jdbc:mysql://mariadb.discussment/sampledb?serverTimezone=UTC'
         JDBC_USER='userSSK'
         JDBC_PASSWORD='CXAI5KegsAOnM5dM'
         JDBC_DATABASE='sampledb'
