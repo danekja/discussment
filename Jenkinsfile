@@ -7,6 +7,10 @@ pipeline {
     }
     environment {
         MAVEN_OPTS='-Dfile.encoding=UTF-8'
+        JDBC_URL='jdbc:mysql://mariadb.discussment'
+        JDBC_USER='userSSK'
+        JDBC_PASSWORD='CXAI5KegsAOnM5dM'
+        JDBC_DATABASE='sampledb'
     }
     stages {
         stage('checkout') {

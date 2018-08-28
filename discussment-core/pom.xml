@@ -72,9 +72,9 @@
 
     <properties>
         <!-- TODO: use this also in persistence.xml file-->
-        <jdbc.user>userSKK</jdbc.user>
+        <!--jdbc.user>userSKK</jdbc.user>
         <jdbc.password>CXAI5KegsAOnM5dM</jdbc.password>
-        <jdbc.url>jdbc:mysql://mariadb.discussment/sampledb?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
+        <jdbc.url>jdbc:mysql://mariadb.discussment/sampledb?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url-->
         <skip.flyway>${skipTests}</skip.flyway>
 
     </properties>
@@ -136,11 +136,24 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <environmentVariables>
+                        <jdbc.url>${env.JDBC_URL}</jdbc.url>
+                        <jdbc.user>${env.JDBC_USER}</jdbc.user>
+                        <jdbc.password>${env.JDBC_PASSWORD}</jdbc.password>
+                        <jdbc.database>${env.JDBC_DATABASE}</jdbc.database>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>${flyway.version}</version>
                 <configuration>
-                    <url>${jdbc.url}</url>
+                    <url>${jdbc.url}/${jdbc.database}</url>
                     <user>${jdbc.user}</user>
                     <password>${jdbc.password}</password>
                 </configuration>
