@@ -74,6 +74,7 @@
 			<groupId>org.danekja.discussment</groupId>
 			<artifactId>discussment-core</artifactId>
 			<version>0.9.1-SNAPSHOT</version>
+			<classifier>${prj.classifier}</classifier>
 		</dependency>
 
 
