@@ -5,7 +5,7 @@
     <groupId>org.danekja.discussment</groupId>
     <artifactId>discussment-builder-jdk7</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.9.0</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>
@@ -51,7 +51,7 @@
         <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
         <url>https://github.com/danekja/discussment/tree/master</url>
-        <tag>HEAD</tag>
+        <tag>v0.9.0-jdk7</tag>
     </scm>
 
     <distributionManagement>
