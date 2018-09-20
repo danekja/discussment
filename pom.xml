@@ -69,6 +69,11 @@
         <!-- Do not skip tests by default -->
         <skipTests>false</skipTests>
 
+        <!-- other -->
+        <prj.classifier></prj.classifier>
+        <jdk.source>1.8</jdk.source>
+        <jdk.target>1.8</jdk.target>
+
         <!-- versions -->
         <flyway.version>4.2.0</flyway.version>
         <hibernate3.version>3.6.10.Final</hibernate3.version>
@@ -185,12 +190,21 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.6.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${jdk.source}</source>
+                        <target>${jdk.target}</target>
                         <compilerArgs>
                             <arg>-verbose</arg>
                             <arg>-Xlint:all,-options,-path</arg>
                         </compilerArgs>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <classifier>${prj.classifier}</classifier>
                     </configuration>
                 </plugin>
 
@@ -323,6 +337,15 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>build-jdk7</id>
+            <properties>
+                <prj.classifier>jdk7</prj.classifier>
+                <jdk.source>1.7</jdk.source>
+                <jdk.target>1.7</jdk.target>
+            </properties>
         </profile>
     </profiles>
 
