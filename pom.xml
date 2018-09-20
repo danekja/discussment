@@ -5,7 +5,7 @@
     <groupId>org.danekja.discussment</groupId>
     <artifactId>discussment</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.1</version>
+    <version>0.9.2-SNAPSHOT</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>
@@ -51,7 +51,7 @@
         <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
         <url>https://github.com/danekja/discussment/tree/master</url>
-        <tag>v0.9.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
