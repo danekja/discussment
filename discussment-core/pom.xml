@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.danekja.discussment</groupId>
         <artifactId>discussment</artifactId>
-        <version>0.9.1-SNAPSHOT</version>
+        <version>0.9.1</version>
     </parent>
     <artifactId>discussment-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.1</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>
@@ -56,7 +56,7 @@
         <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
         <url>https://github.com/danekja/discussment/tree/master</url>
-        <tag>HEAD</tag>
+        <tag>v0.9.1</tag>
     </scm>
 
     <distributionManagement>
