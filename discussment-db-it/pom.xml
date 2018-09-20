@@ -15,8 +15,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <core.version>${project.version}</core.version>
-        <dao.version>${project.version}</dao.version>
+        <core.version>0.9.1-SNAPSHOT</core.version>
+        <dao.version>0.9.1-SNAPSHOT</dao.version>
 
         <spring.version>5.0.6.RELEASE</spring.version>
     </properties>
