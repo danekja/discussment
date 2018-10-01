@@ -266,4 +266,9 @@ public class Post extends LongEntity implements Serializable {
         this.userPostReputations = userPostReputations;
     }
 
+    public void setAsReply(Post post) {
+        this.setPost(post);
+        this.setLevel(post.getLevel() + 1);
+    }
+
 }
