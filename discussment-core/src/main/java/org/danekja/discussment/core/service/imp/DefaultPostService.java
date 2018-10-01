@@ -64,6 +64,7 @@ public class DefaultPostService implements PostService {
 
     public Post sendReply(Post reply, Post post) throws AccessDeniedException {
         reply.setPost(post);
+        reply.setLevel(post.getLevel() + 1);
         return sendPost(post.getDiscussion(), reply);
     }
 
