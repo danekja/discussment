@@ -209,7 +209,6 @@ public class Post extends LongEntity implements Serializable {
 
     public void setPost(Post post) {
         this.post = post;
-        this.setLevel(this.getLevel() + 1);
     }
 
     @Column(name = "text")
@@ -265,6 +264,11 @@ public class Post extends LongEntity implements Serializable {
 
     public void setUserPostReputations(List<UserPostReputation> userPostReputations) {
         this.userPostReputations = userPostReputations;
+    }
+
+    public void setAsReply(Post post) {
+        this.setLevel(post.getLevel() + 1);
+        this.setPost(post);
     }
 
 }

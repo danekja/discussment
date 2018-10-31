@@ -63,7 +63,7 @@ public class DefaultPostService implements PostService {
     }
 
     public Post sendReply(Post reply, Post post) throws AccessDeniedException {
-        reply.setPost(post);
+        reply.setAsReply(post);
         return sendPost(post.getDiscussion(), reply);
     }
 
