@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>5.0.0</version>
+            <version>${flyway.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -142,29 +142,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>${flyway.version}</version>
-                <configuration>
-                    <url>${jdbc.url}</url>
-                    <user>${jdbc.user}</user>
-                    <password>${jdbc.password}</password>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>test</id>
-                        <phase>generate-test-resources</phase>
-                        <configuration>
-                            <skip>${skip.flyway}</skip>
-                        </configuration>
-                        <goals>
-                            <goal>clean</goal>
-                            <goal>migrate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
         </plugins>
     </build>
