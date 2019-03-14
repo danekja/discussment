@@ -48,8 +48,8 @@
     </contributors>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com:fidransky/discussment.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:fidransky/discussment.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/fidransky/discussment.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/fidransky/discussment.git</developerConnection>
         <url>https://github.com/fidransky/discussment/tree/master</url>
         <tag>HEAD</tag>
     </scm>
