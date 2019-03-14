@@ -48,21 +48,23 @@
     </contributors>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
-        <url>https://github.com/danekja/discussment/tree/master</url>
+        <connection>scm:git:ssh://git@github.com:fidransky/discussment.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:fidransky/discussment.git</developerConnection>
+        <url>https://github.com/fidransky/discussment/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>yosorep</id>
+            <name>Internal Releases</name>
+            <url>https://nexus.yoso.fi/repository/maven-releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>yosorep</id>
+            <name>Internal Releases</name>
+            <url>https://nexus.yoso.fi/repository/maven-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <modules>
