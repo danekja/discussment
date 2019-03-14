@@ -5,18 +5,18 @@
     <parent>
         <artifactId>discussment</artifactId>
         <groupId>org.danekja.discussment</groupId>
-        <version>0.9.1-SNAPSHOT</version>
+        <version>0.9.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.danekja.discussment.test</groupId>
     <artifactId>discussment-dao-it</artifactId>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <core.version>0.9.1-SNAPSHOT</core.version>
-        <dao.version>0.9.1-SNAPSHOT</dao.version>
+        <core.version>0.9.2-SNAPSHOT</core.version>
+        <dao.version>0.9.2-SNAPSHOT</dao.version>
 
         <spring.version>5.0.6.RELEASE</spring.version>
     </properties>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>5.0.0</version>
+            <version>${flyway.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -141,6 +141,7 @@
                     </execution>
                 </executions>
             </plugin>
+
 
         </plugins>
     </build>

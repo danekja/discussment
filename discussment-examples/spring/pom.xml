@@ -35,13 +35,13 @@
         <dependency>
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-ui-wicket</artifactId>
-            <version>0.9.1-SNAPSHOT</version>
+            <version>0.9.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-core</artifactId>
-            <version>0.9.1-SNAPSHOT</version>
+            <version>0.9.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
