@@ -102,6 +102,6 @@ public class CoreConfiguration {
 
     @Bean
     public PostReputationService postReputationService(){
-        return new DefaultPostReputationService(userPostReputationDao(), postDao(), userService(), accessControlService());
+        return new DefaultPostReputationService(userPostReputationDao(), postDao(), userService());
     }
 }

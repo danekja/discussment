@@ -1,28 +1,21 @@
 package org.danekja.discussment.spring.page.article;
 
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
-import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
-import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
-import org.danekja.discussment.core.service.*;
-import org.danekja.discussment.core.service.imp.*;
-import org.danekja.discussment.spring.WicketApplication;
-import org.danekja.discussment.spring.core.dao.jpa.UserDaoJPA;
+import org.danekja.discussment.core.service.DiscussionService;
+import org.danekja.discussment.core.service.PostReputationService;
+import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.spring.core.service.UserService;
-import org.danekja.discussment.spring.core.service.imp.DefaultUserService;
 import org.danekja.discussment.spring.page.base.BasePage;
-import org.danekja.discussment.ui.wicket.panel.accessDenied.AccessDeniedPanel;
 import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
-import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
-
-import javax.persistence.EntityManager;
 
 
 /**
@@ -74,9 +67,7 @@ public class ArticlePage extends BasePage {
             }
             add(new DiscussionPanel("content", new Model<Discussion>(discussion), new Model<Post>(), postService, userService, postReputationService, accessControlService));
         } catch (AccessDeniedException e) {
-            add(new AccessDeniedPanel("content"));
-        } catch (NullPointerException ex) {
-            add(new NotLoggedInPanel("content"));
+            add(new EmptyPanel("content"));
         }
     }
 
