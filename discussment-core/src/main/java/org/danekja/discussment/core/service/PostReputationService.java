@@ -37,15 +37,6 @@ public interface PostReputationService {
     boolean userVotedOn(IDiscussionUser user, Post post);
 
     /**
-     * Checks if user liked the post
-     *
-     * @param user user to get the vote for
-     * @param post post to get vote
-     * @return true, if user liked the post
-     */
-    boolean userLiked(IDiscussionUser user, Post post);
-
-    /**
      * Gets user's vote on the post
      *
      * @param user user to get the vote for

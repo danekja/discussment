@@ -4,19 +4,16 @@ import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.Action;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
-import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.DiscussionDao;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
-import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.TopicService;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,19 +79,6 @@ public class DefaultDiscussionService implements DiscussionService {
             discussionDao.remove(discussion);
         } else {
             throw new AccessDeniedException(Action.DELETE, getCurrentUserId(), discussion.getId(), PermissionType.DISCUSSION);
-        }
-    }
-
-    public IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException {
-        if(accessControlService.canViewPosts(discussion)) {
-            Post post = postDao.getLastPost(discussion);
-            if(post == null) {
-                return null;
-            } else {
-                return discussionUserService.getUserById(post.getUserId());
-            }
-        } else {
-            throw new AccessDeniedException(Action.VIEW, getCurrentUserId(), discussion.getId(), PermissionType.POST);
         }
     }
 

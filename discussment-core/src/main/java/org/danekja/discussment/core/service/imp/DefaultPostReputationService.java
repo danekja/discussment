@@ -1,12 +1,10 @@
 package org.danekja.discussment.core.service.imp;
 
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.dao.UserPostReputationDao;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +24,16 @@ public class DefaultPostReputationService implements PostReputationService {
     private UserPostReputationDao userPostReputationDao;
     private PostDao postDao;
 
-    private AccessControlService accessControlService;
     private DiscussionUserService userService;
 
     public DefaultPostReputationService(UserPostReputationDao userPostReputationDao,
                                         PostDao postDao,
-                                        DiscussionUserService userService,
-                                        AccessControlService accessControlService){
+                                        DiscussionUserService userService){
 
         this.userPostReputationDao = userPostReputationDao;
         this.postDao = postDao;
 
         this.userService = userService;
-        this.accessControlService = accessControlService;
     }
 
     public void addLike(Post post){
@@ -71,9 +66,9 @@ public class DefaultPostReputationService implements PostReputationService {
 
     public void changeVote(IDiscussionUser user, Post post){
         synchronized (monitor) {
-            UserPostReputation upr = getVote(user, post);
-            if (upr != null) {
-                if (userLiked(user, post)) {
+            if (userVotedOn(user, post)) {
+                UserPostReputation upr = getVote(user, post);
+                if (upr.getLiked()) {
                     post.getPostReputation().removeLike();
                     post.getPostReputation().addDislike();
                     upr.changeLiked();
@@ -89,18 +84,14 @@ public class DefaultPostReputationService implements PostReputationService {
     }
 
     public UserPostReputation getVote(IDiscussionUser user, Post post){
-        return userPostReputationDao.getForUser(user, post);
-    }
-
-    public boolean userVotedOn(IDiscussionUser user, Post post){
-        if(getVote(user, post) != null){
-            return true;
+        if (user == null) {
+            return null;
         } else {
-            return false;
+            return userPostReputationDao.getForUser(user, post);
         }
     }
 
-    public boolean userLiked(IDiscussionUser user, Post post){
-        return getVote(user, post).getLiked();
+    public boolean userVotedOn(IDiscussionUser user, Post post){
+        return getVote(user, post) != null;
     }
 }
