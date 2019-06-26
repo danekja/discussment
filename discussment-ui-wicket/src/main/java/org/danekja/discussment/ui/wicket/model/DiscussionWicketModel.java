@@ -7,6 +7,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,9 +37,7 @@ public class DiscussionWicketModel extends LoadableDetachableModel<List<Discussi
         try{
             return discussionService.getDiscussionsByTopic(topicModel.getObject());
         } catch (AccessDeniedException e) {
-            return  null;
-        } catch (NullPointerException e) {
-            return null;
+            return Collections.emptyList();
         }
     }
 }

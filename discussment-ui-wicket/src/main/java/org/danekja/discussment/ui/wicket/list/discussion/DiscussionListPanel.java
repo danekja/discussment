@@ -1,6 +1,5 @@
 package org.danekja.discussment.ui.wicket.list.discussion;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -10,21 +9,21 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.PostService;
+import org.danekja.discussment.ui.wicket.form.PasswordForm;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
-
-import java.util.List;
 
 
 /**
@@ -38,7 +37,9 @@ public class DiscussionListPanel extends Panel {
     private PostService postService;
     private IModel<Discussion> discussionModel;
     private IModel<Topic> topicListModel;
+    private DiscussionUserService userService;
     private AccessControlService accessControlService;
+    private PermissionManagementService permissionService;
 
 
     /**
@@ -49,14 +50,23 @@ public class DiscussionListPanel extends Panel {
      * @param discussionService instance of the discussion service
      * @param discussionModel model for setting the selected discussion
      */
-    public DiscussionListPanel(String id, IModel<Topic> topicListModel, IModel<Discussion> discussionModel, DiscussionService discussionService, PostService postService, AccessControlService accessControlService) {
+    public DiscussionListPanel(String id,
+                               IModel<Topic> topicListModel,
+                               IModel<Discussion> discussionModel,
+                               DiscussionService discussionService,
+                               PostService postService,
+                               DiscussionUserService userService,
+                               AccessControlService accessControlService,
+                               PermissionManagementService permissionService) {
         super(id);
 
         this.discussionService = discussionService;
         this.postService = postService;
         this.discussionModel = discussionModel;
         this.topicListModel = topicListModel;
+        this.userService = userService;
         this.accessControlService = accessControlService;
+        this.permissionService = permissionService;
     }
 
     @Override
@@ -80,32 +90,46 @@ public class DiscussionListPanel extends Panel {
                     listItem.add(new Label("numberOfPosts"));
                 }
 
-                listItem.add(new Label("lastUsername", new LoadableDetachableModel<String>() {
-                    protected String load() {
-                        try {
-                            return discussionService.getLastPostAuthor(listItem.getModelObject()).getDisplayName();
-                        } catch (DiscussionUserNotFoundException e) {
-                            return getString("error.userNotFound");
-                        } catch (AccessDeniedException e){
-                            return getString("error.accessDenied");
-                        } catch (NullPointerException e){
-                            return "";
-                        }
-                    }
-                }));
-                try {
-                    listItem.add(new Label("lastCreated", postService.getLastPost(listItem.getModelObject()).getCreated()));
-                } catch (NullPointerException e){
+                Post lastPost = getLastPost(listItem.getModelObject());
+                if (lastPost != null) {
+                    listItem.add(new Label("lastCreated", lastPost.getCreated()));
+                } else {
                     listItem.add(new Label("lastCreated"));
-                } catch (AccessDeniedException e){
-                    listItem.add(new Label("lastCreated"));
+                }
+
+                IDiscussionUser lastPostAuthor = getPostAuthor(lastPost);
+                if (lastPostAuthor != null) {
+                    listItem.add(new Label("lastUsername", lastPostAuthor.getDisplayName()));
+                } else {
+                    listItem.add(new Label("lastUsername"));
                 }
 
                 listItem.add(createRemoveDiscussionLink(listItem.getModel()));
             }
         });
+
+        add(new PasswordForm("passwordForm", discussionModel, new Model<>(new Discussion()), userService, accessControlService, permissionService, discussionService));
     }
 
+    private Post getLastPost(Discussion discussion) {
+        try {
+            return postService.getLastPost(discussion);
+        } catch (AccessDeniedException e) {
+            return null;
+        }
+    }
+
+    private IDiscussionUser getPostAuthor(Post post) {
+        if (post == null) {
+            return null;
+        }
+
+        try {
+            return postService.getPostAuthor(post);
+        } catch (AccessDeniedException | DiscussionUserNotFoundException e) {
+            return null;
+        }
+    }
 
     private WebMarkupContainer createPasswordAlert() {
         return new WebMarkupContainer("alertPassword") {
@@ -154,11 +178,7 @@ public class DiscussionListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                try {
-                    this.setVisible(accessControlService.canAddDiscussion(topicListModel.getObject()));
-                } catch (NullPointerException e) {
-                    this.setVisible(false);
-                }
+                this.setVisible(accessControlService.canAddDiscussion(topicListModel.getObject()));
             }
 
             @Override

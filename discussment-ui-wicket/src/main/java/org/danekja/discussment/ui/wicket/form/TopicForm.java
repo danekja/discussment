@@ -3,6 +3,10 @@ package org.danekja.discussment.ui.wicket.form;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.PermissionData;
+import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
@@ -16,20 +20,12 @@ import org.danekja.discussment.ui.wicket.form.topic.TopicFormComponent;
 public class TopicForm extends Form {
 
     private TopicService topicService;
+    private DiscussionUserService userService;
+    private AccessControlService accessControlService;
+    private PermissionManagementService permissionService;
 
     private IModel<Topic> topicModel;
     private IModel<Category> categoryModel;
-
-    /**
-     * Constructor for creating a instance of the form for creating a new topic
-     *
-     * @param id id of the element into which the panel is inserted
-     * @param categoryModel model contains the category for adding a new topic
-     * @param topicModel model contains the topic for setting the form
-     */
-    public TopicForm(String id, IModel<Category> categoryModel, IModel<Topic> topicModel) {
-        this(id, null, categoryModel, topicModel);
-    }
 
     /**
      * Constructor for creating a instance of the form for creating a new topic
@@ -39,11 +35,21 @@ public class TopicForm extends Form {
      * @param categoryModel model contains the category for adding a new topic
      * @param topicModel model contains the topic for setting the form
      */
-    public TopicForm(String id, TopicService topicService, IModel<Category> categoryModel, IModel<Topic> topicModel) {
+    public TopicForm(String id,
+                     TopicService topicService,
+                     DiscussionUserService userService,
+                     AccessControlService accessControlService,
+                     PermissionManagementService permissionService,
+                     IModel<Category> categoryModel,
+                     IModel<Topic> topicModel) {
         super(id);
 
-        this.categoryModel = categoryModel;
         this.topicService = topicService;
+        this.userService = userService;
+        this.accessControlService = accessControlService;
+        this.permissionService = permissionService;
+
+        this.categoryModel = categoryModel;
         this.topicModel = topicModel;
     }
 
@@ -61,16 +67,18 @@ public class TopicForm extends Form {
 
     @Override
     protected void onSubmit() {
-        if (topicService != null) {
-            try {
-                topicService.createTopic(categoryModel.getObject(), topicModel.getObject());
-            } catch (AccessDeniedException e) {
-                // todo: not yet impemented
+        try {
+            Topic topic = topicService.createTopic(categoryModel.getObject(), topicModel.getObject());
+
+            if (!accessControlService.canAddDiscussion(topic)) {
+                permissionService.configureDiscussionPermissions(userService.getCurrentlyLoggedUser(), topic, new PermissionData(true, false, false, true));
             }
 
-            topicModel.setObject(new Topic());
-            setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
+        } catch (AccessDeniedException e) {
+            // todo: not yet impemented
         }
 
+        topicModel.setObject(new Topic());
+        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }

@@ -29,22 +29,6 @@ public class PasswordForm extends Form {
     private IModel<Discussion> passwordModel;
 
     /**
-     * Constructor for creating a instance of the form for verification the password
-     *
-     * @param id id of the element into which the panel is inserted
-     * @param discussionModel model contains the discussion to verification access to the discussion
-     * @param passwordModel model contains the discussion for setting the form
-     */
-    public PasswordForm(String id,
-                        IModel<Discussion> discussionModel,
-                        IModel<Discussion> passwordModel,
-                        DiscussionUserService userService,
-                        AccessControlService accessControlService,
-                        PermissionManagementService permissionService) {
-        this(id, discussionModel, passwordModel, userService, accessControlService, permissionService, null);
-    }
-
-    /**
      * Constructor for creating a instance of the form for verification a password
      *
      * @param id id of the element into which the panel is inserted
@@ -61,13 +45,13 @@ public class PasswordForm extends Form {
                         DiscussionService discussionService) {
         super(id);
 
+        this.discussionModel = discussionModel;
+        this.passwordModel = passwordModel;
+
         this.discussionService = discussionService;
         this.accessControlService = accessControlService;
         this.userService = userService;
         this.permissionService = permissionService;
-
-        this.discussionModel = discussionModel;
-        this.passwordModel = passwordModel;
     }
 
     @Override
@@ -77,43 +61,36 @@ public class PasswordForm extends Form {
         add(new PasswordFormComponent("passwordFormComponent", passwordModel));
     }
 
-    public void setDiscussionService(DiscussionService discussionService) {
-        this.discussionService = discussionService;
-    }
-
     @Override
     protected void onSubmit() {
-
         PageParameters pageParameters = getPage().getPageParameters();
 
-        if (discussionService != null) {
+        if (discussionModel.getObject().getPass() == null) {
+            // no password for discussion
+            SessionUtil.setAccess(true);
+            SessionUtil.setDiscussionId(discussionModel.getObject().getId());
 
-            if (discussionModel.getObject().getPass() == null){
-                // no password for discussion
+            pageParameters.add("discussionId", discussionModel.getObject().getId());
 
-                SessionUtil.setAccess(true);
-                SessionUtil.setDiscussionId(discussionModel.getObject().getId());
-                pageParameters.add("discussionId", discussionModel.getObject().getId());
-            } else if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
-                if(accessControlService.canViewPosts(discussionModel.getObject()) == false) {
-                    permissionService.configurePostPermissions(userService.getCurrentlyLoggedUser(), discussionModel.getObject(), new PermissionData(false, false, false, true));
-                }
-
-                SessionUtil.setAccess(true);
-                SessionUtil.setDiscussionId(discussionModel.getObject().getId());
-
-                pageParameters.add("discussionId", discussionModel.getObject().getId());
-            } else {
-
-                pageParameters.add("topicId", discussionModel.getObject().getTopic().getId());
-
-                SessionUtil.setAccess(true);
-                SessionUtil.setError("password");
+        } else if (discussionModel.getObject().getPass().equals(passwordModel.getObject().getPass())) {
+            if (!accessControlService.canViewPosts(discussionModel.getObject())) {
+                permissionService.configurePostPermissions(userService.getCurrentlyLoggedUser(), discussionModel.getObject(), new PermissionData(false, false, false, true));
             }
 
-            passwordModel.setObject(new Discussion());
+            SessionUtil.setAccess(true);
+            SessionUtil.setDiscussionId(discussionModel.getObject().getId());
 
-            setResponsePage(getPage().getPageClass(), pageParameters);
+            pageParameters.add("discussionId", discussionModel.getObject().getId());
+
+        } else {
+            SessionUtil.setAccess(true);
+            SessionUtil.setError("password");
+
+            pageParameters.add("topicId", discussionModel.getObject().getTopic().getId());
         }
+
+        passwordModel.setObject(new Discussion());
+
+        setResponsePage(getPage().getPageClass(), pageParameters);
     }
 }

@@ -26,32 +26,15 @@ public class DiscussionForm extends Form {
     private AccessControlService accessControlService;
 
     private IModel<Topic> topicModel;
-
     private IModel<Discussion> discussionModel;
 
     /**
      * Constructor for creating a instance of the form for adding a discussion form
      *
      * @param id id of the element into which the panel is inserted
-     * @param topicModel  model contains the topic for adding a new discussion
-     * @param discussionModel model contains the discussion for setting the form
-     */
-    public DiscussionForm(String id,
-                          IModel<Topic> topicModel,
-                          IModel<Discussion> discussionModel,
-                          DiscussionUserService userService,
-                          AccessControlService accessControlService,
-                          PermissionManagementService permissionService) {
-        this(id, topicModel, discussionModel, userService, accessControlService, permissionService, null);
-    }
-
-    /**
-     * Constructor for creating a instance of the form for adding a discussion form
-     *
-     * @param id id of the element into which the panel is inserted
-     * @param discussionService instance of the discussion service
      * @param topicModel model contains the topic for adding a new discussion
      * @param discussionModel model contains the discussion for setting the form
+     * @param discussionService instance of the discussion service
      */
     public DiscussionForm(String id,
                           IModel<Topic> topicModel,
@@ -62,12 +45,13 @@ public class DiscussionForm extends Form {
                           DiscussionService discussionService) {
         super(id);
 
-        this.discussionService = discussionService;
         this.topicModel = topicModel;
         this.discussionModel = discussionModel;
-        this.accessControlService = accessControlService;
+
         this.userService = userService;
         this.permissionService = permissionService;
+        this.accessControlService = accessControlService;
+        this.discussionService = discussionService;
     }
 
     @Override
@@ -77,30 +61,22 @@ public class DiscussionForm extends Form {
         add(new DiscussionFormComponent("discussionFormComponent", discussionModel));
     }
 
-    public void setDiscussionService(DiscussionService discussionService) {
-        this.discussionService = discussionService;
-    }
-
     @Override
     protected void onSubmit() {
+        try {
+            Discussion discussion = discussionService.createDiscussion(topicModel.getObject(), discussionModel.getObject());
 
-        Discussion discussion = discussionModel.getObject();
-        discussion.setTopic(topicModel.getObject());
-
-        if (discussionService != null) {
-            try {
-                discussion = discussionService.createDiscussion(topicModel.getObject(), discussion);
-                if(accessControlService.canAddPost(discussion) == false) {
-                    permissionService.configurePostPermissions(userService.getCurrentlyLoggedUser(), discussion, new PermissionData(true, false, false, true));
-                }
-            } catch (AccessDeniedException e) {
-                //todo: not yet implemented
+            if (!accessControlService.canAddPost(discussion)) {
+                permissionService.configurePostPermissions(userService.getCurrentlyLoggedUser(), discussion, new PermissionData(true, false, false, true));
             }
 
-            discussionModel.setObject(new Discussion());
-
-            PageParameters pageParameters = new PageParameters();
-            pageParameters.add("topicId", topicModel.getObject().getId());
+        } catch (AccessDeniedException e) {
+            //todo: not yet implemented
         }
+
+        discussionModel.setObject(new Discussion());
+
+        PageParameters pageParameters = new PageParameters();
+        pageParameters.add("topicId", topicModel.getObject().getId());
     }
 }

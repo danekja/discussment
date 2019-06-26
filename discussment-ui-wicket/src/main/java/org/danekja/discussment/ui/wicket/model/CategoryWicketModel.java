@@ -5,6 +5,7 @@ import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.service.CategoryService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,9 +32,7 @@ public class CategoryWicketModel extends LoadableDetachableModel<List<Category>>
         try {
             return categoryService.getCategories();
         } catch (AccessDeniedException e) {
-            return null;
-        } catch (NullPointerException e) {
-            return null;
+            return Collections.emptyList();
         }
     }
 

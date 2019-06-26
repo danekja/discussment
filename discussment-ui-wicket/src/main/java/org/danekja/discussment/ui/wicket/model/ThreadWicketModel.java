@@ -7,6 +7,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,9 +36,7 @@ public class ThreadWicketModel extends LoadableDetachableModel<List<Post>> {
         try {
             return postService.listPostHierarchy(discussionModel.getObject());
         } catch (AccessDeniedException e) {
-            return null;
-        } catch (NullPointerException e) {
-            return null;
+            return Collections.emptyList();
         }
     }
 

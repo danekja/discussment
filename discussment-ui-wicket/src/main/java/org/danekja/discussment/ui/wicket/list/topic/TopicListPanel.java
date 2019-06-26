@@ -83,11 +83,7 @@ public class TopicListPanel extends Panel {
     protected void onConfigure() {
         super.onConfigure();
 
-        if (topicListModel.getObject().size() == 0) {
-            setVisible(false);
-        } else {
-            setVisible(true);
-        }
+        this.setVisible(!topicListModel.getObject().isEmpty());
     }
 
     private Link createOpenTopicLink(final IModel<Topic> tm) {

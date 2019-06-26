@@ -3,16 +3,11 @@ package org.danekja.discussment.ui.wicket.form.postReputation;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The class contains input fields for making a new vote on post.
@@ -24,8 +19,10 @@ import java.util.List;
 public class PostReputationFormComponent extends Panel {
 
     private IModel<Post> postModel;
+
     private PostReputationService postReputationService;
     private DiscussionUserService userService;
+
     /**
      * Constructor for creating a instance of getting a name and text of the article.
      *
@@ -56,7 +53,7 @@ public class PostReputationFormComponent extends Panel {
 
             @Override
             protected void onConfigure(){
-                this.setVisible(!postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                this.setVisible(!userService.isGuest() && !postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
             }
         };
 
@@ -70,7 +67,7 @@ public class PostReputationFormComponent extends Panel {
 
             @Override
             protected void onConfigure(){
-                this.setVisible(!postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                this.setVisible(!userService.isGuest() && !postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
             }
         };
 
@@ -84,7 +81,7 @@ public class PostReputationFormComponent extends Panel {
 
             @Override
             protected void onConfigure(){
-                this.setVisible(postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                this.setVisible(!userService.isGuest() && postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
             }
         };
 

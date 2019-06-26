@@ -63,25 +63,8 @@ public class DiscussionPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ReplyForm("replyForm", selectedPost, new Model<Post>(new Post()), userService, postReputationService, postService));
+        add(new ReplyForm("replyForm", discussionModel, selectedPost, new Model<>(new Post()), postService, accessControlService));
         add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, postReputationService, accessControlService));
-
-        add(createPostForm());
-    }
-
-    private PostForm createPostForm() {
-        return new PostForm("postForm", discussionModel, new Model<Post>(new Post()), userService, postReputationService, postService) {
-
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-
-                try {
-                    this.setVisibilityAllowed(accessControlService.canAddPost(discussionModel.getObject()));
-                } catch (NullPointerException e) {
-                    this.setVisibilityAllowed(false);
-                }
-            }
-        };
+        add(new PostForm("postForm", discussionModel, new Model<Post>(new Post()), postService, accessControlService));
     }
 }
