@@ -1,5 +1,6 @@
 package org.danekja.discussment.spring.form;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.spring.core.domain.User;
@@ -37,7 +38,7 @@ public class LoginForm extends Form {
         User user = userService.getUserByUsername(userModel.getObject().getDisplayName());
 
         if (user != null) {
-            SessionUtil.setUser(user);
+            Session.get().setAttribute("user", user);
         } else {
             SessionUtil.setError("username");
         }

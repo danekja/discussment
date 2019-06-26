@@ -1,5 +1,6 @@
 package org.danekja.discussment.article.core.service.imp;
 
+import org.apache.wicket.Session;
 import org.danekja.discussment.article.core.dao.UserDao;
 import org.danekja.discussment.article.core.domain.User;
 import org.danekja.discussment.article.core.service.UserService;
@@ -43,6 +44,6 @@ public class DefaultUserService implements UserService {
     }
 
     public IDiscussionUser getCurrentlyLoggedUser() {
-        return SessionUtil.getUser();
+        return (IDiscussionUser) Session.get().getAttribute("user");
     }
 }

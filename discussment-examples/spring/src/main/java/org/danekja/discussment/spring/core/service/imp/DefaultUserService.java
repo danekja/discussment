@@ -1,11 +1,11 @@
 package org.danekja.discussment.spring.core.service.imp;
 
+import org.apache.wicket.Session;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.spring.core.dao.UserDao;
 import org.danekja.discussment.spring.core.domain.User;
 import org.danekja.discussment.spring.core.service.UserService;
-import org.danekja.discussment.ui.wicket.session.SessionUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -46,6 +46,6 @@ public class DefaultUserService implements UserService {
     }
 
     public IDiscussionUser getCurrentlyLoggedUser() {
-        return SessionUtil.getUser();
+        return (IDiscussionUser) Session.get().getAttribute("user");
     }
 }
