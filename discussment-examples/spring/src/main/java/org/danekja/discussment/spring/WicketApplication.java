@@ -1,6 +1,7 @@
 package org.danekja.discussment.spring;
 
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.danekja.discussment.spring.page.article.ArticlePage;
 import org.danekja.discussment.spring.page.dashboard.DashboardPage;
 import org.danekja.discussment.spring.page.discussion.DiscussionPage;
@@ -38,6 +39,8 @@ public class WicketApplication extends WebApplication {
 
 		getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
 		mountPages();
+
+		getResourceSettings().getStringResourceLoaders().add(new BundleStringResourceLoader("org.danekja.discussment.ui.wicket.Messages"));
 	}
 
 	public Class getHomePage()
