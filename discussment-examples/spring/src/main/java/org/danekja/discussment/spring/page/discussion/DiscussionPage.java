@@ -4,21 +4,12 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.danekja.discussment.core.accesscontrol.dao.jpa.PermissionDaoJPA;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
-import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
-import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
-import org.danekja.discussment.core.service.imp.*;
-import org.danekja.discussment.spring.WicketApplication;
-import org.danekja.discussment.spring.core.dao.UserDao;
-import org.danekja.discussment.spring.core.dao.jpa.UserDaoJPA;
 import org.danekja.discussment.spring.core.service.UserService;
-import org.danekja.discussment.spring.core.service.imp.DefaultUserService;
 import org.danekja.discussment.spring.page.base.BasePage;
 import org.danekja.discussment.ui.wicket.panel.forum.ForumPanel;
-import org.danekja.discussment.ui.wicket.panel.notLoggedIn.NotLoggedInPanel;
 
 import javax.persistence.EntityManager;
 import java.util.HashMap;
@@ -80,11 +71,8 @@ public class DiscussionPage extends BasePage {
 
         parametersModel.getObject().put("topicId", parameters.get("topicId").isNull() ? -1 : Integer.parseInt(parameters.get("topicId").toString()));
         parametersModel.getObject().put("discussionId", parameters.get("discussionId").isNull() ? -1 : Integer.parseInt(parameters.get("discussionId").toString()));
-        if(userService.getCurrentlyLoggedUser() == null) {
-            add(new NotLoggedInPanel("content"));
-        } else {
-            add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService, postReputationService, accessControlService, permissionService));
-        }
+
+        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService, postReputationService, accessControlService, permissionService));
     }
 
     @Override
