@@ -16,7 +16,7 @@
     <tx:annotation-driven transaction-manager="transactionManager" />
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" destroy-method="destroy">
-        <!--property name="dataSource" ref="dataSource" /-->
+        <property name="dataSource" ref="dataSource"/>
         <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml"/>
         <property name="jpaVendorAdapter" ref="hibernateVendorAdapter"/>
         <property name="packagesToScan" value="org.danekja.discussment.spring.**"/>
@@ -25,12 +25,12 @@
 
     <bean id="hibernateVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
-    <!--bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost/discussment?serverTimezone=UTC" />
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC" />
         <property name="username" value="root" />
         <property name="password" value="root" />
-    </bean-->
+    </bean>
 
     <!-- Transaction manager for a single EntityManagerFactory (alternative to JTA) -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
