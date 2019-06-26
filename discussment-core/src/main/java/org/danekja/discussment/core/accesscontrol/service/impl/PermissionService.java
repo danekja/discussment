@@ -12,10 +12,7 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Transactional
 public class PermissionService implements PermissionManagementService, AccessControlService, AccessControlManagerService {
@@ -144,7 +141,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
     public boolean canEditPost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
-        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+        } else if (post.getUserId().equals(user.getDiscussionUserId())) {
             return true;
         } else {
             return canEditPosts(user, post.getDiscussion());
@@ -159,7 +156,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
     public boolean canRemovePost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
-        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+        } else if (post.getUserId().equals(user.getDiscussionUserId())) {
             return true;
         } else {
             return canRemovePosts(user, post.getDiscussion());
@@ -174,7 +171,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
     public boolean canViewPost(IDiscussionUser user, Post post) {
         if (user == null) {
             return false;
-        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
+        } else if (post.getUserId().equals(user.getDiscussionUserId())) {
             return true;
         } else {
             return canViewPosts(user, post.getDiscussion());
@@ -247,25 +244,41 @@ public class PermissionService implements PermissionManagementService, AccessCon
     }
 
     protected List<PostPermission> getPostPermissions(IDiscussionUser user, Discussion discussion) {
-        Long dId = discussion.getId();
-        Long tId = discussion.getTopic().getId();
-        Long cId = discussion.getTopic().getCategory().getId();
-        return permissionDao.findForUser(user, dId, tId, cId);
+        if (user == null) {
+            return Collections.emptyList();
+        } else {
+            Long dId = discussion.getId();
+            Long tId = discussion.getTopic().getId();
+            Long cId = discussion.getTopic().getCategory().getId();
+            return permissionDao.findForUser(user, dId, tId, cId);
+        }
     }
 
     protected List<DiscussionPermission> getDiscussionPermissions(IDiscussionUser user, Topic topic) {
-        Long tId = topic.getId();
-        Long cId = topic.getCategory().getId();
-        return permissionDao.findForUser(user, tId, cId);
+        if (user == null) {
+            return Collections.emptyList();
+        } else {
+            Long tId = topic.getId();
+            Long cId = topic.getCategory().getId();
+            return permissionDao.findForUser(user, tId, cId);
+        }
     }
 
     protected List<TopicPermission> getTopicPermissions(IDiscussionUser user, Category category) {
-        Long cId = category.getId();
-        return permissionDao.findForUser(user, cId);
+        if (user == null) {
+            return Collections.emptyList();
+        } else {
+            Long cId = category.getId();
+            return permissionDao.findForUser(user, cId);
+        }
     }
 
     protected List<CategoryPermission> getCategoryPermissions(IDiscussionUser user) {
-        return permissionDao.findForUser(user);
+        if (user == null) {
+            return Collections.emptyList();
+        } else {
+            return permissionDao.findForUser(user);
+        }
     }
 
     /**

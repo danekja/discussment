@@ -87,7 +87,6 @@ public class DiscussionServiceTest {
 
         assertNotNull("Discussion is null!", discussion);
         assertNotNull("Id is null!", discussion.getId());
-        assertNull("There shouldn't be any posts in discussion!", discussionService.getLastPostAuthor(discussion));
         assertNotNull("Discussion has null topic!", discussion.getTopic());
     }
 
@@ -156,12 +155,5 @@ public class DiscussionServiceTest {
         assertNotNull("Discussion to be removed not found!", toBeRemoved);
         discussionService.removeDiscussion(toBeRemoved);
         assertNull("Discussion not removed!", discussionService.getDiscussionById(toBeRemoved.getId()));
-    }
-
-    @Test
-    public void testGetLastPostAuthor() throws DiscussionUserNotFoundException, AccessDeniedException {
-        when(postDao.getLastPost(any(Discussion.class))).then(invocationOnMock -> new Post(testUser, "Test post"));
-
-        assertEquals("Wrong author!", testUser.getDisplayName(), discussionService.getLastPostAuthor(new Discussion()).getDisplayName());
     }
 }

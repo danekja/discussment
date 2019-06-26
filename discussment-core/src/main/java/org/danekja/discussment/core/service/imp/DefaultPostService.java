@@ -63,12 +63,17 @@ public class DefaultPostService implements PostService {
     }
 
     public Post sendReply(Post reply, Post post) throws AccessDeniedException {
-        reply.setAsReply(post);
-        return sendPost(post.getDiscussion(), reply);
+        if (accessControlService.canAddPost(post.getDiscussion())) {
+            reply.setAsReply(post);
+            return sendPost(post.getDiscussion(), reply);
+        } else {
+            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), post.getDiscussion().getId(), PermissionType.POST);
+        }
     }
 
     public Post sendPost(Discussion discussion, Post post) throws AccessDeniedException {
         if(accessControlService.canAddPost(discussion)) {
+            post.setUserId(discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId());
             post.setDiscussion(discussion);
             return postDao.save(post);
         } else {
@@ -108,6 +113,10 @@ public class DefaultPostService implements PostService {
         } else {
             throw new AccessDeniedException(Action.VIEW, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
+    }
+
+    public boolean isPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException {
+        return getPostAuthor(post).equals(discussionUserService.getCurrentlyLoggedUser());
     }
 
     public Post getLastPost(Discussion discussion) throws AccessDeniedException{

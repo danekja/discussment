@@ -59,13 +59,4 @@ public interface DiscussionService {
      * @throws AccessDeniedException when user is not allowed to commit the action
      */
     void removeDiscussion(Discussion discussion) throws AccessDeniedException;
-
-    /**
-     * Returns the author of the last post in the discussion.
-     * @param discussion  the discussion for which the author is returned
-     * @return Author of the last post. Null if discussion has no posts.
-     * @throws AccessDeniedException when user is not allowed to commit the action
-     * @throws DiscussionUserNotFoundException when the post author does not exist, for some reason
-     */
-    IDiscussionUser getLastPostAuthor(Discussion discussion) throws DiscussionUserNotFoundException, AccessDeniedException;
 }

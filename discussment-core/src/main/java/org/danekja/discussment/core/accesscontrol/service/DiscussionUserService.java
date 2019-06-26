@@ -29,4 +29,11 @@ public interface DiscussionUserService extends Serializable {
      */
     IDiscussionUser getCurrentlyLoggedUser();
 
+    /**
+     * @return true if there is a user logged into the application, otherwise false
+     */
+    default boolean isGuest() {
+        return getCurrentlyLoggedUser() == null;
+    }
+
 }

@@ -91,6 +91,15 @@ public interface PostService {
     IDiscussionUser getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException;
 
     /**
+     * Returns true if the current user is post author.
+     * @param post post for which author is checked
+     * @return True if the current user is post author, otherwise false.
+     * @throws AccessDeniedException Thrown if the current user doesn't have permissions to view the post.
+     * @throws DiscussionUserNotFoundException Thrown if the user can be found by post.getUserId() id.
+     */
+    boolean isPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException;
+
+    /**
      * Returns the last post in the discussion.
      * @param discussion discussion to get the last post for
      * @return Last post in the discussion.
