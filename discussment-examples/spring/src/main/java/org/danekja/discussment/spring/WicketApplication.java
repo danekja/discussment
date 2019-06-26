@@ -1,20 +1,14 @@
 package org.danekja.discussment.spring;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.danekja.discussment.spring.page.article.ArticlePage;
 import org.danekja.discussment.spring.page.dashboard.DashboardPage;
 import org.danekja.discussment.spring.page.discussion.DiscussionPage;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 
 /**
  * Application object for your web application. If you want to run this application without deploying, run the Start class.
@@ -43,7 +37,7 @@ public class WicketApplication extends WebApplication {
 		getResourceSettings().getStringResourceLoaders().add(new BundleStringResourceLoader("org.danekja.discussment.ui.wicket.Messages"));
 	}
 
-	public Class getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return DashboardPage.class;
 	}

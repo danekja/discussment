@@ -67,7 +67,7 @@ public abstract class BasePage extends WebPage {
     }
 
     private Label createUsernameLabel() {
-        IModel<String> model = new Model() {
+        IModel<String> model = new Model<String>() {
             @Override
             public String getObject() {
                 User user = (User) getSession().getAttribute("user");
