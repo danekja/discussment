@@ -4,13 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.danekja.discussment</groupId>
-        <artifactId>discussment</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-
+    <groupId>org.danekja.discussment.examples</groupId>
     <artifactId>discussment-spring</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>discussment-spring</name>
 
@@ -23,6 +19,7 @@
     </licenses>
 
     <properties>
+        <discussment.version>0.9.3-SNAPSHOT</discussment.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
         <mysql.connector.version>6.0.5</mysql.connector.version>
@@ -35,13 +32,13 @@
         <dependency>
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-ui-wicket</artifactId>
-            <version>0.9.2-SNAPSHOT</version>
+            <version>${discussment.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-core</artifactId>
-            <version>0.9.2-SNAPSHOT</version>
+            <version>${discussment.version}</version>
         </dependency>
 
         <dependency>
