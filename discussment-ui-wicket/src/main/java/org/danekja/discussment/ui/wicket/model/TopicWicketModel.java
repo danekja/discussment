@@ -8,6 +8,7 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.service.TopicService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,9 +38,7 @@ public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
         try {
             return topicService.getTopicsByCategory(categoryModel.getObject());
         } catch (AccessDeniedException e) {
-            return null;
-        } catch (NullPointerException e) {
-            return null;
+            return Collections.emptyList();
         }
     }
 }

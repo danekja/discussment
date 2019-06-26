@@ -83,6 +83,13 @@ public class CategoryListPanel extends Panel {
         });
     }
 
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+
+        this.setVisible(!categoryListModel.getObject().isEmpty());
+    }
+
     private TopicListPanel createTopicListViewPanel(IModel<Category> cm) {
         TopicListPanel topicListViewPanel = new TopicListPanel("topicListPanel", new TopicWicketModel(cm, topicService), topicService, discussionService, postService, accessControlService);
         topicListViewPanel.setOutputMarkupId(true);

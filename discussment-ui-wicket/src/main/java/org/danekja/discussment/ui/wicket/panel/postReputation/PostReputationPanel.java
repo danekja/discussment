@@ -1,7 +1,6 @@
 package org.danekja.discussment.ui.wicket.panel.postReputation;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -12,6 +11,7 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
+import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostReputationForm;
 
 /**
@@ -25,8 +25,9 @@ public class PostReputationPanel extends Panel  {
 
     private IModel<Post> postModel;
     private IModel<PostReputation> postReputationModel;
-    private DiscussionUserService userService;
+    private PostService postService;
     private PostReputationService postReputationService;
+    private DiscussionUserService userService;
     private AccessControlService accessControlService;
 
     /**
@@ -34,21 +35,24 @@ public class PostReputationPanel extends Panel  {
      *
      * @param id id of the element into which the panel is inserted
      * @param postModel model contains the post to get votes for
-     * @param userService instance of the user service
+     * @param postService instance of the post service
      * @param postReputationService instance of the post reputation service
+     * @param userService instance of the user service
      * @param accessControlService instance of the access control service
      */
     public PostReputationPanel(String id,
                                IModel<Post> postModel,
+                               PostService postService,
+                               PostReputationService postReputationService,
                                DiscussionUserService userService,
-                               AccessControlService accessControlService,
-                               PostReputationService postReputationService){
+                               AccessControlService accessControlService){
         super(id);
         this.postModel = postModel;
         this.postReputationModel = new Model<PostReputation>();
 
-        this.userService = userService;
+        this.postService = postService;
         this.postReputationService = postReputationService;
+        this.userService = userService;
         this.accessControlService = accessControlService;
     }
 
@@ -62,21 +66,21 @@ public class PostReputationPanel extends Panel  {
 
         add(new Label("dislikes", new PropertyModel(postReputationModel, "dislikes")));
 
-        Form prform = new PostReputationForm("prform", postModel, userService, postReputationService, accessControlService);
+        add(new PostReputationForm("prform", postModel, postService, postReputationService, userService, accessControlService));
 
         Label liked = new Label("liked");
-        liked.setVisible(false);
+        add(liked);
 
-        if (postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())){
-            if (postReputationService.userLiked(userService.getCurrentlyLoggedUser(), postModel.getObject())){
-                liked = new Label("liked", new ResourceModel("postReputation.liked"));
+        if (!userService.isGuest() && postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())) {
+            if (postReputationService.getVote(userService.getCurrentlyLoggedUser(), postModel.getObject()).getLiked()) {
+                liked.setDefaultModel(new ResourceModel("postReputation.liked"));
             } else {
-                liked = new Label("liked", new ResourceModel("postReputation.disliked"));
+                liked.setDefaultModel(new ResourceModel("postReputation.disliked"));
             }
             liked.setVisible(true);
+        } else {
+            liked.setVisible(false);
         }
-        add(liked);
-        add(prform);
     }
 
     @Override

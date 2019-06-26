@@ -14,7 +14,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
@@ -36,6 +35,7 @@ public class PostListPanel extends Panel {
     private IModel<Post> postModel;
     private PostService postService;
     private IModel<List<Post>> postListModel;
+
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
@@ -47,6 +47,9 @@ public class PostListPanel extends Panel {
      * @param postListModel model for getting the posts
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
+     * @param userService instance of the user service
+     * @param postReputationService instance of the post reputation service
+     * @param accessControlService instance of the access control service
      */
     public PostListPanel(String id,
                          IModel<List<Post>> postListModel,
@@ -112,10 +115,17 @@ public class PostListPanel extends Panel {
 
                 listItem.add(new AttributeModifier("style", "padding-left: " + listItem.getModelObject().getLevel() * 30 + "px"));
 
-                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), userService, accessControlService, postReputationService));
+                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), postService, postReputationService, userService, accessControlService));
             }
         });
 
+    }
+
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+
+        this.setVisible(!postListModel.getObject().isEmpty());
     }
 
     private AjaxLink createReplyAjaxLink(final IModel<Post> pm) {
@@ -130,7 +140,6 @@ public class PostListPanel extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-
                 this.setVisible(accessControlService.canAddPost(pm.getObject().getDiscussion()));
             }
         };
@@ -151,9 +160,7 @@ public class PostListPanel extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-
-                IDiscussionUser user = userService.getCurrentlyLoggedUser();
-                this.setVisible(user != null && accessControlService.canRemovePost(pm.getObject()));
+                this.setVisible(accessControlService.canRemovePost(pm.getObject()));
             }
         };
     }
