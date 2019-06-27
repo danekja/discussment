@@ -9,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PostDaoIT extends GenericDaoIT<Long, Post> {
 
@@ -119,22 +120,10 @@ class PostDaoIT extends GenericDaoIT<Long, Post> {
 
     @Test
     void getNumbersOfPosts() {
-        List<Object[]> res = postDao.getNumbersOfPosts(Arrays.asList(TestData.TEST_DISCUSSION_1, TestData.TEST_DISCUSSION_2, TestData.TEST_DISCUSSION_3));
+        Map<Long, Long> res = postDao.getNumbersOfPosts(Arrays.asList(TestData.TEST_DISCUSSION_1, TestData.TEST_DISCUSSION_2, TestData.TEST_DISCUSSION_3));
 
-        long expected;
-        for (Object[] re : res) {
-            if (re[0] == TestData.TEST_DISCUSSION_1) {
-                expected = TestData.TEST_POSTS_DISCUSSION_1.length;
-            } else if (re[0] == TestData.TEST_DISCUSSION_2) {
-                expected = TestData.TEST_POSTS_DISCUSSION_2.length;
-            } else if (re[0] == TestData.TEST_DISCUSSION_3) {
-                expected = 0;
-            } else {
-                fail("Unexpected post count!");
-                break;
-            }
-
-            assertEquals(expected, re[1]);
-        }
+        assertEquals(Long.valueOf(TestData.TEST_POSTS_DISCUSSION_1.length), res.get(TestData.TEST_DISCUSSION_1));
+        assertEquals(Long.valueOf(TestData.TEST_POSTS_DISCUSSION_2.length), res.get(TestData.TEST_DISCUSSION_2));
+        assertNull(res.get(TestData.TEST_DISCUSSION_3));
     }
 }
