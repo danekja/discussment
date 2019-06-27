@@ -154,6 +154,13 @@
             </properties>
             <dependencies>
                 <dependency>
+                    <groupId>org.danekja.discussment.db</groupId>
+                    <artifactId>discussment-db-jpa</artifactId>
+                    <version>${dao.version}</version>
+                    <classifier>${prj.classifier}</classifier>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
                     <groupId>org.hibernate</groupId>
                     <artifactId>hibernate-entitymanager</artifactId>
                     <version>5.2.6.Final</version>
