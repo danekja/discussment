@@ -139,14 +139,7 @@ public class DefaultPostService implements PostService {
             return Collections.emptyMap();
         }
 
-        List<Object[]> numbersOfPosts = postDao.getNumbersOfPosts(discussionIds);
-        Map<Long, Long> resultMap = new HashMap<>();
-
-        for (Object[] numbers : numbersOfPosts) {
-            resultMap.put(((Number) numbers[0]).longValue(), ((Number) numbers[1]).longValue());
-        }
-
-        return resultMap;
+        return postDao.getNumbersOfPosts(discussionIds);
     }
 
     /**

@@ -8,7 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Martin Bláha on 19.01.17.
@@ -59,9 +61,16 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
         return (Long) q.getSingleResult();
     }
 
-    public List<Object[]> getNumbersOfPosts(List<Long> discussionIds) {
+    public Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds) {
         Query q = em.createNamedQuery(Post.COUNT_BY_DISCUSSIONS);
         q.setParameter("discussionIds", discussionIds);
-        return q.getResultList();
+        List<Object[]> numbersOfPosts = q.getResultList();
+
+        Map<Long, Long> resultMap = new HashMap<>();
+        for (Object[] numbers : numbersOfPosts) {
+            resultMap.put(((Number) numbers[0]).longValue(), ((Number) numbers[1]).longValue());
+        }
+
+        return resultMap;
     }
 }

@@ -8,7 +8,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jakub Danek on 19.01.17.
@@ -57,10 +59,17 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         return (Long) q.uniqueResult();
     }
 
-    public List<Object[]> getNumbersOfPosts(List<Long> discussionIds) {
+    public Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds) {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery(Post.COUNT_BY_DISCUSSIONS);
         q.setParameterList("discussionIds", discussionIds);
-        return q.list();
+        List<Object[]> numbersOfPosts = q.list();
+
+        Map<Long, Long> resultMap = new HashMap<>();
+        for (Object[] numbers : numbersOfPosts) {
+            resultMap.put(((Number) numbers[0]).longValue(), ((Number) numbers[1]).longValue());
+        }
+
+        return resultMap;
     }
 }

@@ -4,6 +4,7 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Martin Bláha on 13.05.17.
@@ -53,9 +54,9 @@ public interface PostDao extends GenericDao<Long, Post> {
     long getNumberOfPosts(Discussion discussion);
 
     /**
-     * Gets numbers of posts in discussions.
+     * Gets numbers of posts in discussions as a map where key is discussion ID and value is number of posts.
      *
      * @param discussionIds Identifiers of discussions.
      */
-    List<Object[]> getNumbersOfPosts(List<Long> discussionIds);
+    Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds);
 }
