@@ -100,14 +100,14 @@ public class PostServiceTest {
                 }
             }
 
-            List<Object[]> result = new ArrayList<>();
+            Map<Long, Long> resultMap = new HashMap<>();
             for (Long discussionId : discussionIds) {
                 if (numbersOfPosts.containsKey(discussionId)) {
-                    result.add(new Object[] { discussionId, numbersOfPosts.get(discussionId) });
+                    resultMap.put(discussionId, numbersOfPosts.get(discussionId));
                 }
             }
 
-            return result;
+            return resultMap;
         }));
 
         postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
