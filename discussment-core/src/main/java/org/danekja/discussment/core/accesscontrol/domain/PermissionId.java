@@ -76,7 +76,7 @@ public class PermissionId implements Serializable {
      * @return Level for which the permission applies (single discussion, topic, category or global)
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, updatable = false)
+    @Column(name = "level", nullable = false, updatable = false)
     public PermissionLevel getLevel() {
         return level;
     }
