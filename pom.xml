@@ -96,6 +96,7 @@
         <module>discussment-ui-wicket</module>
         <module>discussment-db-hibernate5</module>
         <module>discussment-db-hibernate3</module>
+        <module>discussment-db-jpa</module>
     </modules>
 
     <dependencyManagement>
