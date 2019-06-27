@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.danekja.discussment</groupId>
         <artifactId>discussment</artifactId>
         <version>0.9.3-SNAPSHOT</version>
     </parent>
-    <artifactId>discussment-core</artifactId>
-    <packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.danekja.discussment.db</groupId>
+    <artifactId>discussment-db-jpa</artifactId>
     <version>0.9.3-SNAPSHOT</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>
-        Library providing domain, daos and services for embedding commenting or discussions to an application. No UI
-        elements included.
+        Implementation of discussment's DAO layer in JPA.
     </description>
     <url>https://github.com/danekja/discussment</url>
 
@@ -71,73 +72,22 @@
     </distributionManagement>
 
     <properties>
-        <!-- TODO: use this also in persistence.xml file-->
-        <jdbc.user>root</jdbc.user>
-        <jdbc.password>root</jdbc.password>
-        <jdbc.url>jdbc:mysql://localhost/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
-        <skip.flyway>${skipTests}</skip.flyway>
-
+        <core.version>0.9.3-SNAPSHOT</core.version>
     </properties>
 
     <dependencies>
-
-        <!--Used only to get access to Hibernate specific annotations. Thus the provided scope.-->
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate3.version}</version>
+            <groupId>org.danekja.discussment</groupId>
+            <artifactId>discussment-core</artifactId>
+            <version>${core.version}</version>
             <scope>provided</scope>
         </dependency>
 
-
-        <!--  JUNIT DEPENDENCY FOR TESTING -->
+        <!-- JPA -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-        <!-- Database -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>true</filtering>
-            </testResource>
-        </testResources>
-    </build>
-
 
 </project>

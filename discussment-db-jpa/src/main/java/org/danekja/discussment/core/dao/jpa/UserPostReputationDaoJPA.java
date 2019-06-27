@@ -3,7 +3,6 @@ package org.danekja.discussment.core.dao.jpa;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.dao.UserPostReputationDao;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.domain.PostReputation;
 import org.danekja.discussment.core.domain.UserPostReputation;
 
 import javax.persistence.EntityManager;
