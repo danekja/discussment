@@ -2,14 +2,12 @@ package org.danekja.discussment.ui.wicket.panel.postReputation;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.*;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
+import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostReputationForm;
@@ -68,19 +66,13 @@ public class PostReputationPanel extends Panel  {
 
         add(new PostReputationForm("prform", postModel, postService, postReputationService, userService, accessControlService));
 
-        Label liked = new Label("liked");
-        add(liked);
-
-        if (!userService.isGuest() && postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject())) {
-            if (postReputationService.getVote(userService.getCurrentlyLoggedUser(), postModel.getObject()).getLiked()) {
-                liked.setDefaultModel(new ResourceModel("postReputation.liked"));
-            } else {
-                liked.setDefaultModel(new ResourceModel("postReputation.disliked"));
+        add(new Label("liked", getLikedModel()) {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(!userService.isGuest() && postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
             }
-            liked.setVisible(true);
-        } else {
-            liked.setVisible(false);
-        }
+        });
     }
 
     @Override
@@ -91,6 +83,21 @@ public class PostReputationPanel extends Panel  {
             this.setVisible(false);
         }
 
+    }
+
+    private IModel<String> getLikedModel() {
+        return new LoadableDetachableModel<String>() {
+            @Override
+            protected String load() {
+                UserPostReputation upr = postReputationService.getVote(userService.getCurrentlyLoggedUser(), postModel.getObject());
+
+                if (upr.getLiked()) {
+                    return getString("postReputation.liked");
+                } else {
+                    return getString("postReputation.disliked");
+                }
+            }
+        };
     }
 
 }
