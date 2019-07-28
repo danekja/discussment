@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
@@ -24,7 +25,6 @@ import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PasswordForm;
 import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
-
 
 /**
  * Created by Martin Bláha on 29.01.17.
@@ -81,34 +81,30 @@ public class DiscussionListPanel extends Panel {
 
         add(new ListView<Discussion>("discussionList", new DiscussionWicketModel(topicListModel, discussionService)) {
             protected void populateItem(final ListItem<Discussion> listItem) {
-
                 listItem.add(createOpenDiscussionAjaxLink(listItem.getModel()));
 
-                try {
-                    listItem.add(new Label("numberOfPosts", postService.getNumberOfPosts(listItem.getModelObject())));
-                } catch (AccessDeniedException e){
-                    listItem.add(new Label("numberOfPosts"));
-                }
+                Long numberOfPosts = getNumberOfPosts(listItem.getModelObject());
+                listItem.add(new Label("numberOfPosts", new Model<>(numberOfPosts)));
 
                 Post lastPost = getLastPost(listItem.getModelObject());
-                if (lastPost != null) {
-                    listItem.add(new Label("lastCreated", lastPost.getCreated()));
-                } else {
-                    listItem.add(new Label("lastCreated"));
-                }
+                listItem.add(new Label("lastCreated", new PropertyModel<>(lastPost, "created")));
 
                 IDiscussionUser lastPostAuthor = getPostAuthor(lastPost);
-                if (lastPostAuthor != null) {
-                    listItem.add(new Label("lastUsername", lastPostAuthor.getDisplayName()));
-                } else {
-                    listItem.add(new Label("lastUsername"));
-                }
+                listItem.add(new Label("lastUsername", new PropertyModel<>(lastPostAuthor, "displayName")));
 
                 listItem.add(createRemoveDiscussionLink(listItem.getModel()));
             }
         });
 
         add(new PasswordForm("passwordForm", discussionModel, new Model<>(new Discussion()), userService, accessControlService, permissionService, discussionService));
+    }
+
+    private Long getNumberOfPosts(Discussion discussion) {
+        try {
+            return postService.getNumberOfPosts(discussion);
+        } catch (AccessDeniedException e) {
+            return null;
+        }
     }
 
     private Post getLastPost(Discussion discussion) {

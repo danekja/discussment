@@ -141,7 +141,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
     public boolean canEditPost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
-        } else if (post.getUserId().equals(user.getDiscussionUserId())) {
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
             return true;
         } else {
             return canEditPosts(user, post.getDiscussion());
@@ -156,7 +156,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
     public boolean canRemovePost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
-        } else if (post.getUserId().equals(user.getDiscussionUserId())) {
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
             return true;
         } else {
             return canRemovePosts(user, post.getDiscussion());
@@ -171,7 +171,7 @@ public class PermissionService implements PermissionManagementService, AccessCon
     public boolean canViewPost(IDiscussionUser user, Post post) {
         if (user == null) {
             return false;
-        } else if (post.getUserId().equals(user.getDiscussionUserId())) {
+        } else if (Objects.equals(user.getDiscussionUserId(), post.getUserId())) {
             return true;
         } else {
             return canViewPosts(user, post.getDiscussion());
