@@ -54,6 +54,9 @@ public class DefaultPostService implements PostService {
 
     public Post getPostById(long postId) throws AccessDeniedException {
         Post post = postDao.getById(postId);
+        if(post == null) {
+            return null;
+        }
 
         if(accessControlService.canViewPost(post)) {
             return post;

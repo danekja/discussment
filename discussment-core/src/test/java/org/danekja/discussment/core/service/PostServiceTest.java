@@ -1,9 +1,11 @@
 package org.danekja.discussment.core.service;
 
-import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.dao.PermissionDao;
+import org.danekja.discussment.core.accesscontrol.domain.*;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -40,7 +42,7 @@ public class PostServiceTest {
     private PostDao postDao;
 
     @Mock
-    private AccessControlService accessControlService;
+    private PermissionDao permissionDao;
 
     @Mock
     private DiscussionUserService discussionUserService;
@@ -66,12 +68,6 @@ public class PostServiceTest {
 
         when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
         when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
-        when(accessControlService.canAddDiscussion(any(Topic.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
-        when(accessControlService.canRemovePost(any(Post.class))).then(invocationOnMock -> true);
-        when(accessControlService.canAddPost(any(Discussion.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewPost(any(Post.class))).then(invocationOnMock -> true);
-        when(accessControlService.canEditPost(any(Post.class))).then(invocationOnMock -> true);
         when(postDao.save(any(Post.class))).then(new SavePostMock());
         doAnswer(new RemovePostMock()).when(postDao).remove(any(Post.class));
         when(postDao.getById(anyLong())).then((invocationOnMock) -> {
@@ -110,7 +106,28 @@ public class PostServiceTest {
             return resultMap;
         }));
 
+        AccessControlService accessControlService = new PermissionService(permissionDao, discussionUserService) {
+            @Override
+            protected List<PostPermission> getPostPermissions(IDiscussionUser user, Discussion discussion) {
+                return Collections.emptyList();
+            }
+
+            @Override
+            protected boolean checkPermissions(Action action, List<? extends AbstractPermission> permissions) {
+                return true;
+            }
+        };
+
         postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
+    }
+
+    @Test
+    public void testGetPostById() throws AccessDeniedException {
+        long postId = 1L;
+
+        when(postDao.getById(postId)).thenReturn(null);
+
+        assertNull(postService.getPostById(postId));
     }
 
     /**
@@ -238,7 +255,7 @@ public class PostServiceTest {
             Iterator<Post> pIterator = postRepository.iterator();
             while(pIterator.hasNext()) {
                 Post p = pIterator.next();
-                if (p.equals(post) || p.getChainId().startsWith(post.getChainId())) {
+                if (p.equals(post) || (p.getChainId() != null && p.getChainId().contains(post.getId().toString()))) {
                     pIterator.remove();
                 }
             }
