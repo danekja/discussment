@@ -19,7 +19,7 @@
     </licenses>
 
     <properties>
-        <discussment.version>0.9.3-SNAPSHOT</discussment.version>
+        <discussment.version>0.9.3</discussment.version>
         <flyway.version>5.2.4</flyway.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
