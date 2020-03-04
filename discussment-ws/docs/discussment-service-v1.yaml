@@ -1,0 +1,384 @@
+#%RAML 1.0
+title: Discussment web service
+version: v1
+baseUri: /{version}
+mediaType: application/json
+securitySchemes:
+  basic:
+    description: JWT-based authentication.
+    type: Basic Authentication
+securedBy: [ basic ]
+types:
+  CategoryDTO:
+    type: object
+    properties:
+      id:
+        description: Unique ID of the category.
+        type: integer
+        required: true
+      name:
+        description: Name of the category.
+        type: string
+        required: true
+    example: |
+      {
+        "id": 1,
+        "name": "default category"
+      }
+  TopicDTO:
+    type: object
+    properties:
+      id:
+        description: Unique ID of the topic.
+        type: integer
+        required: true
+      name:
+        description: Name of the topic.
+        type: string
+        required: true
+      description:
+        description: Description of the topic.
+        type: string
+        required: true
+    example: |
+      {
+        "id": 1,
+        "name": "default topic",
+        "description": ""
+      }
+  CreateDiscussionDTO:
+    type: object
+    properties:
+      name:
+        description: Name of the discussion.
+        type: string
+        required: true
+      password:
+        description: Password of the discussion in plain text. Pass empty string if the newly created discussion is not to be password protected.
+        type: string
+        required: true
+    example: |
+      {
+        "name": "default discussion",
+        "password": ""
+      }
+  DiscussionDTO:
+    type: object
+    properties:
+      id:
+        description: Unique ID of the discussion.
+        type: integer
+        required: true
+      name:
+        description: Name of the discussion.
+        type: string
+        required: true
+      password:
+        description: Password of the discussion in plain text. Pass empty string if the newly created discussion is not to be password protected.
+        type: string
+        required: true
+    example: |
+      {
+        "id": 1,
+        "name": "default discussion",
+        "password": ""
+      }
+  CreatePostDTO:
+    type: object
+    properties:
+      text:
+        description: Text of the post.
+        type: string
+        required: true
+    example: |
+      {
+        "text": "Lorem ipsum."
+      }
+  UpdatePostDTO:
+    type: object
+    properties:
+      state:
+        description: State of the post.
+        type: PostState
+        required: true
+    example: |
+      {
+        "state": "DISABLED"
+      }
+  PostDTO:
+    description: Post in a discussion.
+    type: object
+    properties:
+      id:
+        description: Unique ID of the post.
+        type: integer
+        required: true
+      text:
+        description: Text of the post.
+        type: string
+        required: true
+      state:
+        description: State of the post.
+        type: PostState
+        required: true
+      level:
+        description: Nesting level of the post. Starts from 0, increases by 1 for every reply level.
+        type: integer
+        required: true
+      createdBy:
+        description: Username of the user who authored the post.
+        type: string
+        required: true
+      createdAt:
+        description: Datetime when the post was created in UTC timezone.
+        type: datetime-only
+        required: true
+      likes:
+        description: Number of LIKED reactions attached to the post.
+        type: integer
+        required: true
+      dislikes:
+        description: Number of DISLIKED reactions attached to the post.
+        type: integer
+        required: true
+    example: |
+      {
+        "id": 1,
+        "text": "Lorem ipsum.",
+        "state": "ENABLED",
+        "level": 0,
+        "createdBy": "john.doe",
+        "createdAt": "2015-07-04T21:00:00",
+        "likes": 2,
+        "dislikes": 1
+      }
+  PostState:
+    description: State of a post.
+    type: string
+    enum: [ ENABLED, DISABLED ]
+  ReactionDTO:
+    description: User's reaction to a post.
+    type: object
+    properties:
+      type:
+        required: true
+        type: ReactionType
+    example: |
+      {
+        "type": "LIKE"
+      }
+  ReactionType:
+    description: Type of a reaction.
+    type: string
+    enum: [ LIKE, DISLIKE ]
+
+/categories:
+  /{categoryId}:
+    uriParameters:
+      categoryId:
+        description: Category ID.
+        type: integer
+        required: true
+    get:
+      displayName: retrieveCategory
+      description: TODO
+      responses:
+        200:
+          description: TODO
+          body: CategoryDTO
+        401:
+        404:
+
+/topics:
+  /{topicId}:
+    uriParameters:
+      topicId:
+        description: Topic ID.
+        type: integer
+        required: true
+    get:
+      displayName: retrieveTopic
+      description: TODO
+      responses:
+        200:
+          description: TODO
+          body: TopicDTO
+        401:
+        404:
+    /discussions:
+      post:
+        displayName: createDiscussion
+        description: TODO
+        body: CreateDiscussionDTO
+        responses:
+          200:
+            description: TODO
+            body: DiscussionDTO
+          401:
+          404:
+
+/discussions:
+  /{discussionId}:
+    uriParameters:
+      discussionId:
+        description: Discussion ID.
+        type: integer
+        required: true
+    get:
+      displayName: retrieveDiscussion
+      description: TODO
+      responses:
+        200:
+          description: TODO
+          body: DiscussionDTO
+        401:
+        404:
+    /posts:
+      get:
+        displayName: retrievePosts
+        description: Retrieves all posts in given discussion.
+        responses:
+          200:
+            description: Posts retrieved successfully.
+            body: PostDTO[]
+          404:
+            description: Discussion with this id does not exist.
+      post:
+        displayName: createPost
+        description: Adds a new post to given discussion.
+        body: CreatePostDTO
+        responses:
+          201:
+            description: Post sent successfully.
+            body: PostDTO
+          400:
+            description: It is not possible to post any new messages to this discussion.
+          404:
+            description: Discussion with this id does not exist.
+
+/posts:
+  /{postId}:
+    uriParameters:
+      postId:
+        description: Post Id.
+        type: integer
+        required: true
+    get:
+      displayName: retrievePost
+      description: Retrieves given post.
+      responses:
+        200:
+          description: Post retrieved successfully.
+          body: PostDTO
+        404:
+          description: Post with this id does not exist.
+    patch:
+      displayName: updatePost
+      description: Updates given post. Possible only if current user is author of the post.
+      body: UpdatePostDTO
+      responses:
+        200:
+          description: Post updated successfully.
+          body: PostDTO
+        401:
+          description: Client tried to edit post that he is not the owner of.
+        404:
+          description: Post with this id does not exist.
+    delete:
+      displayName: deletePost
+      description: Deletes given post. Possible only if current user is author of the post.
+      responses:
+        204:
+          description: Post deleted successfully.
+        401:
+          description: Client tried to delete post that he is not the owner of.
+        404:
+          description: Post with this id does not exist.
+    /reactions/my:
+      get:
+        displayName: retrieveMyReaction
+        description: Retrieves user's reaction added to this post.
+        responses:
+          200:
+            description: Reaction retrieved successfully.
+            body: ReactionDTO
+          404:
+            description: User has not reacted to the post.
+      head:
+        displayName: existsMyReaction
+        description: Checks whether user has reacted to the post.
+        responses:
+          204:
+            description: User has reacted to the post.
+          404:
+            description: User has not reacted to the post yet.
+      post:
+        displayName: createMyReaction
+        description: Adds user's reaction to the post.
+        body: ReactionDTO
+        responses:
+          201:
+            description: Reaction added successfully.
+            body: ReactionDTO
+          400:
+            description: Invalid request.
+      put:
+        displayName: changeMyReaction
+        description: Changes user's reaction to the post.
+        responses:
+          200:
+            description: Reaction changed successfully.
+            body: ReactionDTO
+          400:
+            description: Invalid request.
+          404:
+            description: User has not reacted to the post yet.
+    /replies:
+      get:
+        displayName: retrieveReplies
+        description: Retrieves all replies added to this post.
+        responses:
+          200:
+            description: Replies retrieved successfully.
+            body: PostDTO[]
+          404:
+            description: Post does not exist.
+      post:
+        displayName: createReply
+        description: Add a new reply to the post.
+        body: CreatePostDTO
+        responses:
+          201:
+            description: Reply added successfully.
+            body: PostDTO
+          404:
+            description: Post does not exist.
+
+/aggregations:
+  /for-discussions/{discussionIds}:
+    uriParameters:
+      discussionIds:
+        description: Comma-separated list of discussion IDs to retrieve aggregations for.
+        type: string
+        required: true
+    get:
+      displayName: retrieveAggregationsForDiscussions
+      description: TODO
+      responses:
+        200:
+          description: TODO
+          body:
+            application/json:
+              example: |
+                {
+                  "1": {
+                    "numberOfPosts": 1
+                  },
+                  "10": {
+                    "numberOfPosts": 10
+                  },
+                  "100": {
+                    "numberOfPosts": 100
+                  }
+                }
+        400:
