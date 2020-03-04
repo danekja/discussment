@@ -97,6 +97,7 @@
         <module>discussment-db-hibernate5</module>
         <module>discussment-db-hibernate3</module>
         <module>discussment-db-jpa</module>
+        <module>discussment-ws</module>
     </modules>
 
     <dependencyManagement>

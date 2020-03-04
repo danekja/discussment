@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>discussment</artifactId>
+        <groupId>org.danekja.discussment</groupId>
+        <version>0.9.4-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>discussment-ws</artifactId>
+    <version>0.9.4-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <url>https://github.com/danekja/discussment</url>
+
+    <name>${project.groupId}.${project.artifactId}</name>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Pavel Fidranský</name>
+            <email>pavel.fidransky@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Jakub Daněk</name>
+            <email>danek.ja@gmail.com</email>
+            <organization>Jakub Daněk</organization>
+            <organizationUrl>http://www.danekja.org/</organizationUrl>
+        </contributor>
+        <contributor>
+            <name>Jiří Krýda</name>
+            <email>jiri.kryda@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+        <contributor>
+            <name>Zdeněk Valeš</name>
+            <email>zdenek.vales@yoso.fi</email>
+            <organization>Yoso Czech s.r.o.</organization>
+        </contributor>
+    </contributors>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
+        <url>https://github.com/danekja/discussment/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <commons-lang.version>2.6</commons-lang.version>
+        <jackson.version>2.10.3</jackson.version>
+        <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
+        <spring.version>5.2.4.RELEASE</spring.version>
+
+        <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+        <springmvc-raml-plugin.version>2.0.5</springmvc-raml-plugin.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax-validation-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.phoenixnap.oss</groupId>
+                <artifactId>springmvc-raml-plugin</artifactId>
+                <version>${springmvc-raml-plugin.version}</version>
+                <configuration>
+                    <ramlPath>docs/discussment-service-v1.yaml</ramlPath>
+                    <outputRelativePath>target/generated-sources/springmvc-raml-plugin</outputRelativePath>
+                    <basePackage>org.danekja.discussment.ws.v1</basePackage>
+                    <rule>com.phoenixnap.oss.ramlplugin.raml2code.rules.Spring4ControllerInterfaceRule</rule>
+                    <overrideNamingLogicWith>DISPLAY_NAME</overrideNamingLogicWith>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-springmvc-endpoints</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/springmvc-raml-plugin</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
