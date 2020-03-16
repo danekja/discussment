@@ -141,6 +141,10 @@ types:
         description: Number of DISLIKED reactions attached to the post.
         type: integer
         required: true
+      replies:
+        description: One level of replies sent to the post.
+        type: PostDTO[]
+        required: true
     example: |
       {
         "id": 1,
@@ -150,7 +154,8 @@ types:
         "createdBy": "john.doe",
         "createdAt": "2015-07-04T21:00:00",
         "likes": 2,
-        "dislikes": 1
+        "dislikes": 1,
+        "replies": []
       }
   PostState:
     description: State of a post.
