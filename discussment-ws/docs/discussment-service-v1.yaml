@@ -141,6 +141,10 @@ types:
         description: Number of DISLIKED reactions attached to the post.
         type: integer
         required: true
+      parentalPostId:
+        description: Parental post ID in case this post is a reply.
+        type: integer
+        required: false
       replies:
         description: One level of replies sent to the post.
         type: PostDTO[]
