@@ -52,15 +52,15 @@ types:
       name:
         description: Name of the discussion.
         type: string
-        required: true
+        required: false
       password:
         description: Password of the discussion in plain text. Pass empty string if the newly created discussion is not to be password protected.
         type: string
-        required: true
+        required: false
     example: |
       {
         "name": "default discussion",
-        "password": ""
+        "password": "password"
       }
   DiscussionDTO:
     type: object
