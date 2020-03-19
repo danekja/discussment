@@ -4,6 +4,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
@@ -69,6 +70,8 @@ public class ReplyForm extends Form {
             postService.sendReply(replyModel.getObject(), postModel.getObject());
         } catch (AccessDeniedException e) {
             //todo: not yet implemented
+        } catch (MaxReplyLevelExceeded e) {
+            this.error(getString("error.maxReplyLevelExceeded"));
         }
 
         replyModel.setObject(new Post());

@@ -7,6 +7,8 @@ import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -14,7 +16,6 @@ import org.danekja.discussment.core.service.PostService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,12 +32,13 @@ public class DefaultPostService implements PostService {
 
     private AccessControlService accessControlService;
     private DiscussionUserService discussionUserService;
+    private ConfigurationService configurationService;
 
-    public DefaultPostService(PostDao postDao, DiscussionUserService discussionUserService, AccessControlService accessControlService) {
+    public DefaultPostService(PostDao postDao, DiscussionUserService discussionUserService, AccessControlService accessControlService, ConfigurationService configurationService) {
         this.postDao = postDao;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
-
+        this.configurationService = configurationService;
     }
 
     public void removePost(Post post) throws AccessDeniedException {
@@ -65,8 +67,10 @@ public class DefaultPostService implements PostService {
         }
     }
 
-    public Post sendReply(Post reply, Post post) throws AccessDeniedException {
-        if (accessControlService.canAddPost(post.getDiscussion())) {
+    public Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException {
+        if (post.getLevel() >= configurationService.maxReplyLevel()) {
+            throw new MaxReplyLevelExceeded();
+        } else if (accessControlService.canAddPost(post.getDiscussion())) {
             reply.setAsReply(post);
             return sendPost(post.getDiscussion(), reply);
         } else {
