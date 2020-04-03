@@ -2,13 +2,8 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
-import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.PostReputationService;
-import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
 
 /**
@@ -16,10 +11,7 @@ import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
  *
  * The class creates the form for creating a new post
  */
-public class PostForm extends Form {
-
-    private PostService postService;
-    private AccessControlService accessControlService;
+public abstract class PostForm extends Form {
 
     private IModel<Discussion> discussionModel;
     private IModel<Post> postModel;
@@ -30,22 +22,24 @@ public class PostForm extends Form {
      * @param id id of the element into which the panel is inserted
      * @param discussionModel model contains the discussion for adding a new post
      * @param postModel model contains the post for setting the form
-     * @param postService instance of the post service
-     * @param accessControlService instance of the access control service
      */
     public PostForm(String id,
                     IModel<Discussion> discussionModel,
-                    IModel<Post> postModel,
-                    PostService postService,
-                    AccessControlService accessControlService) {
+                    IModel<Post> postModel) {
         super(id);
 
-        this.postService = postService;
-        this.accessControlService = accessControlService;
 
         this.discussionModel = discussionModel;
         this.postModel = postModel;
     }
+
+    /**
+     * Handler called when this form gets submitted.
+     *
+     * @param discussion Discussion to send new post to.
+     * @param post New post content.
+     */
+    public abstract void sendNewPost(Discussion discussion, Post post);
 
     @Override
     protected void onInitialize() {
@@ -55,26 +49,18 @@ public class PostForm extends Form {
     }
 
     @Override
-    protected void onConfigure() {
-        super.onConfigure();
-
-        this.setVisible(accessControlService.canAddPost(discussionModel.getObject()));
-    }
-
-    public void setPostService(PostService postService) {
-        this.postService = postService;
-    }
-
-    @Override
     protected void onSubmit() {
-        try {
-            postService.sendPost(discussionModel.getObject(), postModel.getObject());
-        } catch (AccessDeniedException e) {
-            // todo: not yet implemented
-        }
-
+        sendNewPost(discussionModel.getObject(), postModel.getObject());
         postModel.setObject(new Post());
 
-        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
+//        try {
+//            postService.sendPost(discussionModel.getObject(), postModel.getObject());
+//        } catch (AccessDeniedException e) {
+//            // todo: not yet implemented
+//        }
+//
+//        postModel.setObject(new Post());
+//
+//        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }
