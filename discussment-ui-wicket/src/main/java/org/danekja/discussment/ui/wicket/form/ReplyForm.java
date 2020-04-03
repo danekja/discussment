@@ -74,17 +74,5 @@ public abstract class ReplyForm extends Form {
     protected void onSubmit() {
         replyToPost(postModel.getObject(), replyModel.getObject());
         replyModel.setObject(new Post());
-//
-//        try {
-//            postService.sendReply(replyModel.getObject(), postModel.getObject());
-//        } catch (AccessDeniedException e) {
-//            //todo: not yet implemented
-//        } catch (MaxReplyLevelExceeded e) {
-//            this.error(getString("error.maxReplyLevelExceeded"));
-//        }
-//
-//        replyModel.setObject(new Post());
-//
-//        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }
