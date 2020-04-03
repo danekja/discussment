@@ -52,15 +52,5 @@ public abstract class PostForm extends Form {
     protected void onSubmit() {
         sendNewPost(discussionModel.getObject(), postModel.getObject());
         postModel.setObject(new Post());
-
-//        try {
-//            postService.sendPost(discussionModel.getObject(), postModel.getObject());
-//        } catch (AccessDeniedException e) {
-//            // todo: not yet implemented
-//        }
-//
-//        postModel.setObject(new Post());
-//
-//        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }
