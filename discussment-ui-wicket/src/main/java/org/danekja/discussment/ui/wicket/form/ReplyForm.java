@@ -2,9 +2,7 @@ package org.danekja.discussment.ui.wicket.form;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
-import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
@@ -15,7 +13,7 @@ import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
  *
  * The class creates the form for creating a new reply of the post
  */
-public class ReplyForm extends Form {
+public abstract class ReplyForm extends Form {
 
     private PostService postService;
     private AccessControlService accessControlService;
@@ -50,6 +48,14 @@ public class ReplyForm extends Form {
         this.replyModel = replyModel;
     }
 
+    /**
+     * Handler called when this form is submitted.
+     *
+     * @param parentPost Parent of the new reply.
+     * @param reply Content of the new reply.
+     */
+    public abstract void replyToPost(Post parentPost, Post reply);
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -66,16 +72,19 @@ public class ReplyForm extends Form {
 
     @Override
     protected void onSubmit() {
-        try {
-            postService.sendReply(replyModel.getObject(), postModel.getObject());
-        } catch (AccessDeniedException e) {
-            //todo: not yet implemented
-        } catch (MaxReplyLevelExceeded e) {
-            this.error(getString("error.maxReplyLevelExceeded"));
-        }
-
+        replyToPost(postModel.getObject(), replyModel.getObject());
         replyModel.setObject(new Post());
-
-        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
+//
+//        try {
+//            postService.sendReply(replyModel.getObject(), postModel.getObject());
+//        } catch (AccessDeniedException e) {
+//            //todo: not yet implemented
+//        } catch (MaxReplyLevelExceeded e) {
+//            this.error(getString("error.maxReplyLevelExceeded"));
+//        }
+//
+//        replyModel.setObject(new Post());
+//
+//        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
     }
 }
