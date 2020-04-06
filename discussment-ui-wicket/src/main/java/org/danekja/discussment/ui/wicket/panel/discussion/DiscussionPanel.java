@@ -5,7 +5,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Discussion;
@@ -23,6 +22,9 @@ import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
  *
  * The class creates the panel which contains the discussion. This panel can be used below a article like
  * a discussion about the article.
+ *
+ * Note that this panel and its child components assumes the user is authorized to see this discussion (the
+ * authorization is assumed to be done elsewhere).
  */
 public class DiscussionPanel extends Panel {
 
@@ -30,7 +32,6 @@ public class DiscussionPanel extends Panel {
     private IModel<Post> selectedPost;
 
     private PostService postService;
-    private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
     private ConfigurationService configurationService;
@@ -44,7 +45,6 @@ public class DiscussionPanel extends Panel {
      * @param postService instance of the post service
      * @param selectedPost instance contains the selected post in the discussion
      * @param postReputationService instance of the post reputation service
-     * @param accessControlService instance of the access control service
      * @param configurationService instance of the configuration service
      */
     public DiscussionPanel(String id,
@@ -53,7 +53,6 @@ public class DiscussionPanel extends Panel {
                            PostService postService,
                            DiscussionUserService userService,
                            PostReputationService postReputationService,
-                           AccessControlService accessControlService,
                            ConfigurationService configurationService) {
         super(id);
 
@@ -61,7 +60,6 @@ public class DiscussionPanel extends Panel {
         this.postService = postService;
         this.discussionModel = discussion;
 
-        this.accessControlService = accessControlService;
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
@@ -107,13 +105,13 @@ public class DiscussionPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ReplyForm("replyForm", discussionModel, selectedPost, new Model<>(new Post()), postService, accessControlService) {
+        add(new ReplyForm("replyForm", selectedPost, new Model<>(new Post())) {
             @Override
             public void replyToPost(Post parentPost, Post reply) {
                 DiscussionPanel.this.replyToPost(parentPost, reply);
             }
         });
-        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, accessControlService, configurationService));
+        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override

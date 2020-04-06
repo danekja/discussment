@@ -97,6 +97,7 @@ public class PostListPanel extends Panel {
                 listItem.add(new Label("username", new LoadableDetachableModel<String>() {
                     protected String load() {
                         try {
+                            // todo: #78
                             return postService.getPostAuthor(listItem.getModel().getObject()).getDisplayName();
                         } catch (DiscussionUserNotFoundException e) {
                             return getString("error.userNotFound");
