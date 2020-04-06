@@ -4,7 +4,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Post;
@@ -25,7 +24,6 @@ public class ThreadListPanel extends Panel {
     private IModel<List<Post>> threadListModel;
     private IModel<Post> postModel;
     private PostService postService;
-    private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
     private ConfigurationService configurationService;
@@ -38,7 +36,6 @@ public class ThreadListPanel extends Panel {
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
      * @param postReputationService instance of the post reputation service
-     * @param accessControlService instance of the access control service
      * @param configurationService instance of the configuration service
      */
     public ThreadListPanel(String id,
@@ -47,7 +44,6 @@ public class ThreadListPanel extends Panel {
                            PostService postService,
                            DiscussionUserService userService,
                            PostReputationService postReputationService,
-                           AccessControlService accessControlService,
                            ConfigurationService configurationService) {
         super(id);
 
@@ -55,7 +51,6 @@ public class ThreadListPanel extends Panel {
         this.postModel = postModel;
 
         this.postService = postService;
-        this.accessControlService = accessControlService;
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
