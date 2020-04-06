@@ -73,4 +73,12 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
 
         return resultMap;
     }
+
+    @Override
+    public List<Post> getPostsByIds(List<Long> postIds) {
+        Session session = sessionFactory.getCurrentSession();
+        Query q = session.getNamedQuery(Post.GET_POSTS_BY_IDS);
+        q.setParameter("postIds", postIds);
+        return q.getResultList();
+    }
 }

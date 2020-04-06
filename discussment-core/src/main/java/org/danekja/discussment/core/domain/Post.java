@@ -29,7 +29,10 @@ import static org.danekja.discussment.core.domain.Post.*;
         @NamedQuery(name = GET_BASE_POSTS_BY_DISCUSSION,
                 query = "SELECT p FROM Post p WHERE p.discussion.id = :discussionId AND p.level = 0"),
         @NamedQuery(name = GET_REPLIES_FOR_POST,
-                query = "SELECT p FROM Post p WHERE p.post.id = :postId")
+                query = "SELECT p FROM Post p WHERE p.post.id = :postId"),
+        @NamedQuery(name = GET_POSTS_BY_IDS,
+                query =  "SELECT p FROM Post p WHERE p.post.id in(:postIds)")
+
 })
 public class Post extends LongEntity implements Serializable {
 
@@ -62,6 +65,11 @@ public class Post extends LongEntity implements Serializable {
      * The constant contains name of query for getting replies of the post
      */
     public static final String GET_REPLIES_FOR_POST = "Post.getRepliesForPost";
+
+    /**
+     * The constant contains name of query for getting posts by ids.
+     */
+    public static final String GET_POSTS_BY_IDS = "Post.getPostsByIds";
 
     /**
      * The user who created the post
