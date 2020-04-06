@@ -7,6 +7,7 @@ import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -131,4 +132,15 @@ public interface PostService {
      * @return number of posts in the discussion
      */
     Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds);
+
+    /**
+     * Returns authors for given posts. This method can be used to fix N+1 problem which raises when
+     * loading authors of posts in discussion one by one.
+     *
+     * @param postIds Collections of ids of posts.
+     * @return Map of postId -> author.
+     */
+    default Map<Long, IDiscussionUser> getPostsAuthors(List<Long> postIds) {
+        return Collections.emptyMap();
+    }
 }

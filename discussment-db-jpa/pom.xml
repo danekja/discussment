@@ -3,13 +3,13 @@
     <parent>
         <groupId>org.danekja.discussment</groupId>
         <artifactId>discussment</artifactId>
-        <version>0.9.4-SNAPSHOT</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.danekja.discussment.db</groupId>
     <artifactId>discussment-db-jpa</artifactId>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.10.4-SNAPSHOT</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>

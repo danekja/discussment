@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.service.imp;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.Action;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
@@ -15,9 +16,8 @@ import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostService;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Post service which uses new permission system.
@@ -156,6 +156,26 @@ public class DefaultPostService implements PostService {
         }
 
         return postDao.getNumbersOfPosts(discussionIds);
+    }
+
+    @Override
+    public Map<Long, IDiscussionUser> getPostsAuthors(List<Long> postIds) {
+        if (postIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Post> posts = postDao.getPostsByIds(postIds);
+        Set<String> userIds = posts.stream().map(Post::getUserId).collect(Collectors.toSet());
+        Map<String, IDiscussionUser> users = discussionUserService.getUsersByIds(userIds).stream().collect(Collectors.toMap(
+                IDiscussionUser::getDiscussionUserId,
+                u -> u
+        ));
+
+
+        return posts.stream().collect(Collectors.toMap(
+                Post::getId,
+                p -> users.get(p.getUserId())
+        ));
     }
 
     /**
