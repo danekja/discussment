@@ -76,9 +76,7 @@ public class PostListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        Map<Long, IDiscussionUser> postsAuthors = postService.getPostsAuthors(postListModel.getObject()
-                .stream().map(Post::getId)
-                .collect(Collectors.toList()));
+        Map<Long, IDiscussionUser> postsAuthors = postService.getPostsAuthors(postListModel.getObject());
 
         add(new ListView<Post>("postListView", postListModel) {
             protected void populateItem(final ListItem<Post> listItem) {
