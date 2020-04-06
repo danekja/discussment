@@ -15,7 +15,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Post;
@@ -23,7 +22,6 @@ import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPanel;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +35,6 @@ public class PostListPanel extends Panel {
     private PostService postService;
     private IModel<List<Post>> postListModel;
 
-    private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
     private ConfigurationService configurationService;
@@ -51,7 +48,6 @@ public class PostListPanel extends Panel {
      * @param postService instance of the post service
      * @param userService instance of the user service
      * @param postReputationService instance of the post reputation service
-     * @param accessControlService instance of the access control service
      * @param configurationService instance of the configuration service
      */
     public PostListPanel(String id,
@@ -60,7 +56,6 @@ public class PostListPanel extends Panel {
                          PostService postService,
                          DiscussionUserService userService,
                          PostReputationService postReputationService,
-                         AccessControlService accessControlService,
                          ConfigurationService configurationService) {
         super(id);
 
@@ -68,11 +63,11 @@ public class PostListPanel extends Panel {
         this.postService = postService;
         this.postListModel = postListModel;
 
-        this.accessControlService = accessControlService;
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
     }
+
 
     @Override
     protected void onInitialize() {
@@ -111,7 +106,7 @@ public class PostListPanel extends Panel {
                     }
                 }));
 
-                listItem.add(DateLabel.forDateStyle("created", new PropertyModel<Date>(listItem.getModel(), "created"), "MS"));
+                listItem.add(DateLabel.forDateStyle("created", new PropertyModel<>(listItem.getModel(), "created"), "MS"));
 
 
                 listItem.add(createReplyAjaxLink(listItem.getModel()));
@@ -120,7 +115,7 @@ public class PostListPanel extends Panel {
 
                 listItem.add(new AttributeModifier("style", "padding-left: " + listItem.getModelObject().getLevel() * 30 + "px"));
 
-                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), postService, postReputationService, userService, accessControlService));
+                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), postService, postReputationService, userService));
             }
         });
 
@@ -145,7 +140,7 @@ public class PostListPanel extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                this.setVisible(accessControlService.canAddPost(pm.getObject().getDiscussion()) && pm.getObject().getLevel() < configurationService.maxReplyLevel());
+                this.setVisible(pm.getObject().getLevel() < configurationService.maxReplyLevel());
             }
         };
     }
@@ -157,15 +152,14 @@ public class PostListPanel extends Panel {
                 try {
                     postService.removePost(pm.getObject());
                 } catch (AccessDeniedException e) {
-                    // todo: not yet implemented
+                    this.error(getString("error.accessDenied"));
                 }
-                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
             }
 
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                this.setVisible(accessControlService.canRemovePost(pm.getObject()));
+                this.setVisible(!userService.isGuest() && userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(pm.getObject().getUserId()));
             }
         };
     }
@@ -175,17 +169,18 @@ public class PostListPanel extends Panel {
         Link disableLink = new Link("disable") {
             @Override
             public void onClick() {
+
                 if (pm.getObject().isDisabled()) {
                     try{
                         postService.enablePost(pm.getObject());
                     } catch (AccessDeniedException e) {
-                        // todo: not yet implemented
+                        this.error(getString("error.accessDenied"));
                     }
                 } else {
                     try {
                         postService.disablePost(pm.getObject());
                     } catch (AccessDeniedException e) {
-                        // todo: not yet implemented
+                        this.error(getString("error.accessDenied"));
                     }
                 }
             }
@@ -194,7 +189,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                this.setVisible(accessControlService.canEditPost(pm.getObject()));
+                this.setVisible(!userService.isGuest() && userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(pm.getObject().getUserId()));
             }
         };
 

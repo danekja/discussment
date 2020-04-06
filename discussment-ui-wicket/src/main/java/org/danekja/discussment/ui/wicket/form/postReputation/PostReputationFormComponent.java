@@ -2,12 +2,14 @@ package org.danekja.discussment.ui.wicket.form.postReputation;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.IEventSource;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.service.PostReputationService;
+import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPanel;
 
 /**
  * The class contains input fields for making a new vote on post.
@@ -16,26 +18,25 @@ import org.danekja.discussment.core.service.PostReputationService;
  *
  * @author Jiri Kryda
  */
-public class PostReputationFormComponent extends Panel {
+public class PostReputationFormComponent extends Panel implements IEventSource {
 
     private IModel<Post> postModel;
 
-    private PostReputationService postReputationService;
+    private PostReputationPanel parent;
+
     private DiscussionUserService userService;
 
     /**
      * Constructor for creating a instance of getting a name and text of the article.
-     *
-     * @param id id of the element into which the panel is inserted
+     *  @param id id of the element into which the panel is inserted
+     * @param parent
      * @param postModel model contains the post to add a vote
      * @param userService instance of the user service
-     * @param postReputationService instance of the post reputation service
      */
-    public PostReputationFormComponent (String id, IModel<Post> postModel, DiscussionUserService userService, PostReputationService postReputationService) {
+    public PostReputationFormComponent(String id, PostReputationPanel parent, IModel<Post> postModel, DiscussionUserService userService) {
         super(id);
         this.postModel = postModel;
-
-        this.postReputationService = postReputationService;
+        this.parent = parent;
         this.userService = userService;
     }
 
@@ -47,13 +48,12 @@ public class PostReputationFormComponent extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                postReputationService.addLike(postModel.getObject());
-                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
+                parent.likePost(postModel, target);
             }
 
             @Override
             protected void onConfigure(){
-                this.setVisible(!userService.isGuest() && !postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                this.setVisible(currentUserVoteStatus(false));
             }
         };
 
@@ -61,13 +61,12 @@ public class PostReputationFormComponent extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                postReputationService.addDislike(postModel.getObject());
-                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
+                parent.dislikePost(postModel, target);
             }
 
             @Override
             protected void onConfigure(){
-                this.setVisible(!userService.isGuest() && !postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                this.setVisible(currentUserVoteStatus(false));
             }
         };
 
@@ -75,13 +74,12 @@ public class PostReputationFormComponent extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                postReputationService.changeVote(userService.getCurrentlyLoggedUser(), postModel.getObject());
-                setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
+                parent.changePostVote(postModel, target);
             }
 
             @Override
             protected void onConfigure(){
-                this.setVisible(!userService.isGuest() && postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                this.setVisible(currentUserVoteStatus(true));
             }
         };
 
@@ -90,4 +88,17 @@ public class PostReputationFormComponent extends Panel {
         add(changeVote);
     }
 
+
+    private boolean currentUserVoteStatus(boolean voted) {
+        IDiscussionUser currentUser = userService.getCurrentlyLoggedUser();
+        if (currentUser != null) {
+            if (voted) {
+                return postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals(currentUser.getDiscussionUserId()));
+            } else {
+                return postModel.getObject().getUserPostReputations().stream().noneMatch(pr -> pr.getUserId().equals(currentUser.getDiscussionUserId()));
+            }
+        } else {
+            return false;
+        }
+    }
 }

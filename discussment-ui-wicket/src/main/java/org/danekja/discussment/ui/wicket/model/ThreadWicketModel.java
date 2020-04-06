@@ -11,9 +11,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Martin Bláha on 25.01.17.
- *
  * The class for getting the posts in the thread by discussion via the discussion service.
+ *
+ * Created by Martin Bláha on 25.01.17.
  */
 public class ThreadWicketModel extends LoadableDetachableModel<List<Post>> {
 

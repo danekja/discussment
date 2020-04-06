@@ -3,6 +3,7 @@ package org.danekja.discussment.ui.wicket.panel.discussion;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
@@ -15,7 +16,6 @@ import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostForm;
 import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
-import org.danekja.discussment.ui.wicket.model.ThreadWicketModel;
 
 
 /**
@@ -39,7 +39,8 @@ public class DiscussionPanel extends Panel {
      * Constructor for creating the panel which contains the discussion.
      *
      * @param id id of the element into which the panel is inserted
-     * @param discussion discussion in the panel
+     * @param discussion Model of the discussion to be displayed in this panel. It is assumed that the model object
+     *                   is complete, that is, it contains all posts and reply chains to be rendered.
      * @param postService instance of the post service
      * @param selectedPost instance contains the selected post in the discussion
      * @param postReputationService instance of the post reputation service
@@ -112,7 +113,7 @@ public class DiscussionPanel extends Panel {
                 DiscussionPanel.this.replyToPost(parentPost, reply);
             }
         });
-        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, postReputationService, accessControlService, configurationService));
+        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, accessControlService, configurationService));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override
