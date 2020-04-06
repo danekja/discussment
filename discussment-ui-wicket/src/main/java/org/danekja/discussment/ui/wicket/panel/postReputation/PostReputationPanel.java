@@ -1,9 +1,13 @@
 package org.danekja.discussment.ui.wicket.panel.postReputation;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
@@ -26,7 +30,6 @@ public class PostReputationPanel extends Panel  {
     private PostService postService;
     private PostReputationService postReputationService;
     private DiscussionUserService userService;
-    private AccessControlService accessControlService;
 
     /**
      * Constructor for creating the panel which contains the specific article and its discussion.
@@ -36,27 +39,25 @@ public class PostReputationPanel extends Panel  {
      * @param postService instance of the post service
      * @param postReputationService instance of the post reputation service
      * @param userService instance of the user service
-     * @param accessControlService instance of the access control service
      */
     public PostReputationPanel(String id,
                                IModel<Post> postModel,
                                PostService postService,
                                PostReputationService postReputationService,
-                               DiscussionUserService userService,
-                               AccessControlService accessControlService){
+                               DiscussionUserService userService){
         super(id);
         this.postModel = postModel;
-        this.postReputationModel = new Model<PostReputation>();
+        this.postReputationModel = new Model<>();
 
         this.postService = postService;
         this.postReputationService = postReputationService;
         this.userService = userService;
-        this.accessControlService = accessControlService;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        setOutputMarkupId(true);
 
         postReputationModel.setObject(postModel.getObject().getPostReputation());
 
@@ -64,13 +65,13 @@ public class PostReputationPanel extends Panel  {
 
         add(new Label("dislikes", new PropertyModel(postReputationModel, "dislikes")));
 
-        add(new PostReputationForm("prform", postModel, postService, postReputationService, userService, accessControlService));
+        add(new PostReputationForm("prform", this, postModel, userService));
 
         add(new Label("liked", getLikedModel()) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(!userService.isGuest() && postReputationService.userVotedOn(userService.getCurrentlyLoggedUser(), postModel.getObject()));
+                setVisible(!userService.isGuest() && postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals("currentUserId")));
             }
         });
     }
@@ -85,17 +86,70 @@ public class PostReputationPanel extends Panel  {
 
     }
 
+    /**
+     * Handler for like button.
+     *
+     * @param post
+     * @param target
+     */
+    public void likePost(IModel<Post> post, AjaxRequestTarget target) {
+        Post p = post.getObject();
+        postReputationService.addLike(p);
+        post.setObject(reloadPost(p));
+        target.add(this);
+    }
+
+    /**
+     * Handler for dislike button.
+     *
+     * @param post
+     * @param target
+     */
+    public void dislikePost(IModel<Post> post, AjaxRequestTarget target) {
+        Post p = post.getObject();
+        postReputationService.addDislike(p);
+        post.setObject(reloadPost(p));
+        target.add(this);
+    }
+
+    /**
+     * Handler for changing post vote.
+     *
+     * @param post
+     * @param target
+     */
+    public void changePostVote(IModel<Post> post, AjaxRequestTarget target) {
+        Post p = post.getObject();
+        postReputationService.changeVote(userService.getCurrentlyLoggedUser(), p);
+        post.setObject(reloadPost(p));
+        target.add(this);
+    }
+
+    private Post reloadPost(Post p) {
+        try {
+            return postService.getPostById(p.getId());
+        } catch (AccessDeniedException e) {
+            e.printStackTrace();
+            return p;
+        }
+    }
+
     private IModel<String> getLikedModel() {
         return new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
-                UserPostReputation upr = postReputationService.getVote(userService.getCurrentlyLoggedUser(), postModel.getObject());
-
-                if (upr.getLiked()) {
-                    return getString("postReputation.liked");
-                } else {
-                    return getString("postReputation.disliked");
+                for(UserPostReputation upr : postModel.getObject().getUserPostReputations()) {
+                    if (upr.getUserId().equals("currentUserId")) {
+                        if (upr.getLiked()) {
+                            return getString("postReputation.liked");
+                        } else {
+                            return getString("postReputation.disliked");
+                        }
+                    }
                 }
+
+                // liked/disliked is not visible if current user didn't react to post
+                return "";
             }
         };
     }
