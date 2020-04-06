@@ -110,7 +110,7 @@ public class ForumPanel extends Panel {
             try {
                 Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
                 if (accessControlService.canViewPosts(discussion) || (SessionUtil.getAccess() != null && SessionUtil.getDiscussionId() != null && SessionUtil.getDiscussionId().equals(discussion.getId()))) {
-                    add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel, postService, userService, postReputationService, accessControlService, configurationService));
+                    add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel, postService, userService, postReputationService, configurationService));
                 } else {
                     setResponsePage(getPage().getPageClass(), new PageParameters().set("topicId", parametersModel.getObject().get("topicId")));
                 }
