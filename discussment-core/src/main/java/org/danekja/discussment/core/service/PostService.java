@@ -1,12 +1,11 @@
 package org.danekja.discussment.core.service;
 
-import javafx.geometry.Pos;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
-import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 
 import java.util.Collections;
 import java.util.List;
