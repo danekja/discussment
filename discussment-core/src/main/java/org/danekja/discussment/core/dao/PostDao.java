@@ -59,12 +59,4 @@ public interface PostDao extends GenericDao<Long, Post> {
      * @param discussionIds Identifiers of discussions.
      */
     Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds);
-
-    /**
-     * Returns posts with given ids.
-     *
-     * @param postIds
-     * @return
-     */
-    List<Post> getPostsByIds(List<Long> postIds);
 }

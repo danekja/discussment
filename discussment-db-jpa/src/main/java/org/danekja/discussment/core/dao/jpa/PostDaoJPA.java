@@ -73,11 +73,4 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
 
         return resultMap;
     }
-
-    @Override
-    public List<Post> getPostsByIds(List<Long> postIds) {
-        Query q = em.createNamedQuery(Post.GET_POSTS_BY_IDS);
-        q.setParameter("postIds", postIds);
-        return q.getResultList();
-    }
 }
