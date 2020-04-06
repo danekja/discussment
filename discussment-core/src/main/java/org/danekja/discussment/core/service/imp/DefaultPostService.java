@@ -1,6 +1,5 @@
 package org.danekja.discussment.core.service.imp;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.Action;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
@@ -8,15 +7,18 @@ import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
-import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.service.PostService;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

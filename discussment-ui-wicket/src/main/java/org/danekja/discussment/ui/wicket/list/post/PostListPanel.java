@@ -14,6 +14,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
@@ -23,6 +24,8 @@ import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPanel;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Martin Bláha on 04.02.17.
@@ -73,6 +76,10 @@ public class PostListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        Map<Long, IDiscussionUser> postsAuthors = postService.getPostsAuthors(postListModel.getObject()
+                .stream().map(Post::getId)
+                .collect(Collectors.toList()));
+
         add(new ListView<Post>("postListView", postListModel) {
             protected void populateItem(final ListItem<Post> listItem) {
 
@@ -96,13 +103,11 @@ public class PostListPanel extends Panel {
 
                 listItem.add(new Label("username", new LoadableDetachableModel<String>() {
                     protected String load() {
-                        try {
-                            // todo: #78
-                            return postService.getPostAuthor(listItem.getModel().getObject()).getDisplayName();
-                        } catch (DiscussionUserNotFoundException e) {
+
+                        if (postsAuthors.containsKey(listItem.getModelObject().getId())) {
+                            return postsAuthors.get(listItem.getModelObject().getId()).getDisplayName();
+                        } else {
                             return getString("error.userNotFound");
-                        } catch (AccessDeniedException e) {
-                            return getString("error.accessDenied");
                         }
                     }
                 }));
