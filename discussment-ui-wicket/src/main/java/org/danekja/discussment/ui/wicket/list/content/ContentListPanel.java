@@ -14,7 +14,6 @@ import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.core.service.TopicService;
 import org.danekja.discussment.ui.wicket.list.category.CategoryListPanel;
 import org.danekja.discussment.ui.wicket.list.topic.TopicListPanel;
-import org.danekja.discussment.ui.wicket.panel.accessDenied.AccessDeniedPanel;
 
 import java.util.List;
 

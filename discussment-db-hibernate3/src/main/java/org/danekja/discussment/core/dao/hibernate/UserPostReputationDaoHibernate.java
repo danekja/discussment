@@ -8,8 +8,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.persistence.NoResultException;
-
 /**
  * Hibernate implementation of the UserPostReputationDao interface.
  *
