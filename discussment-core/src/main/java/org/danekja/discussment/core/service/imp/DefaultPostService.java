@@ -161,12 +161,11 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public Map<Long, IDiscussionUser> getPostsAuthors(List<Long> postIds) {
-        if (postIds.isEmpty()) {
+    public Map<Long, IDiscussionUser> getPostsAuthors(List<Post> posts) {
+        if (posts.isEmpty()) {
             return Collections.emptyMap();
         }
 
-        List<Post> posts = postDao.getPostsByIds(postIds);
         Set<String> userIds = posts.stream().map(Post::getUserId).collect(Collectors.toSet());
         Map<String, IDiscussionUser> users = discussionUserService.getUsersByIds(userIds).stream().collect(Collectors.toMap(
                 IDiscussionUser::getDiscussionUserId,

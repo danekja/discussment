@@ -1,5 +1,6 @@
 package org.danekja.discussment.core.service;
 
+import javafx.geometry.Pos;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
@@ -137,10 +138,10 @@ public interface PostService {
      * Returns authors for given posts. This method can be used to fix N+1 problem which raises when
      * loading authors of posts in discussion one by one.
      *
-     * @param postIds Collections of ids of posts.
+     * @param posts Collections of posts.
      * @return Map of postId -> author.
      */
-    default Map<Long, IDiscussionUser> getPostsAuthors(List<Long> postIds) {
+    default Map<Long, IDiscussionUser> getPostsAuthors(List<Post> posts) {
         return Collections.emptyMap();
     }
 }
