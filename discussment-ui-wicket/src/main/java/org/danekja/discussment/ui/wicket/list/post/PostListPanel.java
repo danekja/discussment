@@ -17,6 +17,7 @@ import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
@@ -39,6 +40,7 @@ public class PostListPanel extends Panel {
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
+    private ConfigurationService configurationService;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -50,6 +52,7 @@ public class PostListPanel extends Panel {
      * @param userService instance of the user service
      * @param postReputationService instance of the post reputation service
      * @param accessControlService instance of the access control service
+     * @param configurationService instance of the configuration service
      */
     public PostListPanel(String id,
                          IModel<List<Post>> postListModel,
@@ -57,7 +60,8 @@ public class PostListPanel extends Panel {
                          PostService postService,
                          DiscussionUserService userService,
                          PostReputationService postReputationService,
-                         AccessControlService accessControlService) {
+                         AccessControlService accessControlService,
+                         ConfigurationService configurationService) {
         super(id);
 
         this.postModel = postModel;
@@ -67,6 +71,7 @@ public class PostListPanel extends Panel {
         this.accessControlService = accessControlService;
         this.userService = userService;
         this.postReputationService = postReputationService;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -140,7 +145,7 @@ public class PostListPanel extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                this.setVisible(accessControlService.canAddPost(pm.getObject().getDiscussion()));
+                this.setVisible(accessControlService.canAddPost(pm.getObject().getDiscussion()) && pm.getObject().getLevel() < configurationService.maxReplyLevel());
             }
         };
     }

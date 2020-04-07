@@ -6,6 +6,8 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -49,6 +51,9 @@ public class PostServiceTest {
 
     @Mock
     private DiscussionService discussionService;
+
+    @Mock
+    private ConfigurationService configurationService;
 
     private PostService postService;
 
@@ -105,6 +110,7 @@ public class PostServiceTest {
 
             return resultMap;
         }));
+        when(configurationService.maxReplyLevel()).thenReturn(ConfigurationService.UNLIMITED_REPLY_LEVEL);
 
         AccessControlService accessControlService = new PermissionService(permissionDao, discussionUserService) {
             @Override
@@ -118,7 +124,7 @@ public class PostServiceTest {
             }
         };
 
-        postService = new DefaultPostService(postDao, discussionUserService, accessControlService);
+        postService = new DefaultPostService(postDao, discussionUserService, accessControlService, configurationService);
     }
 
     @Test
@@ -135,7 +141,7 @@ public class PostServiceTest {
      * that the whole chain has been deleted.
      */
     @Test
-    public void testRemovePost1() throws AccessDeniedException {
+    public void testRemovePost1() throws MaxReplyLevelExceeded, AccessDeniedException {
         Post rootPost = new Post(testUser, "Root post");
         rootPost = postService.sendPost(new Discussion(), rootPost);
         Post reply = new Post(testUser, "This is a reply");
@@ -155,7 +161,7 @@ public class PostServiceTest {
      * Delete reply 1 and verify that root and reply 3 are still present.
      */
     @Test
-    public void testRemovePost2() throws AccessDeniedException {
+    public void testRemovePost2() throws MaxReplyLevelExceeded, AccessDeniedException {
         Post root = new Post(testUser, "root");
         Post reply1 = new Post(testUser, "reply1");
         Post reply2 = new Post(testUser, "reply2");
@@ -184,7 +190,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendReply() throws AccessDeniedException, DiscussionUserNotFoundException {
+    public void testSendReply() throws MaxReplyLevelExceeded, AccessDeniedException, DiscussionUserNotFoundException {
         Post originalPost = new Post(testUser, "original post");
         originalPost = postService.sendPost(new Discussion(), originalPost);
 
@@ -194,6 +200,17 @@ public class PostServiceTest {
         assertNotNull("Reply shouldn't be null!", postService.getPostById(reply.getId()));
         assertNotNull("Author of the reply shouldn't be null!", postService.getPostAuthor(reply));
         assertEquals("Wrong name of the author of the reply!", testUser.getDisplayName(), postService.getPostAuthor(reply).getDisplayName());
+    }
+
+    @Test(expected = MaxReplyLevelExceeded.class)
+    public void testSendReply_maxReplyLevelExceeded() throws MaxReplyLevelExceeded, AccessDeniedException {
+        when(configurationService.maxReplyLevel()).thenReturn(0);
+
+        Post originalPost = new Post(testUser, "original post");
+        originalPost = postService.sendPost(new Discussion(), originalPost);
+
+        Post reply = new Post(testUser, "reply to original post");
+        postService.sendReply(reply, originalPost);
     }
 
     @Test
