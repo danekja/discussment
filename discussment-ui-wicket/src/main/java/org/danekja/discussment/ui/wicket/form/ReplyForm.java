@@ -36,7 +36,7 @@ public abstract class ReplyForm extends Form {
      * @param parentPost Parent of the new reply.
      * @param reply Content of the new reply.
      */
-    public abstract void replyToPost(Post parentPost, Post reply);
+    protected abstract void replyToPost(Post parentPost, Post reply);
 
     @Override
     protected void onInitialize() {

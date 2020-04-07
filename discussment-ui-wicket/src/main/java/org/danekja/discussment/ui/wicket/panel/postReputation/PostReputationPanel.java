@@ -15,6 +15,8 @@ import org.danekja.discussment.core.domain.UserPostReputation;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostReputationForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The class creates the panel which contains likes and dislike for a post and calls a form for making a new vote.
@@ -24,6 +26,8 @@ import org.danekja.discussment.ui.wicket.form.PostReputationForm;
  * @author Jiri Kryda
  */
 public class PostReputationPanel extends Panel  {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private IModel<Post> postModel;
     private IModel<PostReputation> postReputationModel;
@@ -129,7 +133,7 @@ public class PostReputationPanel extends Panel  {
         try {
             return postService.getPostById(p.getId());
         } catch (AccessDeniedException e) {
-            e.printStackTrace();
+            logger.error("Access denied exception when reloading post {}.", p.getId());
             return p;
         }
     }
