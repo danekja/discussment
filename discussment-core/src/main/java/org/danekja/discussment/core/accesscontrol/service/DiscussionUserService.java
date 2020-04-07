@@ -5,7 +5,6 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,10 +40,9 @@ public interface DiscussionUserService extends Serializable {
 
     /**
      * Returns a list of users with given ids.
-     * @param userIds
-     * @return
+     *
+     * @param userIds Ids of users to be returned.
+     * @return Found users.
      */
-    default List<IDiscussionUser> getUsersByIds(Collection<String> userIds) {
-        return Collections.emptyList();
-    }
+    List<IDiscussionUser> getUsersByIds(Collection<String> userIds);
 }
