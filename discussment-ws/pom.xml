@@ -6,11 +6,11 @@
     <parent>
         <artifactId>discussment</artifactId>
         <groupId>org.danekja.discussment</groupId>
-        <version>0.9.4-SNAPSHOT</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>discussment-ws</artifactId>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.10.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/danekja/discussment</url>
