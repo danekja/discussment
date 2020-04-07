@@ -360,6 +360,8 @@ types:
           201:
             description: Reply added successfully.
             body: PostDTO
+          400:
+            description: Maximum level of replies added to a post exceeded.
           404:
             description: Post does not exist.
 
