@@ -7,7 +7,6 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -140,7 +139,5 @@ public interface PostService {
      * @param posts Collections of posts.
      * @return Map of postId -> author.
      */
-    default Map<Long, IDiscussionUser> getPostsAuthors(List<Post> posts) {
-        return Collections.emptyMap();
-    }
+    Map<Long, IDiscussionUser> getPostsAuthors(List<Post> posts);
 }
