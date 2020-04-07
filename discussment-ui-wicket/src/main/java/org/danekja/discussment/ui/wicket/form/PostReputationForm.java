@@ -49,6 +49,10 @@ public class PostReputationForm extends Form {
     @Override
     protected void onConfigure() {
         IDiscussionUser currentUser = userService.getCurrentlyLoggedUser();
-        setVisible(currentUser != null && postModel.getObject().getUserId().equals(currentUser.getDiscussionUserId()));
+        if (userService.isGuest()) {
+            setVisible(false);
+        } else {
+            setVisible(postModel.getObject().getUserId().equals(currentUser.getDiscussionUserId()));
+        }
     }
 }

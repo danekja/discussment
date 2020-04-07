@@ -75,7 +75,12 @@ public class PostReputationPanel extends Panel  {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(!userService.isGuest() && postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals("currentUserId")));
+                if (userService.isGuest()) {
+                    setVisible(false);
+                } else {
+                    final String currentUserId = userService.getCurrentlyLoggedUser().getDiscussionUserId();
+                    setVisible(postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> currentUserId.equals(pr.getUserId())));
+                }
             }
         });
     }
@@ -142,8 +147,10 @@ public class PostReputationPanel extends Panel  {
         return new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
+                final String currentUserId = userService.getCurrentlyLoggedUser().getDiscussionUserId();
+
                 for(UserPostReputation upr : postModel.getObject().getUserPostReputations()) {
-                    if (upr.getUserId().equals("currentUserId")) {
+                    if (currentUserId.equals(upr.getUserId())) {
                         if (upr.getLiked()) {
                             return getString("postReputation.liked");
                         } else {
