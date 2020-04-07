@@ -39,7 +39,7 @@ public abstract class PostForm extends Form {
      * @param discussion Discussion to send new post to.
      * @param post New post content.
      */
-    public abstract void sendNewPost(Discussion discussion, Post post);
+    protected abstract void sendNewPost(Discussion discussion, Post post);
 
     @Override
     protected void onInitialize() {

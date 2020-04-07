@@ -29,7 +29,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
     /**
      * Constructor for creating a instance of getting a name and text of the article.
      *  @param id id of the element into which the panel is inserted
-     * @param parent
+     * @param parent Parent component used to call handlers of reputation actions (like/dislike/change vote).
      * @param postModel model contains the post to add a vote
      * @param userService instance of the user service
      */
@@ -90,8 +90,8 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
 
 
     private boolean currentUserVoteStatus(boolean voted) {
-        IDiscussionUser currentUser = userService.getCurrentlyLoggedUser();
-        if (currentUser != null) {
+        if (!userService.isGuest()) {
+            IDiscussionUser currentUser = userService.getCurrentlyLoggedUser();
             if (voted) {
                 return postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals(currentUser.getDiscussionUserId()));
             } else {
