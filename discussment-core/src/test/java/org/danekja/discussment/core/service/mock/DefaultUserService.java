@@ -6,6 +6,7 @@ import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.mock.UserDao;
 import org.danekja.discussment.core.mock.UserService;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -48,5 +49,8 @@ public class DefaultUserService implements UserService {
         return userDao.getUserByUsername(username);
     }
 
-
+    @Override
+    public List<IDiscussionUser> getUsersByIds(Collection<String> userIds) {
+        return userDao.getUsersByIds(userIds);
+    }
 }

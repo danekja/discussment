@@ -5,6 +5,9 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * New class for user service. Will replace DefaultUserServiceClass.
  *
@@ -25,5 +28,10 @@ public class NewUserService implements DiscussionUserService {
     public IDiscussionUser getCurrentlyLoggedUser() {
         // todo: implement this
         throw new NotImplementedException();
+    }
+
+    @Override
+    public List<IDiscussionUser> getUsersByIds(Collection<String> userIds) {
+        return userDao.getUsersByIds(userIds);
     }
 }

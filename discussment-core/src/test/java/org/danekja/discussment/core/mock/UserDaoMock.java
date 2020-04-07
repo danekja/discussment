@@ -1,9 +1,9 @@
 package org.danekja.discussment.core.mock;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Martin Bláha on 04.01.17.
@@ -62,6 +62,11 @@ public class UserDaoMock implements UserDao {
 
     public List<User> getUsers() {
         return new ArrayList<User>(userRepository);
+    }
+
+    @Override
+    public List<IDiscussionUser> getUsersByIds(Collection<String> userIds) {
+        return userRepository.stream().filter(u -> userIds.contains(u.getDiscussionUserId())).collect(Collectors.toList());
     }
 
     public void remove(User obj) {
