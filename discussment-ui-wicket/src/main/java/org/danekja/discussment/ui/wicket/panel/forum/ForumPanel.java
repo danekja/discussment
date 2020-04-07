@@ -8,6 +8,7 @@ import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
@@ -44,6 +45,7 @@ public class ForumPanel extends Panel {
     private PostReputationService postReputationService;
     private AccessControlService accessControlService;
     private PermissionManagementService permissionService;
+    private ConfigurationService configurationService;
 
     private IModel<Category> categoryModel;
     private IModel<Discussion> discussionModel;
@@ -63,6 +65,7 @@ public class ForumPanel extends Panel {
      * @param postReputationService instance of the post reputation service
      * @param accessControlService instance of the access control service
      * @param permissionService instance of the permission service
+     * @param configurationService instance of the configuration service
      */
     public ForumPanel(String id,
                       IModel<HashMap<String, Integer>> parametersModel,
@@ -73,7 +76,8 @@ public class ForumPanel extends Panel {
                       DiscussionUserService userService,
                       PostReputationService postReputationService,
                       AccessControlService accessControlService,
-                      PermissionManagementService permissionService) {
+                      PermissionManagementService permissionService,
+                      ConfigurationService configurationService) {
         super(id);
 
         this.parametersModel = parametersModel;
@@ -86,6 +90,7 @@ public class ForumPanel extends Panel {
         this.userService = userService;
         this.accessControlService = accessControlService;
         this.permissionService = permissionService;
+        this.configurationService = configurationService;
 
         this.categoryModel = new Model<Category>();
         this.discussionModel = new Model<Discussion>();
@@ -105,7 +110,7 @@ public class ForumPanel extends Panel {
             try {
                 Discussion discussion = discussionService.getDiscussionById(parametersModel.getObject().get("discussionId"));
                 if (accessControlService.canViewPosts(discussion) || (SessionUtil.getAccess() != null && SessionUtil.getDiscussionId() != null && SessionUtil.getDiscussionId().equals(discussion.getId()))) {
-                    add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel, postService, userService, postReputationService, accessControlService));
+                    add(new DiscussionPanel("content", new Model<Discussion>(discussion), postModel, postService, userService, postReputationService, accessControlService, configurationService));
                 } else {
                     setResponsePage(getPage().getPageClass(), new PageParameters().set("topicId", parametersModel.getObject().get("topicId")));
                 }

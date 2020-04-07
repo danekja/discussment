@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
@@ -27,6 +28,7 @@ public class ThreadListPanel extends Panel {
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
+    private ConfigurationService configurationService;
 
     /**
      * Constructor for creating a instance of the panel contains the threads with the posts
@@ -37,6 +39,7 @@ public class ThreadListPanel extends Panel {
      * @param postService instance of the post service
      * @param postReputationService instance of the post reputation service
      * @param accessControlService instance of the access control service
+     * @param configurationService instance of the configuration service
      */
     public ThreadListPanel(String id,
                            IModel<List<Post>> threadListModel,
@@ -44,7 +47,8 @@ public class ThreadListPanel extends Panel {
                            PostService postService,
                            DiscussionUserService userService,
                            PostReputationService postReputationService,
-                           AccessControlService accessControlService) {
+                           AccessControlService accessControlService,
+                           ConfigurationService configurationService) {
         super(id);
 
         this.threadListModel = threadListModel;
@@ -54,6 +58,7 @@ public class ThreadListPanel extends Panel {
         this.accessControlService = accessControlService;
         this.userService = userService;
         this.postReputationService = postReputationService;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class ThreadListPanel extends Panel {
 
         add(new ListView<Post>("threadListView", threadListModel) {
             protected void populateItem(ListItem<Post> listItem) {
-                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel(), postService), postModel, postService, userService,  postReputationService, accessControlService));
+                listItem.add(new PostListPanel("postPanel", new PostWicketModel(listItem.getModel(), postService), postModel, postService, userService,  postReputationService, accessControlService, configurationService));
             }
         });
     }

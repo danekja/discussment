@@ -5,6 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.service.PostReputationService;
@@ -30,6 +31,7 @@ public class DiscussionPanel extends Panel {
     private AccessControlService accessControlService;
     private DiscussionUserService userService;
     private PostReputationService postReputationService;
+    private ConfigurationService configurationService;
 
     /**
      * Constructor for creating the panel which contains the discussion.
@@ -40,6 +42,7 @@ public class DiscussionPanel extends Panel {
      * @param selectedPost instance contains the selected post in the discussion
      * @param postReputationService instance of the post reputation service
      * @param accessControlService instance of the access control service
+     * @param configurationService instance of the configuration service
      */
     public DiscussionPanel(String id,
                            IModel<Discussion> discussion,
@@ -47,7 +50,8 @@ public class DiscussionPanel extends Panel {
                            PostService postService,
                            DiscussionUserService userService,
                            PostReputationService postReputationService,
-                           AccessControlService accessControlService) {
+                           AccessControlService accessControlService,
+                           ConfigurationService configurationService) {
         super(id);
 
         this.selectedPost = selectedPost;
@@ -57,6 +61,7 @@ public class DiscussionPanel extends Panel {
         this.accessControlService = accessControlService;
         this.userService = userService;
         this.postReputationService = postReputationService;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class DiscussionPanel extends Panel {
         super.onInitialize();
 
         add(new ReplyForm("replyForm", discussionModel, selectedPost, new Model<>(new Post()), postService, accessControlService));
-        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, postReputationService, accessControlService));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, postReputationService, accessControlService, configurationService));
         add(new PostForm("postForm", discussionModel, new Model<Post>(new Post()), postService, accessControlService));
     }
 }

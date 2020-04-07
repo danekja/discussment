@@ -3,6 +3,7 @@ package org.danekja.discussment.core.service;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 
@@ -40,9 +41,10 @@ public interface PostService {
      * @param reply new reply
      * @param post post to which the reply is added
      * @return reply
+     * @throws MaxReplyLevelExceeded Thrown when adding reply to post would exceed maximum reply level.
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to parent discussion.
      */
-    Post sendReply(Post reply, Post post) throws AccessDeniedException;
+    Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException;
 
     /**
      * Send a new post in the discussion
