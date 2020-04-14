@@ -149,6 +149,11 @@ types:
         description: One level of replies sent to the post.
         type: PostDTO[]
         required: true
+      currentUserVote:
+        description: Vote of the currently authenticated user. NUll if the user has not voted.
+        type: ReactionDTO
+        required: false
+
     example: |
       {
         "id": 1,
