@@ -56,6 +56,7 @@ public class PostReputationPanel extends Panel  {
         this.postService = postService;
         this.postReputationService = postReputationService;
         this.userService = userService;
+        this.likedModel = getLikedModel();
     }
 
     @Override
@@ -65,11 +66,13 @@ public class PostReputationPanel extends Panel  {
 
         postReputationModel.setObject(postModel.getObject().getPostReputation());
 
-        add(new Label("likes", new PropertyModel(postReputationModel, "likes")));
+        dislikesLabel = new Label("dislikes", new PropertyModel(postReputationModel, "dislikes"));
+        dislikesLabel.setOutputMarkupId(true);
+        add(dislikesLabel);
 
-        add(new Label("dislikes", new PropertyModel(postReputationModel, "dislikes")));
-
-        add(new PostReputationForm("prform", this, postModel, userService));
+        reputationForm = new PostReputationForm("prform", this, postModel, userService);
+        reputationForm.setOutputMarkupId(true);
+        add(reputationForm);
 
         add(new Label("liked", getLikedModel()) {
             @Override
@@ -143,7 +146,7 @@ public class PostReputationPanel extends Panel  {
         }
     }
 
-    private IModel<String> getLikedModel() {
+    private LoadableDetachableModel<String> getLikedModel() {
         return new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
