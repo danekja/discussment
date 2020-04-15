@@ -2,6 +2,7 @@ package org.danekja.discussment.ui.wicket.list.post;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -168,9 +169,9 @@ public class PostListPanel extends Panel {
 
     private Link createDisableLink(final IModel<Post> pm) {
 
-        Link disableLink = new Link("disable") {
+        Link disableLink = new AjaxFallbackLink("disable") {
             @Override
-            public void onClick() {
+            public void onClick(AjaxRequestTarget target) {
 
                 if (pm.getObject().isDisabled()) {
                     try{
