@@ -150,7 +150,7 @@ types:
         type: PostDTO[]
         required: true
       currentUserVote:
-        description: Vote of the currently authenticated user. NUll if the user has not voted.
+        description: Vote of the currently authenticated user. Null if the user has not voted.
         type: ReactionDTO
         required: false
 
