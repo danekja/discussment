@@ -1,13 +1,11 @@
 package org.danekja.discussment.ui.wicket.panel.postReputation;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.PostReputation;
@@ -110,9 +108,8 @@ public class PostReputationPanel extends Panel  {
      * Handler for like button.
      *
      * @param post
-     * @param target
      */
-    public void likePost(IModel<Post> post, AjaxRequestTarget target) {
+    public void likePost(IModel<Post> post) {
         Post p = post.getObject();
         postReputationService.addLike(p);
     }
@@ -121,9 +118,8 @@ public class PostReputationPanel extends Panel  {
      * Handler for dislike button.
      *
      * @param post
-     * @param target
      */
-    public void dislikePost(IModel<Post> post, AjaxRequestTarget target) {
+    public void dislikePost(IModel<Post> post) {
         Post p = post.getObject();
         postReputationService.addDislike(p);
     }
@@ -132,9 +128,8 @@ public class PostReputationPanel extends Panel  {
      * Handler for changing post vote.
      *
      * @param post
-     * @param target
      */
-    public void changePostVote(IModel<Post> post, AjaxRequestTarget target) {
+    public void changePostVote(IModel<Post> post) {
         Post p = post.getObject();
         postReputationService.changeVote(userService.getCurrentlyLoggedUser(), p);
     }

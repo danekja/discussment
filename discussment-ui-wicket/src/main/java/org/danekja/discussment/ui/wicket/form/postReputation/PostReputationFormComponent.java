@@ -48,7 +48,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                parent.likePost(postModel, target);
+                parent.likePost(postModel);
             }
 
             @Override
@@ -61,7 +61,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                parent.dislikePost(postModel, target);
+                parent.dislikePost(postModel);
             }
 
             @Override
@@ -74,7 +74,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form prform)
             {
-                parent.changePostVote(postModel, target);
+                parent.changePostVote(postModel);
             }
 
             @Override
