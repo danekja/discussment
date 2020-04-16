@@ -34,6 +34,9 @@ public class PostReputationPanel extends Panel  {
     private PostService postService;
     private PostReputationService postReputationService;
     private DiscussionUserService userService;
+    private IModel<String> likedModel;
+    private Label dislikesLabel, likesLabel;
+    private PostReputationForm reputationForm;
 
     /**
      * Constructor for creating the panel which contains the specific article and its discussion.
@@ -56,7 +59,6 @@ public class PostReputationPanel extends Panel  {
         this.postService = postService;
         this.postReputationService = postReputationService;
         this.userService = userService;
-        this.likedModel = getLikedModel();
     }
 
     @Override
@@ -64,17 +66,23 @@ public class PostReputationPanel extends Panel  {
         super.onInitialize();
         setOutputMarkupId(true);
 
+        this.likedModel = getLikedModel();
+
         postReputationModel.setObject(postModel.getObject().getPostReputation());
 
         dislikesLabel = new Label("dislikes", new PropertyModel(postReputationModel, "dislikes"));
         dislikesLabel.setOutputMarkupId(true);
         add(dislikesLabel);
 
+        likesLabel = new Label("likes", new PropertyModel(postReputationModel, "likes"));
+        likesLabel.setOutputMarkupId(true);
+        add(likesLabel);
+
         reputationForm = new PostReputationForm("prform", this, postModel, userService);
         reputationForm.setOutputMarkupId(true);
         add(reputationForm);
 
-        add(new Label("liked", getLikedModel()) {
+        add(new Label("liked", likedModel) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -107,8 +115,6 @@ public class PostReputationPanel extends Panel  {
     public void likePost(IModel<Post> post, AjaxRequestTarget target) {
         Post p = post.getObject();
         postReputationService.addLike(p);
-        post.setObject(reloadPost(p));
-        target.add(this);
     }
 
     /**
@@ -120,8 +126,6 @@ public class PostReputationPanel extends Panel  {
     public void dislikePost(IModel<Post> post, AjaxRequestTarget target) {
         Post p = post.getObject();
         postReputationService.addDislike(p);
-        post.setObject(reloadPost(p));
-        target.add(this);
     }
 
     /**
@@ -133,17 +137,6 @@ public class PostReputationPanel extends Panel  {
     public void changePostVote(IModel<Post> post, AjaxRequestTarget target) {
         Post p = post.getObject();
         postReputationService.changeVote(userService.getCurrentlyLoggedUser(), p);
-        post.setObject(reloadPost(p));
-        target.add(this);
-    }
-
-    private Post reloadPost(Post p) {
-        try {
-            return postService.getPostById(p.getId());
-        } catch (AccessDeniedException e) {
-            logger.error("Access denied exception when reloading post {}.", p.getId());
-            return p;
-        }
     }
 
     private LoadableDetachableModel<String> getLikedModel() {
