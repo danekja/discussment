@@ -9,6 +9,17 @@ securitySchemes:
     type: Basic Authentication
 securedBy: [ basic ]
 types:
+  CreateCategoryDTO:
+    type: object
+    properties:
+      name:
+        description: Name of the category.
+        type: string
+        required: true
+    example: |
+      {
+        "name": "default category"
+      }
   CategoryDTO:
     type: object
     properties:
@@ -24,6 +35,22 @@ types:
       {
         "id": 1,
         "name": "default category"
+      }
+  CreateTopicDTO:
+    type: object
+    properties:
+      name:
+        description: Name of the topic.
+        type: string
+        required: true
+      description:
+        description: Description of the topic.
+        type: string
+        required: true
+    example: |
+      {
+        "name": "default topic",
+        "description": ""
       }
   TopicDTO:
     type: object
@@ -149,11 +176,10 @@ types:
         description: One level of replies sent to the post.
         type: PostDTO[]
         required: true
-      currentUserVote:
-        description: Vote of the currently authenticated user. Null if the user has not voted.
+      currentUserReaction:
+        description: Reaction of the currently authenticated user. Null if no user is authenticated or the user has not voted.
         type: ReactionDTO
         required: false
-
     example: |
       {
         "id": 1,
@@ -187,6 +213,29 @@ types:
     enum: [ LIKE, DISLIKE ]
 
 /categories:
+  get:
+    displayName: retrieveAllCategories
+    description: Retrieves all categories.
+    responses:
+      200:
+        description: Categories retrieved successfully.
+        body: CategoryDTO[]
+      401:
+        description: User is not authenticated.
+      403:
+        description: User is not authorized to read all categories.
+  post:
+    displayName: createCategory
+    description: Creates a new category.
+    body: CreateCategoryDTO
+    responses:
+      200:
+        description: Category created successfully.
+        body: CategoryDTO
+      401:
+        description: User is not authenticated.
+      403:
+        description: User is not authorized to create categories.
   /{categoryId}:
     uriParameters:
       categoryId:
@@ -195,13 +244,57 @@ types:
         required: true
     get:
       displayName: retrieveCategory
-      description: TODO
+      description: Retrieves given category.
       responses:
         200:
-          description: TODO
+          description: Category retrieved successfully.
           body: CategoryDTO
         401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to read the category.
         404:
+          description: Category with this id does not exist.
+    delete:
+      displayName: removeCategory
+      description: Removes given category.
+      responses:
+        204:
+          description: Category removed successfully.
+        401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to remove the category.
+        404:
+          description: Category with this id does not exist.
+    /topics:
+      get:
+        displayName: retrieveTopics
+        description: Retrieves all topics in given category.
+        responses:
+          200:
+            description: Discussions retrieved successfully.
+            body: TopicDTO[]
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to read topics in the category.
+          404:
+            description: Category with this id does not exist.
+      post:
+        displayName: createTopic
+        description: Creates a new topic in given category.
+        body: CreateTopicDTO
+        responses:
+          200:
+            description: Topic created successfully.
+            body: TopicDTO
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to create topics in given category.
+          404:
+            description: Category with this id does not exist.
 
 /topics:
   /{topicId}:
@@ -212,24 +305,57 @@ types:
         required: true
     get:
       displayName: retrieveTopic
-      description: TODO
+      description: Retrieves given topic.
       responses:
         200:
-          description: TODO
+          description: Topic retrieved successfully.
           body: TopicDTO
         401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to read the topic.
         404:
+          description: Topic with this id does not exist.
+    delete:
+      displayName: removeTopic
+      description: Removes given topic.
+      responses:
+        204:
+          description: Topic removed successfully.
+        401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to remove the topic.
+        404:
+          description: Topic with this id does not exist.
     /discussions:
+      get:
+        displayName: retrieveDiscussions
+        description: Retrieves all discussions in given topic.
+        responses:
+          200:
+            description: Discussions retrieved successfully.
+            body: DiscussionDTO[]
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to read discussions in the topic.
+          404:
+            description: Topic with this id does not exist.
       post:
         displayName: createDiscussion
-        description: TODO
+        description: Creates a new discussion in given topic.
         body: CreateDiscussionDTO
         responses:
           200:
-            description: TODO
+            description: Post created successfully.
             body: DiscussionDTO
           401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to create discussions in given topic.
           404:
+            description: Topic with this id does not exist.
 
 /discussions:
   /{discussionId}:
@@ -240,13 +366,29 @@ types:
         required: true
     get:
       displayName: retrieveDiscussion
-      description: TODO
+      description: Retrieves given discussion.
       responses:
         200:
-          description: TODO
+          description: Discussion retrieved successfully.
           body: DiscussionDTO
         401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to read the discussion.
         404:
+          description: Discussion with this id does not exist.
+    delete:
+      displayName: removeDiscussion
+      description: Removes given discussion.
+      responses:
+        204:
+          description: Discussion removed successfully.
+        401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to remove the discussion.
+        404:
+          description: Discussion with this id does not exist.
     /posts:
       get:
         displayName: retrievePosts
@@ -255,6 +397,10 @@ types:
           200:
             description: Posts retrieved successfully.
             body: PostDTO[]
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to read posts in the discussion.
           404:
             description: Discussion with this id does not exist.
       post:
@@ -267,6 +413,10 @@ types:
             body: PostDTO
           400:
             description: It is not possible to post any new messages to this discussion.
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to create posts in the discussion.
           404:
             description: Discussion with this id does not exist.
 
@@ -284,6 +434,10 @@ types:
         200:
           description: Post retrieved successfully.
           body: PostDTO
+        401:
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to read the post.
         404:
           description: Post with this id does not exist.
     patch:
@@ -295,17 +449,21 @@ types:
           description: Post updated successfully.
           body: PostDTO
         401:
-          description: Client tried to edit post that he is not the owner of.
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to edit posts that he is not the owner of.
         404:
           description: Post with this id does not exist.
     delete:
-      displayName: deletePost
-      description: Deletes given post. Possible only if current user is author of the post.
+      displayName: removePost
+      description: Removes given post. Possible only if current user is author of the post.
       responses:
         204:
-          description: Post deleted successfully.
+          description: Post removed successfully.
         401:
-          description: Client tried to delete post that he is not the owner of.
+          description: User is not authenticated.
+        403:
+          description: User is not authorized to remove posts that he is not the owner of.
         404:
           description: Post with this id does not exist.
     /reactions/my:
@@ -316,6 +474,10 @@ types:
           200:
             description: Reaction retrieved successfully.
             body: ReactionDTO
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to read own reaction to the post.
           404:
             description: User has not reacted to the post.
       head:
@@ -324,6 +486,10 @@ types:
         responses:
           204:
             description: User has reacted to the post.
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to read own reaction to the post.
           404:
             description: User has not reacted to the post yet.
       post:
@@ -336,6 +502,10 @@ types:
             body: ReactionDTO
           400:
             description: Invalid request.
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to react to the post.
       put:
         displayName: changeMyReaction
         description: Changes user's reaction to the post.
@@ -345,6 +515,10 @@ types:
             body: ReactionDTO
           400:
             description: Invalid request.
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to change own reaction to the post.
           404:
             description: User has not reacted to the post yet.
     /replies:
@@ -355,6 +529,10 @@ types:
           200:
             description: Replies retrieved successfully.
             body: PostDTO[]
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to read replies to the post.
           404:
             description: Post does not exist.
       post:
@@ -367,6 +545,10 @@ types:
             body: PostDTO
           400:
             description: Maximum level of replies added to a post exceeded.
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to reply to the post.
           404:
             description: Post does not exist.
 
@@ -379,10 +561,10 @@ types:
         required: true
     get:
       displayName: retrieveAggregationsForDiscussions
-      description: TODO
+      description: Retrieves aggregated counters for given discussions.
       responses:
         200:
-          description: TODO
+          description: Aggregations retrieved successfully.
           body:
             application/json:
               example: |
@@ -398,3 +580,4 @@ types:
                   }
                 }
         400:
+          description: Discussion IDs were not passed in correct format.
