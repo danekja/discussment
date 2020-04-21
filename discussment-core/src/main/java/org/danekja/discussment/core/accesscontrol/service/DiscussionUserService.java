@@ -44,5 +44,5 @@ public interface DiscussionUserService extends Serializable {
      * @param userIds Ids of users to be returned.
      * @return Found users.
      */
-    List<IDiscussionUser> getUsersByIds(Collection<String> userIds);
+    List<? extends IDiscussionUser> getUsersByIds(Collection<String> userIds);
 }
