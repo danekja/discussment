@@ -52,7 +52,7 @@ public class AccessControlServiceTest {
 
     @BeforeClass
     public static void setUpGlobal() throws Exception {
-        testUser = new User(-100L, "PMS Test User");
+        testUser = new User("john.doe", "John Doe");
     }
 
     @Before

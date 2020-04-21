@@ -58,7 +58,7 @@ public class DiscussionServiceTest {
 
     @BeforeClass
     public static void setUpGlobal() {
-        testUser = new User(-100L, "PMS Test User");
+        testUser = new User("john.doe", "John Doe");
     }
 
     @Before

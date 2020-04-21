@@ -45,7 +45,7 @@ public class CategoryServiceTest {
 
     @BeforeClass
     public static void setUpGlobally() {
-        testUser = new User(-100L, "Username");
+        testUser = new User("john.doe", "John Doe");
     }
 
     @Before
