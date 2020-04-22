@@ -146,7 +146,7 @@ PostDTO:
       type: string
       required: true
     createdAt:
-      description: Datetime when the post was created in UTC timezone.
+      description: Datetime when the post was created in UTC timezone formatted as yyyy-mm-ddThh:mm:ss.
       type: datetime-only
       required: true
     likes:
