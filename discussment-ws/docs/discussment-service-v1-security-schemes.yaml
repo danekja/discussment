@@ -1,0 +1,3 @@
+basic:
+  description: JWT-based authentication.
+  type: Basic Authentication
