@@ -229,7 +229,7 @@ types:
     description: Creates a new category.
     body: CreateCategoryDTO
     responses:
-      200:
+      201:
         description: Category created successfully.
         body: CategoryDTO
       401:
@@ -286,7 +286,7 @@ types:
         description: Creates a new topic in given category.
         body: CreateTopicDTO
         responses:
-          200:
+          201:
             description: Topic created successfully.
             body: TopicDTO
           401:
@@ -347,7 +347,7 @@ types:
         description: Creates a new discussion in given topic.
         body: CreateDiscussionDTO
         responses:
-          200:
+          201:
             description: Post created successfully.
             body: DiscussionDTO
           401:
