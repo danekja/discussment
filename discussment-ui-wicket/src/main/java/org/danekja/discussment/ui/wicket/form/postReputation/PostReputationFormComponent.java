@@ -53,7 +53,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
 
             @Override
             protected void onConfigure(){
-                this.setVisible(currentUserVoteStatus(false));
+                this.setVisible(!hasVoted());
             }
         };
 
@@ -66,7 +66,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
 
             @Override
             protected void onConfigure(){
-                this.setVisible(currentUserVoteStatus(false));
+                this.setVisible(!hasVoted());
             }
         };
 
@@ -79,7 +79,7 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
 
             @Override
             protected void onConfigure(){
-                this.setVisible(currentUserVoteStatus(true));
+                this.setVisible(hasVoted());
             }
         };
 
@@ -88,17 +88,11 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
         add(changeVote);
     }
 
-
-    private boolean currentUserVoteStatus(boolean voted) {
-        if (!userService.isGuest()) {
-            IDiscussionUser currentUser = userService.getCurrentlyLoggedUser();
-            if (voted) {
-                return postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals(currentUser.getDiscussionUserId()));
-            } else {
-                return postModel.getObject().getUserPostReputations().stream().noneMatch(pr -> pr.getUserId().equals(currentUser.getDiscussionUserId()));
-            }
-        } else {
+    private boolean hasVoted() {
+        if (userService.isGuest()) {
             return false;
+        } else {
+            return postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals(userService.getCurrentlyLoggedUser().getDiscussionUserId()));
         }
     }
 }

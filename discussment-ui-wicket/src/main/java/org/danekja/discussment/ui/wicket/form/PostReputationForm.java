@@ -52,7 +52,7 @@ public class PostReputationForm extends Form {
         if (userService.isGuest()) {
             setVisible(false);
         } else {
-            setVisible(postModel.getObject().getUserId().equals(currentUser.getDiscussionUserId()));
+            setVisible(!postModel.getObject().getUserId().equals(currentUser.getDiscussionUserId()));
         }
     }
 }
