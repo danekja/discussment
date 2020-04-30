@@ -66,11 +66,4 @@ public class ThreadListPanel extends Panel {
             }
         });
     }
-
-    @Override
-    protected void onConfigure() {
-        super.onConfigure();
-
-        this.setVisible(!threadListModel.getObject().isEmpty());
-    }
 }
