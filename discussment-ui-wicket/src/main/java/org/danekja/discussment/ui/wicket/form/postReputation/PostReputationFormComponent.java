@@ -6,10 +6,11 @@ import org.apache.wicket.event.IEventSource;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.danekja.discussment.core.accesscontrol.domain.IDiscussionUser;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPanel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The class contains input fields for making a new vote on post.
@@ -19,6 +20,8 @@ import org.danekja.discussment.ui.wicket.panel.postReputation.PostReputationPane
  * @author Jiri Kryda
  */
 public class PostReputationFormComponent extends Panel implements IEventSource {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private IModel<Post> postModel;
 
@@ -89,10 +92,16 @@ public class PostReputationFormComponent extends Panel implements IEventSource {
     }
 
     private boolean hasVoted() {
-        if (userService.isGuest()) {
+        try {
+            if (userService.isGuest()) {
+                return false;
+            } else {
+                final String currentUserId = userService.getCurrentlyLoggedUser().getDiscussionUserId();
+                return postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals(currentUserId));
+            }
+        } catch (Exception ex) {
+            logger.error("Exception occurred while getting the vote of the current user: ", ex);
             return false;
-        } else {
-            return postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> pr.getUserId().equals(userService.getCurrentlyLoggedUser().getDiscussionUserId()));
         }
     }
 }

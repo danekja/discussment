@@ -84,11 +84,16 @@ public class PostReputationPanel extends Panel  {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                if (userService.isGuest()) {
+                try {
+                    if (userService.isGuest()) {
+                        setVisible(false);
+                    } else {
+                        final String currentUserId = userService.getCurrentlyLoggedUser().getDiscussionUserId();
+                        setVisible(postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> currentUserId.equals(pr.getUserId())));
+                    }
+                }catch (Exception ex) {
+                    logger.error("Exception occurred while configuring the 'liked' label: ", ex);
                     setVisible(false);
-                } else {
-                    final String currentUserId = userService.getCurrentlyLoggedUser().getDiscussionUserId();
-                    setVisible(postModel.getObject().getUserPostReputations().stream().anyMatch(pr -> currentUserId.equals(pr.getUserId())));
                 }
             }
         });
@@ -111,7 +116,12 @@ public class PostReputationPanel extends Panel  {
      */
     public void likePost(IModel<Post> post) {
         Post p = post.getObject();
-        postReputationService.addLike(p);
+        try {
+            postReputationService.addLike(p);
+        } catch (Exception ex) {
+            Long postId = p == null ? null : p.getId();
+            logger.error("Exception occurred while liking post {}:  {}", postId, ex);
+        }
     }
 
     /**
@@ -121,7 +131,12 @@ public class PostReputationPanel extends Panel  {
      */
     public void dislikePost(IModel<Post> post) {
         Post p = post.getObject();
-        postReputationService.addDislike(p);
+        try {
+            postReputationService.addDislike(p);
+        } catch (Exception ex) {
+            Long postId = p == null ? null : p.getId();
+            logger.error("Exception occurred while disliking post {}:  {}", postId, ex);
+        }
     }
 
     /**
@@ -131,7 +146,12 @@ public class PostReputationPanel extends Panel  {
      */
     public void changePostVote(IModel<Post> post) {
         Post p = post.getObject();
-        postReputationService.changeVote(userService.getCurrentlyLoggedUser(), p);
+        try {
+            postReputationService.changeVote(userService.getCurrentlyLoggedUser(), p);
+        } catch (Exception ex) {
+            Long postId = p == null ? null : p.getId();
+            logger.error("Exception occurred while changing vote for post {}:  {}", postId, ex);
+        }
     }
 
     private LoadableDetachableModel<String> getLikedModel() {
