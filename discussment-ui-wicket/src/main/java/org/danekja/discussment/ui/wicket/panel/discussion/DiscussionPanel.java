@@ -15,6 +15,8 @@ import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostForm;
 import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -27,6 +29,8 @@ import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
  * authorization is assumed to be done elsewhere).
  */
 public class DiscussionPanel extends Panel {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private IModel<Discussion> discussionModel;
     private IModel<Post> selectedPost;
@@ -79,6 +83,8 @@ public class DiscussionPanel extends Panel {
             this.error(getString("error.maxReplyLevelExceeded"));
         } catch (AccessDeniedException e) {
             this.error(getString("error.accessDenied"));
+        } catch (Exception ex) {
+            logger.error("Exception occurred when replying new post: ", ex);
         }
 
         setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
@@ -96,6 +102,8 @@ public class DiscussionPanel extends Panel {
             postService.sendPost(discussion, newPost);
         } catch (AccessDeniedException e) {
             this.error(getString("error.accessDenied"));
+        } catch (Exception ex) {
+            logger.error("Exception occurred when sending new post: ", ex);
         }
 
         setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
