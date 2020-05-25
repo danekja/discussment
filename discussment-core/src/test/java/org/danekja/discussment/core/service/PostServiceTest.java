@@ -6,12 +6,13 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
-import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
+import org.danekja.discussment.core.exception.MessageLengthExceeded;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
 import org.junit.Before;
@@ -110,6 +111,7 @@ public class PostServiceTest {
             return resultMap;
         }));
         when(configurationService.maxReplyLevel()).thenReturn(ConfigurationService.UNLIMITED_REPLY_LEVEL);
+        when(configurationService.messageLengthLimit()).thenReturn(ConfigurationService.DEFAULT_MESSAGE_LIMIT);
 
         AccessControlService accessControlService = new PermissionService(permissionDao, discussionUserService) {
             @Override
@@ -140,7 +142,7 @@ public class PostServiceTest {
      * that the whole chain has been deleted.
      */
     @Test
-    public void testRemovePost1() throws MaxReplyLevelExceeded, AccessDeniedException {
+    public void testRemovePost1() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         Post rootPost = new Post(testUser, "Root post");
         rootPost = postService.sendPost(new Discussion(), rootPost);
         Post reply = new Post(testUser, "This is a reply");
@@ -160,7 +162,7 @@ public class PostServiceTest {
      * Delete reply 1 and verify that root and reply 3 are still present.
      */
     @Test
-    public void testRemovePost2() throws MaxReplyLevelExceeded, AccessDeniedException {
+    public void testRemovePost2() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         Post root = new Post(testUser, "root");
         Post reply1 = new Post(testUser, "reply1");
         Post reply2 = new Post(testUser, "reply2");
@@ -179,7 +181,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendPost() throws AccessDeniedException, DiscussionUserNotFoundException {
+    public void testSendPost() throws AccessDeniedException, DiscussionUserNotFoundException, MessageLengthExceeded {
         Post post = new Post(testUser, "root");
         post = postService.sendPost(new Discussion(), post);
 
@@ -188,8 +190,16 @@ public class PostServiceTest {
         assertEquals("Wrong name of the author of the post!", testUser.getDisplayName(), postService.getPostAuthor(post).getDisplayName());
     }
 
+    @Test(expected = MessageLengthExceeded.class)
+    public void testSendPost_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded {
+        when(configurationService.messageLengthLimit()).thenReturn(1);
+
+        Post post = new Post(testUser, "text");
+        postService.sendPost(new Discussion(), post);
+    }
+
     @Test
-    public void testSendReply() throws MaxReplyLevelExceeded, AccessDeniedException, DiscussionUserNotFoundException {
+    public void testSendReply() throws MaxReplyLevelExceeded, AccessDeniedException, DiscussionUserNotFoundException, MessageLengthExceeded {
         Post originalPost = new Post(testUser, "original post");
         originalPost = postService.sendPost(new Discussion(), originalPost);
 
@@ -202,7 +212,7 @@ public class PostServiceTest {
     }
 
     @Test(expected = MaxReplyLevelExceeded.class)
-    public void testSendReply_maxReplyLevelExceeded() throws MaxReplyLevelExceeded, AccessDeniedException {
+    public void testSendReply_maxReplyLevelExceeded() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         when(configurationService.maxReplyLevel()).thenReturn(0);
 
         Post originalPost = new Post(testUser, "original post");
@@ -212,8 +222,20 @@ public class PostServiceTest {
         postService.sendReply(reply, originalPost);
     }
 
+    @Test(expected = MessageLengthExceeded.class)
+    public void testSendReply_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded, MaxReplyLevelExceeded {
+        when(configurationService.maxReplyLevel()).thenReturn(1);
+        when(configurationService.messageLengthLimit()).thenReturn(20);
+
+        Post originalPost = new Post(testUser, "Original post");
+        originalPost = postService.sendPost(new Discussion(), originalPost);
+
+        Post reply = new Post(testUser, "This reply is very very long and should fail");
+        postService.sendReply(reply, originalPost);
+    }
+
     @Test
-    public void testDisablePost() throws AccessDeniedException {
+    public void testDisablePost() throws AccessDeniedException, MessageLengthExceeded {
         Post post = new Post(testUser, "some text");
         post = postService.sendPost(new Discussion(), post);
 
@@ -225,7 +247,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testEnablePost() throws AccessDeniedException {
+    public void testEnablePost() throws AccessDeniedException, MessageLengthExceeded {
         Post post = new Post(testUser, "some text");
         post.setDisabled(true);
         post = postService.sendPost(new Discussion(), post);
@@ -237,7 +259,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testGetNumbersOfPosts() throws AccessDeniedException {
+    public void testGetNumbersOfPosts() throws AccessDeniedException, MessageLengthExceeded {
         when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(invocationOnMock -> invocationOnMock.getArguments()[1]);
 
         Discussion discussion1 = new Discussion(55L,"Some discussion");
