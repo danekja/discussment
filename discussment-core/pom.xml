@@ -9,7 +9,7 @@
     </parent>
     <artifactId>discussment-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.10.4-SNAPSHOT</version>
+    <version>0.10.5-SNAPSHOT</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>

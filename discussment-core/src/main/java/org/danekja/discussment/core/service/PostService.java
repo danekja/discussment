@@ -6,6 +6,7 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
+import org.danekja.discussment.core.exception.MessageLengthExceeded;
 
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,9 @@ public interface PostService {
      * @return reply
      * @throws MaxReplyLevelExceeded Thrown when adding reply to post would exceed maximum reply level.
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to parent discussion.
+     * @throws MessageLengthExceeded Thrown when the text of the reply exceeds maximum message length.
      */
-    Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException;
+    Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded;
 
     /**
      * Send a new post in the discussion
@@ -53,8 +55,9 @@ public interface PostService {
      * @param post new post
      * @return new post
      * @throws AccessDeniedException Thrown if the current user doesn't have permissions to add posts to discussion.
+     * @throws MessageLengthExceeded Thrown when the text of the post exceeds maximum message length.
      */
-    Post sendPost(Discussion discussion, Post post) throws AccessDeniedException;
+    Post sendPost(Discussion discussion, Post post) throws AccessDeniedException, MessageLengthExceeded;
 
     /**
      * Disable the post

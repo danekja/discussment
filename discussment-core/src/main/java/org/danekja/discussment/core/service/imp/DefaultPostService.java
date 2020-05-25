@@ -7,11 +7,12 @@ import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFoundException;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
-import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
+import org.danekja.discussment.core.exception.MessageLengthExceeded;
 import org.danekja.discussment.core.service.PostService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,24 +70,28 @@ public class DefaultPostService implements PostService {
         }
     }
 
-    public Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException {
+    public Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         if (post.getLevel() >= configurationService.maxReplyLevel()) {
             throw new MaxReplyLevelExceeded();
-        } else if (accessControlService.canAddPost(post.getDiscussion())) {
+        } else if (!accessControlService.canAddPost(post.getDiscussion())) {
+            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), post.getDiscussion().getId(), PermissionType.POST);
+        } else if (reply.getText().length() > configurationService.messageLengthLimit()){
+            throw new MessageLengthExceeded(reply.getText().length(), configurationService.messageLengthLimit());
+        } else {
             reply.setAsReply(post);
             return sendPost(post.getDiscussion(), reply);
-        } else {
-            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), post.getDiscussion().getId(), PermissionType.POST);
         }
     }
 
-    public Post sendPost(Discussion discussion, Post post) throws AccessDeniedException {
-        if(accessControlService.canAddPost(discussion)) {
+    public Post sendPost(Discussion discussion, Post post) throws AccessDeniedException, MessageLengthExceeded {
+        if(!accessControlService.canAddPost(discussion)) {
+            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(),discussion.getId(), PermissionType.POST);
+        } else if (post.getText().length() > configurationService.messageLengthLimit()){
+            throw new MessageLengthExceeded(post.getText().length(), configurationService.messageLengthLimit());
+        } else {
             post.setUserId(discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId());
             post.setDiscussion(discussion);
             return postDao.save(post);
-        } else {
-            throw new AccessDeniedException(Action.CREATE, getCurrentUserId(),discussion.getId(), PermissionType.POST);
         }
     }
 
