@@ -6,7 +6,7 @@ package org.danekja.discussment.core.exception;
 public class MessageLengthExceeded extends Exception {
 
     public MessageLengthExceeded(int messageLength, int limit) {
-        super("Message length ("+messageLength+") exceeds the limit ("+limit+")");
+        super(String.format("Message length (%d) exceeds the limit (%d)", messageLength, limit));
     }
 
     public MessageLengthExceeded() {
