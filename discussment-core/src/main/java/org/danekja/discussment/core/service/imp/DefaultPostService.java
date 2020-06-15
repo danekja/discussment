@@ -44,6 +44,7 @@ public class DefaultPostService implements PostService {
         this.configurationService = configurationService;
     }
 
+    @Override
     public void removePost(Post post) throws AccessDeniedException {
         if( accessControlService.canRemovePost(post)) {
             if (post.getPost() != null) {
@@ -57,6 +58,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public Post getPostById(long postId) throws AccessDeniedException {
         Post post = postDao.getById(postId);
         if(post == null) {
@@ -70,6 +72,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public Post sendReply(Post reply, Post post) throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         if (post.getLevel() >= configurationService.maxReplyLevel()) {
             throw new MaxReplyLevelExceeded();
@@ -83,6 +86,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public Post sendPost(Discussion discussion, Post post) throws AccessDeniedException, MessageLengthExceeded {
         if(!accessControlService.canAddPost(discussion)) {
             throw new AccessDeniedException(Action.CREATE, getCurrentUserId(),discussion.getId(), PermissionType.POST);
@@ -95,6 +99,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public Post disablePost(Post post) throws AccessDeniedException {
         if (accessControlService.canEditPost(post)) {
             post.setDisabled(true);
@@ -104,6 +109,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public Post enablePost(Post post) throws AccessDeniedException {
         if (accessControlService.canEditPost(post)) {
             post.setDisabled(false);
@@ -113,6 +119,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public List<Post> listPostHierarchy(Discussion discussion) throws AccessDeniedException {
         if (accessControlService.canViewPosts(discussion)) {
             return postDao.getBasePostsByDiscussion(discussion);
@@ -121,6 +128,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public IDiscussionUser getPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException {
         if(accessControlService.canViewPost(post)) {
             return discussionUserService.getUserById(post.getUserId());
@@ -129,10 +137,12 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public boolean isPostAuthor(Post post) throws DiscussionUserNotFoundException, AccessDeniedException {
         return getPostAuthor(post).equals(discussionUserService.getCurrentlyLoggedUser());
     }
 
+    @Override
     public Post getLastPost(Discussion discussion) throws AccessDeniedException{
         if(accessControlService.canViewPosts(discussion)) {
             return postDao.getLastPost(discussion);
@@ -141,6 +151,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public List<Post> getReplies(Post post) throws AccessDeniedException{
         if(accessControlService.canViewPost(post)){
             return postDao.getRepliesForPost(post);
@@ -149,6 +160,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public long getNumberOfPosts(Discussion discussion) throws AccessDeniedException{
         if(accessControlService.canViewPosts(discussion)) {
             return postDao.getNumberOfPosts(discussion);
@@ -157,6 +169,7 @@ public class DefaultPostService implements PostService {
         }
     }
 
+    @Override
     public Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds) {
         if (discussionIds.isEmpty()) {
             return Collections.emptyMap();

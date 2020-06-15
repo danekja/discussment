@@ -25,119 +25,148 @@ public class PermissionService implements PermissionManagementService, AccessCon
         this.userService = userService;
     }
 
+    @Override
     public void configurePostPermissions(IDiscussionUser user, Discussion discussion, PermissionData permissions) {
         permissionDao.save(new PostPermission(user.getDiscussionUserId(), discussion, permissions));
     }
 
+    @Override
     public void configurePostPermissions(IDiscussionUser user, Topic topic, PermissionData permissions) {
         permissionDao.save(new PostPermission(user.getDiscussionUserId(), topic, permissions));
     }
 
+    @Override
     public void configurePostPermissions(IDiscussionUser user, Category category, PermissionData permissions) {
         permissionDao.save(new PostPermission(user.getDiscussionUserId(), category, permissions));
     }
 
+    @Override
     public void configurePostPermissions(IDiscussionUser user, PermissionData permissions) {
         permissionDao.save(new PostPermission(user.getDiscussionUserId(), permissions));
     }
 
+    @Override
     public void configureDiscussionPermissions(IDiscussionUser user, Topic topic, PermissionData permissions) {
         permissionDao.save(new DiscussionPermission(user.getDiscussionUserId(), topic, permissions));
     }
 
+    @Override
     public void configureDiscussionPermissions(IDiscussionUser user, Category category, PermissionData permissions) {
         permissionDao.save(new DiscussionPermission(user.getDiscussionUserId(), category, permissions));
     }
 
+    @Override
     public void configureDiscussionPermissions(IDiscussionUser user, PermissionData permissions) {
         permissionDao.save(new DiscussionPermission(user.getDiscussionUserId(), permissions));
     }
 
+    @Override
     public void configureTopicPermissions(IDiscussionUser user, Category category, PermissionData permissions) {
         permissionDao.save(new TopicPermission(user.getDiscussionUserId(), category, permissions));
     }
 
+    @Override
     public void configureTopicPermissions(IDiscussionUser user, PermissionData permissions) {
         permissionDao.save(new TopicPermission(user.getDiscussionUserId(), permissions));
     }
 
+    @Override
     public void configureCategoryPermissions(IDiscussionUser user, PermissionData permissions) {
         permissionDao.save(new CategoryPermission(user.getDiscussionUserId(), permissions));
     }
 
+    @Override
     public boolean canViewPost(Post post) {
         return canViewPost(userService.getCurrentlyLoggedUser(), post);
     }
 
+    @Override
     public boolean canAddPost(Discussion discussion) {
         return canAddPost(userService.getCurrentlyLoggedUser(), discussion);
     }
 
+    @Override
     public boolean canEditPost(Post post) {
         return canEditPost(userService.getCurrentlyLoggedUser(), post);
     }
 
+    @Override
     public boolean canRemovePost(Post post) {
         return canRemovePost(userService.getCurrentlyLoggedUser(), post);
     }
 
+    @Override
     public boolean canViewPosts(Discussion discussion) {
         return canViewPosts(userService.getCurrentlyLoggedUser(), discussion);
     }
 
+    @Override
     public boolean canAddDiscussion(Topic topic) {
         return canAddDiscussion(userService.getCurrentlyLoggedUser(), topic);
     }
 
+    @Override
     public boolean canEditDiscussion(Discussion discussion) {
         return canEditDiscussion(userService.getCurrentlyLoggedUser(), discussion);
     }
 
+    @Override
     public boolean canRemoveDiscussion(Discussion discussion) {
         return canRemoveDiscussion(userService.getCurrentlyLoggedUser(), discussion);
     }
 
+    @Override
     public boolean canViewDiscussions(Topic topic) {
         return canViewDiscussions(userService.getCurrentlyLoggedUser(), topic);
     }
 
+    @Override
     public boolean canAddTopic(Category category) {
         return canAddTopic(userService.getCurrentlyLoggedUser(), category);
     }
 
+    @Override
     public boolean canEditTopic(Topic topic) {
         return canEditTopic(userService.getCurrentlyLoggedUser(), topic);
     }
 
+    @Override
     public boolean canRemoveTopic(Topic topic) {
         return canRemoveTopic(userService.getCurrentlyLoggedUser(), topic);
     }
 
+    @Override
     public boolean canViewTopics(Category category) {
         return canViewTopics(userService.getCurrentlyLoggedUser(), category);
     }
 
+    @Override
     public boolean canAddCategory() {
         return canAddCategory(userService.getCurrentlyLoggedUser());
     }
 
+    @Override
     public boolean canEditCategory(Category category) {
         return canEditCategory(userService.getCurrentlyLoggedUser(), category);
     }
 
+    @Override
     public boolean canRemoveCategory(Category category) {
         return canRemoveCategory(userService.getCurrentlyLoggedUser(), category);
     }
 
+    @Override
     public boolean canViewCategories() {
         return canViewCategories(userService.getCurrentlyLoggedUser());
     }
 
+    @Override
     public boolean canAddPost(IDiscussionUser user, Discussion discussion) {
         List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.CREATE, permissions);
     }
 
+    @Override
     public boolean canEditPost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
@@ -148,11 +177,13 @@ public class PermissionService implements PermissionManagementService, AccessCon
         }
     }
 
+    @Override
     public boolean canEditPosts(IDiscussionUser user, Discussion discussion) {
         List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.EDIT, permissions);
     }
 
+    @Override
     public boolean canRemovePost(IDiscussionUser user, Post post){
         if (user == null) {
             return false;
@@ -163,11 +194,13 @@ public class PermissionService implements PermissionManagementService, AccessCon
         }
     }
 
+    @Override
     public boolean canRemovePosts(IDiscussionUser user, Discussion discussion) {
         List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.DELETE, permissions);
     }
 
+    @Override
     public boolean canViewPost(IDiscussionUser user, Post post) {
         if (user == null) {
             return false;
@@ -178,66 +211,79 @@ public class PermissionService implements PermissionManagementService, AccessCon
         }
     }
 
+    @Override
     public boolean canViewPosts(IDiscussionUser user, Discussion discussion) {
         List<PostPermission> permissions = getPostPermissions(user, discussion);
         return checkPermissions(Action.VIEW, permissions);
     }
 
+    @Override
     public boolean canAddDiscussion(IDiscussionUser user, Topic topic) {
         List<DiscussionPermission> permissions = getDiscussionPermissions(user, topic);
         return checkPermissions(Action.CREATE, permissions);
     }
 
+    @Override
     public boolean canEditDiscussion(IDiscussionUser user, Discussion discussion) {
         List<DiscussionPermission> permissions = getDiscussionPermissions(user, discussion.getTopic());
         return checkPermissions(Action.EDIT, permissions);
     }
 
+    @Override
     public boolean canRemoveDiscussion(IDiscussionUser user, Discussion discussion) {
         List<DiscussionPermission> permissions = getDiscussionPermissions(user, discussion.getTopic());
         return checkPermissions(Action.DELETE, permissions);
     }
 
+    @Override
     public boolean canViewDiscussions(IDiscussionUser user, Topic topic) {
         List<DiscussionPermission> permissions = getDiscussionPermissions(user, topic);
         return checkPermissions(Action.VIEW, permissions);
     }
 
+    @Override
     public boolean canAddTopic(IDiscussionUser user, Category category) {
         List<TopicPermission> permissions = getTopicPermissions(user, category);
         return checkPermissions(Action.CREATE, permissions);
     }
 
+    @Override
     public boolean canEditTopic(IDiscussionUser user, Topic topic) {
         List<TopicPermission> permissions = getTopicPermissions(user, topic.getCategory());
         return checkPermissions(Action.EDIT, permissions);
     }
 
+    @Override
     public boolean canRemoveTopic(IDiscussionUser user, Topic topic) {
         List<TopicPermission> permissions = getTopicPermissions(user, topic.getCategory());
         return checkPermissions(Action.DELETE, permissions);
     }
 
+    @Override
     public boolean canViewTopics(IDiscussionUser user, Category category) {
         List<TopicPermission> permissions = getTopicPermissions(user, category);
         return checkPermissions(Action.VIEW, permissions);
     }
 
+    @Override
     public boolean canAddCategory(IDiscussionUser user) {
         List<CategoryPermission> permissions = getCategoryPermissions(user);
         return checkPermissions(Action.CREATE, permissions);
     }
 
+    @Override
     public boolean canEditCategory(IDiscussionUser user, Category category) {
         List<CategoryPermission> permissions = getCategoryPermissions(user);
         return checkPermissions(Action.EDIT, permissions);
     }
 
+    @Override
     public boolean canRemoveCategory(IDiscussionUser user, Category category) {
         List<CategoryPermission> permissions = getCategoryPermissions(user);
         return checkPermissions(Action.DELETE, permissions);
     }
 
+    @Override
     public boolean canViewCategories(IDiscussionUser user) {
         List<CategoryPermission> permissions = getCategoryPermissions(user);
         return checkPermissions(Action.VIEW, permissions);

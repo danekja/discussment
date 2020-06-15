@@ -34,6 +34,7 @@ public class DefaultPostReputationService implements PostReputationService {
         this.userService = userService;
     }
 
+    @Override
     public void addLike(Post post){
         IDiscussionUser user = userService.getCurrentlyLoggedUser();
         UserPostReputation upr = getVote(user, post);
@@ -46,6 +47,7 @@ public class DefaultPostReputationService implements PostReputationService {
         }
     }
 
+    @Override
     public void addDislike(Post post){
         IDiscussionUser user = userService.getCurrentlyLoggedUser();
         UserPostReputation upr = getVote(user, post);
@@ -58,6 +60,7 @@ public class DefaultPostReputationService implements PostReputationService {
         }
     }
 
+    @Override
     public void changeVote(IDiscussionUser user, Post post){
         if (userVotedOn(user, post)) {
             UserPostReputation upr = getVote(user, post);
@@ -75,6 +78,7 @@ public class DefaultPostReputationService implements PostReputationService {
         }
     }
 
+    @Override
     public UserPostReputation getVote(IDiscussionUser user, Post post){
         if (user == null) {
             return null;
@@ -83,6 +87,7 @@ public class DefaultPostReputationService implements PostReputationService {
         }
     }
 
+    @Override
     public boolean userVotedOn(IDiscussionUser user, Post post){
         return getVote(user, post) != null;
     }

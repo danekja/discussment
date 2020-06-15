@@ -62,6 +62,7 @@ public class DefaultCategoryService implements CategoryService {
         }
     }
 
+    @Override
     public Category getDefaultCategory(){
         Category category = categoryDao.getById(Category.DEFAULT_CATEGORY_ID);
         if(category == null) {

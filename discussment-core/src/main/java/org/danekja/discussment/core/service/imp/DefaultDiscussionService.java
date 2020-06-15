@@ -36,6 +36,7 @@ public class DefaultDiscussionService implements DiscussionService {
         this.discussionUserService = discussionUserService;
     }
 
+    @Override
     public Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException {
         if(accessControlService.canAddDiscussion(topic)) {
             discussion.setTopic(topic);
@@ -45,6 +46,7 @@ public class DefaultDiscussionService implements DiscussionService {
         }
     }
 
+    @Override
     public List<Discussion> getDiscussionsByTopic(Topic topic) throws AccessDeniedException {
         if(accessControlService.canViewDiscussions(topic)) {
             return discussionDao.getDiscussionsByTopic(topic);
@@ -53,6 +55,7 @@ public class DefaultDiscussionService implements DiscussionService {
         }
     }
 
+    @Override
     public Discussion getDiscussionById(long discussionId) throws AccessDeniedException {
         Discussion d = discussionDao.getById(discussionId);
         if(d == null || accessControlService.canViewDiscussions(d.getTopic())) {
@@ -62,6 +65,7 @@ public class DefaultDiscussionService implements DiscussionService {
         }
     }
 
+    @Override
     public Discussion getDefaultDiscussion() {
         Discussion d = discussionDao.getById(Discussion.DEFAULT_DISCUSSION_ID);
         if(d == null){
@@ -72,6 +76,7 @@ public class DefaultDiscussionService implements DiscussionService {
         return d;
     }
 
+    @Override
     public void removeDiscussion(Discussion discussion) throws AccessDeniedException {
         if(accessControlService.canRemoveDiscussion(discussion)) {
             discussionDao.remove(discussion);
