@@ -11,9 +11,12 @@ import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
+import org.danekja.discussment.core.event.*;
 import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.exception.MessageLengthExceeded;
 import org.danekja.discussment.core.service.PostService;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -29,19 +32,25 @@ import java.util.stream.Collectors;
  * Created by Zdenek Vales on 27.11.2017.
  */
 @Transactional
-public class DefaultPostService implements PostService {
+public class DefaultPostService implements PostService, ApplicationEventPublisherAware {
 
     private final PostDao postDao;
 
     private final AccessControlService accessControlService;
     private final DiscussionUserService discussionUserService;
     private final ConfigurationService configurationService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public DefaultPostService(PostDao postDao, DiscussionUserService discussionUserService, AccessControlService accessControlService, ConfigurationService configurationService) {
         this.postDao = postDao;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
         this.configurationService = configurationService;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -53,6 +62,7 @@ public class DefaultPostService implements PostService {
                 postDao.getBasePostsByDiscussion(post.getDiscussion()).remove(post);
             }
             postDao.remove(post);
+            publishEvent(new PostRemovedEvent(post));
         } else {
             throw new AccessDeniedException(Action.DELETE, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
@@ -95,7 +105,9 @@ public class DefaultPostService implements PostService {
         } else {
             post.setUserId(discussionUserService.getCurrentlyLoggedUser().getDiscussionUserId());
             post.setDiscussion(discussion);
-            return postDao.save(post);
+            Post createdPost = postDao.save(post);
+            publishEvent(new PostCreatedEvent(createdPost));
+            return createdPost;
         }
     }
 
@@ -103,7 +115,9 @@ public class DefaultPostService implements PostService {
     public Post disablePost(Post post) throws AccessDeniedException {
         if (accessControlService.canEditPost(post)) {
             post.setDisabled(true);
-            return postDao.save(post);
+            Post disabledPost = postDao.save(post);
+            publishEvent(new PostDisabledEvent(disabledPost));
+            return disabledPost;
         } else {
             throw new AccessDeniedException(Action.EDIT, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
@@ -113,7 +127,9 @@ public class DefaultPostService implements PostService {
     public Post enablePost(Post post) throws AccessDeniedException {
         if (accessControlService.canEditPost(post)) {
             post.setDisabled(false);
-            return postDao.save(post);
+            Post enabledPost = postDao.save(post);
+            publishEvent(new PostEnabledEvent(enabledPost));
+            return enabledPost;
         } else {
             throw new AccessDeniedException(Action.EDIT, getCurrentUserId(),post.getId(), PermissionType.POST);
         }
@@ -204,5 +220,15 @@ public class DefaultPostService implements PostService {
     private String getCurrentUserId() {
         IDiscussionUser user = discussionUserService.getCurrentlyLoggedUser();
         return user == null ? null : user.getDiscussionUserId();
+    }
+
+    /**
+     * Publishes event if {@link #applicationEventPublisher} is not null.
+     * @param event Event to be published.
+     */
+    private void publishEvent(PostEvent event) {
+        if (applicationEventPublisher != null) {
+            applicationEventPublisher.publishEvent(event);
+        }
     }
 }

@@ -8,17 +8,23 @@ import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.domain.Category;
+import org.danekja.discussment.core.event.CategoryCreatedEvent;
+import org.danekja.discussment.core.event.CategoryEvent;
+import org.danekja.discussment.core.event.CategoryRemovedEvent;
 import org.danekja.discussment.core.service.CategoryService;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
-public class DefaultCategoryService implements CategoryService {
+public class DefaultCategoryService implements CategoryService, ApplicationEventPublisherAware {
 
     private final CategoryDao categoryDao;
     private final AccessControlService accessControlService;
     private final DiscussionUserService discussionUserService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public DefaultCategoryService(CategoryDao categoryDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.categoryDao = categoryDao;
@@ -27,9 +33,16 @@ public class DefaultCategoryService implements CategoryService {
     }
 
     @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @Override
     public Category createCategory(Category entity) throws AccessDeniedException {
         if(accessControlService.canAddCategory()) {
-            return categoryDao.save(entity);
+            Category createdCategory = categoryDao.save(entity);
+            publishEvent(new CategoryCreatedEvent(createdCategory));
+            return createdCategory;
         } else {
             throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), 0, PermissionType.CATEGORY);
         }
@@ -57,6 +70,7 @@ public class DefaultCategoryService implements CategoryService {
     public void removeCategory(Category entity) throws AccessDeniedException {
         if (accessControlService.canRemoveCategory(entity)) {
             categoryDao.remove(entity);
+            publishEvent(new CategoryRemovedEvent(entity));
         } else {
             throw new AccessDeniedException(Action.DELETE, getCurrentUserId(), entity.getId(), PermissionType.CATEGORY);
         }
@@ -79,5 +93,15 @@ public class DefaultCategoryService implements CategoryService {
     private String getCurrentUserId() {
         IDiscussionUser user = discussionUserService.getCurrentlyLoggedUser();
         return user == null ? null : user.getDiscussionUserId();
+    }
+
+    /**
+     * Publishes event if {@link #applicationEventPublisher} is not null.
+     * @param event Event to be published.
+     */
+    private void publishEvent(CategoryEvent event) {
+        if (applicationEventPublisher != null) {
+            applicationEventPublisher.publishEvent(event);
+        }
     }
 }

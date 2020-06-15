@@ -7,11 +7,15 @@ import org.danekja.discussment.core.accesscontrol.domain.PermissionType;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.DiscussionDao;
-import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.event.DiscussionCreatedEvent;
+import org.danekja.discussment.core.event.DiscussionEvent;
+import org.danekja.discussment.core.event.DiscussionRemovedEvent;
 import org.danekja.discussment.core.service.DiscussionService;
 import org.danekja.discussment.core.service.TopicService;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,12 +26,13 @@ import java.util.List;
  *
  */
 @Transactional
-public class DefaultDiscussionService implements DiscussionService {
+public class DefaultDiscussionService implements DiscussionService, ApplicationEventPublisherAware {
 
     private final DiscussionDao discussionDao;
     private final TopicService topicService;
     private final AccessControlService accessControlService;
     private final DiscussionUserService discussionUserService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public DefaultDiscussionService(DiscussionDao discussionDao, TopicService topicService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.discussionDao = discussionDao;
@@ -37,10 +42,17 @@ public class DefaultDiscussionService implements DiscussionService {
     }
 
     @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @Override
     public Discussion createDiscussion(Topic topic, Discussion discussion) throws AccessDeniedException {
         if(accessControlService.canAddDiscussion(topic)) {
             discussion.setTopic(topic);
-            return discussionDao.save(discussion);
+            Discussion createdDiscussion = discussionDao.save(discussion);
+            publishEvent(new DiscussionCreatedEvent(createdDiscussion));
+            return createdDiscussion;
         } else {
             throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), topic.getId(), PermissionType.DISCUSSION);
         }
@@ -80,6 +92,7 @@ public class DefaultDiscussionService implements DiscussionService {
     public void removeDiscussion(Discussion discussion) throws AccessDeniedException {
         if(accessControlService.canRemoveDiscussion(discussion)) {
             discussionDao.remove(discussion);
+            publishEvent(new DiscussionRemovedEvent(discussion));
         } else {
             throw new AccessDeniedException(Action.DELETE, getCurrentUserId(), discussion.getId(), PermissionType.DISCUSSION);
         }
@@ -92,5 +105,15 @@ public class DefaultDiscussionService implements DiscussionService {
     private String getCurrentUserId() {
         IDiscussionUser user = discussionUserService.getCurrentlyLoggedUser();
         return user == null ? null : user.getDiscussionUserId();
+    }
+
+    /**
+     * Publishes event if {@link #applicationEventPublisher} is not null.
+     * @param event Event to be published.
+     */
+    private void publishEvent(DiscussionEvent event) {
+        if (applicationEventPublisher != null) {
+            applicationEventPublisher.publishEvent(event);
+        }
     }
 }
