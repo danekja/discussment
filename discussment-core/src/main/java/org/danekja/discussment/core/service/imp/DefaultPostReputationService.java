@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DefaultPostReputationService implements PostReputationService {
 
-    private static final Object monitor = new Object();
-
     private final UserPostReputationDao userPostReputationDao;
     private final PostDao postDao;
 
@@ -37,49 +35,43 @@ public class DefaultPostReputationService implements PostReputationService {
     }
 
     public void addLike(Post post){
-        synchronized(monitor){
-            IDiscussionUser user = userService.getCurrentlyLoggedUser();
-            UserPostReputation upr = getVote(user, post);
-            if (upr == null) {
-                post.getPostReputation().addLike();
-                userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
-                postDao.save(post);
-            } else if (upr.getLiked()){
-                changeVote(user, post);
-            }
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        UserPostReputation upr = getVote(user, post);
+        if (upr == null) {
+            post.getPostReputation().addLike();
+            userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
+            postDao.save(post);
+        } else if (upr.getLiked()){
+            changeVote(user, post);
         }
     }
 
     public void addDislike(Post post){
-        synchronized(monitor) {
-            IDiscussionUser user = userService.getCurrentlyLoggedUser();
-            UserPostReputation upr = getVote(user, post);
-            if (upr == null) {
-                post.getPostReputation().addDislike();
-                userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
-                postDao.save(post);
-            } else if(!upr.getLiked()){
-                changeVote(user, post);
-            }
+        IDiscussionUser user = userService.getCurrentlyLoggedUser();
+        UserPostReputation upr = getVote(user, post);
+        if (upr == null) {
+            post.getPostReputation().addDislike();
+            userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
+            postDao.save(post);
+        } else if(!upr.getLiked()){
+            changeVote(user, post);
         }
     }
 
     public void changeVote(IDiscussionUser user, Post post){
-        synchronized (monitor) {
-            if (userVotedOn(user, post)) {
-                UserPostReputation upr = getVote(user, post);
-                if (upr.getLiked()) {
-                    post.getPostReputation().removeLike();
-                    post.getPostReputation().addDislike();
-                    upr.changeLiked();
-                } else {
-                    post.getPostReputation().addLike();
-                    post.getPostReputation().removeDislike();
-                    upr.changeLiked();
-                }
-                userPostReputationDao.save(upr);
-                postDao.save(post);
+        if (userVotedOn(user, post)) {
+            UserPostReputation upr = getVote(user, post);
+            if (upr.getLiked()) {
+                post.getPostReputation().removeLike();
+                post.getPostReputation().addDislike();
+                upr.changeLiked();
+            } else {
+                post.getPostReputation().addLike();
+                post.getPostReputation().removeDislike();
+                upr.changeLiked();
             }
+            userPostReputationDao.save(upr);
+            postDao.save(post);
         }
     }
 

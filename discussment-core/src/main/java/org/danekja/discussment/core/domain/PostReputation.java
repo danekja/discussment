@@ -44,19 +44,19 @@ public class PostReputation implements Serializable {
         this.dislikes = dislike;
     }
 
-    public synchronized void addLike(){
+    public void addLike(){
         this.likes++;
     }
 
-    public synchronized void addDislike(){
+    public void addDislike(){
         this.dislikes++;
     }
 
-    public synchronized void removeLike(){
+    public void removeLike(){
         this.likes--;
     }
 
-    public synchronized void removeDislike(){
+    public void removeDislike(){
         this.dislikes--;
     }
 }
