@@ -21,10 +21,10 @@ public class DefaultPostReputationService implements PostReputationService {
 
     private static final Object monitor = new Object();
 
-    private UserPostReputationDao userPostReputationDao;
-    private PostDao postDao;
+    private final UserPostReputationDao userPostReputationDao;
+    private final PostDao postDao;
 
-    private DiscussionUserService userService;
+    private final DiscussionUserService userService;
 
     public DefaultPostReputationService(UserPostReputationDao userPostReputationDao,
                                         PostDao postDao,

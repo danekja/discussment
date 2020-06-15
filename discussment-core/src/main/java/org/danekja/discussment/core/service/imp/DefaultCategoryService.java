@@ -16,9 +16,9 @@ import java.util.List;
 @Transactional
 public class DefaultCategoryService implements CategoryService {
 
-    private CategoryDao categoryDao;
-    private AccessControlService accessControlService;
-    private DiscussionUserService discussionUserService;
+    private final CategoryDao categoryDao;
+    private final AccessControlService accessControlService;
+    private final DiscussionUserService discussionUserService;
 
     public DefaultCategoryService(CategoryDao categoryDao, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.categoryDao = categoryDao;

@@ -24,11 +24,11 @@ import java.util.List;
 @Transactional
 public class DefaultDiscussionService implements DiscussionService {
 
-    private DiscussionDao discussionDao;
-    private PostDao postDao;
-    private TopicService topicService;
-    private AccessControlService accessControlService;
-    private DiscussionUserService discussionUserService;
+    private final DiscussionDao discussionDao;
+    private final PostDao postDao;
+    private final TopicService topicService;
+    private final AccessControlService accessControlService;
+    private final DiscussionUserService discussionUserService;
 
     public DefaultDiscussionService(DiscussionDao discussionDao, PostDao postDao, TopicService topicService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.discussionDao = discussionDao;

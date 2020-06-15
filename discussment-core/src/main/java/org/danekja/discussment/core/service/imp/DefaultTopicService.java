@@ -18,10 +18,10 @@ import java.util.List;
 @Transactional
 public class DefaultTopicService implements TopicService {
 
-    private TopicDao topicDao;
-    private CategoryService categoryService;
-    private AccessControlService accessControlService;
-    private DiscussionUserService discussionUserService;
+    private final TopicDao topicDao;
+    private final CategoryService categoryService;
+    private final AccessControlService accessControlService;
+    private final DiscussionUserService discussionUserService;
 
     public DefaultTopicService(TopicDao topicDao, CategoryService categoryService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.topicDao = topicDao;

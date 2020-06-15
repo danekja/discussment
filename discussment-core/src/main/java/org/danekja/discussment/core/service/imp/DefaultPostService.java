@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class DefaultPostService implements PostService {
 
-    private PostDao postDao;
+    private final PostDao postDao;
 
-    private AccessControlService accessControlService;
-    private DiscussionUserService discussionUserService;
-    private ConfigurationService configurationService;
+    private final AccessControlService accessControlService;
+    private final DiscussionUserService discussionUserService;
+    private final ConfigurationService configurationService;
 
     public DefaultPostService(PostDao postDao, DiscussionUserService discussionUserService, AccessControlService accessControlService, ConfigurationService configurationService) {
         this.postDao = postDao;
