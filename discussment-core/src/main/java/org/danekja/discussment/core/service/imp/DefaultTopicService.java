@@ -9,19 +9,25 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.TopicDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
+import org.danekja.discussment.core.event.TopicCreatedEvent;
+import org.danekja.discussment.core.event.TopicEvent;
+import org.danekja.discussment.core.event.TopicRemovedEvent;
 import org.danekja.discussment.core.service.CategoryService;
 import org.danekja.discussment.core.service.TopicService;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
-public class DefaultTopicService implements TopicService {
+public class DefaultTopicService implements TopicService, ApplicationEventPublisherAware {
 
     private final TopicDao topicDao;
     private final CategoryService categoryService;
     private final AccessControlService accessControlService;
     private final DiscussionUserService discussionUserService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public DefaultTopicService(TopicDao topicDao, CategoryService categoryService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.topicDao = topicDao;
@@ -31,10 +37,17 @@ public class DefaultTopicService implements TopicService {
     }
 
     @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @Override
     public Topic createTopic(Category category, Topic topic) throws AccessDeniedException {
         if (accessControlService.canAddTopic(category)) {
             topic.setCategory(category);
-            return topicDao.save(topic);
+            Topic createdTopic = topicDao.save(topic);
+            publishEvent(new TopicCreatedEvent(createdTopic));
+            return createdTopic;
         } else {
             throw new AccessDeniedException(Action.CREATE, getCurrentUserId(), category.getId(), PermissionType.TOPIC);
         }
@@ -79,6 +92,7 @@ public class DefaultTopicService implements TopicService {
     public void removeTopic(Topic topic) throws AccessDeniedException {
         if (accessControlService.canRemoveTopic(topic)) {
             topicDao.remove(topic);
+            publishEvent(new TopicRemovedEvent(topic));
         } else {
             throw new AccessDeniedException(Action.DELETE, getCurrentUserId(), topic.getId(), PermissionType.TOPIC);
         }
@@ -91,5 +105,15 @@ public class DefaultTopicService implements TopicService {
     private String getCurrentUserId() {
         IDiscussionUser user = discussionUserService.getCurrentlyLoggedUser();
         return user == null ? null : user.getDiscussionUserId();
+    }
+
+    /**
+     * Publishes event if {@link #applicationEventPublisher} is not null.
+     * @param event Event to be published.
+     */
+    private void publishEvent(TopicEvent event) {
+        if (applicationEventPublisher != null) {
+            applicationEventPublisher.publishEvent(event);
+        }
     }
 }
