@@ -5,7 +5,6 @@ import org.danekja.discussment.core.accesscontrol.exception.DiscussionUserNotFou
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.dao.DiscussionDao;
-import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
@@ -41,10 +40,6 @@ public class DiscussionServiceTest {
     private DiscussionDao discussionDao;
 
     @Mock
-    private PostDao postDao;
-
-
-    @Mock
     private AccessControlService accessControlService;
 
     @Mock
@@ -74,14 +69,13 @@ public class DiscussionServiceTest {
         when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
 
 
-        discussionService = new DefaultDiscussionService(discussionDao, postDao, topicService, accessControlService, discussionUserService);
+        discussionService = new DefaultDiscussionService(discussionDao, topicService, accessControlService, discussionUserService);
     }
 
     @Test
     public void testCreateDiscussion() throws AccessDeniedException, DiscussionUserNotFoundException {
         Discussion discussion = new Discussion(55L,"Some discussion");
         when(discussionDao.save(any(Discussion.class))).then(invocationOnMock -> (Discussion)invocationOnMock.getArguments()[0]);
-        when(postDao.getBasePostsByDiscussion(any(Discussion.class))).then(invocationOnMock -> new ArrayList<>());
         discussion = discussionService.createDiscussion(new Topic(), discussion);
 
         assertNotNull("Discussion is null!", discussion);

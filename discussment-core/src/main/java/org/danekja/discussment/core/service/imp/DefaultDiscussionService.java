@@ -25,14 +25,12 @@ import java.util.List;
 public class DefaultDiscussionService implements DiscussionService {
 
     private final DiscussionDao discussionDao;
-    private final PostDao postDao;
     private final TopicService topicService;
     private final AccessControlService accessControlService;
     private final DiscussionUserService discussionUserService;
 
-    public DefaultDiscussionService(DiscussionDao discussionDao, PostDao postDao, TopicService topicService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
+    public DefaultDiscussionService(DiscussionDao discussionDao, TopicService topicService, AccessControlService accessControlService, DiscussionUserService discussionUserService) {
         this.discussionDao = discussionDao;
-        this.postDao = postDao;
         this.topicService = topicService;
         this.accessControlService = accessControlService;
         this.discussionUserService = discussionUserService;
