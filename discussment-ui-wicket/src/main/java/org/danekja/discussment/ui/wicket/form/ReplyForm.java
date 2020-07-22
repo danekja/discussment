@@ -1,5 +1,7 @@
 package org.danekja.discussment.ui.wicket.form;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Post;
@@ -14,6 +16,7 @@ public abstract class ReplyForm extends Form {
 
     private IModel<Post> postModel;
     private IModel<Post> replyModel;
+    private PostFormComponent replyFormComponent;
 
     /**
      * Constructor for creating a instance of the form for creating a new reply of the post
@@ -41,18 +44,23 @@ public abstract class ReplyForm extends Form {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        this.replyFormComponent = new PostFormComponent("replyFormComponent", replyModel);
+        replyFormComponent.setOutputMarkupId(true);
 
-        add(new PostFormComponent("replyFormComponent", replyModel));
+        add(replyFormComponent);
+        add(new AjaxFormSubmitBehavior(this, "onclick") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                super.onSubmit(target);
+                replyToPost(postModel.getObject(), replyModel.getObject());
+                replyModel.setObject(new Post());
+                target.add(replyFormComponent);
+            }
+        });
     }
 
     @Override
     protected void onConfigure() {
         super.onConfigure();
-    }
-
-    @Override
-    protected void onSubmit() {
-        replyToPost(postModel.getObject(), replyModel.getObject());
-        replyModel.setObject(new Post());
     }
 }

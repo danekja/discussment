@@ -1,5 +1,7 @@
 package org.danekja.discussment.ui.wicket.form;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.danekja.discussment.core.domain.Discussion;
@@ -15,6 +17,7 @@ public abstract class PostForm extends Form {
 
     private IModel<Discussion> discussionModel;
     private IModel<Post> postModel;
+    private PostFormComponent postFormComponent;
 
     /**
      * Constructor for creating a instance of a form for adding a post form
@@ -45,12 +48,18 @@ public abstract class PostForm extends Form {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new PostFormComponent("postFormComponent", postModel));
-    }
+        this.postFormComponent = new PostFormComponent("postFormComponent", postModel);
+        postFormComponent.setOutputMarkupId(true);
 
-    @Override
-    protected void onSubmit() {
-        sendNewPost(discussionModel.getObject(), postModel.getObject());
-        postModel.setObject(new Post());
+        add(postFormComponent);
+        add(new AjaxFormSubmitBehavior(this, "onclick") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                super.onSubmit(target);
+                sendNewPost(discussionModel.getObject(), postModel.getObject());
+                postModel.setObject(new Post());
+                target.add(postFormComponent);
+            }
+        });
     }
 }
