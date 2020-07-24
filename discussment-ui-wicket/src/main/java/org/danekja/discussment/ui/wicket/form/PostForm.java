@@ -38,11 +38,11 @@ public abstract class PostForm extends Form {
 
     /**
      * Handler called when this form gets submitted.
-     *
-     * @param discussion Discussion to send new post to.
+     *  @param discussion Discussion to send new post to.
      * @param post New post content.
+     * @param target
      */
-    protected abstract void sendNewPost(Discussion discussion, Post post);
+    protected abstract void sendNewPost(Discussion discussion, Post post, AjaxRequestTarget target);
 
     @Override
     protected void onInitialize() {
@@ -56,7 +56,7 @@ public abstract class PostForm extends Form {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 super.onSubmit(target);
-                sendNewPost(discussionModel.getObject(), postModel.getObject());
+                sendNewPost(discussionModel.getObject(), postModel.getObject(), target);
                 postModel.setObject(new Post());
                 target.add(postFormComponent);
             }

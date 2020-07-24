@@ -39,7 +39,7 @@ public abstract class ReplyForm extends Form {
      * @param parentPost Parent of the new reply.
      * @param reply Content of the new reply.
      */
-    protected abstract void replyToPost(Post parentPost, Post reply);
+    protected abstract void replyToPost(Post parentPost, Post reply, AjaxRequestTarget target);
 
     @Override
     protected void onInitialize() {
@@ -52,7 +52,7 @@ public abstract class ReplyForm extends Form {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 super.onSubmit(target);
-                replyToPost(postModel.getObject(), replyModel.getObject());
+                replyToPost(postModel.getObject(), replyModel.getObject(), target);
                 replyModel.setObject(new Post());
                 target.add(replyFormComponent);
             }
