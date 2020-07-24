@@ -1,5 +1,6 @@
 package org.danekja.discussment.ui.wicket.panel.discussion;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -72,11 +73,11 @@ public class DiscussionPanel extends Panel {
     /**
      * Sends reply to post using postService and refreshes the page.
      * Override to provide custom implementation.
-     *
-     * @param parentPost Parent post of the reply.
+     *  @param parentPost Parent post of the reply.
      * @param reply Reply content.
+     * @param target
      */
-    public void replyToPost(Post parentPost, Post reply) {
+    public void replyToPost(Post parentPost, Post reply, AjaxRequestTarget target) {
         try {
             postService.sendReply(reply, parentPost);
         } catch (MaxReplyLevelExceeded e) {
@@ -93,11 +94,11 @@ public class DiscussionPanel extends Panel {
     /**
      * Sends posts to new discussion using postService and refreshes the page.
      * Override to provide custom implementation.
-     *
-     * @param discussion Discussion to send new post to.
+     *  @param discussion Discussion to send new post to.
      * @param newPost New post content.
+     * @param target
      */
-    public void sendNewPost(Discussion discussion, Post newPost) {
+    public void sendNewPost(Discussion discussion, Post newPost, AjaxRequestTarget target) {
         try {
             postService.sendPost(discussion, newPost);
         } catch (AccessDeniedException e) {
@@ -115,16 +116,16 @@ public class DiscussionPanel extends Panel {
 
         add(new ReplyForm("replyForm", selectedPost, new Model<>(new Post())) {
             @Override
-            public void replyToPost(Post parentPost, Post reply) {
-                DiscussionPanel.this.replyToPost(parentPost, reply);
+            public void replyToPost(Post parentPost, Post reply, AjaxRequestTarget target) {
+                DiscussionPanel.this.replyToPost(parentPost, reply, target);
             }
         });
         add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override
-            public void sendNewPost(Discussion discussion, Post post) {
-                DiscussionPanel.this.sendNewPost(discussion, post);
+            public void sendNewPost(Discussion discussion, Post post, AjaxRequestTarget target) {
+                DiscussionPanel.this.sendNewPost(discussion, post, target);
             }
         });
     }
