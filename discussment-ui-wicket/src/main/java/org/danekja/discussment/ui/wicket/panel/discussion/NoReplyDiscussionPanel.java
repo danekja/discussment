@@ -10,26 +10,21 @@ import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
-import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostForm;
-import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * Created by Martin Bláha on 29.01.17.
+ * Same as {@link DiscussionPanel} but without the modal reply form. This component can thus be safely used inside
+ * another modal window.
  *
- * The class creates the panel which contains the discussion. This panel can be used below a article like
- * a discussion about the article.
- *
- * Note that this panel and its child components assumes the user is authorized to see this discussion (the
- * authorization is assumed to be done elsewhere).
+ * Note: the reply form is still needed to submit replies. Consumers of this library is expected to initialize it
+ * and place it into the page themselves.
  */
-public class DiscussionPanel extends Panel {
+public class NoReplyDiscussionPanel extends Panel {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,55 +36,36 @@ public class DiscussionPanel extends Panel {
     private PostReputationService postReputationService;
     private ConfigurationService configurationService;
 
+    private String replyModalContainerId;
+
     /**
      * Constructor for creating the panel which contains the discussion.
-     *
-     * @param id id of the element into which the panel is inserted
-     * @param discussion Model of the discussion to be displayed in this panel. It is assumed that the model object
+     *  @param id id of the element into which the panel is inserted
+     * @param discussionModel Model of the discussion to be displayed in this panel. It is assumed that the model object
      *                   is complete, that is, it contains all posts and reply chains to be rendered.
-     * @param postService instance of the post service
      * @param selectedPost instance contains the selected post in the discussion
+     * @param postService instance of the post service
      * @param postReputationService instance of the post reputation service
      * @param configurationService instance of the configuration service
+     * @param replyModalContainerId HTML Id of a modal container used for replies.
      */
-    public DiscussionPanel(String id,
-                           IModel<Discussion> discussion,
-                           IModel<Post> selectedPost,
-                           PostService postService,
-                           DiscussionUserService userService,
-                           PostReputationService postReputationService,
-                           ConfigurationService configurationService) {
+    public NoReplyDiscussionPanel(String id,
+                                  IModel<Discussion> discussionModel,
+                                  IModel<Post> selectedPost,
+                                  PostService postService,
+                                  DiscussionUserService userService,
+                                  PostReputationService postReputationService,
+                                  ConfigurationService configurationService, String replyModalContainerId) {
         super(id);
-
+        this.discussionModel = discussionModel;
         this.selectedPost = selectedPost;
         this.postService = postService;
-        this.discussionModel = discussion;
-
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
+        this.replyModalContainerId = replyModalContainerId;
     }
 
-    /**
-     * Sends reply to post using postService and refreshes the page.
-     * Override to provide custom implementation.
-     *  @param parentPost Parent post of the reply.
-     * @param reply Reply content.
-     * @param target
-     */
-    public void replyToPost(Post parentPost, Post reply, AjaxRequestTarget target) {
-        try {
-            postService.sendReply(reply, parentPost);
-        } catch (MaxReplyLevelExceeded e) {
-            this.error(getString("error.maxReplyLevelExceeded"));
-        } catch (AccessDeniedException e) {
-            this.error(getString("error.accessDenied"));
-        } catch (Exception ex) {
-            logger.error("Exception occurred when replying new post: ", ex);
-        }
-
-        setResponsePage(getPage().getPageClass(), getPage().getPageParameters());
-    }
 
     /**
      * Sends posts to new discussion using postService and refreshes the page.
@@ -114,18 +90,12 @@ public class DiscussionPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ReplyForm("replyForm", selectedPost, new Model<>(new Post())) {
-            @Override
-            public void replyToPost(Post parentPost, Post reply, AjaxRequestTarget target) {
-                DiscussionPanel.this.replyToPost(parentPost, reply, target);
-            }
-        });
-        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, ""));
+        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, replyModalContainerId));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override
             public void sendNewPost(Discussion discussion, Post post, AjaxRequestTarget target) {
-                DiscussionPanel.this.sendNewPost(discussion, post, target);
+                NoReplyDiscussionPanel.this.sendNewPost(discussion, post, target);
             }
         });
     }

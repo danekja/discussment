@@ -41,16 +41,18 @@ public class PostListPanel extends Panel {
     private PostReputationService postReputationService;
     private ConfigurationService configurationService;
 
+    private String replyModalContainerId;
+
     /**
      * Constructor for creating a instance of the panel contains the posts
-     *
-     * @param id id of the element into which the panel is inserted
+     *  @param id id of the element into which the panel is inserted
      * @param postListModel model for getting the posts
      * @param postModel model for setting the selected post
      * @param postService instance of the post service
      * @param userService instance of the user service
      * @param postReputationService instance of the post reputation service
      * @param configurationService instance of the configuration service
+     * @param replyModalContainerId Id (html not markup) of the modal container for the reply modal window.
      */
     public PostListPanel(String id,
                          IModel<List<Post>> postListModel,
@@ -58,7 +60,7 @@ public class PostListPanel extends Panel {
                          PostService postService,
                          DiscussionUserService userService,
                          PostReputationService postReputationService,
-                         ConfigurationService configurationService) {
+                         ConfigurationService configurationService, String replyModalContainerId) {
         super(id);
 
         this.postModel = postModel;
@@ -68,8 +70,8 @@ public class PostListPanel extends Panel {
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
+        this.replyModalContainerId = replyModalContainerId;
     }
-
 
     @Override
     protected void onInitialize() {
@@ -137,7 +139,7 @@ public class PostListPanel extends Panel {
             public void onClick(AjaxRequestTarget target) {
                 postModel.setObject(pm.getObject());
 
-                target.appendJavaScript("$('#replyModal').modal('show');");
+                target.appendJavaScript("$('#"+replyModalContainerId+"').modal('show');");
             }
 
             @Override
