@@ -36,10 +36,10 @@ public class DiscussionPanel extends Panel {
     private IModel<Discussion> discussionModel;
     private IModel<Post> selectedPost;
 
-    private PostService postService;
-    private DiscussionUserService userService;
-    private PostReputationService postReputationService;
-    private ConfigurationService configurationService;
+    private final PostService postService;
+    private final DiscussionUserService userService;
+    private final PostReputationService postReputationService;
+    private final ConfigurationService configurationService;
 
     /**
      * Constructor for creating the panel which contains the discussion.
@@ -68,6 +68,10 @@ public class DiscussionPanel extends Panel {
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
+    }
+
+    public String getReplyModalContainerId() {
+        return "replyModal";
     }
 
     /**
@@ -120,7 +124,7 @@ public class DiscussionPanel extends Panel {
                 DiscussionPanel.this.replyToPost(parentPost, reply, target);
             }
         });
-        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, ""));
+        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, getReplyModalContainerId()));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override

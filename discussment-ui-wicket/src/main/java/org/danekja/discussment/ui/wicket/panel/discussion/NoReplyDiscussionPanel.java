@@ -31,12 +31,10 @@ public class NoReplyDiscussionPanel extends Panel {
     private IModel<Discussion> discussionModel;
     private IModel<Post> selectedPost;
 
-    private PostService postService;
-    private DiscussionUserService userService;
-    private PostReputationService postReputationService;
-    private ConfigurationService configurationService;
-
-    private String replyModalContainerId;
+    private final PostService postService;
+    private final DiscussionUserService userService;
+    private final PostReputationService postReputationService;
+    private final ConfigurationService configurationService;
 
     /**
      * Constructor for creating the panel which contains the discussion.
@@ -47,7 +45,6 @@ public class NoReplyDiscussionPanel extends Panel {
      * @param postService instance of the post service
      * @param postReputationService instance of the post reputation service
      * @param configurationService instance of the configuration service
-     * @param replyModalContainerId HTML Id of a modal container used for replies.
      */
     public NoReplyDiscussionPanel(String id,
                                   IModel<Discussion> discussionModel,
@@ -55,7 +52,7 @@ public class NoReplyDiscussionPanel extends Panel {
                                   PostService postService,
                                   DiscussionUserService userService,
                                   PostReputationService postReputationService,
-                                  ConfigurationService configurationService, String replyModalContainerId) {
+                                  ConfigurationService configurationService) {
         super(id);
         this.discussionModel = discussionModel;
         this.selectedPost = selectedPost;
@@ -63,9 +60,11 @@ public class NoReplyDiscussionPanel extends Panel {
         this.userService = userService;
         this.postReputationService = postReputationService;
         this.configurationService = configurationService;
-        this.replyModalContainerId = replyModalContainerId;
     }
 
+    public String getReplyModalContainerId() {
+        return "replyModal";
+    }
 
     /**
      * Sends posts to new discussion using postService and refreshes the page.
@@ -90,7 +89,7 @@ public class NoReplyDiscussionPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, replyModalContainerId));
+        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, getReplyModalContainerId()));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override
