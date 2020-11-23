@@ -63,7 +63,6 @@
         <commons-lang.version>2.6</commons-lang.version>
         <jackson.version>2.10.3</jackson.version>
         <javax-validation-api.version>2.0.1.Final</javax-validation-api.version>
-        <spring.version>5.2.4.RELEASE</spring.version>
 
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <springmvc-raml-plugin.version>2.0.5</springmvc-raml-plugin.version>
@@ -98,13 +97,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
