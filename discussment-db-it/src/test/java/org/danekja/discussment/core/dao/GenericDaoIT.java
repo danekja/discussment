@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:applicationContext-test.xml")
+@RunWithMysqlContainer
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 abstract class GenericDaoIT<PK extends Serializable, T extends BaseEntity<PK>> {
 
