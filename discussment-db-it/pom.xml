@@ -5,7 +5,7 @@
     <parent>
         <artifactId>discussment</artifactId>
         <groupId>org.danekja.discussment</groupId>
-        <version>0.9.3-SNAPSHOT</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,8 +15,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <core.version>0.9.3-SNAPSHOT</core.version>
-        <dao.version>0.9.3-SNAPSHOT</dao.version>
+        <core.version>0.10.4-SNAPSHOT</core.version>
+        <dao.version>0.10.4-SNAPSHOT</dao.version>
 
         <spring.version>5.0.6.RELEASE</spring.version>
         <testcontainers.version>1.15.0</testcontainers.version>
