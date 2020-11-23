@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        kubernetes {
-            cloud 'openshift'
-            label 'maven'
-        }
+        label 'jenkins-docker-agent'
     }
     environment {
         MAVEN_OPTS='-Dfile.encoding=UTF-8'
@@ -18,12 +15,6 @@ pipeline {
         stage('build') {
             steps {
                 sh '/bin/bash -c "mvn clean install"'
-            }
-        }
-
-        stage('IT Preparation') {
-            steps {
-                openshiftScale apiURL: '', authToken: '', depCfg: 'mariadb', namespace: 'yosoinfra', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'true', waitTime: ''
             }
         }
 
@@ -52,11 +43,6 @@ pipeline {
                     sh '/bin/bash -c "mvn clean install -P hibernate5"'
                 }
             }
-        }
-    }
-    post {
-        always {
-            openshiftScale apiURL: '', authToken: '', depCfg: 'mariadb', namespace: 'yosoinfra', replicaCount: '0', verbose: 'false', verifyReplicaCount: 'true', waitTime: ''
         }
     }
 }
