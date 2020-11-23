@@ -70,7 +70,6 @@
         <skipTests>false</skipTests>
 
         <!-- other -->
-        <prj.classifier />
         <jdk.source>1.8</jdk.source>
         <jdk.target>1.8</jdk.target>
 
@@ -209,9 +208,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.6</version>
-                    <configuration>
-                        <classifier>${prj.classifier}</classifier>
-                    </configuration>
                 </plugin>
 
                 <plugin>
@@ -329,15 +325,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-
-        <profile>
-            <id>build-jdk7</id>
-            <properties>
-                <prj.classifier>jdk7</prj.classifier>
-                <jdk.source>1.7</jdk.source>
-                <jdk.target>1.7</jdk.target>
-            </properties>
         </profile>
     </profiles>
 

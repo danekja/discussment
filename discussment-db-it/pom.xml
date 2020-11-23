@@ -27,7 +27,6 @@
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-core</artifactId>
             <version>${core.version}</version>
-            <classifier>${prj.classifier}</classifier>
             <scope>test</scope>
         </dependency>
 
@@ -170,7 +169,6 @@
                     <groupId>org.danekja.discussment.db</groupId>
                     <artifactId>discussment-db-jpa</artifactId>
                     <version>${dao.version}</version>
-                    <classifier>${prj.classifier}</classifier>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
@@ -198,7 +196,6 @@
                     <groupId>org.danekja.discussment.db</groupId>
                     <artifactId>discussment-db-hibernate3</artifactId>
                     <version>${dao.version}</version>
-                    <classifier>${prj.classifier}</classifier>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
@@ -231,7 +228,6 @@
                     <groupId>org.danekja.discussment.db</groupId>
                     <artifactId>discussment-db-hibernate5</artifactId>
                     <version>${dao.version}</version>
-                    <classifier>${prj.classifier}</classifier>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
