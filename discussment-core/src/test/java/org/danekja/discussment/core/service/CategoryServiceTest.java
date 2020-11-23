@@ -8,25 +8,25 @@ import org.danekja.discussment.core.dao.CategoryDao;
 import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.service.imp.DefaultCategoryService;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
 
 
@@ -43,21 +43,19 @@ public class CategoryServiceTest {
 
     private CategoryService categoryService;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobally() {
         testUser = new User("john.doe", "John Doe");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws DiscussionUserNotFoundException {
-        MockitoAnnotations.initMocks(CategoryServiceTest.class);
-
-        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
-        when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
-        when(accessControlService.canAddCategory()).then(invocationOnMock -> true);
-        when(accessControlService.canEditCategory(any(Category.class))).then(invocationOnMock -> true);
-        when(accessControlService.canRemoveCategory(any(Category.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewCategories()).then(invocationOnMock -> true);
+        lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
+        lenient().when(discussionUserService.getUserById(anyString())).thenReturn(testUser);
+        lenient().when(accessControlService.canAddCategory()).thenReturn(true);
+        lenient().when(accessControlService.canEditCategory(any(Category.class))).thenReturn(true);
+        lenient().when(accessControlService.canRemoveCategory(any(Category.class))).thenReturn(true);
+        lenient().when(accessControlService.canViewCategories()).thenReturn(true);
 
         categoryService = new DefaultCategoryService(categoryDao, accessControlService, discussionUserService);
     }
@@ -66,11 +64,11 @@ public class CategoryServiceTest {
     public void testCreateCategory() throws AccessDeniedException {
         // prepare data
         Category category = new Category(-87L, "Test category");
-        when(categoryDao.save(any(Category.class))).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(categoryDao.save(any(Category.class))).then(invocationOnMock -> invocationOnMock.getArgument(0));
 
         Category c = categoryService.createCategory(category);
-        assertNotNull("Category is null!", c);
-        assertEquals("Category has wrong id!", c.getId().longValue(), category.getId().longValue());
+        assertNotNull(c, "Category is null!");
+        assertEquals(c.getId().longValue(), category.getId().longValue(), "Category has wrong id!");
     }
 
     @Test
@@ -79,8 +77,8 @@ public class CategoryServiceTest {
         when(categoryDao.getById(any(Long.class))).then(invocationOnMock -> category);
 
         Category c = categoryService.getCategoryById(-87L);
-        assertNotNull("Null category returned!" , c);
-        assertEquals("Wrong category returned!", category, c);
+        assertNotNull(c, "Null category returned!");
+        assertEquals(category, c, "Wrong category returned!");
     }
 
     @Test
@@ -89,9 +87,9 @@ public class CategoryServiceTest {
         when(categoryDao.getCategories()).then(invocationOnMock -> Arrays.asList(category));
 
         List<Category> categories = categoryService.getCategories();
-        assertNotNull("Null returned!", categories);
-        assertEquals("Wrong number of categories returned!", 1, categories.size());
-        assertEquals("Wrong category returned!", category, categories.get(0));
+        assertNotNull(categories, "Null returned!");
+        assertEquals(1, categories.size(), "Wrong number of categories returned!");
+        assertEquals(category, categories.get(0), "Wrong category returned!");
     }
 
     @Test
@@ -100,7 +98,7 @@ public class CategoryServiceTest {
 
         // mock get, save and remove methods
         when(categoryDao.getById(any(Long.class))).then(invocationOnMock -> {
-            Long id = (Long) invocationOnMock.getArguments()[0];
+            Long id = (Long) invocationOnMock.getArgument(0);
             for(Category c : categoryRepository) {
                 if(c.getId().equals(id)) {
                     return c;
@@ -110,12 +108,12 @@ public class CategoryServiceTest {
             return null;
         });
         when(categoryDao.save(any(Category.class))).then(invocationOnMock -> {
-            Category category = (Category) invocationOnMock.getArguments()[0];
+            Category category = (Category) invocationOnMock.getArgument(0);
             categoryRepository.add(category);
             return category;
         });
         doAnswer(invocationOnMock -> {
-            Category toBeRemoved = (Category) invocationOnMock.getArguments()[0];
+            Category toBeRemoved = (Category) invocationOnMock.getArgument(0);
             for(Category c : categoryRepository) {
                 if(c.getId().equals(toBeRemoved.getId())) {
                     categoryRepository.remove(c);
@@ -132,8 +130,8 @@ public class CategoryServiceTest {
 
         // test category removing
         Category toBeRemoved = categoryService.getCategoryById(category.getId());
-        assertNotNull("Category to be removed not found!", toBeRemoved);
+        assertNotNull(toBeRemoved, "Category to be removed not found!");
         categoryService.removeCategory(toBeRemoved);
-        assertNull("Cateogry not removed!", categoryService.getCategoryById(toBeRemoved.getId()));
+        assertNull(categoryService.getCategoryById(toBeRemoved.getId()), "Category not removed!");
     }
 }

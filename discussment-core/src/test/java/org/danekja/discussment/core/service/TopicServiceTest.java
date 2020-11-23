@@ -9,27 +9,27 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.service.imp.DefaultTopicService;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-
+@ExtendWith(MockitoExtension.class)
 public class TopicServiceTest {
 
     private static User testUser;
@@ -48,33 +48,31 @@ public class TopicServiceTest {
 
     private TopicService topicService;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobal() {
         testUser = new User("john.doe", "John Doe");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws DiscussionUserNotFoundException {
-        MockitoAnnotations.initMocks(TopicServiceTest.class);
-
-        when(accessControlService.canAddTopic(any(Category.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewTopics(any(Category.class))).then(invocationOnMock -> true);
-        when(accessControlService.canRemoveTopic(any(Topic.class))).then(invocationOnMock -> true);
-        when(discussionUserService.getUserById(any(String.class))).then(invocationOnMock -> testUser);
-        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
+        lenient().when(accessControlService.canAddTopic(any(Category.class))).thenReturn(true);
+        lenient().when(accessControlService.canViewTopics(nullable(Category.class))).thenReturn(true);
+        lenient().when(accessControlService.canRemoveTopic(any(Topic.class))).thenReturn(true);
+        lenient().when(discussionUserService.getUserById(any(String.class))).thenReturn(testUser);
+        lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
 
         topicService = new DefaultTopicService(topicDao, categoryService, accessControlService, discussionUserService);
     }
 
     @Test
     public void testCreateTopic() throws AccessDeniedException {
-        when(topicDao.save(any(Topic.class))).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(topicDao.save(any(Topic.class))).then(invocationOnMock -> invocationOnMock.getArgument(0));
 
         Topic t = new Topic(98L, "Test topic", "Description");
         t = topicService.createTopic(new Category(), t);
 
-        assertNotNull("Null topic returned!", t);
-        assertNotNull("Topic has null category!", t.getCategory());
+        assertNotNull(t, "Null topic returned!");
+        assertNotNull(t.getCategory(), "Topic has null category!");
     }
 
     @Test
@@ -82,8 +80,8 @@ public class TopicServiceTest {
         when(topicDao.getById(55L)).then(invocationOnMock -> new Topic(55L, "Mock topic", "Mock description"));
         when(topicDao.getById(not(eq(55L)))).then(invocationOnMock -> null);
 
-        assertNotNull("Null returned on existing topic!", topicService.getTopicById(55L));
-        assertNull("Topic shouldn't exist!", topicService.getTopicById(-5798L));
+        assertNotNull(topicService.getTopicById(55L), "Null returned on existing topic!");
+        assertNull(topicService.getTopicById(-5798L), "Topic shouldn't exist!");
     }
 
     @Test
@@ -93,8 +91,8 @@ public class TopicServiceTest {
         when(topicDao.getTopicsByCategory(c1)).then(invocationOnMock -> Arrays.asList(new Topic(87L, "test topic", "desc")));
         when(topicDao.getTopicsByCategory(c2)).then(invocationOnMock -> new ArrayList<>());
 
-        assertEquals("Wrong number of topics returned for c1!", 1, topicService.getTopicsByCategory(c1).size());
-        assertEquals("Wrong number of topics returned for c2!", 0, topicService.getTopicsByCategory(c2).size());
+        assertEquals(1, topicService.getTopicsByCategory(c1).size(), "Wrong number of topics returned for c1!");
+        assertEquals(0, topicService.getTopicsByCategory(c2).size(), "Wrong number of topics returned for c2!");
     }
 
     @Test
@@ -103,7 +101,7 @@ public class TopicServiceTest {
 
         // mock get, save and remove methods
         when(topicDao.getById(any(Long.class))).then(invocationOnMock -> {
-            Long id = (Long) invocationOnMock.getArguments()[0];
+            Long id = (Long) invocationOnMock.getArgument(0);
             for(Topic t : topicRepository) {
                 if(t.getId().equals(id)) {
                     return t;
@@ -113,12 +111,12 @@ public class TopicServiceTest {
             return null;
         });
         when(topicDao.save(any(Topic.class))).then(invocationOnMock -> {
-            Topic topic = (Topic) invocationOnMock.getArguments()[0];
+            Topic topic = (Topic) invocationOnMock.getArgument(0);
             topicRepository.add(topic);
             return topic;
         });
         doAnswer(invocationOnMock -> {
-            Topic toBeRemoved = (Topic) invocationOnMock.getArguments()[0];
+            Topic toBeRemoved = (Topic) invocationOnMock.getArgument(0);
             for(Topic t : topicRepository) {
                 if(t.getId().equals(toBeRemoved.getId())) {
                     topicRepository.remove(t);
@@ -135,9 +133,9 @@ public class TopicServiceTest {
 
         // test discussion removing
         Topic toBeRemoved = topicService.getTopicById(topic.getId());
-        assertNotNull("Topic to be removed not found!", toBeRemoved);
+        assertNotNull(toBeRemoved, "Topic to be removed not found!");
         topicService.removeTopic(toBeRemoved);
-        assertNull("Topic not removed!", topicService.getTopicById(toBeRemoved.getId()));
+        assertNull(topicService.getTopicById(toBeRemoved.getId()), "Topic not removed!");
     }
 
 }

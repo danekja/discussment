@@ -9,28 +9,32 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.service.imp.DefaultDiscussionService;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
  * This test case is using services with accesscontrol component.
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DiscussionServiceTest {
 
 
@@ -51,36 +55,33 @@ public class DiscussionServiceTest {
     private DiscussionService discussionService;
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobal() {
         testUser = new User("john.doe", "John Doe");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws DiscussionUserNotFoundException {
-        MockitoAnnotations.initMocks(DiscussionServiceTest.class);
-
-        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
-        when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
-        when(accessControlService.canRemoveDiscussion(any(Discussion.class))).then(invocationOnMock -> true);
-        when(accessControlService.canAddDiscussion(any(Topic.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewDiscussions(any(Topic.class))).then(invocationOnMock -> true);
-        when(accessControlService.canEditDiscussion(any(Discussion.class))).then(invocationOnMock -> true);
-        when(accessControlService.canViewPosts(any(Discussion.class))).then(invocationOnMock -> true);
-
+        lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
+        lenient().when(discussionUserService.getUserById(anyString())).thenReturn(testUser);
+        lenient().when(accessControlService.canRemoveDiscussion(any(Discussion.class))).thenReturn(true);
+        lenient().when(accessControlService.canAddDiscussion(any(Topic.class))).thenReturn(true);
+        lenient().when(accessControlService.canViewDiscussions(nullable(Topic.class))).thenReturn(true);
+        lenient().when(accessControlService.canEditDiscussion(any(Discussion.class))).thenReturn(true);
+        lenient().when(accessControlService.canViewPosts(any(Discussion.class))).thenReturn(true);
 
         discussionService = new DefaultDiscussionService(discussionDao, topicService, accessControlService, discussionUserService);
     }
 
     @Test
-    public void testCreateDiscussion() throws AccessDeniedException, DiscussionUserNotFoundException {
+    public void testCreateDiscussion() throws AccessDeniedException {
         Discussion discussion = new Discussion(55L,"Some discussion");
-        when(discussionDao.save(any(Discussion.class))).then(invocationOnMock -> (Discussion)invocationOnMock.getArguments()[0]);
+        when(discussionDao.save(any(Discussion.class))).then(invocationOnMock -> invocationOnMock.getArgument(0));
         discussion = discussionService.createDiscussion(new Topic(), discussion);
 
-        assertNotNull("Discussion is null!", discussion);
-        assertNotNull("Id is null!", discussion.getId());
-        assertNotNull("Discussion has null topic!", discussion.getTopic());
+        assertNotNull(discussion, "Discussion is null!");
+        assertNotNull(discussion.getId(), "Id is null!");
+        assertNotNull(discussion.getTopic(), "Discussion has null topic!");
     }
 
     @Test
@@ -88,23 +89,23 @@ public class DiscussionServiceTest {
         final Discussion discussion1 = new Discussion(-10L, "discussion1");
         final Discussion discussion2 = new Discussion(-11L, "discussion2");
 
-        when(discussionDao.getDiscussionsByTopic(any(Topic.class))).then(invocationOnMock -> Arrays.asList(new Discussion[] {discussion1, discussion2}));
+        when(discussionDao.getDiscussionsByTopic(any(Topic.class))).thenReturn(Arrays.asList(discussion1, discussion2));
 
         List<Discussion> discussions = discussionService.getDiscussionsByTopic(new Topic());
-        assertNotNull("Null list returned!", discussions);
-        assertEquals("Wrong number of discussions returned!", 2, discussions.size());
-        assertTrue("Discussion 1 not included!", discussions.contains(discussion1));
-        assertTrue("Discussion 2 not included!", discussions.contains(discussion2));
+        assertNotNull(discussions, "Null list returned!");
+        assertEquals(2, discussions.size(), "Wrong number of discussions returned!");
+        assertTrue(discussions.contains(discussion1), "Discussion 1 not included!");
+        assertTrue(discussions.contains(discussion2), "Discussion 2 not included!");
     }
 
     @Test
     public void testGetDiscussionById() throws AccessDeniedException {
         final Discussion discussion1 = new Discussion(-10L, "discussion1");
 
-        when(discussionDao.getById(-10L)).then(invocationOnMock -> discussion1);
+        when(discussionDao.getById(-10L)).thenReturn(discussion1);
 
-        assertEquals("Wrong discussion returned!", discussion1, discussionService.getDiscussionById(-10L));
-        assertNull("Discussion with id -12345 shouldn't exist!", discussionService.getDiscussionById(-12345L));
+        assertEquals(discussion1, discussionService.getDiscussionById(-10L), "Wrong discussion returned!");
+        assertNull(discussionService.getDiscussionById(-12345L), "Discussion with id -12345 shouldn't exist!");
     }
 
     @Test
@@ -113,7 +114,7 @@ public class DiscussionServiceTest {
 
         // mock get, save and remove methods
         when(discussionDao.getById(any(Long.class))).then(invocationOnMock -> {
-            Long id = (Long) invocationOnMock.getArguments()[0];
+            Long id = (Long) invocationOnMock.getArgument(0);
             for(Discussion d : discussionRepository) {
                 if(d.getId().equals(id)) {
                     return d;
@@ -123,12 +124,12 @@ public class DiscussionServiceTest {
             return null;
         });
         when(discussionDao.save(any(Discussion.class))).then(invocationOnMock -> {
-            Discussion discussion = (Discussion) invocationOnMock.getArguments()[0];
+            Discussion discussion = (Discussion) invocationOnMock.getArgument(0);
             discussionRepository.add(discussion);
             return discussion;
         });
         doAnswer(invocationOnMock -> {
-            Discussion toBeRemoved = (Discussion) invocationOnMock.getArguments()[0];
+            Discussion toBeRemoved = (Discussion) invocationOnMock.getArgument(0);
             for(Discussion d : discussionRepository) {
                 if(d.getId().equals(toBeRemoved.getId())) {
                     discussionRepository.remove(d);
@@ -145,8 +146,8 @@ public class DiscussionServiceTest {
 
         // test discussion removing
         Discussion toBeRemoved = discussionService.getDiscussionById(discussion.getId());
-        assertNotNull("Discussion to be removed not found!", toBeRemoved);
+        assertNotNull(toBeRemoved, "Discussion to be removed not found!");
         discussionService.removeDiscussion(toBeRemoved);
-        assertNull("Discussion not removed!", discussionService.getDiscussionById(toBeRemoved.getId()));
+        assertNull(discussionService.getDiscussionById(toBeRemoved.getId()), "Discussion not removed!");
     }
 }

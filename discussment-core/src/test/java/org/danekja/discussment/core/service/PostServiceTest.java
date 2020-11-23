@@ -15,28 +15,30 @@ import org.danekja.discussment.core.exception.MaxReplyLevelExceeded;
 import org.danekja.discussment.core.exception.MessageLengthExceeded;
 import org.danekja.discussment.core.mock.User;
 import org.danekja.discussment.core.service.imp.DefaultPostService;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.doAnswer;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 
 /**
  * This test case is using services with accesscontrol component.
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
 
     private static User testUser;
@@ -60,36 +62,32 @@ public class PostServiceTest {
 
     private List<Post> postRepository;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobal() {
         testUser = new User("john.doe", "John Doe");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws DiscussionUserNotFoundException {
-        MockitoAnnotations.initMocks(PostServiceTest.class);
-
         postRepository = new ArrayList<>();
 
-        when(discussionUserService.getCurrentlyLoggedUser()).then(invocationOnMock -> testUser);
-        when(discussionUserService.getUserById(anyString())).then(invocationOnMock -> testUser);
-        when(postDao.save(any(Post.class))).then(new SavePostMock());
-        doAnswer(new RemovePostMock()).when(postDao).remove(any(Post.class));
-        when(postDao.getById(anyLong())).then((invocationOnMock) -> {
-            Long id = (Long) invocationOnMock.getArguments()[0];
-            if(id == null) {
-               return null;
-           } else {
-               for(Post p : postRepository) {
-                   if (p.getId().equals(id)) {
-                       return p;
-                   }
-               }
-               return null;
-           }
+        lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
+        lenient().when(discussionUserService.getUserById(anyString())).thenReturn(testUser);
+        lenient().when(postDao.save(any(Post.class))).then(new SavePostMock());
+        lenient().doAnswer(new RemovePostMock()).when(postDao).remove(any(Post.class));
+        lenient().when(postDao.getById(anyLong())).then((invocationOnMock) -> {
+            Long id = invocationOnMock.getArgument(0);
+            if (id != null) {
+                for (Post p : postRepository) {
+                    if (p.getId().equals(id)) {
+                        return p;
+                    }
+                }
+            }
+            return null;
         });
-        when(postDao.getNumbersOfPosts(anyListOf(Long.class))).then((invocationOnMock -> {
-            List<Long> discussionIds = (List<Long>) invocationOnMock.getArguments()[0];
+        lenient().when(postDao.getNumbersOfPosts(anyList())).then((invocationOnMock -> {
+            List<Long> discussionIds = invocationOnMock.getArgument(0);
 
             Map<Long, Long> numbersOfPosts = new HashMap<>();
             for (Post p : postRepository) {
@@ -110,8 +108,8 @@ public class PostServiceTest {
 
             return resultMap;
         }));
-        when(configurationService.maxReplyLevel()).thenReturn(ConfigurationService.UNLIMITED_REPLY_LEVEL);
-        when(configurationService.messageLengthLimit()).thenReturn(ConfigurationService.DEFAULT_MESSAGE_LIMIT);
+        lenient().when(configurationService.maxReplyLevel()).thenReturn(ConfigurationService.UNLIMITED_REPLY_LEVEL);
+        lenient().when(configurationService.messageLengthLimit()).thenReturn(ConfigurationService.DEFAULT_MESSAGE_LIMIT);
 
         AccessControlService accessControlService = new PermissionService(permissionDao, discussionUserService) {
             @Override
@@ -149,8 +147,8 @@ public class PostServiceTest {
         reply = postService.sendReply(reply, rootPost);
 
         postService.removePost(rootPost);
-        assertNull("Root post should be null!", postService.getPostById(rootPost.getId()));
-        assertNull("Reply should be null!", postService.getPostById(reply.getId()));
+        assertNull(postService.getPostById(rootPost.getId()), "Root post should be null!");
+        assertNull(postService.getPostById(reply.getId()), "Reply should be null!");
     }
 
     /**
@@ -174,10 +172,10 @@ public class PostServiceTest {
         reply3 = postService.sendReply(reply3, root);
 
         postService.removePost(reply1);
-        assertNull("Reply 1 should be null!", postService.getPostById(reply1.getId()));
-        assertNull("Reply 2 should be null!", postService.getPostById(reply2.getId()));
-        assertNotNull("Reply 3 shouldn't be null!", postService.getPostById(reply3.getId()));
-        assertNotNull("Root shouldn't be null!", postService.getPostById(root.getId()));
+        assertNull(postService.getPostById(reply1.getId()), "Reply 1 should be null!");
+        assertNull(postService.getPostById(reply2.getId()), "Reply 2 should be null!");
+        assertNotNull(postService.getPostById(reply3.getId()), "Reply 3 shouldn't be null!");
+        assertNotNull(postService.getPostById(root.getId()), "Root shouldn't be null!");
     }
 
     @Test
@@ -185,17 +183,17 @@ public class PostServiceTest {
         Post post = new Post(testUser, "root");
         post = postService.sendPost(new Discussion(), post);
 
-        assertNotNull("Post shouldn't be null!", postService.getPostById(post.getId()));
-        assertNotNull("Author of the post shouldn't be null!", postService.getPostAuthor(post));
-        assertEquals("Wrong name of the author of the post!", testUser.getDisplayName(), postService.getPostAuthor(post).getDisplayName());
+        assertNotNull(postService.getPostById(post.getId()), "Post shouldn't be null!");
+        assertNotNull(postService.getPostAuthor(post), "Author of the post shouldn't be null!");
+        assertEquals(testUser.getDisplayName(), postService.getPostAuthor(post).getDisplayName(), "Wrong name of the author of the post!");
     }
 
-    @Test(expected = MessageLengthExceeded.class)
-    public void testSendPost_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded {
+    @Test
+    public void testSendPost_messageLengthExceeded() {
         when(configurationService.messageLengthLimit()).thenReturn(1);
 
         Post post = new Post(testUser, "text");
-        postService.sendPost(new Discussion(), post);
+        assertThrows(MessageLengthExceeded.class, () -> postService.sendPost(new Discussion(), post));
     }
 
     @Test
@@ -206,32 +204,30 @@ public class PostServiceTest {
         Post reply = new Post(testUser, "reply to original post");
         reply = postService.sendReply(reply, originalPost);
 
-        assertNotNull("Reply shouldn't be null!", postService.getPostById(reply.getId()));
-        assertNotNull("Author of the reply shouldn't be null!", postService.getPostAuthor(reply));
-        assertEquals("Wrong name of the author of the reply!", testUser.getDisplayName(), postService.getPostAuthor(reply).getDisplayName());
+        assertNotNull(postService.getPostById(reply.getId()), "Reply shouldn't be null!");
+        assertNotNull(postService.getPostAuthor(reply), "Author of the reply shouldn't be null!");
+        assertEquals(testUser.getDisplayName(), postService.getPostAuthor(reply).getDisplayName(), "Wrong name of the author of the reply!");
     }
 
-    @Test(expected = MaxReplyLevelExceeded.class)
-    public void testSendReply_maxReplyLevelExceeded() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
+    @Test
+    public void testSendReply_maxReplyLevelExceeded() throws AccessDeniedException, MessageLengthExceeded {
         when(configurationService.maxReplyLevel()).thenReturn(0);
 
-        Post originalPost = new Post(testUser, "original post");
-        originalPost = postService.sendPost(new Discussion(), originalPost);
+        Post originalPost = postService.sendPost(new Discussion(), new Post(testUser, "original post"));
 
         Post reply = new Post(testUser, "reply to original post");
-        postService.sendReply(reply, originalPost);
+        assertThrows(MaxReplyLevelExceeded.class, () -> postService.sendReply(reply, originalPost));
     }
 
-    @Test(expected = MessageLengthExceeded.class)
-    public void testSendReply_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded, MaxReplyLevelExceeded {
+    @Test
+    public void testSendReply_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded {
         when(configurationService.maxReplyLevel()).thenReturn(1);
         when(configurationService.messageLengthLimit()).thenReturn(20);
 
-        Post originalPost = new Post(testUser, "Original post");
-        originalPost = postService.sendPost(new Discussion(), originalPost);
+        Post originalPost = postService.sendPost(new Discussion(), new Post(testUser, "Original post"));
 
         Post reply = new Post(testUser, "This reply is very very long and should fail");
-        postService.sendReply(reply, originalPost);
+        assertThrows(MessageLengthExceeded.class, () -> postService.sendReply(reply, originalPost));
     }
 
     @Test
@@ -242,8 +238,8 @@ public class PostServiceTest {
         postService.disablePost(post);
 
         Post disabledPost = postService.getPostById(post.getId());
-        assertNotNull("Post is null after disabling!", disabledPost);
-        assertTrue("Post is not disabled!", disabledPost.isDisabled());
+        assertNotNull(disabledPost, "Post is null after disabling!");
+        assertTrue(disabledPost.isDisabled(), "Post is not disabled!");
     }
 
     @Test
@@ -254,8 +250,8 @@ public class PostServiceTest {
 
         postService.enablePost(post);
         Post enabledPost = postService.getPostById(post.getId());
-        assertNotNull("Post is null after enabling!", enabledPost);
-        assertTrue("Post is not enabled!", !enabledPost.isDisabled());
+        assertNotNull(enabledPost, "Post is null after enabling!");
+        assertFalse(enabledPost.isDisabled(), "Post is not enabled!");
     }
 
     @Test
@@ -289,7 +285,7 @@ public class PostServiceTest {
     private class RemovePostMock implements Answer<Void> {
         @Override
         public Void answer(InvocationOnMock invocationOnMock) {
-            Post post = (Post) invocationOnMock.getArguments()[0];
+            Post post = (Post) invocationOnMock.getArgument(0);
             Iterator<Post> pIterator = postRepository.iterator();
             while(pIterator.hasNext()) {
                 Post p = pIterator.next();
@@ -308,7 +304,7 @@ public class PostServiceTest {
     private class SavePostMock implements Answer<Post> {
         @Override
         public Post answer(InvocationOnMock invocationOnMock) {
-            Post post = (Post) invocationOnMock.getArguments()[0];
+            Post post = (Post) invocationOnMock.getArgument(0);
 
             if (post.getId() != null) {
                 return mergePost(post);

@@ -10,25 +10,25 @@ import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 // TODO: test global permissions as well
 public class AccessControlServiceTest {
 
@@ -50,29 +50,28 @@ public class AccessControlServiceTest {
     private Discussion discussion;
     private Post post;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobal() throws Exception {
         testUser = new User("john.doe", "John Doe");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(AccessControlServiceTest.class);
         pms = new PermissionService(permissionDao, userService);
         accessControlService = (AccessControlService) pms;
         testPermissions.clear();
 
         // mock
-        when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
-        when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
-            AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
+        lenient().when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
+        lenient().when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
+            AbstractPermission newPerm = invocationOnMock.getArgument(0, AbstractPermission.class);
             testPermissions.add(newPerm);
             return newPerm;
         });
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> testPermissions);
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong())).then(invocationOnMock -> testPermissions);
-        when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong())).then(invocationOnMock -> testPermissions);
-        when(permissionDao.findForUser(any(IDiscussionUser.class))).then(invocationOnMock -> testPermissions);
+        lenient().when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong(), anyLong())).then(invocationOnMock -> testPermissions);
+        lenient().when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong(), anyLong())).then(invocationOnMock -> testPermissions);
+        lenient().when(permissionDao.findForUser(any(IDiscussionUser.class), anyLong())).then(invocationOnMock -> testPermissions);
+        lenient().when(permissionDao.findForUser(any(IDiscussionUser.class))).then(invocationOnMock -> testPermissions);
 
         // initialize data
         category = new Category(-10L, "test category");
@@ -100,14 +99,14 @@ public class AccessControlServiceTest {
         pms.configurePostPermissions(testUser, discussion, data);
 
         // test access control
-        assertTrue("Test user should be able to view posts in discussion!",accessControlService.canViewPosts(discussion));
-        assertTrue("Test user should be able to add posts in discussion!", accessControlService.canAddPost(discussion));
-        assertFalse("Test user should not be able to edit posts in discussion!", accessControlService.canEditPost(post));
-        assertFalse("Test user should not be able to delete posts from discussion!", accessControlService.canRemovePost(post));
+        assertTrue(accessControlService.canViewPosts(discussion), "Test user should be able to view posts in discussion!");
+        assertTrue(accessControlService.canAddPost(discussion), "Test user should be able to add posts in discussion!");
+        assertFalse(accessControlService.canEditPost(post), "Test user should not be able to edit posts in discussion!");
+        assertFalse(accessControlService.canRemovePost(post), "Test user should not be able to delete posts from discussion!");
 
         // check permissions for user's own post
-        assertTrue("Test user should be able to edit his post!", accessControlService.canEditPost(usersPost));
-        assertTrue("Test user should be able to remove his post!", accessControlService.canRemovePost(usersPost));
+        assertTrue(accessControlService.canEditPost(usersPost), "Test user should be able to edit his post!");
+        assertTrue(accessControlService.canRemovePost(usersPost), "Test user should be able to remove his post!");
     }
 
     /**
@@ -120,10 +119,10 @@ public class AccessControlServiceTest {
         pms.configureDiscussionPermissions(testUser, category, data);
 
         // test access control
-        assertTrue("Test user should be able to view discussion in topic!", accessControlService.canViewDiscussions(topic));
-        assertTrue("Test user should be able to create discussion in topic!", accessControlService.canAddDiscussion(topic));
-        assertFalse("Test user should not be able to edit discussion in topic!", accessControlService.canEditDiscussion(discussion));
-        assertFalse("Test user should not be able to remove discussion from topic!", accessControlService.canRemoveDiscussion(discussion));
+        assertTrue(accessControlService.canViewDiscussions(topic), "Test user should be able to view discussion in topic!");
+        assertTrue(accessControlService.canAddDiscussion(topic), "Test user should be able to create discussion in topic!");
+        assertFalse(accessControlService.canEditDiscussion(discussion), "Test user should not be able to edit discussion in topic!");
+        assertFalse(accessControlService.canRemoveDiscussion(discussion), "Test user should not be able to remove discussion from topic!");
     }
 
     /**
@@ -136,10 +135,10 @@ public class AccessControlServiceTest {
         pms.configureTopicPermissions(testUser, category, data);
 
         // test access control
-        assertTrue("Test user should be able to view topic in category!", accessControlService.canViewTopics(category));
-        assertTrue("Test user should be able to create topics in category!", accessControlService.canAddTopic(category));
-        assertFalse("Test user should not be able to edit topics in category!", accessControlService.canEditTopic(topic));
-        assertFalse("Test user should not be able to remove topics in category!", accessControlService.canRemoveTopic(topic));
+        assertTrue(accessControlService.canViewTopics(category), "Test user should be able to view topic in category!");
+        assertTrue(accessControlService.canAddTopic(category), "Test user should be able to create topics in category!");
+        assertFalse(accessControlService.canEditTopic(topic), "Test user should not be able to edit topics in category!");
+        assertFalse(accessControlService.canRemoveTopic(topic), "Test user should not be able to remove topics in category!");
     }
 
     /**
@@ -152,10 +151,10 @@ public class AccessControlServiceTest {
         pms.configureCategoryPermissions(testUser, data);
 
         // test access control
-        assertTrue("Test user should be able to view categories!", accessControlService.canViewCategories());
-        assertTrue("Test user should be able to create categories!", accessControlService.canAddCategory());
-        assertFalse("Test user should not be able to edit category!", accessControlService.canEditCategory(category));
-        assertFalse("Test user should not be able to remove category!", accessControlService.canRemoveCategory(category));
+        assertTrue(accessControlService.canViewCategories(), "Test user should be able to view categories!");
+        assertTrue(accessControlService.canAddCategory(), "Test user should be able to create categories!");
+        assertFalse(accessControlService.canEditCategory(category), "Test user should not be able to edit category!");
+        assertFalse(accessControlService.canRemoveCategory(category), "Test user should not be able to remove category!");
     }
 
     /**
@@ -189,16 +188,16 @@ public class AccessControlServiceTest {
         });
 
         // test access control in category
-        assertTrue("Test user should be able to view posts in discussion!",accessControlService.canViewPosts(discussion));
-        assertTrue("Test user should be able to add posts in discussion!", accessControlService.canAddPost(discussion));
-        assertFalse("Test user should not be able to edit posts in discussion!", accessControlService.canEditPost(post));
-        assertFalse("Test user should not be able to delete posts from discussion!", accessControlService.canRemovePost(post));
+        assertTrue(accessControlService.canViewPosts(discussion), "Test user should be able to view posts in discussion!");
+        assertTrue(accessControlService.canAddPost(discussion), "Test user should be able to add posts in discussion!");
+        assertFalse(accessControlService.canEditPost(post), "Test user should not be able to edit posts in discussion!");
+        assertFalse(accessControlService.canRemovePost(post), "Test user should not be able to delete posts from discussion!");
 
         // test access in user's discussion
-        assertTrue("Test user should be able to view posts in his discussion!",accessControlService.canViewPosts(usersDiscussion));
-        assertTrue("Test user should be able to add posts in his discussion!", accessControlService.canAddPost(usersDiscussion));
-        assertTrue("Test user should be able to edit post in his discussion!", accessControlService.canEditPost(p));
-        assertTrue("Test user should be able to remove post from his discussion!", accessControlService.canRemovePost(p));
+        assertTrue(accessControlService.canViewPosts(usersDiscussion), "Test user should be able to view posts in his discussion!");
+        assertTrue(accessControlService.canAddPost(usersDiscussion), "Test user should be able to add posts in his discussion!");
+        assertTrue(accessControlService.canEditPost(p), "Test user should be able to edit post in his discussion!");
+        assertTrue(accessControlService.canRemovePost(p), "Test user should be able to remove post from his discussion!");
     }
 
     /**
@@ -232,15 +231,15 @@ public class AccessControlServiceTest {
         });
 
         // test access control in category
-        assertTrue("Test user should be able to view posts in discussion!",accessControlService.canViewPosts(discussion));
-        assertTrue("Test user should be able to add posts in discussion!", accessControlService.canAddPost(discussion));
-        assertTrue("Test user should be able to edit posts in discussion!", accessControlService.canEditPost(post));
-        assertTrue("Test user should be able to delete posts from discussion!", accessControlService.canRemovePost(post));
+        assertTrue(accessControlService.canViewPosts(discussion), "Test user should be able to view posts in discussion!");
+        assertTrue(accessControlService.canAddPost(discussion), "Test user should be able to add posts in discussion!");
+        assertTrue(accessControlService.canEditPost(post), "Test user should be able to edit posts in discussion!");
+        assertTrue(accessControlService.canRemovePost(post), "Test user should be able to delete posts from discussion!");
 
         // test access in user's discussion
-        assertTrue("Test user should be able to view posts in limited discussion!",accessControlService.canViewPosts(limitedDiscussion));
-        assertTrue("Test user should be able to add posts in limited discussion!", accessControlService.canAddPost(limitedDiscussion));
-        assertFalse("Test user should not be able to edit post in limited discussion!", accessControlService.canEditPost(p));
-        assertFalse("Test user should not be able to remove post from limited discussion!", accessControlService.canRemovePost(p));
+        assertTrue(accessControlService.canViewPosts(limitedDiscussion), "Test user should be able to view posts in limited discussion!");
+        assertTrue(accessControlService.canAddPost(limitedDiscussion), "Test user should be able to add posts in limited discussion!");
+        assertFalse(accessControlService.canEditPost(p), "Test user should not be able to edit post in limited discussion!");
+        assertFalse(accessControlService.canRemovePost(p), "Test user should not be able to remove post from limited discussion!");
     }
 }

@@ -7,25 +7,25 @@ import org.danekja.discussment.core.domain.Category;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Topic;
 import org.danekja.discussment.core.mock.User;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.when;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PermissionManagementServiceTest {
 
-    private final Long NULL_ITEM_ID = new Long(0);
+    private final Long NULL_ITEM_ID = 0L;
 
     @Mock
     private PermissionDao permissionDao;
@@ -37,20 +37,19 @@ public class PermissionManagementServiceTest {
     private static User testUser;
     private List<AbstractPermission> testPermissions = new ArrayList<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobal() throws Exception {
         testUser = new User("john.doe", "John Doe");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(PermissionManagementServiceTest.class);
         pms = new PermissionService(permissionDao, userService);
         testPermissions.clear();
 
-        when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
-        when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
-            AbstractPermission newPerm = invocationOnMock.getArgumentAt(0, AbstractPermission.class);
+        lenient().when(userService.getCurrentlyLoggedUser()).thenReturn(testUser);
+        lenient().when(permissionDao.save(any(AbstractPermission.class))).then(invocationOnMock -> {
+            AbstractPermission newPerm = invocationOnMock.getArgument(0, AbstractPermission.class);
             testPermissions.add(newPerm);
             return newPerm;
         });

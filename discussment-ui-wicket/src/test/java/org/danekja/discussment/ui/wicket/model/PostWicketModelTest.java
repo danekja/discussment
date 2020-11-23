@@ -2,11 +2,11 @@ package org.danekja.discussment.ui.wicket.model;
 
 import org.apache.wicket.model.Model;
 import org.danekja.discussment.core.domain.Post;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PostWicketModelTest {
 
@@ -26,10 +26,10 @@ public class PostWicketModelTest {
         long[] expectedOrder = new long[] {1, 2, 3, 4, 5, 7, 6};
 
         List<Post> posts = new PostWicketModel(Model.of(root)).load();
-        assertEquals("Wrong number of posts returned!", expectedOrder.length, posts.size());
+        assertEquals(expectedOrder.length, posts.size(), "Wrong number of posts returned!");
         int cnt = 0;
         for(Post p : posts) {
-            assertEquals("Wrong post id!", expectedOrder[cnt++], p.getId().longValue());
+            assertEquals(expectedOrder[cnt++], p.getId().longValue(), "Wrong post id!");
         }
     }
 }
