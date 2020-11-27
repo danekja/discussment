@@ -6,8 +6,8 @@ import org.danekja.discussment.core.dao.PostDao;
 import org.danekja.discussment.core.dao.UserPostReputationDao;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.UserPostReputation;
+import org.danekja.discussment.core.event.PostReputationChangedEvent;
 import org.danekja.discussment.core.event.UserPostReputationChangedEvent;
-import org.danekja.discussment.core.event.UserPostReputationEvent;
 import org.danekja.discussment.core.service.PostReputationService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -51,8 +51,9 @@ public class DefaultPostReputationService implements PostReputationService, Appl
         if (upr == null) {
             post.getPostReputation().addLike();
             UserPostReputation savedUpr = userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, true));
-            postDao.save(post);
+            Post savedPost = postDao.save(post);
             publishEvent(new UserPostReputationChangedEvent(savedUpr));
+            publishEvent(new PostReputationChangedEvent(savedPost));
         } else if (upr.getLiked()){
             changeVote(user, post);
         }
@@ -65,8 +66,9 @@ public class DefaultPostReputationService implements PostReputationService, Appl
         if (upr == null) {
             post.getPostReputation().addDislike();
             UserPostReputation savedUpr = userPostReputationDao.save(new UserPostReputation(user.getDiscussionUserId(), post, false));
-            postDao.save(post);
+            Post savedPost = postDao.save(post);
             publishEvent(new UserPostReputationChangedEvent(savedUpr));
+            publishEvent(new PostReputationChangedEvent(savedPost));
         } else if(!upr.getLiked()){
             changeVote(user, post);
         }
@@ -86,8 +88,9 @@ public class DefaultPostReputationService implements PostReputationService, Appl
                 upr.changeLiked();
             }
             UserPostReputation savedUpr = userPostReputationDao.save(upr);
-            postDao.save(post);
+            Post savedPost = postDao.save(post);
             publishEvent(new UserPostReputationChangedEvent(savedUpr));
+            publishEvent(new PostReputationChangedEvent(savedPost));
         }
     }
 
@@ -109,7 +112,7 @@ public class DefaultPostReputationService implements PostReputationService, Appl
      * Publishes event if {@link #applicationEventPublisher} is not null.
      * @param event Event to be published.
      */
-    private void publishEvent(UserPostReputationEvent event) {
+    private void publishEvent(Object event) {
         if (applicationEventPublisher != null) {
             applicationEventPublisher.publishEvent(event);
         }
