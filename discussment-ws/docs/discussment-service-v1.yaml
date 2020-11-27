@@ -288,12 +288,18 @@ types: !include discussment-service-v1-types.yaml
           404:
             description: User has not reacted to the post yet.
       post:
-        displayName: createMyReaction
-        description: Adds user's reaction to the post.
+        displayName: saveMyReaction
+        description: Adds user's reaction to the post or changes the existing reaction if there's one.
         body: ReactionDTO
         responses:
+          200:
+            description: Reaction updated successfully.
+            body: ReactionDTO
           201:
             description: Reaction added successfully.
+            headers:
+              Location:
+                example: /v1/posts/1/reactions/my
             body: ReactionDTO
           400:
             description: Invalid request.
@@ -301,21 +307,6 @@ types: !include discussment-service-v1-types.yaml
             description: User is not authenticated.
           403:
             description: User is not authorized to react to the post.
-      put:
-        displayName: changeMyReaction
-        description: Changes user's reaction to the post.
-        responses:
-          200:
-            description: Reaction changed successfully.
-            body: ReactionDTO
-          400:
-            description: Invalid request.
-          401:
-            description: User is not authenticated.
-          403:
-            description: User is not authorized to change own reaction to the post.
-          404:
-            description: User has not reacted to the post yet.
     /replies:
       get:
         displayName: retrieveReplies
