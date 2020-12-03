@@ -57,14 +57,18 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<dependencies>
+	<properties>
+		<core.version>0.10.5-SNAPSHOT</core.version>
 
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
 		<dependency>
 			<groupId>org.danekja.discussment</groupId>
 			<artifactId>discussment-core</artifactId>
-			<version>0.10.4-SNAPSHOT</version>
+			<version>${core.version}</version>
 		</dependency>
-
 
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
@@ -88,10 +92,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<build>
 		<resources>
@@ -117,8 +117,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-                                        <source>1.8</source>
-                                        <target>1.8</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<compilerArgs>
 						<arg>-verbose</arg>
 						<arg>-Xlint:all,-options,-path</arg>
