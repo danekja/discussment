@@ -59,7 +59,7 @@
     </scm>
 
     <properties>
-        <core.version>0.10.4-SNAPSHOT</core.version>
+        <core.version>0.10.5-SNAPSHOT</core.version>
     </properties>
 
     <dependencies>
