@@ -307,6 +307,18 @@ types: !include discussment-service-v1-types.yaml
             description: User is not authenticated.
           403:
             description: User is not authorized to react to the post.
+      delete:
+        displayName: removeMyReaction
+        description: Removes user's reaction to the post.
+        responses:
+          204:
+            description: Reaction removed successfully.
+          401:
+            description: User is not authenticated.
+          403:
+            description: User is not authorized to change own reaction to the post.
+          404:
+            description: User has not reacted to the post yet.
     /replies:
       get:
         displayName: retrieveReplies
