@@ -95,6 +95,21 @@ public class DefaultPostReputationService implements PostReputationService, Appl
     }
 
     @Override
+    public void removeVote(IDiscussionUser user, Post post) {
+        if (userVotedOn(user, post)) {
+            UserPostReputation upr = getVote(user, post);
+            if (upr.getLiked()) {
+                post.getPostReputation().removeLike();
+            } else {
+                post.getPostReputation().removeDislike();
+            }
+            userPostReputationDao.remove(upr);
+            Post savedPost = postDao.save(post);
+            publishEvent(new PostReputationChangedEvent(savedPost));
+        }
+    }
+
+    @Override
     public UserPostReputation getVote(IDiscussionUser user, Post post){
         if (user == null) {
             return null;

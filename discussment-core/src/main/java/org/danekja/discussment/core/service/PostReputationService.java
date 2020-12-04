@@ -53,4 +53,13 @@ public interface PostReputationService {
      * @param post post to change vote
      */
     void changeVote(IDiscussionUser user, Post post);
+
+    /**
+     * Checks if user has voted on the post before.
+     * If he did it then removes his vote.
+     *
+     * @param user user to remove the vote for
+     * @param post post to remove vote
+     */
+    void removeVote(IDiscussionUser user, Post post);
 }
