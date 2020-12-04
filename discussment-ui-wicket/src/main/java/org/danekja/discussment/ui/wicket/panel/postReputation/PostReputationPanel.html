@@ -1,14 +1,11 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
     <div>
-        <wicket:message key="postReputation.likesLabel"/> <span wicket:id="likes" />
+        <a wicket:id="likes">
+            <wicket:message key="postReputation.likesLabel"/> <span wicket:id="numberOfLikes"/>
+        </a>
 
-        <wicket:message key="postReputation.dislikesLabel"/> <span wicket:id="dislikes" />
-
-        <div>
-            <span wicket:id="liked" />
-            <form wicket:id="prform">
-                <span wicket:id="postReputationFormComponent"></span>
-            </form>
-        </div>
+        <a wicket:id="dislikes">
+            <wicket:message key="postReputation.dislikesLabel"/> <span wicket:id="numberOfDislikes"/>
+        </a>
     </div>
 </wicket:panel>

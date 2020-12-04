@@ -120,7 +120,7 @@ public class PostListPanel extends Panel {
 
                 listItem.add(new AttributeModifier("style", "padding-left: " + listItem.getModelObject().getLevel() * 30 + "px"));
 
-                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), postService, postReputationService, userService));
+                listItem.add(new PostReputationPanel("postreputation", listItem.getModel(), postReputationService, userService));
             }
         });
 
