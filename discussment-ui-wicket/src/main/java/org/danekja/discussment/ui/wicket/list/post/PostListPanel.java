@@ -7,7 +7,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -133,11 +133,11 @@ public class PostListPanel extends Panel {
         this.setVisible(!postListModel.getObject().isEmpty());
     }
 
-    private AjaxLink createReplyAjaxLink(final IModel<Post> pm) {
-        return new AjaxLink("reply") {
+    private AbstractLink createReplyAjaxLink(final IModel<Post> pm) {
+        return new AjaxLink<Post>("reply", pm) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                postModel.setObject(pm.getObject());
+                postModel.setObject(getModelObject());
 
                 target.appendJavaScript("$('#"+replyModalContainerId+"').modal('show');");
             }
@@ -145,17 +145,17 @@ public class PostListPanel extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                this.setVisible(pm.getObject().getLevel() < configurationService.maxReplyLevel());
+                this.setVisible(getModelObject().getLevel() < configurationService.maxReplyLevel());
             }
         };
     }
 
-    private Link createRemoveLink(final IModel<Post> pm) {
-        return new Link("remove") {
+    private AbstractLink createRemoveLink(final IModel<Post> pm) {
+        return new AjaxFallbackLink<Post>("remove", pm) {
             @Override
-            public void onClick() {
+            public void onClick(AjaxRequestTarget target) {
                 try {
-                    postService.removePost(pm.getObject());
+                    postService.removePost(getModelObject());
                 } catch (AccessDeniedException e) {
                     this.error(getString("error.accessDenied"));
                 }
@@ -164,29 +164,24 @@ public class PostListPanel extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                this.setVisible(!userService.isGuest() && userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(pm.getObject().getUserId()));
+                this.setVisible(!userService.isGuest() && userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(getModelObject().getUserId()));
             }
         };
     }
 
-    private Link createDisableLink(final IModel<Post> pm) {
+    private AbstractLink createDisableLink(final IModel<Post> pm) {
 
-        Link disableLink = new AjaxFallbackLink("disable") {
+        AbstractLink disableLink = new AjaxFallbackLink<Post>("disable", pm) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-
-                if (pm.getObject().isDisabled()) {
-                    try{
-                        postService.enablePost(pm.getObject());
-                    } catch (AccessDeniedException e) {
-                        this.error(getString("error.accessDenied"));
+                try {
+                    if (getModelObject().isDisabled()) {
+                        postService.enablePost(getModelObject());
+                    } else {
+                        postService.disablePost(getModelObject());
                     }
-                } else {
-                    try {
-                        postService.disablePost(pm.getObject());
-                    } catch (AccessDeniedException e) {
-                        this.error(getString("error.accessDenied"));
-                    }
+                } catch (AccessDeniedException e) {
+                    this.error(getString("error.accessDenied"));
                 }
             }
 
@@ -194,7 +189,7 @@ public class PostListPanel extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
 
-                this.setVisible(!userService.isGuest() && userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(pm.getObject().getUserId()));
+                this.setVisible(!userService.isGuest() && userService.getCurrentlyLoggedUser().getDiscussionUserId().equals(getModelObject().getUserId()));
             }
         };
 
