@@ -8,6 +8,7 @@ import org.danekja.discussment.spring.core.domain.User;
 import org.danekja.discussment.spring.core.service.UserService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,6 +39,11 @@ public class DefaultUserService implements UserService {
             throw new DiscussionUserNotFoundException(userId);
         }
         return user;
+    }
+
+    @Override
+    public List<? extends IDiscussionUser> getUsersByIds(Collection<String> collection) {
+        return userDao.getUsers();
     }
 
     public User getUserByUsername(String username) {

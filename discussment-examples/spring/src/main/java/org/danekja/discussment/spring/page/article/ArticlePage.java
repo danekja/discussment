@@ -5,7 +5,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
-import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.domain.Discussion;
 import org.danekja.discussment.core.domain.Post;
 import org.danekja.discussment.core.domain.Topic;
@@ -38,7 +38,7 @@ public class ArticlePage extends BasePage {
 	private PostService postService;
 
     @SpringBean
-	private AccessControlService accessControlService;
+	private ConfigurationService configurationService;
 
     @SpringBean
 	private UserService userService;
@@ -65,7 +65,7 @@ public class ArticlePage extends BasePage {
                 Topic topic = topicService.getTopicById(TOPIC_ID);
                 discussion = discussionService.createDiscussion(topic, new Discussion("article name"));
             }
-            add(new DiscussionPanel("content", new Model<Discussion>(discussion), new Model<Post>(), postService, userService, postReputationService, accessControlService));
+            add(new DiscussionPanel("content", new Model<Discussion>(discussion), new Model<Post>(), postService, userService, postReputationService, configurationService));
         } catch (AccessDeniedException e) {
             add(new EmptyPanel("content"));
         }

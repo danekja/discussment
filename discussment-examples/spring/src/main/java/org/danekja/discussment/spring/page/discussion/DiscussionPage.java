@@ -6,6 +6,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
 import org.danekja.discussment.core.service.*;
 import org.danekja.discussment.spring.core.service.UserService;
 import org.danekja.discussment.spring.page.base.BasePage;
@@ -48,6 +49,9 @@ public class DiscussionPage extends BasePage {
     @SpringBean
     private PostReputationService postReputationService;
 
+    @SpringBean
+    private ConfigurationService configurationService;
+
     private IModel<HashMap<String, Integer>> parametersModel;
 
     final PageParameters parameters;
@@ -72,7 +76,7 @@ public class DiscussionPage extends BasePage {
         parametersModel.getObject().put("topicId", parameters.get("topicId").isNull() ? -1 : Integer.parseInt(parameters.get("topicId").toString()));
         parametersModel.getObject().put("discussionId", parameters.get("discussionId").isNull() ? -1 : Integer.parseInt(parameters.get("discussionId").toString()));
 
-        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService, postReputationService, accessControlService, permissionService));
+        add(new ForumPanel("content", parametersModel, discussionService, topicService, categoryService, postService, userService, postReputationService, accessControlService, permissionService, configurationService));
     }
 
     @Override

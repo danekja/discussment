@@ -33,19 +33,19 @@
         <dependency>
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-ui-wicket</artifactId>
-            <version>${discussment.version}</version>
+            <version>0.10.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.danekja.discussment</groupId>
             <artifactId>discussment-core</artifactId>
-            <version>${discussment.version}</version>
+            <version>0.10.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.danekja.discussment.db</groupId>
             <artifactId>discussment-db-jpa</artifactId>
-            <version>${discussment.version}</version>
+            <version>0.10.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>

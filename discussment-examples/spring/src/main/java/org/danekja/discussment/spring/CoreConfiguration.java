@@ -6,6 +6,8 @@ import org.danekja.discussment.core.accesscontrol.service.AccessControlManagerSe
 import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
 import org.danekja.discussment.core.accesscontrol.service.PermissionManagementService;
 import org.danekja.discussment.core.accesscontrol.service.impl.PermissionService;
+import org.danekja.discussment.core.configuration.service.ConfigurationService;
+import org.danekja.discussment.core.configuration.service.imp.DefaultConfigurationService;
 import org.danekja.discussment.core.dao.*;
 import org.danekja.discussment.core.dao.jpa.*;
 import org.danekja.discussment.core.service.*;
@@ -92,16 +94,21 @@ public class CoreConfiguration {
 
     @Bean
     public DiscussionService discussionService(){
-        return new DefaultDiscussionService(discussionDao(), postDao(), topicService(), accessControlService(), userService());
+        return new DefaultDiscussionService(discussionDao(), topicService(), accessControlService(), userService());
     }
 
     @Bean
     public PostService postService(){
-        return new DefaultPostService(postDao(), userService(), accessControlService());
+        return new DefaultPostService(postDao(), userService(), accessControlService(), configurationService());
     }
 
     @Bean
     public PostReputationService postReputationService(){
         return new DefaultPostReputationService(userPostReputationDao(), postDao(), userService());
+    }
+
+    @Bean
+    public ConfigurationService configurationService(){
+        return new DefaultConfigurationService();
     }
 }
