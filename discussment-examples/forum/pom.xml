@@ -25,7 +25,7 @@
     <properties>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
-        <mysql.connector.version>6.0.5</mysql.connector.version>
+        <mysql.connector.version>8.0.28</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
