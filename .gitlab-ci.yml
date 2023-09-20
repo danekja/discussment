@@ -1,0 +1,89 @@
+default:
+  image: maven:3-openjdk-8
+  # Cache downloaded dependencies and plugins between builds.
+  # The key here separates one cache per branch/tag ($CI_COMMIT_REF_SLUG)
+  cache:
+    key: "maven-$CI_COMMIT_REF_SLUG"
+    paths:
+      - .m2/repository
+
+stages:
+  - build
+  - test
+  - publish
+
+variables:
+  MAVEN_OPTS: >-
+    -Dhttps.protocols=TLSv1.2
+    -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+    -Dorg.slf4j.simpleLogger.showDateTime=true
+    -Djava.awt.headless=true
+
+  MAVEN_ARGS: >-
+    --batch-mode
+    --errors
+    --fail-at-end
+    --no-transfer-progress
+    --show-version
+    --update-snapshots
+    -DdeployAtEnd=true
+
+.default_rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+maven-compile:
+  stage: build
+  rules:
+    - !reference [ .default_rules, rules ]
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  script:
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS compile
+
+maven-test:
+  stage: test
+  rules:
+    - !reference [ .default_rules, rules ]
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  script:
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS test
+
+maven-verify:
+  stage: test
+  rules:
+    - !reference [ .default_rules, rules ]
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  services:
+    - name: docker:dind
+      command: [ "--tls=false" ]
+  parallel:
+    matrix:
+      - MAVEN_PROFILE: jpa
+      - MAVEN_PROFILE: hibernate3
+      - MAVEN_PROFILE: hibernate5
+  variables:
+    # Instruct Testcontainers to use the daemon of DinD.
+    DOCKER_HOST: "tcp://docker:2375"
+    # Instruct Docker not to start over TLS.
+    DOCKER_TLS_CERTDIR: ""
+    # Improve performance with overlays.
+    DOCKER_DRIVER: overlay2
+  script:
+    - cd discussment-db-it
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -P$MAVEN_PROFILE verify
+  artifacts:
+    when: always
+    reports:
+      # Store JUnit reports (recursive pattern for multi-module projects)
+      junit:
+        - "**/target/*-reports/TEST-*.xml"
+
+maven-deploy:
+  stage: publish
+  rules:
+    - !reference [ .default_rules, rules ]
+  script:
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
