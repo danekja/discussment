@@ -18,7 +18,7 @@
         <core.version>0.10.5-SNAPSHOT</core.version>
         <dao.version>0.10.4-SNAPSHOT</dao.version>
 
-        <testcontainers.version>1.15.0</testcontainers.version>
+        <testcontainers.version>1.19.0</testcontainers.version>
     </properties>
 
     <dependencies>
