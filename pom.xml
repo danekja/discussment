@@ -56,12 +56,12 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>gitlab-maven</id>
+            <url>https://git.yoso.fi/api/v4/projects/187/packages/maven</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>gitlab-maven</id>
+            <url>https://git.yoso.fi/api/v4/projects/187/packages/maven</url>
         </repository>
     </distributionManagement>
 
