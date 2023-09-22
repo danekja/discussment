@@ -49,6 +49,12 @@ maven-test:
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS test
+  artifacts:
+    when: always
+    reports:
+      # Store JUnit reports (recursive pattern for multi-module projects)
+      junit:
+        - "**/target/*-reports/TEST-*.xml"
 
 maven-verify:
   stage: test
