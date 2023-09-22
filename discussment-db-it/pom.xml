@@ -157,7 +157,7 @@
                 <dependency>
                     <groupId>org.hibernate</groupId>
                     <artifactId>hibernate-entitymanager</artifactId>
-                    <version>5.2.6.Final</version>
+                    <version>5.6.15.Final</version>
                 </dependency>
             </dependencies>
         </profile>
