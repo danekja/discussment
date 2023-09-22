@@ -5,7 +5,7 @@
     ":disableDependencyDashboard"
   ],
   "assignees": [
-    "pavel.fidransky@yoso.fi"
+    "pavel.fidransky"
   ],
   "commitMessagePrefix": "MNDIS-NaN:",
   "packageRules": [
@@ -16,6 +16,6 @@
   ],
   "platformAutomerge": true,
   "reviewers": [
-    "pavel.fidransky@yoso.fi"
+    "pavel.fidransky"
   ]
 }
