@@ -25,7 +25,7 @@
         <jpa-2.1.version>1.0.2.Final</jpa-2.1.version>
         <mysql.connector.version>6.0.6</mysql.connector.version>
         <wicket.version>7.6.0</wicket.version>
-        <spring.version>5.0.4.RELEASE</spring.version>
+        <spring.version>5.3.30</spring.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

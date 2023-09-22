@@ -83,7 +83,7 @@
         <mockito.version>3.12.4</mockito.version>
         <mysql.connector.version>8.0.33</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.2.11.RELEASE</spring.version>
+        <spring.version>5.3.30</spring.version>
         <wicket.version>7.6.0</wicket.version>
     </properties>
 
