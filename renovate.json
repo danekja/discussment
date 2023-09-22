@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":disableDependencyDashboard"
+  ],
+  "assignees": [
+    "pavel.fidransky@yoso.fi"
+  ],
+  "commitMessagePrefix": "MNDIS-NaN:",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ],
+  "platformAutomerge": true,
+  "reviewers": [
+    "pavel.fidransky@yoso.fi"
+  ]
+}
