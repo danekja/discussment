@@ -81,7 +81,7 @@
         <jpa-2.1.version>1.0.2.Final</jpa-2.1.version>
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
         <mockito.version>3.6.0</mockito.version>
-        <mysql.connector.version>8.0.16</mysql.connector.version>
+        <mysql.connector.version>8.0.33</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.2.11.RELEASE</spring.version>
         <wicket.version>7.6.0</wicket.version>
