@@ -78,7 +78,7 @@
         <hibernate3.version>3.6.10.Final</hibernate3.version>
         <hibernate5.version>5.2.6.Final</hibernate5.version>
         <javassist.version>3.20.0-GA</javassist.version>
-        <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
+        <jpa-2.1.version>1.0.2.Final</jpa-2.1.version>
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
         <mockito.version>3.6.0</mockito.version>
         <mysql.connector.version>8.0.16</mysql.connector.version>
