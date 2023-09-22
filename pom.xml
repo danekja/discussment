@@ -84,7 +84,7 @@
         <mysql.connector.version>8.0.33</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.3.30</spring.version>
-        <wicket.version>7.6.0</wicket.version>
+        <wicket.version>7.18.0</wicket.version>
     </properties>
 
     <modules>
