@@ -80,7 +80,7 @@
         <javassist.version>3.29.2-GA</javassist.version>
         <jpa-2.1.version>1.0.2.Final</jpa-2.1.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <mockito.version>3.6.0</mockito.version>
+        <mockito.version>3.12.4</mockito.version>
         <mysql.connector.version>8.0.33</mysql.connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.2.11.RELEASE</spring.version>
