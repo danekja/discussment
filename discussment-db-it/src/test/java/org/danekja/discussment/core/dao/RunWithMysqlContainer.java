@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 @TestPropertySource(properties = {
         "JDBC_DRIVER=org.testcontainers.jdbc.ContainerDatabaseDriver",
-        "JDBC_URL=jdbc:tc:mariadb:///test_db?TC_REUSABLE=true",
+        "JDBC_URL=jdbc:tc:mariadb:///test_db?useMysqlMetadata=true&TC_REUSABLE=true",
         "JDBC_USER=",
         "JDBC_PWD=",
 })
