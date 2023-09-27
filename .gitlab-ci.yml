@@ -42,14 +42,14 @@ maven-compile:
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS compile
 
-maven-test:
+maven-verify:
   stage: test
   rules:
     - !reference [ .default_rules, rules ]
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
-    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS test
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS verify
   artifacts:
     when: always
     reports:
@@ -64,7 +64,7 @@ maven-deploy:
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
 
-maven-verify:
+maven-verify-db-it:
   stage: verify
   rules:
     - !reference [ .default_rules, rules ]
