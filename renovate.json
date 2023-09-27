@@ -12,6 +12,14 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
+    },
+    {
+      "matchPackagePatterns": "^org\\.springframework:spring",
+      "allowedVersions": "<6"
+    },
+    {
+      "matchPackagePatterns": "^org\\.mockito:mockito",
+      "allowedVersions": "<5"
     }
   ],
   "platformAutomerge": true,
