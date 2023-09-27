@@ -9,9 +9,8 @@ default:
 
 stages:
   - build
-  - test
-  - publish
   - verify
+  - publish
 
 variables:
   MAVEN_OPTS: >-
@@ -29,27 +28,14 @@ variables:
     --update-snapshots
     -DdeployAtEnd=true
 
-.default_rules:
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-maven-compile:
+maven-install:
   stage: build
   rules:
-    - !reference [ .default_rules, rules ]
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
-    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS compile
-
-maven-verify:
-  stage: test
-  rules:
-    - !reference [ .default_rules, rules ]
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "web"
-  script:
-    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS verify
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS install
   artifacts:
     when: always
     reports:
@@ -57,17 +43,10 @@ maven-verify:
       junit:
         - "**/target/*-reports/TEST-*.xml"
 
-maven-deploy:
-  stage: publish
-  rules:
-    - !reference [ .default_rules, rules ]
-  script:
-    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
-
 maven-verify-db-it:
   stage: verify
   rules:
-    - !reference [ .default_rules, rules ]
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
   services:
@@ -94,3 +73,10 @@ maven-verify-db-it:
       # Store JUnit reports (recursive pattern for multi-module projects)
       junit:
         - "**/target/*-reports/TEST-*.xml"
+
+maven-deploy:
+  stage: publish
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
