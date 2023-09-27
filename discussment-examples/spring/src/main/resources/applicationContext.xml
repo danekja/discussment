@@ -16,6 +16,10 @@
     <tx:annotation-driven transaction-manager="transactionManager" />
 
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <constructor-arg name="configuration" ref="flywayConfiguration"/>
+    </bean>
+
+    <bean id="flywayConfiguration" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
