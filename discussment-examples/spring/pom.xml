@@ -23,7 +23,7 @@
         <flyway.version>5.2.4</flyway.version>
         <hibernate.version>5.6.15.Final</hibernate.version>
         <jpa-2.1.version>1.0.2.Final</jpa-2.1.version>
-        <mysql.connector.version>8.0.33</mysql.connector.version>
+        <mysql.connector.version>8.1.0</mysql.connector.version>
         <wicket.version>7.18.0</wicket.version>
         <spring.version>5.3.30</spring.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
