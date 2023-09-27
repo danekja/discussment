@@ -11,6 +11,7 @@ stages:
   - build
   - test
   - publish
+  - verify
 
 variables:
   MAVEN_OPTS: >-
@@ -56,8 +57,15 @@ maven-test:
       junit:
         - "**/target/*-reports/TEST-*.xml"
 
+maven-deploy:
+  stage: publish
+  rules:
+    - !reference [ .default_rules, rules ]
+  script:
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
+
 maven-verify:
-  stage: test
+  stage: verify
   rules:
     - !reference [ .default_rules, rules ]
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -86,10 +94,3 @@ maven-verify:
       # Store JUnit reports (recursive pattern for multi-module projects)
       junit:
         - "**/target/*-reports/TEST-*.xml"
-
-maven-deploy:
-  stage: publish
-  rules:
-    - !reference [ .default_rules, rules ]
-  script:
-    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
