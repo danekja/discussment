@@ -19,8 +19,13 @@
 
     <context:property-placeholder properties-ref="properties"/>
 
-    <bean id="flyway" class="org.flywaydb.core.Flyway">
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <constructor-arg name="configuration" ref="flywayConfiguration"/>
+    </bean>
+
+    <bean id="flywayConfiguration" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
         <property name="dataSource" ref="dataSource"/>
+        <property name="cleanDisabled" value="false"/>
     </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">

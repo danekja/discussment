@@ -20,7 +20,7 @@
 
     <properties>
         <discussment.version>0.9.3</discussment.version>
-        <flyway.version>5.2.4</flyway.version>
+        <flyway.version>9.22.2</flyway.version>
         <hibernate.version>5.6.15.Final</hibernate.version>
         <jpa-2.1.version>1.0.2.Final</jpa-2.1.version>
         <mysql.connector.version>8.1.0</mysql.connector.version>
