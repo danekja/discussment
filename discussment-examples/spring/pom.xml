@@ -110,6 +110,8 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
+
         <resources>
             <resource>
                 <filtering>false</filtering>
