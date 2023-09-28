@@ -1,4 +1,7 @@
 # Articles Example
+
+**Update 2023:** This example doesn't work.
+
 ## Getting started
  - create an empty MySQL database with the name `discussment`
 
