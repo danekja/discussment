@@ -4,7 +4,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.danekja.discussment.core.accesscontrol.domain.AccessDeniedException;
 import org.danekja.discussment.core.accesscontrol.service.DiscussionUserService;
 import org.danekja.discussment.core.configuration.service.ConfigurationService;
@@ -16,6 +15,7 @@ import org.danekja.discussment.core.service.PostService;
 import org.danekja.discussment.ui.wicket.form.PostForm;
 import org.danekja.discussment.ui.wicket.form.ReplyForm;
 import org.danekja.discussment.ui.wicket.list.thread.ThreadListPanel;
+import org.danekja.discussment.ui.wicket.model.ThreadWicketModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,7 +124,7 @@ public class DiscussionPanel extends Panel {
                 DiscussionPanel.this.replyToPost(parentPost, reply, target);
             }
         });
-        add(new ThreadListPanel("threadPanel", new PropertyModel<>(discussionModel, "posts"), selectedPost, postService, userService, postReputationService, configurationService, getReplyModalContainerId()));
+        add(new ThreadListPanel("threadPanel", new ThreadWicketModel(postService, discussionModel), selectedPost, postService, userService, postReputationService, configurationService, getReplyModalContainerId()));
 
         add(new PostForm("postForm", discussionModel, new Model<>(new Post())) {
             @Override
