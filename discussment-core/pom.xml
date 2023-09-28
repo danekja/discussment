@@ -59,15 +59,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <properties>
-        <!-- TODO: use this also in persistence.xml file-->
-        <jdbc.user>root</jdbc.user>
-        <jdbc.password>root</jdbc.password>
-        <jdbc.url>jdbc:mysql://localhost/discussment?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</jdbc.url>
-        <skip.flyway>${skipTests}</skip.flyway>
-
-    </properties>
-
     <dependencies>
 
         <!--Used only to get access to Hibernate specific annotations. Thus the provided scope.-->
