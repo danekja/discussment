@@ -33,7 +33,7 @@ import javax.persistence.EntityManager;
  */
 public class DashboardPage extends BasePage {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public DashboardPage(final PageParameters parameters) {
 

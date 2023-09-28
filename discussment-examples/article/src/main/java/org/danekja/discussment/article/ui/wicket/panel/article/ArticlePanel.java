@@ -20,8 +20,8 @@ import org.danekja.discussment.core.accesscontrol.service.AccessControlService;
  */
 public class ArticlePanel extends Panel{
 
-    private AccessControlService accessControlService;
-    private ArticleService articleService;
+    private final AccessControlService accessControlService;
+    private final ArticleService articleService;
     private ModalWindow modalWindow;
 
     /**

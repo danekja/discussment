@@ -24,6 +24,7 @@ public class ArticleDaoJPA extends GenericDaoJPA<Long, Article> implements Artic
         super(Article.class, em);
     }
 
+    @Override
     public List<Article> getArticles() {
         TypedQuery<Article> q = em.createNamedQuery(Article.GET_ARTICLES, Article.class);
         return q.getResultList();

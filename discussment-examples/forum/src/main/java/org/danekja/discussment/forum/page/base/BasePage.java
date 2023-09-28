@@ -41,7 +41,7 @@ import javax.persistence.EntityManager;
  */
 public abstract class BasePage extends WebPage {
 
-    private EntityManager em;
+    private final EntityManager em;
 
 
 

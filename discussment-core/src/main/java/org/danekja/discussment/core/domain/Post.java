@@ -112,12 +112,12 @@ public class Post extends LongEntity implements Serializable {
     /**
      * List contains all replies. If the post is removed, the replies are removed too.
      */
-    private List<Post> replies = new ArrayList<Post>();
+    private List<Post> replies = new ArrayList<>();
 
     /**
      * List contains users voting in this post reputation. It the post reputation is removed these are removed too.
      */
-    private List<UserPostReputation> userPostReputations = new ArrayList<UserPostReputation>();
+    private List<UserPostReputation> userPostReputations = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

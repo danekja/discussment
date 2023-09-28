@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class ThreadWicketModel extends LoadableDetachableModel<List<Post>> {
 
-    private PostService postService;
-    private IModel<Discussion> discussionModel;
+    private final PostService postService;
+    private final IModel<Discussion> discussionModel;
 
     /**
      * Constructor for creating a instance of getting the posts in the thread.
@@ -31,6 +31,7 @@ public class ThreadWicketModel extends LoadableDetachableModel<List<Post>> {
         this.discussionModel = discussionModel;
     }
 
+    @Override
     protected List<Post> load() {
 
         try {

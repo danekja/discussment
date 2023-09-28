@@ -27,7 +27,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryServiceTest {
+class CategoryServiceTest {
 
 
     private static User testUser;
@@ -44,12 +44,12 @@ public class CategoryServiceTest {
     private CategoryService categoryService;
 
     @BeforeAll
-    public static void setUpGlobally() {
+    static void setUpGlobally() {
         testUser = new User("john.doe", "John Doe");
     }
 
     @BeforeEach
-    public void setUp() throws DiscussionUserNotFoundException {
+    void setUp() throws DiscussionUserNotFoundException {
         lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
         lenient().when(discussionUserService.getUserById(anyString())).thenReturn(testUser);
         lenient().when(accessControlService.canAddCategory()).thenReturn(true);
@@ -61,7 +61,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testCreateCategory() throws AccessDeniedException {
+    void createCategory() throws AccessDeniedException {
         // prepare data
         Category category = new Category(-87L, "Test category");
         when(categoryDao.save(any(Category.class))).then(invocationOnMock -> invocationOnMock.getArgument(0));
@@ -72,7 +72,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testGetCategoryById() throws AccessDeniedException {
+    void getCategoryById() throws AccessDeniedException {
         final Category category = new Category(-87L, "Test category");
         when(categoryDao.getById(any(Long.class))).then(invocationOnMock -> category);
 
@@ -82,7 +82,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testGetCategories() throws AccessDeniedException {
+    void getCategories() throws AccessDeniedException {
         final Category category = new Category(-87L, "Test category");
         when(categoryDao.getCategories()).then(invocationOnMock -> Arrays.asList(category));
 
@@ -93,7 +93,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testRemoveCateogry() throws AccessDeniedException {
+    void removeCateogry() throws AccessDeniedException {
         final List<Category> categoryRepository = new ArrayList<>();
 
         // mock get, save and remove methods

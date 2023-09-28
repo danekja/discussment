@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class PermissionManagementServiceTest {
+class PermissionManagementServiceTest {
 
     private final Long NULL_ITEM_ID = 0L;
 
@@ -38,12 +38,12 @@ public class PermissionManagementServiceTest {
     private List<AbstractPermission> testPermissions = new ArrayList<>();
 
     @BeforeAll
-    public static void setUpGlobal() throws Exception {
+    static void setUpGlobal() throws Exception {
         testUser = new User("john.doe", "John Doe");
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         pms = new PermissionService(permissionDao, userService);
         testPermissions.clear();
 
@@ -56,7 +56,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigurePostPermissionsForDiscussion() throws Exception {
+    void configurePostPermissionsForDiscussion() throws Exception {
         Discussion item = new Discussion(-10L, "PMS Test Discussion");
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configurePostPermissions(testUser, item, data);
@@ -65,7 +65,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigurePostPermissionsForTopic() throws Exception {
+    void configurePostPermissionsForTopic() throws Exception {
         Topic item = new Topic(-10L, "PMS Test Topic", "PMS Test Topic Description");
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configurePostPermissions(testUser, item, data);
@@ -74,7 +74,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigurePostPermissionsForCategory() throws Exception {
+    void configurePostPermissionsForCategory() throws Exception {
         Category item = new Category(-10L, "PMS Test Category");
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configurePostPermissions(testUser, item, data);
@@ -83,7 +83,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigurePostPermissionsGlobal() throws Exception {
+    void configurePostPermissionsGlobal() throws Exception {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configurePostPermissions(testUser, data);
 
@@ -91,7 +91,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigureDiscussionPermissionsForTopic() throws Exception {
+    void configureDiscussionPermissionsForTopic() throws Exception {
         Topic item = new Topic(-10L, "PMS Test Topic", "PMS Test Topic Description");
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureDiscussionPermissions(testUser, item, data);
@@ -100,7 +100,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigureDiscussionPermissionsForCategory() throws Exception {
+    void configureDiscussionPermissionsForCategory() throws Exception {
         Category item = new Category(-10L, "PMS Test Category");
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureDiscussionPermissions(testUser, item, data);
@@ -109,7 +109,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigureDiscussionPermissionsGlobal() throws Exception {
+    void configureDiscussionPermissionsGlobal() throws Exception {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureDiscussionPermissions(testUser, data);
 
@@ -117,7 +117,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigureTopicPermissionsForCategory() throws Exception {
+    void configureTopicPermissionsForCategory() throws Exception {
         Category item = new Category(-10L, "PMS Test Category");
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureTopicPermissions(testUser, item, data);
@@ -126,7 +126,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigureTopicPermissionsGlobal() throws Exception {
+    void configureTopicPermissionsGlobal() throws Exception {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureTopicPermissions(testUser, data);
 
@@ -134,7 +134,7 @@ public class PermissionManagementServiceTest {
     }
 
     @Test
-    public void testConfigureCategoryPermissions() throws Exception {
+    void configureCategoryPermissions() throws Exception {
         PermissionData data = new PermissionData(true, false, true, false);
         pms.configureCategoryPermissions(testUser, data);
 

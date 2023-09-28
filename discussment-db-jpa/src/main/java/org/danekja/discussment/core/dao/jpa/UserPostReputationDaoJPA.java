@@ -27,7 +27,8 @@ public class UserPostReputationDaoJPA extends GenericDaoJPA<Long, UserPostReputa
      */
     public UserPostReputationDaoJPA(EntityManager em){ super(UserPostReputation.class, em); }
 
-    public UserPostReputation getForUser(IDiscussionUser user, Post post){
+    @Override
+    public UserPostReputation getForUser(IDiscussionUser user, Post post) {
         TypedQuery<UserPostReputation> q = em.createNamedQuery(UserPostReputation.GET_FOR_USER, UserPostReputation.class);
         q.setParameter("userId", user.getDiscussionUserId());
         q.setParameter("postId", post.getId());

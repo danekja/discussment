@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
  * This test case is using services with accesscontrol component.
  */
 @ExtendWith(MockitoExtension.class)
-public class DiscussionServiceTest {
+class DiscussionServiceTest {
 
 
     private static User testUser;
@@ -56,12 +56,12 @@ public class DiscussionServiceTest {
 
 
     @BeforeAll
-    public static void setUpGlobal() {
+    static void setUpGlobal() {
         testUser = new User("john.doe", "John Doe");
     }
 
     @BeforeEach
-    public void setUp() throws DiscussionUserNotFoundException {
+    void setUp() throws DiscussionUserNotFoundException {
         lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
         lenient().when(discussionUserService.getUserById(anyString())).thenReturn(testUser);
         lenient().when(accessControlService.canRemoveDiscussion(any(Discussion.class))).thenReturn(true);
@@ -74,7 +74,7 @@ public class DiscussionServiceTest {
     }
 
     @Test
-    public void testCreateDiscussion() throws AccessDeniedException {
+    void createDiscussion() throws AccessDeniedException {
         Discussion discussion = new Discussion(55L,"Some discussion");
         when(discussionDao.save(any(Discussion.class))).then(invocationOnMock -> invocationOnMock.getArgument(0));
         discussion = discussionService.createDiscussion(new Topic(), discussion);
@@ -85,7 +85,7 @@ public class DiscussionServiceTest {
     }
 
     @Test
-    public void testGetDiscussionsByTopic() throws AccessDeniedException {
+    void getDiscussionsByTopic() throws AccessDeniedException {
         final Discussion discussion1 = new Discussion(-10L, "discussion1");
         final Discussion discussion2 = new Discussion(-11L, "discussion2");
 
@@ -99,7 +99,7 @@ public class DiscussionServiceTest {
     }
 
     @Test
-    public void testGetDiscussionById() throws AccessDeniedException {
+    void getDiscussionById() throws AccessDeniedException {
         final Discussion discussion1 = new Discussion(-10L, "discussion1");
 
         when(discussionDao.getById(-10L)).thenReturn(discussion1);
@@ -109,7 +109,7 @@ public class DiscussionServiceTest {
     }
 
     @Test
-    public void testRemoveDiscussion() throws AccessDeniedException {
+    void removeDiscussion() throws AccessDeniedException {
         final List<Discussion> discussionRepository = new ArrayList<>();
 
         // mock get, save and remove methods

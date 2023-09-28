@@ -19,6 +19,7 @@ public class DiscussionDaoHibernate extends GenericDaoHibernate<Long, Discussion
         super(Discussion.class, sessionFactory);
     }
 
+    @Override
     public List<Discussion> getDiscussionsByTopic(Topic topic) {
         Session session = sessionFactory.getCurrentSession();
         TypedQuery<Discussion> q = session.createNamedQuery(Discussion.GET_DISCUSSIONS_BY_TOPIC_ID, Discussion.class);

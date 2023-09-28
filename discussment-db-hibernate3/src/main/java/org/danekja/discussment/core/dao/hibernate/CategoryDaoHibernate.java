@@ -17,6 +17,7 @@ public class CategoryDaoHibernate extends GenericDaoHibernate<Long, Category> im
         super(Category.class, sessionFactory);
     }
 
+    @Override
     public List<Category> getCategories() {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery(Category.GET_CATEGORIES);

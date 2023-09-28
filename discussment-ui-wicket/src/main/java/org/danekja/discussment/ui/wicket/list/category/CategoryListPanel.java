@@ -32,13 +32,13 @@ public class CategoryListPanel extends Panel {
 
     private static int generateId = 0;
 
-    private CategoryService categoryService;
-    private TopicService topicService;
-    private DiscussionService discussionService;
-    private PostService postService;
-    private IModel<Category> categoryModel;
-    private IModel<List<Category>> categoryListModel;
-    private AccessControlService accessControlService;
+    private final CategoryService categoryService;
+    private final TopicService topicService;
+    private final DiscussionService discussionService;
+    private final PostService postService;
+    private final IModel<Category> categoryModel;
+    private final IModel<List<Category>> categoryListModel;
+    private final AccessControlService accessControlService;
 
     /**
      * Constructor for creating a instance of the panel contains categories with the topics

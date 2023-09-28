@@ -33,8 +33,8 @@ public class DiscussionPanel extends Panel {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private IModel<Discussion> discussionModel;
-    private IModel<Post> selectedPost;
+    private final IModel<Discussion> discussionModel;
+    private final IModel<Post> selectedPost;
 
     private final PostService postService;
     private final DiscussionUserService userService;

@@ -27,7 +27,7 @@ public class CategoryFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> name = new TextField<String>("name", new PropertyModel<String>(getDefaultModel(), "name"));
+        TextField<String> name = new TextField<>("name", new PropertyModel<String>(getDefaultModel(), "name"));
         name.setRequired(true);
         add(name);
 

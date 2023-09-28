@@ -24,9 +24,9 @@ import java.util.List;
  */
 public class ArticleListPanel extends Panel {
 
-    private ArticleService articleService;
-    private AccessControlService accessControlService;
-    private IModel<List<Article>> articleListModel;
+    private final ArticleService articleService;
+    private final AccessControlService accessControlService;
+    private final IModel<List<Article>> articleListModel;
 
     /**
      * Constructor for creating a instance of the panel containing the articles

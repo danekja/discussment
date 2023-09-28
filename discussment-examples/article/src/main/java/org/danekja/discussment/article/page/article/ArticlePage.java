@@ -40,14 +40,14 @@ public class ArticlePage extends BasePage {
 
     private static final long serialVersionUID = 1L;
 
-    private EntityManager em;
+    private final EntityManager em;
 
-    private UserService userService;
-	private ArticleService articleService;
-	private CategoryService categoryService;
-	private DiscussionService discussionService;
-	private TopicService topicService;
-	private AccessControlService accessControlService;
+    private final UserService userService;
+    private final ArticleService articleService;
+    private final CategoryService categoryService;
+    private final DiscussionService discussionService;
+    private final TopicService topicService;
+    private final AccessControlService accessControlService;
 
     final PageParameters parameters;
 

@@ -15,8 +15,8 @@ import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
  */
 public abstract class PostForm extends Form {
 
-    private IModel<Discussion> discussionModel;
-    private IModel<Post> postModel;
+    private final IModel<Discussion> discussionModel;
+    private final IModel<Post> postModel;
     private PostFormComponent postFormComponent;
 
     /**

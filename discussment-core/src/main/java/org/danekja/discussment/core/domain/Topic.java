@@ -49,7 +49,7 @@ public class Topic extends LongEntity implements Serializable {
     /**
      * List contains discussion in the topic. If the topic is removed, the discussions are removed too.
      */
-    private List<Discussion> discussions = new ArrayList<Discussion>();
+    private List<Discussion> discussions = new ArrayList<>();
 
     public Topic() {
     }

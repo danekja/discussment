@@ -16,7 +16,7 @@ import java.util.Stack;
  */
 public class PostWicketModel extends LoadableDetachableModel<List<Post>> {
 
-    private IModel<Post> post;
+    private final IModel<Post> post;
 
     /**
      * Constructor for creating a instance of getting the posts.

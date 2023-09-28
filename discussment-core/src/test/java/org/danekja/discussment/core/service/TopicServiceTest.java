@@ -30,7 +30,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TopicServiceTest {
+class TopicServiceTest {
 
     private static User testUser;
 
@@ -49,12 +49,12 @@ public class TopicServiceTest {
     private TopicService topicService;
 
     @BeforeAll
-    public static void setUpGlobal() {
+    static void setUpGlobal() {
         testUser = new User("john.doe", "John Doe");
     }
 
     @BeforeEach
-    public void setUp() throws DiscussionUserNotFoundException {
+    void setUp() throws DiscussionUserNotFoundException {
         lenient().when(accessControlService.canAddTopic(any(Category.class))).thenReturn(true);
         lenient().when(accessControlService.canViewTopics(nullable(Category.class))).thenReturn(true);
         lenient().when(accessControlService.canRemoveTopic(any(Topic.class))).thenReturn(true);
@@ -65,7 +65,7 @@ public class TopicServiceTest {
     }
 
     @Test
-    public void testCreateTopic() throws AccessDeniedException {
+    void createTopic() throws AccessDeniedException {
         when(topicDao.save(any(Topic.class))).then(invocationOnMock -> invocationOnMock.getArgument(0));
 
         Topic t = new Topic(98L, "Test topic", "Description");
@@ -76,7 +76,7 @@ public class TopicServiceTest {
     }
 
     @Test
-    public void testGetTopicById() throws AccessDeniedException {
+    void getTopicById() throws AccessDeniedException {
         when(topicDao.getById(55L)).then(invocationOnMock -> new Topic(55L, "Mock topic", "Mock description"));
         when(topicDao.getById(not(eq(55L)))).then(invocationOnMock -> null);
 
@@ -85,7 +85,7 @@ public class TopicServiceTest {
     }
 
     @Test
-    public void testGetTopicsByCategory() throws AccessDeniedException {
+    void getTopicsByCategory() throws AccessDeniedException {
         final Category c1 = new Category(45L, "test cat 1");
         final Category c2 = new Category(87L, "no topics cat");
         when(topicDao.getTopicsByCategory(c1)).then(invocationOnMock -> Arrays.asList(new Topic(87L, "test topic", "desc")));
@@ -96,7 +96,7 @@ public class TopicServiceTest {
     }
 
     @Test
-    public void testRemoveTopic() throws AccessDeniedException {
+    void removeTopic() throws AccessDeniedException {
         final List<Topic> topicRepository = new ArrayList<>();
 
         // mock get, save and remove methods

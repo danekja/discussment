@@ -19,8 +19,8 @@ import org.danekja.discussment.article.ui.wicket.form.ArticleForm;
  */
 public class ModalPanel extends Panel {
 
-    private ArticleService articleService;
-    private ModalWindow modalWindow;
+    private final ArticleService articleService;
+    private final ModalWindow modalWindow;
 
     /**
      * Constructor for creating a instance of the modal window with form for creating a new article.

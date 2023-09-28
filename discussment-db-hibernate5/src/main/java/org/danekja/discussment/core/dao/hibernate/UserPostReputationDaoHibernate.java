@@ -24,6 +24,7 @@ public class UserPostReputationDaoHibernate extends GenericDaoHibernate<Long, Us
         super(UserPostReputation.class, sessionFactory);
     }
 
+    @Override
     public UserPostReputation getForUser(IDiscussionUser user, Post post) {
         Session session = sessionFactory.getCurrentSession();
         TypedQuery<UserPostReputation> q = session.createNamedQuery(UserPostReputation.GET_FOR_USER, UserPostReputation.class);

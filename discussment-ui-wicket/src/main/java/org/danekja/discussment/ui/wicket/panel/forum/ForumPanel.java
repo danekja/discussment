@@ -35,22 +35,22 @@ import java.util.HashMap;
  */
 public class ForumPanel extends Panel {
 
-    private IModel<HashMap<String, Integer>> parametersModel;
+    private final IModel<HashMap<String, Integer>> parametersModel;
 
-    private CategoryService categoryService;
-    private PostService postService;
-    private TopicService topicService;
-    private DiscussionService discussionService;
-    private DiscussionUserService userService;
-    private PostReputationService postReputationService;
-    private AccessControlService accessControlService;
-    private PermissionManagementService permissionService;
-    private ConfigurationService configurationService;
+    private final CategoryService categoryService;
+    private final PostService postService;
+    private final TopicService topicService;
+    private final DiscussionService discussionService;
+    private final DiscussionUserService userService;
+    private final PostReputationService postReputationService;
+    private final AccessControlService accessControlService;
+    private final PermissionManagementService permissionService;
+    private final ConfigurationService configurationService;
 
-    private IModel<Category> categoryModel;
-    private IModel<Discussion> discussionModel;
-    private IModel<Topic> topicModel;
-    private IModel<Post> postModel;
+    private final IModel<Category> categoryModel;
+    private final IModel<Discussion> discussionModel;
+    private final IModel<Topic> topicModel;
+    private final IModel<Post> postModel;
 
     /**
      * Constructor for creating the panel which contains the forum.
@@ -92,10 +92,10 @@ public class ForumPanel extends Panel {
         this.permissionService = permissionService;
         this.configurationService = configurationService;
 
-        this.categoryModel = new Model<Category>();
-        this.discussionModel = new Model<Discussion>();
-        this.topicModel = new Model<Topic>();
-        this.postModel = new Model<Post>();
+        this.categoryModel = new Model<>();
+        this.discussionModel = new Model<>();
+        this.topicModel = new Model<>();
+        this.postModel = new Model<>();
     }
 
     @Override

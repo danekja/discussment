@@ -33,13 +33,13 @@ import org.danekja.discussment.ui.wicket.model.DiscussionWicketModel;
  */
 public class DiscussionListPanel extends Panel {
 
-    private DiscussionService discussionService;
-    private PostService postService;
-    private IModel<Discussion> discussionModel;
-    private IModel<Topic> topicListModel;
-    private DiscussionUserService userService;
-    private AccessControlService accessControlService;
-    private PermissionManagementService permissionService;
+    private final DiscussionService discussionService;
+    private final PostService postService;
+    private final IModel<Discussion> discussionModel;
+    private final IModel<Topic> topicListModel;
+    private final DiscussionUserService userService;
+    private final AccessControlService accessControlService;
+    private final PermissionManagementService permissionService;
 
 
     /**
@@ -148,6 +148,7 @@ public class DiscussionListPanel extends Panel {
     private AjaxLink createOpenDiscussionAjaxLink(final IModel<Discussion> dm) {
         AjaxLink discussionNameLink = new AjaxLink("openDiscussion") {
 
+            @Override
             public void onClick(AjaxRequestTarget target) {
 
                 discussionModel.setObject(dm.getObject());

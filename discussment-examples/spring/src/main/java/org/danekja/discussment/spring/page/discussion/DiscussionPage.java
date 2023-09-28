@@ -52,7 +52,7 @@ public class DiscussionPage extends BasePage {
     @SpringBean
     private ConfigurationService configurationService;
 
-    private IModel<HashMap<String, Integer>> parametersModel;
+    private final IModel<HashMap<String, Integer>> parametersModel;
 
     final PageParameters parameters;
 

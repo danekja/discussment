@@ -13,9 +13,9 @@ import org.danekja.discussment.ui.wicket.session.SessionUtil;
  */
 public class LoginForm extends Form {
 
-    private UserService userService;
+    private final UserService userService;
 
-    private IModel<User> userModel;
+    private final IModel<User> userModel;
 
     public LoginForm(String id, UserService userService, IModel<User> userModel) {
         super(id);

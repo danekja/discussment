@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
 
-    private TopicService topicService;
-    private IModel<Category> categoryModel;
+    private final TopicService topicService;
+    private final IModel<Category> categoryModel;
 
     /**
      * Constructor for creating a instance of getting topic in the forum.
@@ -32,6 +32,7 @@ public class TopicWicketModel extends LoadableDetachableModel<List<Topic>> {
         this.topicService = topicService;
     }
 
+    @Override
     protected List<Topic> load() {
 
         try {

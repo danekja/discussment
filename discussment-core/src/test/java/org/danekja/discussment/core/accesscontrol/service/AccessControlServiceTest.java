@@ -28,9 +28,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 // TODO: test global permissions as well
-public class AccessControlServiceTest {
+@ExtendWith(MockitoExtension.class)
+class AccessControlServiceTest {
 
     @Mock
     private PermissionDao permissionDao;
@@ -51,12 +51,12 @@ public class AccessControlServiceTest {
     private Post post;
 
     @BeforeAll
-    public static void setUpGlobal() throws Exception {
+    static void setUpGlobal() throws Exception {
         testUser = new User("john.doe", "John Doe");
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         pms = new PermissionService(permissionDao, userService);
         accessControlService = (AccessControlService) pms;
         testPermissions.clear();
@@ -88,7 +88,7 @@ public class AccessControlServiceTest {
      * Basic post access control test.
      */
     @Test
-    public void testPostAccessControl() {
+    void postAccessControl() {
         // item posted by user himself
         Post usersPost = new Post("Post created by test user.");
         usersPost.setDiscussion(discussion);
@@ -113,7 +113,7 @@ public class AccessControlServiceTest {
      * Basic discussion access control test.
      */
     @Test
-    public void testDiscussionAccessControl() {
+    void discussionAccessControl() {
         // set permissions
         PermissionData data = new PermissionData(true, false, false, true);
         pms.configureDiscussionPermissions(testUser, category, data);
@@ -129,7 +129,7 @@ public class AccessControlServiceTest {
      * Basic topic access control test.
      */
     @Test
-    public void testTopicAccessControl() {
+    void topicAccessControl() {
         // set permissions
         PermissionData data = new PermissionData(true, false, false, true);
         pms.configureTopicPermissions(testUser, category, data);
@@ -145,7 +145,7 @@ public class AccessControlServiceTest {
      * Basic category access control test.
      */
     @Test
-    public void testCategoryAccessControl() {
+    void categoryAccessControl() {
         // set permissions
         PermissionData data = new PermissionData(true, false, false, true);
         pms.configureCategoryPermissions(testUser, data);
@@ -162,7 +162,7 @@ public class AccessControlServiceTest {
      * Test that he can access post inside his discussion and also other posts in category properly.
      */
     @Test
-    public void testPostOverrideAccess() {
+    void postOverrideAccess() {
         // create user's discussion
         Discussion usersDiscussion = new Discussion(-11L, "Users own discussion");
         usersDiscussion.setTopic(topic);
@@ -205,7 +205,7 @@ public class AccessControlServiceTest {
      * Test that he can access post inside his discussion and also other posts in category properly.
      */
     @Test
-    public void testPostOverrideAccess2() {
+    void postOverrideAccess2() {
         // create discussion which will be limited for user
         Discussion limitedDiscussion = new Discussion(-11L, "Limited discussion");
         limitedDiscussion.setTopic(topic);

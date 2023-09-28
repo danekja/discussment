@@ -8,13 +8,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PostWicketModelTest {
+class PostWicketModelTest {
 
     /**
      * Test that tree get transformed to list correctly.
      */
     @Test
-    public void testLoad() {
+    void load() {
         Post root = new Post(1L);
         root.getReplies().add(new Post(2L));
         root.getReplies().get(0).getReplies().add(new Post(3L));

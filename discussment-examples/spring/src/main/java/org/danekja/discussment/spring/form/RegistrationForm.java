@@ -18,18 +18,18 @@ import org.danekja.discussment.spring.form.registration.RegistrationFormComponen
  */
 public class RegistrationForm extends Form {
 
-    private CategoryService categoryService;
-    private TopicService topicService;
-    private DiscussionService discussionService;
-    private UserService userService;
-    private PermissionManagementService permissionService;
+    private final CategoryService categoryService;
+    private final TopicService topicService;
+    private final DiscussionService discussionService;
+    private final UserService userService;
+    private final PermissionManagementService permissionService;
 
-    private IModel<User> userModel;
+    private final IModel<User> userModel;
 
-    private IModel<PermissionData> categoryPermissions;
-    private IModel<PermissionData> topicPermissions;
-    private IModel<PermissionData> discussionPermissions;
-    private IModel<PermissionData> postPermissions;
+    private final IModel<PermissionData> categoryPermissions;
+    private final IModel<PermissionData> topicPermissions;
+    private final IModel<PermissionData> discussionPermissions;
+    private final IModel<PermissionData> postPermissions;
 
 
     private RegistrationFormComponent registrationFormComponent;

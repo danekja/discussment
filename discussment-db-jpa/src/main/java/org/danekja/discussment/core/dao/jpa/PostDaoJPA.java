@@ -28,25 +28,29 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
         super(Post.class, em);
     }
 
+    @Override
     public List<Post> getPostsByDiscussion(Discussion discussion) {
         TypedQuery<Post> q = em.createNamedQuery(Post.GET_BY_DISCUSSION, Post.class);
         q.setParameter("discussionId", discussion.getId());
         return q.getResultList();
     }
 
+    @Override
     public List<Post> getBasePostsByDiscussion(Discussion discussion) {
         TypedQuery<Post> q = em.createNamedQuery(Post.GET_BASE_POSTS_BY_DISCUSSION, Post.class);
         q.setParameter("discussionId", discussion.getId());
         return q.getResultList();
     }
 
-    public List<Post> getRepliesForPost(Post post){
+    @Override
+    public List<Post> getRepliesForPost(Post post) {
         TypedQuery<Post> q = em.createNamedQuery(Post.GET_REPLIES_FOR_POST, Post.class);
         q.setParameter("postId", post.getId());
         return q.getResultList();
     }
 
-    public Post getLastPost(Discussion discussion){
+    @Override
+    public Post getLastPost(Discussion discussion) {
         List<Post> posts = getPostsByDiscussion(discussion);
         if(posts.size() != 0) {
             posts.sort(Comparator.comparing(o -> o.getCreated(), Comparator.reverseOrder()));
@@ -55,12 +59,14 @@ public class PostDaoJPA extends GenericDaoJPA<Long, Post> implements PostDao {
         return null;
     }
 
-    public long getNumberOfPosts(Discussion discussion){
+    @Override
+    public long getNumberOfPosts(Discussion discussion) {
         Query q = em.createNamedQuery(Post.COUNT_BY_DISCUSSION);
         q.setParameter("discussionId", discussion.getId());
         return (Long) q.getSingleResult();
     }
 
+    @Override
     public Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds) {
         Query q = em.createNamedQuery(Post.COUNT_BY_DISCUSSIONS);
         q.setParameter("discussionIds", discussionIds);

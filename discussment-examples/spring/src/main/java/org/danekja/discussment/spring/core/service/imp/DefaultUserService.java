@@ -24,11 +24,13 @@ public class DefaultUserService implements UserService {
 
     }
 
+    @Override
     public User addUser(User entity) {
 
         return userDao.save(entity);
     }
 
+    @Override
     public List<User> getUsers() {
         return userDao.getUsers();
     }
@@ -46,6 +48,7 @@ public class DefaultUserService implements UserService {
         return userDao.getUsers();
     }
 
+    @Override
     public User getUserByUsername(String username) {
 
         return userDao.getUserByUsername(username);

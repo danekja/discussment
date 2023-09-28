@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class CategoryWicketModel extends LoadableDetachableModel<List<Category>> {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     /**
      * Constructor for creating a instance of getting the categories.

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ArticleWicketModel extends LoadableDetachableModel<List<Article>> {
 
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
     /**
      * Constructor for creating a instance of getting the articles.

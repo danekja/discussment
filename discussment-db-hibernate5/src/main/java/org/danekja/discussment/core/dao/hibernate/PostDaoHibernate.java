@@ -23,6 +23,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         super(Post.class, sessionFactory);
     }
 
+    @Override
     public List<Post> getPostsByDiscussion(Discussion discussion) {
         Session session = sessionFactory.getCurrentSession();
         TypedQuery<Post> q = session.createNamedQuery(Post.GET_BY_DISCUSSION, Post.class);
@@ -30,6 +31,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         return q.getResultList();
     }
 
+    @Override
     public List<Post> getBasePostsByDiscussion(Discussion discussion) {
         Session session = sessionFactory.getCurrentSession();
         TypedQuery<Post> q = session.createNamedQuery(Post.GET_BASE_POSTS_BY_DISCUSSION, Post.class);
@@ -37,6 +39,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         return q.getResultList();
     }
 
+    @Override
     public List<Post> getRepliesForPost(Post post) {
         Session session = sessionFactory.getCurrentSession();
         TypedQuery<Post> q = session.createNamedQuery(Post.GET_REPLIES_FOR_POST, Post.class);
@@ -44,6 +47,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         return q.getResultList();
     }
 
+    @Override
     public Post getLastPost(Discussion discussion) {
         List<Post> posts = getPostsByDiscussion(discussion);
         if (posts.size() != 0) {
@@ -53,6 +57,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         return null;
     }
 
+    @Override
     public long getNumberOfPosts(Discussion discussion) {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.createNamedQuery(Post.COUNT_BY_DISCUSSION);
@@ -60,6 +65,7 @@ public class PostDaoHibernate extends GenericDaoHibernate<Long, Post> implements
         return (Long) q.getSingleResult();
     }
 
+    @Override
     public Map<Long, Long> getNumbersOfPosts(List<Long> discussionIds) {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.createNamedQuery(Post.COUNT_BY_DISCUSSIONS);

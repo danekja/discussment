@@ -19,7 +19,7 @@ public class GenericDaoHibernate<PK extends Serializable, T extends BaseEntity<P
 
     private TransactionHelper transactionHelper;
 
-    private Class<T> clazz;
+    private final Class<T> clazz;
 
     public GenericDaoHibernate(Class<T> clazz, SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -31,6 +31,7 @@ public class GenericDaoHibernate<PK extends Serializable, T extends BaseEntity<P
         this.transactionHelper = transactionHelper;
     }
 
+    @Override
     public T save(T obj) {
         Session session = sessionFactory.getCurrentSession();
         boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();
@@ -49,10 +50,12 @@ public class GenericDaoHibernate<PK extends Serializable, T extends BaseEntity<P
         return obj;
     }
 
+    @Override
     public T getById(PK id) {
         return sessionFactory.getCurrentSession().get(clazz, id);
     }
 
+    @Override
     public void remove(T obj) {
         Session session = sessionFactory.getCurrentSession();
         boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();

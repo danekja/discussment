@@ -44,7 +44,7 @@ public class Discussion extends LongEntity implements Serializable {
     /**
      * List contains posts in the discussion. If the discussion is removed, the posts are removed too.
      */
-    private List<Post> posts = new ArrayList<Post>();
+    private List<Post> posts = new ArrayList<>();
 
     /**
      * Topic in which the discussion is.

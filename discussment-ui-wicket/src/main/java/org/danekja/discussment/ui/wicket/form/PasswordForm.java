@@ -19,14 +19,14 @@ import org.danekja.discussment.ui.wicket.session.SessionUtil;
  */
 public class PasswordForm extends Form {
 
-    private IModel<Discussion> discussionModel;
+    private final IModel<Discussion> discussionModel;
 
-    private PermissionManagementService permissionService;
-    private DiscussionService discussionService;
-    private DiscussionUserService userService;
-    private AccessControlService accessControlService;
+    private final PermissionManagementService permissionService;
+    private final DiscussionService discussionService;
+    private final DiscussionUserService userService;
+    private final AccessControlService accessControlService;
 
-    private IModel<Discussion> passwordModel;
+    private final IModel<Discussion> passwordModel;
 
     /**
      * Constructor for creating a instance of the form for verification a password

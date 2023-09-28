@@ -33,15 +33,15 @@ import java.util.Map;
  */
 public class PostListPanel extends Panel {
 
-    private IModel<Post> postModel;
-    private PostService postService;
-    private IModel<List<Post>> postListModel;
+    private final IModel<Post> postModel;
+    private final PostService postService;
+    private final IModel<List<Post>> postListModel;
 
-    private DiscussionUserService userService;
-    private PostReputationService postReputationService;
-    private ConfigurationService configurationService;
+    private final DiscussionUserService userService;
+    private final PostReputationService postReputationService;
+    private final ConfigurationService configurationService;
 
-    private String replyModalContainerId;
+    private final String replyModalContainerId;
 
     /**
      * Constructor for creating a instance of the panel contains the posts
@@ -101,6 +101,7 @@ public class PostListPanel extends Panel {
                 listItem.add(dis);
 
                 listItem.add(new Label("username", new LoadableDetachableModel<String>() {
+                    @Override
                     protected String load() {
 
                         if (postsAuthors.containsKey(listItem.getModelObject().getId())) {

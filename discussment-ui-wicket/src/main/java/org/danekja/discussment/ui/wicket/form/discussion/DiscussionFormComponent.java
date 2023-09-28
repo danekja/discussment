@@ -30,13 +30,13 @@ public class DiscussionFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> name = new TextField<String>("name", new PropertyModel<String>(getDefaultModel(), "name"));
+        TextField<String> name = new TextField<>("name", new PropertyModel<String>(getDefaultModel(), "name"));
         name.setRequired(true);
         add(name);
 
         add(new CheckBox("priv", Model.of(Boolean.FALSE)));
 
-        TextField<String> password = new TextField<String>("password", new PropertyModel<String>(getDefaultModel(), "pass"));
+        TextField<String> password = new TextField<>("password", new PropertyModel<String>(getDefaultModel(), "pass"));
         add(password);
 
     }

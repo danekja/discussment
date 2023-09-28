@@ -19,7 +19,7 @@ public class LoginFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> username = new TextField<String>("username", new PropertyModel<String>(getDefaultModel(), "username"));
+        TextField<String> username = new TextField<>("username", new PropertyModel<String>(getDefaultModel(), "username"));
         username.setRequired(true);
         add(username);
 

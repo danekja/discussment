@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  * This test case is using services with accesscontrol component.
  */
 @ExtendWith(MockitoExtension.class)
-public class PostServiceTest {
+class PostServiceTest {
 
     private static User testUser;
 
@@ -63,12 +63,12 @@ public class PostServiceTest {
     private List<Post> postRepository;
 
     @BeforeAll
-    public static void setUpGlobal() {
+    static void setUpGlobal() {
         testUser = new User("john.doe", "John Doe");
     }
 
     @BeforeEach
-    public void setUp() throws DiscussionUserNotFoundException {
+    void setUp() throws DiscussionUserNotFoundException {
         postRepository = new ArrayList<>();
 
         lenient().when(discussionUserService.getCurrentlyLoggedUser()).thenReturn(testUser);
@@ -127,7 +127,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testGetPostById() throws AccessDeniedException {
+    void getPostById() throws AccessDeniedException {
         long postId = 1L;
 
         when(postDao.getById(postId)).thenReturn(null);
@@ -140,7 +140,7 @@ public class PostServiceTest {
      * that the whole chain has been deleted.
      */
     @Test
-    public void testRemovePost1() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
+    void removePost1() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         Post rootPost = new Post(testUser, "Root post");
         rootPost = postService.sendPost(new Discussion(), rootPost);
         Post reply = new Post(testUser, "This is a reply");
@@ -160,7 +160,7 @@ public class PostServiceTest {
      * Delete reply 1 and verify that root and reply 3 are still present.
      */
     @Test
-    public void testRemovePost2() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
+    void removePost2() throws MaxReplyLevelExceeded, AccessDeniedException, MessageLengthExceeded {
         Post root = new Post(testUser, "root");
         Post reply1 = new Post(testUser, "reply1");
         Post reply2 = new Post(testUser, "reply2");
@@ -179,7 +179,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendPost() throws AccessDeniedException, DiscussionUserNotFoundException, MessageLengthExceeded {
+    void sendPost() throws AccessDeniedException, DiscussionUserNotFoundException, MessageLengthExceeded {
         Post post = new Post(testUser, "root");
         post = postService.sendPost(new Discussion(), post);
 
@@ -189,7 +189,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendPost_messageLengthExceeded() {
+    void sendPost_messageLengthExceeded() {
         when(configurationService.messageLengthLimit()).thenReturn(1);
 
         Post post = new Post(testUser, "text");
@@ -197,7 +197,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendReply() throws MaxReplyLevelExceeded, AccessDeniedException, DiscussionUserNotFoundException, MessageLengthExceeded {
+    void sendReply() throws MaxReplyLevelExceeded, AccessDeniedException, DiscussionUserNotFoundException, MessageLengthExceeded {
         Post originalPost = new Post(testUser, "original post");
         originalPost = postService.sendPost(new Discussion(), originalPost);
 
@@ -210,7 +210,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendReply_maxReplyLevelExceeded() throws AccessDeniedException, MessageLengthExceeded {
+    void sendReply_maxReplyLevelExceeded() throws AccessDeniedException, MessageLengthExceeded {
         when(configurationService.maxReplyLevel()).thenReturn(0);
 
         Post originalPost = postService.sendPost(new Discussion(), new Post(testUser, "original post"));
@@ -220,7 +220,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testSendReply_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded {
+    void sendReply_messageLengthExceeded() throws AccessDeniedException, MessageLengthExceeded {
         when(configurationService.maxReplyLevel()).thenReturn(1);
         when(configurationService.messageLengthLimit()).thenReturn(20);
 
@@ -231,7 +231,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testDisablePost() throws AccessDeniedException, MessageLengthExceeded {
+    void disablePost() throws AccessDeniedException, MessageLengthExceeded {
         Post post = new Post(testUser, "some text");
         post = postService.sendPost(new Discussion(), post);
 
@@ -243,7 +243,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testEnablePost() throws AccessDeniedException, MessageLengthExceeded {
+    void enablePost() throws AccessDeniedException, MessageLengthExceeded {
         Post post = new Post(testUser, "some text");
         post.setDisabled(true);
         post = postService.sendPost(new Discussion(), post);
@@ -255,7 +255,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void testGetNumbersOfPosts() throws AccessDeniedException, MessageLengthExceeded {
+    void getNumbersOfPosts() throws AccessDeniedException, MessageLengthExceeded {
         when(discussionService.createDiscussion(any(Topic.class), any(Discussion.class))).then(invocationOnMock -> invocationOnMock.getArguments()[1]);
 
         Discussion discussion1 = new Discussion(55L,"Some discussion");

@@ -13,10 +13,10 @@ import org.danekja.discussment.spring.core.domain.User;
  */
 public class RegistrationFormComponent extends Panel {
 
-    private IModel<PermissionData> categoryPermissionModel;
-    private IModel<PermissionData> topicPermissionModel;
-    private IModel<PermissionData> discussionPermissionModel;
-    private IModel<PermissionData> postPermissionModel;
+    private final IModel<PermissionData> categoryPermissionModel;
+    private final IModel<PermissionData> topicPermissionModel;
+    private final IModel<PermissionData> discussionPermissionModel;
+    private final IModel<PermissionData> postPermissionModel;
 
     public RegistrationFormComponent(String id,
                                      IModel<User> userModel,
@@ -36,7 +36,7 @@ public class RegistrationFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> username = new TextField<String>("usernameRegistration", new PropertyModel<String>(getDefaultModel(), "username"));
+        TextField<String> username = new TextField<>("usernameRegistration", new PropertyModel<String>(getDefaultModel(), "username"));
         username.setRequired(true);
         add(username);
 

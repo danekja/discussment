@@ -22,11 +22,11 @@ import org.danekja.discussment.ui.wicket.panel.discussion.DiscussionPanel;
  */
 public class ArticleTextPanel extends Panel {
 
-    private IModel<Article> articleModel;
-    private PostService postService;
-    private UserService userService;
-    private AccessControlService accessControlService;
-    private PostReputationService postReputationService;
+    private final IModel<Article> articleModel;
+    private final PostService postService;
+    private final UserService userService;
+    private final AccessControlService accessControlService;
+    private final PostReputationService postReputationService;
 
 
     /**

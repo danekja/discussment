@@ -27,7 +27,7 @@ public class PasswordFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> password = new TextField<String>("password", new PropertyModel<String>(getDefaultModel(), "pass"));
+        TextField<String> password = new TextField<>("password", new PropertyModel<String>(getDefaultModel(), "pass"));
         password.setRequired(true);
         add(password);
 

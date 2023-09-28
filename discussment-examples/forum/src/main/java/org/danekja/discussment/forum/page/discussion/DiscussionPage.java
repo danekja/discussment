@@ -30,18 +30,18 @@ public class DiscussionPage extends BasePage {
 
 	private static final long serialVersionUID = 1L;
 
-    private EntityManager em;
+    private final EntityManager em;
 
-    private DiscussionService discussionService;
-    private CategoryService categoryService;
-    private TopicService topicService;
-    private PostService postService;
-    private UserService userService;
-    private AccessControlService accessControlService;
-    private PermissionManagementService permissionService;
-    private PostReputationService postReputationService;
+    private final DiscussionService discussionService;
+    private final CategoryService categoryService;
+    private final TopicService topicService;
+    private final PostService postService;
+    private final UserService userService;
+    private final AccessControlService accessControlService;
+    private final PermissionManagementService permissionService;
+    private final PostReputationService postReputationService;
 
-    private IModel<HashMap<String, Integer>> parametersModel;
+    private final IModel<HashMap<String, Integer>> parametersModel;
 
     final PageParameters parameters;
 

@@ -18,12 +18,12 @@ import org.danekja.discussment.ui.wicket.form.category.CategoryFormComponent;
  */
 public class CategoryForm extends Form {
 
-    private CategoryService categoryService;
-    private DiscussionUserService userService;
-    private AccessControlService accessControlService;
-    private PermissionManagementService permissionService;
+    private final CategoryService categoryService;
+    private final DiscussionUserService userService;
+    private final AccessControlService accessControlService;
+    private final PermissionManagementService permissionService;
 
-    private IModel<Category> categoryModel;
+    private final IModel<Category> categoryModel;
 
     /**
      * Constructor for creating a instance of the form for adding a new form

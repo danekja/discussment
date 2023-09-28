@@ -23,6 +23,7 @@ public class CategoryDaoJPA extends GenericDaoJPA<Long, Category> implements Cat
         super(Category.class, em);
     }
 
+    @Override
     public List<Category> getCategories() {
         TypedQuery<Category> q = em.createNamedQuery(Category.GET_CATEGORIES, Category.class);
         return q.getResultList();

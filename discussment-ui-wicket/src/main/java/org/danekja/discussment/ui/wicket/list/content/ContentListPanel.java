@@ -25,14 +25,14 @@ import java.util.List;
  */
 public class ContentListPanel extends Panel {
 
-    private CategoryService categoryService;
-    private TopicService topicService;
-    private DiscussionService discussionService;
-    private PostService postService;
-    private AccessControlService accessControlService;
-    private IModel<Category> categoryModel;
-    private IModel<List<Category>>  categoryListModel;
-    private IModel<List<Topic>> topicListModel;
+    private final CategoryService categoryService;
+    private final TopicService topicService;
+    private final DiscussionService discussionService;
+    private final PostService postService;
+    private final AccessControlService accessControlService;
+    private final IModel<Category> categoryModel;
+    private final IModel<List<Category>>  categoryListModel;
+    private final IModel<List<Topic>> topicListModel;
 
     /**
      * Constructor for creating a instance of the panel contains the categories with the topics and the topics without the category.

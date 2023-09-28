@@ -15,17 +15,19 @@ import java.util.List;
  */
 public class DefaultUserService implements UserService {
 
-    private UserDao userDao;
+    private final UserDao userDao;
 
     public DefaultUserService(UserDao userDao) {
         this.userDao = userDao;
     }
 
+    @Override
     public User addUser(User entity) {
 
         return userDao.save(entity);
     }
 
+    @Override
     public List<User> getUsers() {
         return userDao.getUsers();
     }
@@ -38,6 +40,7 @@ public class DefaultUserService implements UserService {
         return user;
     }
 
+    @Override
     public User getUserByUsername(String username) {
 
         return userDao.getUserByUsername(username);

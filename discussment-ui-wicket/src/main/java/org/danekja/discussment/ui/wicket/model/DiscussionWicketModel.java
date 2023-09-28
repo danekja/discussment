@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class DiscussionWicketModel extends LoadableDetachableModel<List<Discussion>> {
 
-    private DiscussionService discussionService;
+    private final DiscussionService discussionService;
 
-    private IModel<Topic> topicModel;
+    private final IModel<Topic> topicModel;
 
     /**
      * Constructor for creating a instance of getting the categories.
@@ -33,6 +33,7 @@ public class DiscussionWicketModel extends LoadableDetachableModel<List<Discussi
         this.discussionService = discussionService;
     }
 
+    @Override
     protected List<Discussion> load() {
         try{
             return discussionService.getDiscussionsByTopic(topicModel.getObject());

@@ -19,6 +19,7 @@ public class UserDaoJPA extends GenericDaoJPA<Long, User> implements UserDao {
         super(User.class, em);
     }
 
+    @Override
     public User getUserByUsername(String username) {
         TypedQuery<User> q = em.createNamedQuery(User.GET_BY_USERNAME, User.class);
         q.setParameter("username", username);
@@ -29,6 +30,7 @@ public class UserDaoJPA extends GenericDaoJPA<Long, User> implements UserDao {
         }
     }
 
+    @Override
     public List<User> getUsers() {
         TypedQuery<User> q = em.createNamedQuery(User.GET_USERS, User.class);
         return q.getResultList();

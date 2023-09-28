@@ -29,9 +29,9 @@ public class PostReputationPanel extends Panel  {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private IModel<Post> postModel;
-    private PostReputationService postReputationService;
-    private DiscussionUserService userService;
+    private final IModel<Post> postModel;
+    private final PostReputationService postReputationService;
+    private final DiscussionUserService userService;
 
     /**
      * Constructor for creating the panel which contains the specific article and its discussion.

@@ -21,14 +21,14 @@ import java.util.List;
  */
 public class ThreadListPanel extends Panel {
 
-    private IModel<List<Post>> threadListModel;
-    private IModel<Post> postModel;
-    private PostService postService;
-    private DiscussionUserService userService;
-    private PostReputationService postReputationService;
-    private ConfigurationService configurationService;
+    private final IModel<List<Post>> threadListModel;
+    private final IModel<Post> postModel;
+    private final PostService postService;
+    private final DiscussionUserService userService;
+    private final PostReputationService postReputationService;
+    private final ConfigurationService configurationService;
 
-    private String replyModalContainerId;
+    private final String replyModalContainerId;
 
     /**
      * Constructor for creating a instance of the panel contains the threads with the posts

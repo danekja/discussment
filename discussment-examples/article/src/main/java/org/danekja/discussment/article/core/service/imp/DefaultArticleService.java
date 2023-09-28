@@ -21,10 +21,10 @@ import java.util.List;
  */
 public class DefaultArticleService implements ArticleService {
 
-    private ArticleDao articleDao;
-    private DiscussionService discussionService;
-    private TopicService topicService;
-    private AccessControlService accessControlService;
+    private final ArticleDao articleDao;
+    private final DiscussionService discussionService;
+    private final TopicService topicService;
+    private final AccessControlService accessControlService;
 
     public DefaultArticleService(ArticleDao articleDao, DiscussionService discussionService, TopicService topicService, AccessControlService accessControlService){
         this.articleDao = articleDao;
@@ -33,6 +33,7 @@ public class DefaultArticleService implements ArticleService {
         this.accessControlService = accessControlService;
     }
 
+    @Override
     public Article createArticle(Article entity) {
 
         try {
@@ -46,15 +47,18 @@ public class DefaultArticleService implements ArticleService {
         return articleDao.save(entity);
     }
 
-    public Article getArticleById(long articleId){
+    @Override
+    public Article getArticleById(long articleId) {
         return articleDao.getById(articleId);
     }
 
+    @Override
     public List<Article> getArticles() {
         return articleDao.getArticles();
     }
 
-    public void removeArticle(Article entity){
+    @Override
+    public void removeArticle(Article entity) {
         articleDao.remove(entity);
     }
 }

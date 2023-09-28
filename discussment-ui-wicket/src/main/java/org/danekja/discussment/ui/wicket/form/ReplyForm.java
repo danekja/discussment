@@ -14,8 +14,8 @@ import org.danekja.discussment.ui.wicket.form.post.PostFormComponent;
  */
 public abstract class ReplyForm extends Form {
 
-    private IModel<Post> postModel;
-    private IModel<Post> replyModel;
+    private final IModel<Post> postModel;
+    private final IModel<Post> replyModel;
     private PostFormComponent replyFormComponent;
 
     /**

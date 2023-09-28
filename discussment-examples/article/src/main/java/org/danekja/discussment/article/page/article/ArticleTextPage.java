@@ -27,18 +27,18 @@ import javax.persistence.EntityManager;
 public class ArticleTextPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
-    private EntityManager em;
+    private final EntityManager em;
 
-    private ArticleService articleService;
-    private CategoryService categoryService;
-    private DiscussionService discussionService;
-    private TopicService topicService;
-    private PostService postService;
-    private UserService userService;
-    private AccessControlService accessControlService;
-    private PostReputationService postReputationService;
+    private final ArticleService articleService;
+    private final CategoryService categoryService;
+    private final DiscussionService discussionService;
+    private final TopicService topicService;
+    private final PostService postService;
+    private final UserService userService;
+    private final AccessControlService accessControlService;
+    private final PostReputationService postReputationService;
 
-    private IModel<Article> articleModel;
+    private final IModel<Article> articleModel;
 
     final PageParameters parameters;
 

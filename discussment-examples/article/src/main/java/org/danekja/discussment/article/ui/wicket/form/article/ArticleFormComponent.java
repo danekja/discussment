@@ -27,11 +27,11 @@ public class ArticleFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> name = new TextField<String>("name", new PropertyModel<String>(getDefaultModel(), "name"));
+        TextField<String> name = new TextField<>("name", new PropertyModel<String>(getDefaultModel(), "name"));
         name.setRequired(true);
         add(name);
 
-        TextArea<String> articleText = new TextArea<String>("articleText", new PropertyModel<String>(getDefaultModel(), "articleText"));
+        TextArea<String> articleText = new TextArea<>("articleText", new PropertyModel<String>(getDefaultModel(), "articleText"));
         articleText.setRequired(true);
         add(articleText);
     }

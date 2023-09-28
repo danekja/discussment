@@ -48,6 +48,7 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         }
     }
 
+    @Override
     public T save(T obj) {
         boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();
         if(!hasOuterTransaction) {
@@ -65,10 +66,12 @@ public class GenericDaoJPA<PK extends Serializable, T extends BaseEntity<PK>> im
         return obj;
     }
 
+    @Override
     public T getById(PK id) {
         return em.find(clazz, id);
     }
 
+    @Override
     public void remove(T obj) {
         boolean hasOuterTransaction = transactionHelper.isJoinedToTransaction();
         if(!hasOuterTransaction) {

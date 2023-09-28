@@ -24,6 +24,7 @@ public class DiscussionDaoJPA extends GenericDaoJPA<Long, Discussion> implements
         super(Discussion.class, em);
     }
 
+    @Override
     public List<Discussion> getDiscussionsByTopic(Topic topic) {
         TypedQuery<Discussion> q = em.createNamedQuery(Discussion.GET_DISCUSSIONS_BY_TOPIC_ID, Discussion.class);
         q.setParameter("topicId", topic.getId());

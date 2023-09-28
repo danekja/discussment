@@ -20,12 +20,12 @@ import org.danekja.discussment.ui.wicket.form.topic.TopicFormComponent;
 public class TopicForm extends Form {
 
     private TopicService topicService;
-    private DiscussionUserService userService;
-    private AccessControlService accessControlService;
-    private PermissionManagementService permissionService;
+    private final DiscussionUserService userService;
+    private final AccessControlService accessControlService;
+    private final PermissionManagementService permissionService;
 
-    private IModel<Topic> topicModel;
-    private IModel<Category> categoryModel;
+    private final IModel<Topic> topicModel;
+    private final IModel<Category> categoryModel;
 
     /**
      * Constructor for creating a instance of the form for creating a new topic

@@ -27,11 +27,11 @@ public class TopicFormComponent extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextField<String> name = new TextField<String>("name", new PropertyModel<String>(getDefaultModel(), "name"));
+        TextField<String> name = new TextField<>("name", new PropertyModel<String>(getDefaultModel(), "name"));
         name.setRequired(true);
         add(name);
 
-        TextField<String> description = new TextField<String>("description", new PropertyModel<String>(getDefaultModel(), "description"));
+        TextField<String> description = new TextField<>("description", new PropertyModel<String>(getDefaultModel(), "description"));
         add(description);
 
     }

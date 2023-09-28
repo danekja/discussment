@@ -26,11 +26,11 @@ import java.util.List;
  */
 public class TopicListPanel extends Panel {
 
-    private TopicService topicService;
-    private DiscussionService discussionService;
-    private PostService postService;
-    private AccessControlService accessControlService;
-    private IModel<List<Topic>>  topicListModel;
+    private final TopicService topicService;
+    private final DiscussionService discussionService;
+    private final PostService postService;
+    private final AccessControlService accessControlService;
+    private final IModel<List<Topic>>  topicListModel;
 
     /**
      * Constructor for creating a instance of the panel contains the topics

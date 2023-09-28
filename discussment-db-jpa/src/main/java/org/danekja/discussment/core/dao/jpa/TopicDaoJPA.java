@@ -24,6 +24,7 @@ public class TopicDaoJPA extends GenericDaoJPA<Long, Topic> implements TopicDao 
         super(Topic.class, em);
     }
 
+    @Override
     public List<Topic> getTopicsByCategory(Category category) {
         TypedQuery<Topic> q = em.createNamedQuery(Topic.GET_TOPICS_BY_CATEGORY_ID, Topic.class);
         q.setParameter("categoryId", category.getId());

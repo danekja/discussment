@@ -31,15 +31,15 @@ public class ArticlePage extends BasePage {
 
 	private static final long serialVersionUID = 1L;
 
-    private EntityManager em;
+    private final EntityManager em;
 
-	private CategoryService categoryService;
-	private TopicService topicService;
-    private DiscussionService discussionService;
-	private PostService postService;
-	private AccessControlService accessControlService;
-	private UserService userService;
-	private PostReputationService postReputationService;
+    private final CategoryService categoryService;
+    private final TopicService topicService;
+    private final DiscussionService discussionService;
+    private final PostService postService;
+    private final AccessControlService accessControlService;
+    private final UserService userService;
+    private final PostReputationService postReputationService;
 
     /**
 	 * Constructor that is invoked when page is invoked without a session.

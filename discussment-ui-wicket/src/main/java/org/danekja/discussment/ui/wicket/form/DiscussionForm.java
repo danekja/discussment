@@ -20,13 +20,13 @@ import org.danekja.discussment.ui.wicket.form.discussion.DiscussionFormComponent
  */
 public class DiscussionForm extends Form {
 
-    private DiscussionService discussionService;
-    private PermissionManagementService permissionService;
-    private DiscussionUserService userService;
-    private AccessControlService accessControlService;
+    private final DiscussionService discussionService;
+    private final PermissionManagementService permissionService;
+    private final DiscussionUserService userService;
+    private final AccessControlService accessControlService;
 
-    private IModel<Topic> topicModel;
-    private IModel<Discussion> discussionModel;
+    private final IModel<Topic> topicModel;
+    private final IModel<Discussion> discussionModel;
 
     /**
      * Constructor for creating a instance of the form for adding a discussion form
