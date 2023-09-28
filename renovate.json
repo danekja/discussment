@@ -7,7 +7,6 @@
   "assignees": [
     "pavel.fidransky"
   ],
-  "commitMessagePrefix": "MNDIS-NaN:",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
