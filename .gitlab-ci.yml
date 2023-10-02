@@ -102,7 +102,6 @@ maven-release:
       if [[ ! -z $RELEASE_PROPERTIES ]]; then
         echo $RELEASE_PROPERTIES > release.properties
       fi
-    - cat release.properties 2>/dev/null
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS release:prepare -DdryRun
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS release:perform -DdryRun
