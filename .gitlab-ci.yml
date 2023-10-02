@@ -47,7 +47,6 @@ maven-install:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $BUILD_TYPE == 'snapshot'
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "web"
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS install
   artifacts:
@@ -62,7 +61,6 @@ maven-verify-db-it:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $BUILD_TYPE == 'snapshot'
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "web"
   services:
     - name: docker:dind
       command: [ "--tls=false" ]
@@ -104,6 +102,7 @@ maven-release:
       if [[ ! -z $RELEASE_PROPERTIES ]]; then
         echo $RELEASE_PROPERTIES > release.properties
       fi
+    - cat release.properties 2>/dev/null
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS release:prepare -DdryRun
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS release:perform -DdryRun
