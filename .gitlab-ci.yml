@@ -28,10 +28,24 @@ variables:
     --update-snapshots
     -DdeployAtEnd=true
 
+  BUILD_TYPE:
+    description: "Select build type. While snapshot publishes artifacts to repository 'as is', release also bumps artifacts' version before and after they are published."
+    value: "snapshot"
+    options:
+      - "snapshot"
+      - "release"
+
+  RELEASE_PROPERTIES:
+    description: "Set release.properties for maven-release-plugin. Only used when BUILD_TYPE 'release' is selected."
+    value: |-
+      scm.tag=my-proj-1.2
+      project.rel.org.myCompany\:projectA=1.2
+      project.dev.org.myCompany\:projectA=1.3-SNAPSHOT
+
 maven-install:
   stage: build
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $BUILD_TYPE == 'snapshot'
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
@@ -46,7 +60,7 @@ maven-install:
 maven-verify-db-it:
   stage: verify
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $BUILD_TYPE == 'snapshot'
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
   services:
@@ -77,6 +91,19 @@ maven-verify-db-it:
 maven-deploy:
   stage: publish
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $BUILD_TYPE == 'snapshot'
   script:
     - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS -Dmaven.test.skip=true -Dmaven.install.skip=true deploy
+
+maven-release:
+  stage: publish
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $BUILD_TYPE == 'release'
+  before_script:
+    - |
+      if [[ ! -z $RELEASE_PROPERTIES ]]; then
+        echo $RELEASE_PROPERTIES > release.properties
+      fi
+  script:
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS release:prepare -DdryRun
+    - mvn --settings $CI_MAVEN_SETTINGS $MAVEN_ARGS release:perform -DdryRun
