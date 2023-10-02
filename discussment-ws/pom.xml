@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>discussment</artifactId>
         <groupId>org.danekja.discussment</groupId>
-        <version>0.10.4</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>discussment-ws</artifactId>
-    <version>0.10.5</version>
+    <version>0.10.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/danekja/discussment</url>
@@ -54,7 +56,7 @@
         <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
         <url>https://github.com/danekja/discussment/tree/master</url>
-        <tag>v0.10.4</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>

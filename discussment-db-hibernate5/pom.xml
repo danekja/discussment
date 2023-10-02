@@ -3,13 +3,13 @@
     <parent>
         <groupId>org.danekja.discussment</groupId>
         <artifactId>discussment</artifactId>
-        <version>0.10.4</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.danekja.discussment.db</groupId>
     <artifactId>discussment-db-hibernate5</artifactId>
-    <version>0.10.4</version>
+    <version>0.10.4-SNAPSHOT</version>
 
     <name>${project.groupId}.${project.artifactId}</name>
     <description>
@@ -55,11 +55,11 @@
         <connection>scm:git:ssh://git@github.com/danekja/discussment.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/danekja/discussment.git</developerConnection>
         <url>https://github.com/danekja/discussment/tree/master</url>
-        <tag>v0.10.4</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
-        <core.version>0.10.5</core.version>
+        <core.version>0.10.5-SNAPSHOT</core.version>
     </properties>
 
     <dependencies>
