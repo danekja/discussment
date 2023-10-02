@@ -39,8 +39,8 @@ variables:
     description: "Set release.properties for maven-release-plugin. Only used when BUILD_TYPE 'release' is selected."
     value: |-
       scm.tag=my-proj-1.2
-      project.rel.org.myCompany\:projectA=1.2
-      project.dev.org.myCompany\:projectA=1.3-SNAPSHOT
+      project.rel.org.myCompany:projectA=1.2
+      project.dev.org.myCompany:projectA=1.3-SNAPSHOT
 
 maven-install:
   stage: build
